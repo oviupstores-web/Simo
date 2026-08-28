@@ -9,6 +9,7 @@ import PrimaryButton from "@/src/components/PrimaryButton";
 import { useMenoo, ParcoursType } from "@/src/store/menoo";
 import { STEP_TITLES, PARCOURS_LABELS, AVEC_DETAILED_ROUTE } from "@/src/services/steps";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
+import FoyerStep, { foyerCanContinue } from "@/src/screens/foyer";
 
 export default function ParcoursStepScreen() {
   const insets = useSafeAreaInsets();
@@ -16,17 +17,21 @@ export default function ParcoursStepScreen() {
   const params = useLocalSearchParams<{ type: string; step: string }>();
   const type = (params.type as ParcoursType) || "pour-moi";
   const step = parseInt(String(params.step ?? "3"), 10);
-  const { setCurrentStep } = useMenoo();
+  const { setCurrentStep, answers } = useMenoo();
 
   const stepInfo = useMemo(() => STEP_TITLES[type]?.[step] ?? { title: "Étape" }, [type, step]);
   const detailedRoute = type === "avec" ? AVEC_DETAILED_ROUTE[step] : null;
 
+  const foyerCheck = type === "pour-foyer" ? foyerCanContinue(step, answers["pour-foyer"]) : true;
+  const canContinue = foyerCheck === true;
+  const blockingMessage = typeof foyerCheck === "string" ? foyerCheck : null;
+
   const goNext = () => {
+    if (!canContinue) return;
     if (step < 12) {
       setCurrentStep(step + 1);
       router.push(`/parcours/${type}/${step + 1}` as any);
     } else {
-      // Final step: return to home
       router.replace("/(tabs)");
     }
   };
@@ -34,6 +39,8 @@ export default function ParcoursStepScreen() {
   const openDetailed = () => {
     if (detailedRoute) router.push(detailedRoute as any);
   };
+
+  const isFoyer = type === "pour-foyer";
 
   return (
     <View style={styles.container}>
@@ -48,18 +55,21 @@ export default function ParcoursStepScreen() {
         <Text style={styles.title}>{stepInfo.title}</Text>
         {stepInfo.hint && <Text style={styles.subtitle}>{stepInfo.hint}</Text>}
 
-        {/* Placeholder card */}
-        <View style={styles.card}>
-          <View style={styles.placeholderIcon}>
-            <Ionicons name="construct-outline" size={22} color={colors.brandPrimary} />
+        {isFoyer ? (
+          <FoyerStep step={step} onOpenPantry={() => router.push("/(tabs)/pantry")} />
+        ) : (
+          <View style={styles.card}>
+            <View style={styles.placeholderIcon}>
+              <Ionicons name="construct-outline" size={22} color={colors.brandPrimary} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Aperçu en préparation</Text>
+              <Text style={styles.cardText}>
+                Le contenu détaillé de cette étape arrive bientôt. Vos réponses seront conservées.
+              </Text>
+            </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardTitle}>Aperçu en préparation</Text>
-            <Text style={styles.cardText}>
-              Le contenu détaillé de cette étape arrive bientôt. Vos réponses seront conservées.
-            </Text>
-          </View>
-        </View>
+        )}
 
         {detailedRoute && (
           <View testID="detailed-screen-block" style={styles.detailedBlock}>
@@ -80,6 +90,13 @@ export default function ParcoursStepScreen() {
           </View>
         )}
 
+        {blockingMessage && (
+          <View testID="foyer-blocking-msg" style={styles.warnBlock}>
+            <Ionicons name="alert-circle-outline" size={18} color={colors.warning} />
+            <Text style={styles.warnText}>{blockingMessage}</Text>
+          </View>
+        )}
+
         <View style={styles.actions}>
           <PrimaryButton
             testID="btn-step-back"
@@ -90,8 +107,9 @@ export default function ParcoursStepScreen() {
           <View style={{ height: spacing.sm }} />
           <PrimaryButton
             testID="btn-step-continue"
-            label={step === 12 ? "Terminer" : "Continuer"}
+            label={step === 12 ? "Créer ma semaine" : "Continuer"}
             onPress={goNext}
+            disabled={!canContinue}
           />
         </View>
       </ScrollView>
@@ -129,5 +147,15 @@ const styles = StyleSheet.create({
   detailedHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 6 },
   detailedTitle: { ...typography.bodyMd, color: colors.onBrandTertiary },
   detailedHint: { ...typography.small, color: colors.onBrandTertiary, lineHeight: 19, marginBottom: spacing.md },
+  warnBlock: {
+    flexDirection: "row",
+    gap: 8,
+    padding: spacing.md,
+    backgroundColor: colors.brandTertiaryMuted,
+    borderRadius: radius.md,
+    marginTop: spacing.sm,
+    alignItems: "center",
+  },
+  warnText: { flex: 1, ...typography.small, color: colors.warning, lineHeight: 19 },
   actions: { marginTop: spacing.md },
 });
