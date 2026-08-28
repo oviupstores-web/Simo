@@ -1,0 +1,181 @@
+{
+  "app_name": "Menoo",
+  "personality": "4 Tactile / Playful LIGHT (constrained to Premium Family tone: cream, deep green, mint, gold)",
+  "personality_one_liner": "A warm, reassuring, and premium familial app featuring large rounded cards, soft contrast, and highly legible typography to make meal planning and pantry management effortless.",
+  "color": {
+    "surface": "#FAF9F6",
+    "onSurface": "#13261C",
+    "surfaceSecondary": "#FFFFFF",
+    "onSurfaceSecondary": "#13261C",
+    "surfaceTertiary": "#F0EFEB",
+    "onSurfaceTertiary": "#2C4035",
+    "surfaceInverse": "#19533B",
+    "onSurfaceInverse": "#FAF9F6",
+    "brand": "#19533B",
+    "brandPrimary": "#19533B",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#A3CBAF",
+    "onBrandSecondary": "#0E3222",
+    "brandTertiary": "#D4AF37",
+    "onBrandTertiary": "#4A3A00",
+    "success": "#7DB88E",
+    "onSuccess": "#FFFFFF",
+    "warning": "#E0B647",
+    "onWarning": "#FFFFFF",
+    "error": "#CC5A47",
+    "onError": "#FFFFFF",
+    "border": "#E8E6E1",
+    "borderStrong": "#D1CFC9",
+    "divider": "#E8E6E1"
+  },
+  "typography": {
+    "displayFontFamily": "PlusJakartaSans-Bold",
+    "textFontFamily": "PlusJakartaSans-Medium",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Maintain generous breathing room to avoid any medical or administrative feel. Use lg (16pt) or xl (24pt) padding inside cards.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "pill": 999
+  },
+  "shadow_tier": "1",
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": "true",
+    "do's": [
+      "Use only for the bottom tab bar and sticky CTAs to maintain a premium feel while scrolling large cards."
+    ],
+    "dont's": [
+      "Do not use on generic list items, input fields, or static dashboard cards to preserve the opaque, warm cream aesthetic."
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Accueil",
+      "purpose": "Home screen featuring 3 large, highly visible path cards to start the user journey.",
+      "states": {
+        "loading": "Centered spinner with a mint green tint.",
+        "empty": "N/A - Static paths are always available.",
+        "error": "Warm error message asking to reload."
+      },
+      "layout": "Vertical list of 3 large rounded cards (lg radius, white on cream background). 'Pour moi', 'Pour mon foyer', 'Avec ce que j'ai'. Highlight the last one using the mint green (brandSecondary) or a gold badge."
+    },
+    {
+      "name": "Réserves",
+      "purpose": "Pantry inventory input screen with 4 accessible methods.",
+      "states": {
+        "loading": "Skeleton loading for inventory list.",
+        "empty": "Illustration of an empty minimal plate/pantry with a warm CTA to start adding items.",
+        "error": "Error toast with a retry button."
+      },
+      "layout": "Grid of 4 large touch-friendly buttons for input methods (Écrire, Parler, Photographier, Scanner code-barres) followed by a list of recently added items. Use Phosphor icons sized 24-28pt."
+    },
+    {
+      "name": "Confirmation",
+      "purpose": "Consolidate pantry additions with calibrated quantity sliders.",
+      "states": {
+        "loading": "Spinner overlaid on the consolidation list.",
+        "empty": "N/A - Only reached when items are present.",
+        "error": "Inline error message."
+      },
+      "layout": "List of detected items. Each row contains a title, a source badge (e.g. Open Food Facts), and a calibrated slider beneath it to adjust real vs total quantity (e.g., 250g / 500g). Sticky primary CTA at the bottom to confirm."
+    },
+    {
+      "name": "Choix_Repas",
+      "purpose": "Filters and selectors to plan the meals.",
+      "states": {
+        "loading": "Skeleton UI for filter options.",
+        "empty": "Illustration of a family table if no preferences set yet.",
+        "error": "Standard retry state."
+      },
+      "layout": "Use pill controls and segmented selectors for number of people (1-6), meals (1-4), and cuisine types. Large padding and easy tap areas. Sticky 'Générer les repas' CTA at the bottom."
+    },
+    {
+      "name": "Vérification",
+      "purpose": "Compatibility check between generated recipe needs and actual pantry stock.",
+      "states": {
+        "loading": "Gauges animating to their values.",
+        "empty": "N/A",
+        "error": "Failed to calculate compatibility."
+      },
+      "layout": "List of required ingredients. Each item features a visual progress gauge (using mint green and deep green) representing what is in stock vs what is needed. Highlight missing items clearly but warmly."
+    },
+    {
+      "name": "Recette",
+      "purpose": "Detailed recipe view.",
+      "states": {
+        "loading": "Skeleton blocks for image and text.",
+        "empty": "N/A",
+        "error": "Failed to load recipe."
+      },
+      "layout": "Hero image at the top with a top-to-bottom gradient scrim. Large title, metadata chips (time, people). Ingredients list and step-by-step instructions in white surfaceSecondary cards. Sticky bottom CTA to 'Mettre à jour le stock' after cooking."
+    },
+    {
+      "name": "Suivi",
+      "purpose": "Nutritional tracking, budget, and energy dashboard.",
+      "states": {
+        "loading": "Skeleton graphs.",
+        "empty": "Empty state illustration of a clean kitchen, prompting users to log their first meal.",
+        "error": "Failed to load stats."
+      },
+      "layout": "Dashboard layout but avoid clinical look. Large rounded cards. One card for a nutritional radar chart, another for a weekly curve, and smaller cards for saved budget and cooking energy metrics."
+    }
+  ],
+  "images": {
+    "hero_meal": {
+      "url": "https://images.unsplash.com/photo-1715249792894-43ad23412d3d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2ODl8MHwxfHNlYXJjaHwxfHxmcmVuY2glMjBjdWlzaW5lJTIwZGlzaHxlbnwwfHx8fDE3ODc5MTY2MDF8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "A white plate topped with french cuisine dish"
+    },
+    "cooking_family": {
+      "url": "https://images.unsplash.com/photo-1761839258803-21515f43190c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHxjb29raW5nJTIwZmFtaWx5JTIwaG9tZXxlbnwwfHx8fDE3ODc5MTY2MjF8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Family cooking together in a warm modern kitchen"
+    },
+    "empty_pantry": {
+      "url": "https://images.unsplash.com/photo-1645802734096-07f97fcd8bf2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwyfHxlbXB0eSUyMHBsYXRlJTIwbWluaW1hbGlzdHxlbnwwfHx8fDE3ODc5MTY2MDF8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Empty minimalist plate representing zero food waste"
+    },
+    "modern_pantry": {
+      "url": "https://images.unsplash.com/photo-1774578341766-081a4996a067?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwyfHxwYW50cnklMjBzaGVsdmVzJTIwbWluaW1hbHxlbnwwfHx8fDE3ODc5MTY2MjF8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Modern minimal pantry with neat shelves"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Strictly adhere to the selected color palette: off-white/cream base, deep green primary, mint green secondary/success, and subtle gold accents. No indigo, blue, or purple allowed anywhere.",
+    "Utilize large, rounded cards (lg: 24pt radius) and maintain generous spacing (md/lg/xl) to emulate a warm, human, non-administrative feel reminiscent of Jow's aesthetic.",
+    "Implement calibrated sliders for the Confirmation screen to handle real vs total quantity input beautifully.",
+    "For the recipe screen hero image, ensure a gradient scrim is present to guarantee text readability.",
+    "When building the Suivi (Tracking) screen, incorporate the nutritional radar chart within a clean white card against the cream background. Keep it looking familial and friendly rather than like a sterile dashboard.",
+    "Ensure touch targets are large (minimum 44x44pt) throughout all flows, particularly for the 4 pantry input methods.",
+    "All copy and placeholders should be written in French as per the problem statement."
+  ]
+}
