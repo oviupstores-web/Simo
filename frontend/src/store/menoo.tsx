@@ -9,7 +9,7 @@ interface MealChoice {
   purchaseRule: PurchaseRule;
 }
 
-export type ParcoursType = 'pour-moi' | 'pour-foyer' | 'avec';
+export type ParcoursType = 'pour-moi' | 'pour-famille';
 
 interface MenooState {
   pantry: PantryItem[];
@@ -20,9 +20,7 @@ interface MenooState {
   setMeal: (patch: Partial<MealChoice>) => void;
   cooked: boolean;
   setCooked: (v: boolean) => void;
-  // Onboarding 12-step
-  entryReason: string | null;
-  setEntryReason: (v: string | null) => void;
+  // Onboarding 12-step (per organigramme v1)
   parcours: ParcoursType | null;
   setParcours: (v: ParcoursType | null) => void;
   currentStep: number; // 1..12
@@ -34,7 +32,7 @@ interface MenooState {
 }
 
 const MenooContext = createContext<MenooState | null>(null);
-const STORAGE_KEY = 'menoo:onboarding:v1';
+const STORAGE_KEY = 'menoo:onboarding:v2';
 
 export function MenooProvider({ children }: { children: React.ReactNode }) {
   const [pantry, setPantry] = useState<PantryItem[]>(initialPantry);
@@ -46,41 +44,36 @@ export function MenooProvider({ children }: { children: React.ReactNode }) {
   });
   const [cooked, setCooked] = useState(false);
 
-  const [entryReason, setEntryReason] = useState<string | null>(null);
   const [parcours, setParcoursState] = useState<ParcoursType | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [answers, setAnswers] = useState<Record<ParcoursType, Record<string, any>>>({
     'pour-moi': {},
-    'pour-foyer': {},
-    'avec': {},
+    'pour-famille': {},
   });
   const [hydrated, setHydrated] = useState(false);
 
-  // Hydrate from AsyncStorage
   useEffect(() => {
     (async () => {
       try {
         const raw = await AsyncStorage.getItem(STORAGE_KEY);
         if (raw) {
           const s = JSON.parse(raw);
-          if (s.entryReason !== undefined) setEntryReason(s.entryReason);
           if (s.parcours !== undefined) setParcoursState(s.parcours);
           if (typeof s.currentStep === 'number') setCurrentStep(s.currentStep);
-          if (s.answers) setAnswers({ 'pour-moi': {}, 'pour-foyer': {}, 'avec': {}, ...s.answers });
+          if (s.answers) setAnswers({ 'pour-moi': {}, 'pour-famille': {}, ...s.answers });
         }
       } catch {}
       setHydrated(true);
     })();
   }, []);
 
-  // Persist onboarding state
   useEffect(() => {
     if (!hydrated) return;
     AsyncStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ entryReason, parcours, currentStep, answers })
+      JSON.stringify({ parcours, currentStep, answers })
     ).catch(() => {});
-  }, [entryReason, parcours, currentStep, answers, hydrated]);
+  }, [parcours, currentStep, answers, hydrated]);
 
   const setPantryItem = useCallback((id: string, patch: Partial<PantryItem>) => {
     setPantry((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)));
@@ -111,23 +104,21 @@ export function MenooProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const resetOnboarding = useCallback(() => {
-    setEntryReason(null);
     setParcoursState(null);
     setCurrentStep(1);
-    setAnswers({ 'pour-moi': {}, 'pour-foyer': {}, 'avec': {} });
+    setAnswers({ 'pour-moi': {}, 'pour-famille': {} });
   }, []);
 
   const value = useMemo(
     () => ({
       pantry, setPantryItem, applyRecipeConsumption, resetPantry,
       meal, setMeal, cooked, setCooked,
-      entryReason, setEntryReason,
       parcours, setParcours,
       currentStep, setCurrentStep,
       answers, setAnswer, resetOnboarding,
       hydrated,
     }),
-    [pantry, setPantryItem, applyRecipeConsumption, resetPantry, meal, setMeal, cooked, entryReason, parcours, currentStep, answers, setAnswer, resetOnboarding, hydrated, setParcours]
+    [pantry, setPantryItem, applyRecipeConsumption, resetPantry, meal, setMeal, cooked, parcours, currentStep, answers, setAnswer, resetOnboarding, hydrated, setParcours]
   );
 
   return <MenooContext.Provider value={value}>{children}</MenooContext.Provider>;

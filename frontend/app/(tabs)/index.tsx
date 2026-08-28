@@ -10,17 +10,14 @@ import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens"
 export default function AccueilScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { parcours, currentStep, entryReason, resetOnboarding, hydrated } = useMenoo();
+  const { parcours, currentStep, resetOnboarding, hydrated } = useMenoo();
 
-  const hasProgress = hydrated && !!parcours && currentStep >= 3 && currentStep <= 12;
-  const startedButNotChosen = hydrated && !parcours && !!entryReason;
+  const hasProgress = hydrated && !!parcours && currentStep >= 1 && currentStep <= 12;
 
-  const goStart = () => router.push("/parcours/entry");
-  const resumeRoute = () =>
+  const goStart = () => router.push("/parcours/path");
+  const resume = () =>
     hasProgress
       ? router.push(`/parcours/${parcours}/${currentStep}` as any)
-      : startedButNotChosen
-      ? router.push("/parcours/path")
       : goStart();
 
   return (
@@ -33,7 +30,6 @@ export default function AccueilScreen() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
         <View style={styles.headerRow}>
           <Text style={styles.logo}>Menoo</Text>
           <View testID="badge-no-account" style={styles.badge}>
@@ -47,38 +43,29 @@ export default function AccueilScreen() {
           Menoo simplifie l'organisation des repas et vous aide à cuisiner ce que vous avez déjà.
         </Text>
 
-        {/* Start or resume */}
-        {hasProgress || startedButNotChosen ? (
+        {hasProgress ? (
           <View style={styles.resumeCard}>
             <View style={styles.resumeBadge}>
               <Ionicons name="play-circle" size={14} color={colors.onBrandSecondary} />
               <Text style={styles.resumeBadgeText}>Reprise possible</Text>
             </View>
-            <Text style={styles.resumeTitle}>
-              {hasProgress ? "Reprendre votre parcours" : "Continuer où vous étiez"}
-            </Text>
+            <Text style={styles.resumeTitle}>Reprendre votre parcours</Text>
             <Text style={styles.resumeHint}>
-              {hasProgress
-                ? `${PARCOURS_LABELS[parcours!]} · Étape ${currentStep} sur 12`
-                : "Choisissez votre parcours pour continuer."}
+              {PARCOURS_LABELS[parcours!]} · Étape {currentStep} sur 12
             </Text>
             <Pressable
               testID="btn-resume"
-              onPress={resumeRoute}
+              onPress={resume}
               style={({ pressed }) => [styles.resumeBtn, pressed && { opacity: 0.85 }]}
             >
-              <Text style={styles.resumeBtnText}>
-                {hasProgress
-                  ? `Reprendre à l'étape ${currentStep}`
-                  : "Continuer"}
-              </Text>
+              <Text style={styles.resumeBtnText}>Reprendre à l'étape {currentStep}</Text>
               <Ionicons name="arrow-forward" size={18} color={colors.onBrandPrimary} />
             </Pressable>
             <Pressable
               testID="btn-restart"
               onPress={() => {
                 resetOnboarding();
-                router.push("/parcours/entry");
+                router.push("/parcours/path");
               }}
               style={styles.restartLink}
             >
@@ -98,7 +85,7 @@ export default function AccueilScreen() {
             </View>
             <Text style={styles.cardFeaturedTitle}>Commencer avec Menoo</Text>
             <Text style={styles.cardFeaturedDesc}>
-              Un parcours en 12 étapes, à votre rythme. Répondez à ce qui vous ressemble, tout peut être modifié plus tard.
+              Choisissez « Pour moi » ou « Pour la famille ». Vous répondez à votre rythme, tout reste modifiable.
             </Text>
             <View style={styles.featuredCta}>
               <Text style={styles.featuredCtaText}>Commencer</Text>
@@ -107,7 +94,6 @@ export default function AccueilScreen() {
           </Pressable>
         )}
 
-        {/* Quick access to pantry (kept to preserve existing functionality) */}
         <Pressable
           testID="quick-pantry"
           onPress={() => router.push("/(tabs)/pantry")}
