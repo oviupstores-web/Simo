@@ -1,8 +1,9 @@
 import React, { useMemo } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { shoppingList, substitutions, ShoppingItem } from "@/src/services/mockData";
+import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
 
 const RAYON_COLORS: Record<ShoppingItem["rayon"], string> = {
@@ -15,6 +16,7 @@ const RAYON_COLORS: Record<ShoppingItem["rayon"], string> = {
 
 export default function CoursesScreen() {
   const insets = useSafeAreaInsets();
+  const { purchased, togglePurchased } = useMenoo();
 
   const byStore = useMemo(() => {
     const map: Record<string, ShoppingItem[]> = {};
@@ -22,6 +24,8 @@ export default function CoursesScreen() {
     return map;
   }, []);
   const total = shoppingList.reduce((s, i) => s + (i.price ?? 0), 0);
+  const remaining = shoppingList.reduce((s, i) => s + (purchased[i.id] ? 0 : i.price ?? 0), 0);
+  const boughtCount = shoppingList.filter((i) => purchased[i.id]).length;
   const itemCount = shoppingList.length;
 
   return (
@@ -42,15 +46,15 @@ export default function CoursesScreen() {
         <View style={styles.summaryRow}>
           <View style={styles.summaryCard}>
             <Text style={styles.summaryLabel}>Articles</Text>
-            <Text style={styles.summaryValue}>{itemCount}</Text>
-          </View>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Magasins</Text>
-            <Text style={[styles.summaryValue, { color: colors.brandPrimary }]}>{Object.keys(byStore).length}</Text>
+            <Text style={styles.summaryValue}>{boughtCount}/{itemCount}</Text>
           </View>
           <View style={styles.summaryCard}>
             <Text style={styles.summaryLabel}>Total prévu</Text>
             <Text style={[styles.summaryValue, { color: colors.brandTertiary }]}>{total.toFixed(2)} €</Text>
+          </View>
+          <View testID="remaining-card" style={[styles.summaryCard, { backgroundColor: colors.brandPrimary }]}>
+            <Text style={[styles.summaryLabel, { color: colors.onSurfaceInverse, opacity: 0.8 }]}>Reste à payer</Text>
+            <Text style={[styles.summaryValue, { color: colors.onSurfaceInverse }]}>{remaining.toFixed(2)} €</Text>
           </View>
         </View>
 
@@ -70,20 +74,37 @@ export default function CoursesScreen() {
                 <Text style={styles.storeName}>{store}</Text>
                 <Text style={styles.storeTotal}>{storeTotal.toFixed(2)} €</Text>
               </View>
-              {items.map((it) => (
-                <View key={it.id} testID={`item-${it.id}`} style={styles.shopRow}>
-                  <View style={[styles.rayonDot, { backgroundColor: RAYON_COLORS[it.rayon] }]} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.itemLabel}>{it.label}</Text>
-                    <Text style={styles.itemMeta}>
-                      {it.qty} · Rayon {it.rayon}
-                    </Text>
-                  </View>
-                  {typeof it.price === "number" && (
-                    <Text style={styles.itemPrice}>{it.price.toFixed(2)} €</Text>
-                  )}
-                </View>
-              ))}
+              {items.map((it) => {
+                const isPurchased = purchased[it.id];
+                return (
+                  <Pressable
+                    key={it.id}
+                    testID={`item-${it.id}`}
+                    onPress={() => togglePurchased(it.id)}
+                    style={({ pressed }) => [styles.shopRow, pressed && { opacity: 0.85 }]}
+                  >
+                    <View style={[styles.checkbox, isPurchased && styles.checkboxOn]}>
+                      {isPurchased && (
+                        <Ionicons name="checkmark" size={14} color={colors.onBrandPrimary} />
+                      )}
+                    </View>
+                    <View style={[styles.rayonDot, { backgroundColor: RAYON_COLORS[it.rayon] }]} />
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.itemLabel, isPurchased && styles.itemLabelDone]}>
+                        {it.label}
+                      </Text>
+                      <Text style={styles.itemMeta}>
+                        {it.qty} · Rayon {it.rayon}
+                      </Text>
+                    </View>
+                    {typeof it.price === "number" && (
+                      <Text style={[styles.itemPrice, isPurchased && styles.itemPriceDone]}>
+                        {it.price.toFixed(2)} €
+                      </Text>
+                    )}
+                  </Pressable>
+                );
+              })}
             </View>
           );
         })}
@@ -165,9 +186,18 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.divider,
   },
   rayonDot: { width: 10, height: 10, borderRadius: 5 },
+  checkbox: {
+    width: 22, height: 22, borderRadius: 6,
+    borderWidth: 2, borderColor: colors.brandPrimary,
+    alignItems: "center", justifyContent: "center",
+    backgroundColor: colors.surfaceSecondary,
+  },
+  checkboxOn: { backgroundColor: colors.brandPrimary },
   itemLabel: { ...typography.bodyMd, color: colors.onSurface },
+  itemLabelDone: { color: colors.muted, textDecorationLine: "line-through" },
   itemMeta: { ...typography.caption, color: colors.muted, marginTop: 2 },
   itemPrice: { ...typography.bodyMd, color: colors.brandPrimary, fontWeight: "700" },
+  itemPriceDone: { color: colors.muted, textDecorationLine: "line-through" },
   subsHeader: {
     flexDirection: "row",
     alignItems: "center",

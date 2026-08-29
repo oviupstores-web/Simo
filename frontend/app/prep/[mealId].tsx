@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import FlowHeader from "@/src/components/FlowHeader";
 import PrimaryButton from "@/src/components/PrimaryButton";
 import { weeklyPlan, prepSteps } from "@/src/services/mockData";
+import { speakFr } from "@/src/services/voice";
 import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
 
@@ -20,7 +21,7 @@ export default function PrepScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { mealId } = useLocalSearchParams<{ mealId: string }>();
-  const { weekOverrides, confirmMeal } = useMenoo();
+  const { weekOverrides, confirmMeal, pinned, togglePinned, voiceEnabled, setVoiceEnabled } = useMenoo();
 
   const meal = useMemo(() => {
     const all = weeklyPlan.flatMap((d) => d.meals);
@@ -53,13 +54,20 @@ export default function PrepScreen() {
         if (r <= 1) {
           clearInterval(timerRef.current);
           setRunning(false);
+          if (voiceEnabled) {
+            speakFr(
+              isLast
+                ? "L'étape est terminée. Vous pouvez confirmer votre repas."
+                : "Étape terminée. Passez à l'étape suivante quand vous êtes prêt."
+            );
+          }
           return 0;
         }
         return r - 1;
       });
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [running]);
+  }, [running, voiceEnabled, isLast]);
 
   // Pause the timer when the screen loses focus (safety).
   useEffect(() => {
@@ -83,6 +91,37 @@ export default function PrepScreen() {
           paddingBottom: spacing.xxxl + insets.bottom,
         }}
       >
+        {/* Toolbar: pin + voice */}
+        <View style={styles.toolbar}>
+          <Pressable
+            testID="pin-toggle"
+            onPress={() => togglePinned(meal.title)}
+            style={[styles.toolBtn, pinned[meal.title] && styles.toolBtnActive]}
+          >
+            <Ionicons
+              name={pinned[meal.title] ? "heart" : "heart-outline"}
+              size={16}
+              color={pinned[meal.title] ? colors.onBrandPrimary : colors.brandPrimary}
+            />
+            <Text style={[styles.toolBtnText, pinned[meal.title] && { color: colors.onBrandPrimary }]}>
+              {pinned[meal.title] ? "Épinglé" : "Épingler"}
+            </Text>
+          </Pressable>
+          <Pressable
+            testID="voice-toggle"
+            onPress={() => setVoiceEnabled(!voiceEnabled)}
+            style={[styles.toolBtn, voiceEnabled && styles.toolBtnActive]}
+          >
+            <Ionicons
+              name={voiceEnabled ? "volume-high" : "volume-mute"}
+              size={16}
+              color={voiceEnabled ? colors.onBrandPrimary : colors.brandPrimary}
+            />
+            <Text style={[styles.toolBtnText, voiceEnabled && { color: colors.onBrandPrimary }]}>
+              Voix
+            </Text>
+          </Pressable>
+        </View>
         <View style={styles.hero}>
           <Image source={{ uri: meal.image }} style={styles.heroImg} contentFit="cover" />
           <View style={styles.heroOverlay}>
@@ -260,4 +299,26 @@ const styles = StyleSheet.create({
   },
   timerBtnText: { ...typography.bodyMd, color: colors.onBrandPrimary, fontWeight: "700" },
   actions: { marginTop: spacing.md },
+  toolbar: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: spacing.md,
+    justifyContent: "flex-end",
+  },
+  toolBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceSecondary,
+    borderWidth: 1.5,
+    borderColor: colors.brandPrimary,
+  },
+  toolBtnActive: {
+    backgroundColor: colors.brandPrimary,
+    borderColor: colors.brandPrimary,
+  },
+  toolBtnText: { ...typography.caption, color: colors.brandPrimary, fontWeight: "700" },
 });

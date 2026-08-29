@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Modal, Dimensions } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal, Dimensions, Share, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
-import { weeklyPlan, swapAlternatives, PlannedMeal } from "@/src/services/mockData";
+import { weeklyPlan, swapAlternatives, shoppingList, PlannedMeal } from "@/src/services/mockData";
 import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
 
@@ -14,8 +14,9 @@ const CARD_W = (SCREEN_W - spacing.lg * 2 - 8 * 2) / 3;
 export default function MenusScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { weekOverrides, swapMeal, confirmedMeals, regenerateWeek, weekVersion } = useMenoo();
+  const { weekOverrides, swapMeal, confirmedMeals, regenerateWeek, weekVersion, pinned, togglePinned } = useMenoo();
   const [swapFor, setSwapFor] = useState<PlannedMeal | null>(null);
+  const [showPoster, setShowPoster] = useState(false);
 
   const merged = useMemo(
     () =>
@@ -39,6 +40,25 @@ export default function MenusScreen() {
 
   const openMeal = (meal: PlannedMeal) => router.push(`/prep/${meal.id}` as any);
 
+  const shoppingTotal = shoppingList.reduce((s, i) => s + (i.price ?? 0), 0);
+  const shareWeek = async () => {
+    const lines = merged
+      .map((d) => {
+        const items = d.meals.map((m) => `• ${m.slot} — ${m.title}`).join("\n");
+        return `${d.day}\n${items}`;
+      })
+      .join("\n\n");
+    const shop = `Courses (${shoppingList.length} articles) — ${shoppingTotal.toFixed(2)} €`;
+    const text = `🍽️ Ma semaine Menoo\n\n${lines}\n\n${shop}`;
+    try {
+      if (Platform.OS === "web" && typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share({ title: "Ma semaine Menoo", text });
+      } else {
+        await Share.share({ message: text, title: "Ma semaine Menoo" });
+      }
+    } catch {}
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -53,6 +73,22 @@ export default function MenusScreen() {
         <Text style={styles.pageSubtitle}>
           7 jours, 3 repas par jour. Tapez sur un repas pour lancer la préparation, ou sur ↔ pour proposer une alternative.
         </Text>
+
+        {/* Actions rapides : partager + info épinglés */}
+        <View style={styles.quickActions}>
+          <Pressable
+            testID="btn-share-week"
+            onPress={() => setShowPoster(true)}
+            style={({ pressed }) => [styles.shareBtn, pressed && { opacity: 0.85 }]}
+          >
+            <Ionicons name="share-social-outline" size={16} color={colors.onBrandPrimary} />
+            <Text style={styles.shareBtnText}>Partager ma semaine</Text>
+          </Pressable>
+          <View style={styles.pinInfo}>
+            <Ionicons name="heart" size={14} color={colors.brandTertiary} />
+            <Text style={styles.pinInfoText}>Épinglés : reviennent toutes les 2–3 semaines</Text>
+          </View>
+        </View>
 
         <View style={styles.summaryRow}>
           <View style={styles.summaryCard}>
@@ -93,6 +129,11 @@ export default function MenusScreen() {
                           <Ionicons name="checkmark" size={12} color={colors.onSuccess} />
                         </View>
                       )}
+                      {pinned[m.title] && (
+                        <View testID={`pinned-badge-${m.id}`} style={styles.pinnedBadge}>
+                          <Ionicons name="heart" size={11} color={colors.onBrandTertiary} />
+                        </View>
+                      )}
                       <Pressable
                         testID={`swap-${m.id}`}
                         onPress={() => setSwapFor(m)}
@@ -102,7 +143,20 @@ export default function MenusScreen() {
                         <Ionicons name="swap-horizontal" size={14} color={colors.onBrandPrimary} />
                       </Pressable>
                     </Pressable>
-                    <Text style={styles.slotBadge}>{m.slot}</Text>
+                    <View style={styles.titleRow}>
+                      <Text style={styles.slotBadge}>{m.slot}</Text>
+                      <Pressable
+                        testID={`pin-${m.id}`}
+                        onPress={() => togglePinned(m.title)}
+                        hitSlop={8}
+                      >
+                        <Ionicons
+                          name={pinned[m.title] ? "heart" : "heart-outline"}
+                          size={13}
+                          color={pinned[m.title] ? colors.brandTertiary : colors.muted}
+                        />
+                      </Pressable>
+                    </View>
                     <Text numberOfLines={2} style={styles.mealTitle}>
                       {m.title}
                     </Text>
@@ -126,8 +180,7 @@ export default function MenusScreen() {
       {/* Swap modal */}
       <Modal visible={!!swapFor} transparent animationType="fade" onRequestClose={() => setSwapFor(null)}>
         <Pressable style={styles.modalBg} onPress={() => setSwapFor(null)}>
-          <Pressable style={styles.modalSheet} onPress={() => {}}>
-            <View style={styles.modalHandle} />
+          <Pressable style={styles.modalSheet} onPress={() => {}}>            <View style={styles.modalHandle} />
             <Text style={styles.modalTitle}>Remplacer par…</Text>
             <Text style={styles.modalHint}>
               {swapFor?.slot} · Menoo propose 3 alternatives compatibles avec vos réserves.
@@ -168,6 +221,53 @@ export default function MenusScreen() {
               style={styles.cancelBtn}
             >
               <Text style={styles.cancelText}>Annuler</Text>
+            </Pressable>
+          </Pressable>
+        </Pressable>
+      </Modal>
+
+      {/* Poster modal (partage semaine) */}
+      <Modal visible={showPoster} transparent animationType="fade" onRequestClose={() => setShowPoster(false)}>
+        <Pressable style={styles.modalBg} onPress={() => setShowPoster(false)}>
+          <Pressable style={styles.posterSheet} onPress={() => {}}>
+            <View style={styles.modalHandle} />
+            <View testID="poster-card" style={styles.poster}>
+              <View style={styles.posterHeader}>
+                <View style={styles.posterMark}>
+                  <Text style={styles.posterMarkText}>M</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.posterTitle}>Ma semaine Menoo</Text>
+                  <Text style={styles.posterSubtitle}>7 jours · {merged.reduce((s, d) => s + d.meals.length, 0)} repas · {shoppingTotal.toFixed(2)} € prévu</Text>
+                </View>
+              </View>
+              <View style={styles.posterGrid}>
+                {merged.map((d) => (
+                  <View key={d.day} style={styles.posterDay}>
+                    <Text style={styles.posterDayLabel}>{d.day}</Text>
+                    <View style={styles.posterImgs}>
+                      {d.meals.map((m) => (
+                        <Image key={m.id} source={{ uri: m.image }} style={styles.posterImg} contentFit="cover" />
+                      ))}
+                    </View>
+                  </View>
+                ))}
+              </View>
+              <View style={styles.posterFooter}>
+                <Ionicons name="wallet-outline" size={14} color={colors.brandTertiary} />
+                <Text style={styles.posterFooterText}>Liste de courses générée · Open Prices</Text>
+              </View>
+            </View>
+            <Pressable testID="poster-share" onPress={shareWeek} style={styles.posterShareBtn}>
+              <Ionicons name="share-social" size={18} color={colors.onBrandPrimary} />
+              <Text style={styles.posterShareText}>Partager</Text>
+            </Pressable>
+            <Pressable
+              testID="poster-close"
+              onPress={() => setShowPoster(false)}
+              style={styles.cancelBtn}
+            >
+              <Text style={styles.cancelText}>Fermer</Text>
             </Pressable>
           </Pressable>
         </Pressable>
@@ -289,4 +389,87 @@ const styles = StyleSheet.create({
   altTitle: { ...typography.bodyMd, color: colors.onSurface, marginBottom: 2 },
   cancelBtn: { paddingVertical: spacing.md, alignItems: "center", marginTop: spacing.sm },
   cancelText: { ...typography.bodyMd, color: colors.muted, fontWeight: "600" },
+  quickActions: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.md, flexWrap: "wrap" },
+  shareBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: radius.pill,
+    backgroundColor: colors.brandPrimary,
+  },
+  shareBtnText: { ...typography.small, color: colors.onBrandPrimary, fontWeight: "700" },
+  pinInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: colors.brandTertiaryMuted,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radius.pill,
+  },
+  pinInfoText: { ...typography.caption, color: colors.onBrandTertiary, fontWeight: "600" },
+  titleRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  pinnedBadge: {
+    position: "absolute",
+    bottom: 6,
+    right: 6,
+    width: 20, height: 20, borderRadius: 10,
+    backgroundColor: colors.brandTertiary,
+    alignItems: "center", justifyContent: "center",
+  },
+  posterSheet: {
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.lg,
+    borderTopRightRadius: radius.lg,
+    padding: spacing.lg,
+    paddingBottom: spacing.xxl,
+  },
+  poster: {
+    backgroundColor: colors.brandPrimary,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginTop: spacing.sm,
+  },
+  posterHeader: { flexDirection: "row", alignItems: "center", gap: spacing.md, marginBottom: spacing.md },
+  posterMark: {
+    width: 40, height: 40, borderRadius: 12,
+    backgroundColor: colors.brandTertiary,
+    alignItems: "center", justifyContent: "center",
+  },
+  posterMarkText: { fontSize: 22, fontWeight: "800", color: colors.onBrandTertiary },
+  posterTitle: { ...typography.h2, color: colors.onSurfaceInverse },
+  posterSubtitle: { ...typography.caption, color: colors.onSurfaceInverse, opacity: 0.85, marginTop: 2 },
+  posterGrid: { gap: 8 },
+  posterDay: { flexDirection: "row", alignItems: "center", gap: 8 },
+  posterDayLabel: {
+    width: 36,
+    ...typography.caption,
+    color: colors.onSurfaceInverse,
+    fontWeight: "800",
+  },
+  posterImgs: { flex: 1, flexDirection: "row", gap: 4 },
+  posterImg: { flex: 1, height: 44, borderRadius: radius.sm },
+  posterFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: spacing.md,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,255,255,0.15)",
+  },
+  posterFooterText: { ...typography.caption, color: colors.onSurfaceInverse, opacity: 0.85 },
+  posterShareBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: colors.brandPrimary,
+    paddingVertical: 14,
+    borderRadius: radius.pill,
+    marginTop: spacing.md,
+  },
+  posterShareText: { ...typography.bodyMd, color: colors.onBrandPrimary, fontWeight: "700" },
 });
