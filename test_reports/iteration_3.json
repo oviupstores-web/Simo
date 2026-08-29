@@ -1,0 +1,28 @@
+{
+  "summary": "All 2 bug fixes and 4 features tested on mobile viewport (390x844) via live preview. Bug1: recipe images now semantically match titles (granola bowl for 'Bowl fruits & granola', pasta for 'Pâtes crémeuses aux champignons', soup for 'Soupe de légumes rôtis', pizza for 'Pizza maison', etc.). Bug2: all 21 meal cards show price in € next to time (verified 32 € occurrences on Menus page). Feature1 Export PDF: buttons btn-export-pdf (Menus) and btn-export-pdf-courses (Courses) present and clickable without crash. Feature2 Historique Épinglés: pinning 2 meals from Menus surfaces them as pinned-item-0/1 in Profile with correct titles (Pâtes crémeuses aux champignons, Salade de riz croquant); unpin-0 correctly removes the item; empty state 'Aucun plat épinglé...' displayed when list is empty. Feature3 Panier Vocal: btn-read-list triggers speechSynthesis without crash, btn-export-pdf-courses ghost button present. Feature4 Kilomètres Économisés: card-trajets shows the 3 stats (3 allers-retours, 12,4 km économisés, 1,8 kg CO₂ évité). Bottom tab bar shows all 5 tabs (Accueil, Menus, Courses, Réserves, Profil). No red screen or crashes on any route.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Global", "issues": ["Console warnings on web: 'shadow*' style props are deprecated (use boxShadow); props.pointerEvents is deprecated (use style.pointerEvents). Non-blocking but worth cleaning up in theme tokens (shadow.soft) for cleaner logs."]}
+    ],
+    "react_native_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional cleanup: replace shadow* style props with boxShadow in src/theme/tokens (shadow.soft) to silence deprecation warnings on RN Web.",
+    "Optional: persist `pinned` state to AsyncStorage in src/store/menoo.tsx so the pinned history survives a full page reload (currently persists only within the JS runtime, so hard-refresh clears it). Not blocking for the prototype."
+  ],
+  "critical_code_review_comments": [
+    "pdfExport.ts correctly guards Platform.OS === 'web' and uses window.open for the generated URI. exportWeekPdf swallows errors via .catch(() => {}) at call sites which is fine for a prototype.",
+    "voice.ts is web-only and no-ops on native, which matches the spec.",
+    "meals.tsx price display uses m.price.toFixed(2) — will crash if a mock meal ever misses price. Currently all 21 mock meals in weeklyPlan have a numeric price, so safe."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only)", "frontend": "100%"},
+  "seed_data_creation": "None (uses mock data)",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Frontend-only Expo app at https://stock-meals.preview.emergentagent.com. Key testIDs: btn-share-week, btn-export-pdf, btn-export-pdf-courses, btn-read-list, pin-{mealId}, pinned-list, pinned-item-{i}, unpin-{i}, meal-{mealId}, card-trajets. Use client-side tab clicks (text=Profil / Menus / Courses / Réserves / Accueil) to preserve context state; page.goto full navigations reset the in-memory Menoo context (pinned/purchased/confirmed etc)."
+}

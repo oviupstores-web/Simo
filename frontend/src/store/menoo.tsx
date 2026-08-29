@@ -21,8 +21,8 @@ interface MenooState {
   cooked: boolean;
   setCooked: (v: boolean) => void;
   // Menu de la semaine (post-onboarding)
-  weekOverrides: Record<string, { title: string; emoji: string; image: string; time: number; noPurchase: boolean }>;
-  swapMeal: (id: string, next: { title: string; emoji: string; image: string; time: number; noPurchase: boolean }) => void;
+  weekOverrides: Record<string, { title: string; emoji: string; image: string; time: number; price: number; noPurchase: boolean }>;
+  swapMeal: (id: string, next: { title: string; emoji: string; image: string; time: number; price: number; noPurchase: boolean }) => void;
   confirmedMeals: Record<string, boolean>;
   confirmMeal: (id: string) => void;
   regenerateWeek: () => void;

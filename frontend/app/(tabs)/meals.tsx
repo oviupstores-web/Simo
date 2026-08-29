@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { weeklyPlan, swapAlternatives, shoppingList, PlannedMeal } from "@/src/services/mockData";
+import { exportWeekPdf } from "@/src/services/pdfExport";
 import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
 
@@ -25,7 +26,7 @@ export default function MenusScreen() {
         meals: d.meals.map((m) => {
           const o = weekOverrides[m.id];
           return o
-            ? { ...m, title: o.title, emoji: o.emoji, image: o.image, time: o.time, noPurchase: o.noPurchase }
+            ? { ...m, title: o.title, emoji: o.emoji, image: o.image, time: o.time, price: o.price, noPurchase: o.noPurchase }
             : m;
         }),
       })),
@@ -82,11 +83,19 @@ export default function MenusScreen() {
             style={({ pressed }) => [styles.shareBtn, pressed && { opacity: 0.85 }]}
           >
             <Ionicons name="share-social-outline" size={16} color={colors.onBrandPrimary} />
-            <Text style={styles.shareBtnText}>Partager ma semaine</Text>
+            <Text style={styles.shareBtnText}>Partager</Text>
+          </Pressable>
+          <Pressable
+            testID="btn-export-pdf"
+            onPress={() => exportWeekPdf(merged, shoppingList).catch(() => {})}
+            style={({ pressed }) => [styles.pdfBtn, pressed && { opacity: 0.85 }]}
+          >
+            <Ionicons name="document-text-outline" size={16} color={colors.brandPrimary} />
+            <Text style={styles.pdfBtnText}>Exporter PDF</Text>
           </Pressable>
           <View style={styles.pinInfo}>
             <Ionicons name="heart" size={14} color={colors.brandTertiary} />
-            <Text style={styles.pinInfoText}>Épinglés : reviennent toutes les 2–3 semaines</Text>
+            <Text style={styles.pinInfoText}>Épinglés reviennent 2–3 sem.</Text>
           </View>
         </View>
 
@@ -163,6 +172,10 @@ export default function MenusScreen() {
                     <View style={styles.metaRow}>
                       <Ionicons name="time-outline" size={11} color={colors.muted} />
                       <Text style={styles.metaText}>{m.time} min</Text>
+                      <Ionicons name="wallet-outline" size={11} color={colors.brandTertiary} />
+                      <Text style={[styles.metaText, { color: colors.brandTertiary, fontWeight: "700" }]}>
+                        {m.price.toFixed(2)} €
+                      </Text>
                       {m.noPurchase && (
                         <View style={styles.noPurchaseBadge}>
                           <Text style={styles.noPurchaseText}>0 €</Text>
@@ -400,6 +413,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brandPrimary,
   },
   shareBtnText: { ...typography.small, color: colors.onBrandPrimary, fontWeight: "700" },
+  pdfBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceSecondary,
+    borderWidth: 1.5,
+    borderColor: colors.brandPrimary,
+  },
+  pdfBtnText: { ...typography.small, color: colors.brandPrimary, fontWeight: "700" },
   pinInfo: {
     flexDirection: "row",
     alignItems: "center",

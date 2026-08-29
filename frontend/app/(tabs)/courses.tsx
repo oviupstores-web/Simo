@@ -2,7 +2,9 @@ import React, { useMemo } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { shoppingList, substitutions, ShoppingItem } from "@/src/services/mockData";
+import { shoppingList, substitutions, weeklyPlan, ShoppingItem } from "@/src/services/mockData";
+import { speakFr } from "@/src/services/voice";
+import { exportWeekPdf } from "@/src/services/pdfExport";
 import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
 
@@ -61,6 +63,35 @@ export default function CoursesScreen() {
         <View style={styles.helperBanner}>
           <Ionicons name="information-circle-outline" size={16} color={colors.onBrandTertiary} />
           <Text style={styles.helperText}>Prix issus d'Open Prices. Aucun rayon inventé — seulement observés.</Text>
+        </View>
+
+        <View style={styles.actionsRow}>
+          <Pressable
+            testID="btn-read-list"
+            onPress={() => {
+              const parts: string[] = ["Voici votre liste de courses."];
+              Object.entries(byStore).forEach(([store, items]) => {
+                parts.push(`Chez ${store}.`);
+                items.forEach((it) => {
+                  if (!purchased[it.id]) parts.push(`${it.label}, ${it.qty}, rayon ${it.rayon}.`);
+                });
+              });
+              parts.push("Bonnes courses !");
+              speakFr(parts.join(" "));
+            }}
+            style={({ pressed }) => [styles.actionBtn, pressed && { opacity: 0.85 }]}
+          >
+            <Ionicons name="volume-high" size={16} color={colors.onBrandPrimary} />
+            <Text style={styles.actionBtnText}>Lire ma liste</Text>
+          </Pressable>
+          <Pressable
+            testID="btn-export-pdf-courses"
+            onPress={() => exportWeekPdf(weeklyPlan, shoppingList).catch(() => {})}
+            style={({ pressed }) => [styles.actionBtnGhost, pressed && { opacity: 0.85 }]}
+          >
+            <Ionicons name="document-text-outline" size={16} color={colors.brandPrimary} />
+            <Text style={styles.actionBtnGhostText}>Exporter PDF</Text>
+          </Pressable>
         </View>
 
         {Object.entries(byStore).map(([store, items]) => {
@@ -162,6 +193,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   helperText: { flex: 1, ...typography.caption, color: colors.onBrandTertiary, lineHeight: 17 },
+  actionsRow: { flexDirection: "row", gap: 8, marginBottom: spacing.md },
+  actionBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 12,
+    borderRadius: radius.pill,
+    backgroundColor: colors.brandPrimary,
+  },
+  actionBtnText: { ...typography.small, color: colors.onBrandPrimary, fontWeight: "700" },
+  actionBtnGhost: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 12,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceSecondary,
+    borderWidth: 1.5,
+    borderColor: colors.brandPrimary,
+  },
+  actionBtnGhostText: { ...typography.small, color: colors.brandPrimary, fontWeight: "700" },
   storeBlock: {
     backgroundColor: colors.surfaceSecondary,
     borderRadius: radius.lg,

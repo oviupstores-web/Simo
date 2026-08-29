@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Logo from "@/src/components/Logo";
+import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
 
 const rows: { icon: any; label: string; hint: string }[] = [
@@ -24,6 +25,10 @@ const sources: { icon: any; label: string; role: string; color: string }[] = [
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
+  const { pinned, togglePinned } = useMenoo();
+  const pinnedList = Object.entries(pinned)
+    .filter(([, v]) => v)
+    .map(([k]) => k);
   return (
     <View style={styles.container}>
       <ScrollView
@@ -56,6 +61,41 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={18} color={colors.muted} />
             </View>
           ))}
+        </View>
+
+        <Text style={styles.sectionTitle}>Historique épinglés</Text>
+        <Text style={styles.sectionHint}>
+          Vos plats préférés qui reviennent automatiquement toutes les 2–3 semaines.
+        </Text>
+        <View testID="pinned-list" style={styles.list}>
+          {pinnedList.length === 0 ? (
+            <View style={styles.emptyRow}>
+              <Ionicons name="heart-outline" size={22} color={colors.muted} />
+              <Text style={styles.emptyText}>
+                Aucun plat épinglé. Tapez sur le cœur d'un repas depuis Menus pour l'ajouter.
+              </Text>
+            </View>
+          ) : (
+            pinnedList.map((title, i) => (
+              <View key={title} testID={`pinned-item-${i}`} style={styles.row}>
+                <View style={[styles.rowIcon, { backgroundColor: colors.brandTertiaryMuted }]}>
+                  <Ionicons name="heart" size={20} color={colors.brandTertiary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.rowLabel}>{title}</Text>
+                  <Text style={styles.rowHint}>Reviendra automatiquement dans 2–3 semaines</Text>
+                </View>
+                <Pressable
+                  testID={`unpin-${i}`}
+                  onPress={() => togglePinned(title)}
+                  hitSlop={8}
+                  style={styles.unpinBtn}
+                >
+                  <Ionicons name="close" size={16} color={colors.muted} />
+                </Pressable>
+              </View>
+            ))
+          )}
         </View>
 
         <Text style={styles.sectionTitle}>Sources & moteurs</Text>
@@ -121,4 +161,11 @@ const styles = StyleSheet.create({
   rowHint: { ...typography.small, color: colors.muted, marginTop: 2 },
   sectionTitle: { ...typography.h2, color: colors.onSurface, marginBottom: 4 },
   sectionHint: { ...typography.small, color: colors.muted, marginBottom: spacing.md, lineHeight: 19 },
+  emptyRow: { flexDirection: "row", alignItems: "center", gap: spacing.md, padding: spacing.lg },
+  emptyText: { flex: 1, ...typography.small, color: colors.muted, lineHeight: 19 },
+  unpinBtn: {
+    width: 28, height: 28, borderRadius: 14,
+    backgroundColor: colors.surfaceTertiary,
+    alignItems: "center", justifyContent: "center",
+  },
 });

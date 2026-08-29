@@ -161,14 +161,36 @@ export default function TrackingScreen() {
           <Text style={styles.savedLabel}>Cette semaine, vous avez économisé 13,50 €</Text>
         </View>
 
-        {/* Energy */}
-        <View testID="card-energy" style={styles.card}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+        {/* Énergie */}
+        <View testID="card-energy" style={styles.card}>          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
             <Ionicons name="flame-outline" size={20} color={colors.brandTertiary} />
             <Text style={styles.cardTitle}>Énergie de cuisson</Text>
           </View>
           <Text style={styles.energyAmount}>2,1 kWh</Text>
           <Text style={styles.cardHint}>Estimation basée sur vos temps et modes de cuisson.</Text>
+        </View>
+
+        {/* Trajets évités (kilomètres économisés) */}
+        <View testID="card-trajets" style={styles.card}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <Ionicons name="car-outline" size={20} color={colors.brandPrimary} />
+            <Text style={styles.cardTitle}>Trajets évités</Text>
+          </View>
+          <Text style={styles.cardHint}>Grâce à vos réserves et au mode « sans achat ».</Text>
+          <View style={styles.trajetsRow}>
+            <View style={styles.trajetItem}>
+              <Text style={styles.trajetValue}>3</Text>
+              <Text style={styles.trajetLabel}>allers-retours</Text>
+            </View>
+            <View style={styles.trajetItem}>
+              <Text style={[styles.trajetValue, { color: colors.brandTertiary }]}>12,4 km</Text>
+              <Text style={styles.trajetLabel}>économisés</Text>
+            </View>
+            <View style={styles.trajetItem}>
+              <Text style={[styles.trajetValue, { color: colors.brandSecondary }]}>1,8 kg</Text>
+              <Text style={styles.trajetLabel}>CO₂ évité</Text>
+            </View>
+          </View>
         </View>
 
         {/* Objectif progression */}
@@ -194,8 +216,7 @@ export default function TrackingScreen() {
         </View>
 
         {/* Diversité */}
-        <View testID="card-diversite" style={styles.card}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+        <View testID="card-diversite" style={styles.card}>          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
             <Ionicons name="color-palette-outline" size={20} color={colors.brandTertiary} />
             <Text style={styles.cardTitle}>Diversité</Text>
           </View>
@@ -275,4 +296,18 @@ const styles = StyleSheet.create({
   diversityValue: { ...typography.caption, color: colors.muted },
   diversityTrack: { height: 8, borderRadius: radius.pill, backgroundColor: colors.brandSecondaryMuted, overflow: "hidden" },
   diversityFill: { height: "100%", backgroundColor: colors.brandTertiary, borderRadius: radius.pill },
+  trajetsRow: {
+    flexDirection: "row",
+    marginTop: spacing.md,
+    gap: spacing.sm,
+  },
+  trajetItem: {
+    flex: 1,
+    backgroundColor: colors.surfaceTertiary,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    alignItems: "center",
+  },
+  trajetValue: { ...typography.h2, color: colors.brandPrimary, fontWeight: "800" },
+  trajetLabel: { ...typography.caption, color: colors.muted, marginTop: 4, textAlign: "center" },
 });
