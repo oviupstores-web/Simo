@@ -109,6 +109,38 @@ export default function AccueilScreen() {
           </View>
           <Ionicons name="chevron-forward" size={22} color={colors.muted} />
         </Pressable>
+
+        <Pressable
+          testID="quick-tracking"
+          onPress={() => router.push("/tracking" as any)}
+          style={({ pressed }) => [styles.card, pressed && { opacity: 0.85 }]}
+        >
+          <View style={styles.quickIcon}>
+            <Ionicons name="stats-chart-outline" size={22} color={colors.brandPrimary} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.cardTitle}>Mon suivi</Text>
+            <Text style={styles.cardDesc}>Nutrition, budget, énergie, objectif, diversité.</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={22} color={colors.muted} />
+        </Pressable>
+
+        {hasProgress && currentStep === 12 && (
+          <Pressable
+            testID="quick-week"
+            onPress={() => router.push("/(tabs)/meals" as any)}
+            style={({ pressed }) => [styles.card, pressed && { opacity: 0.85 }]}
+          >
+            <View style={[styles.quickIcon, { backgroundColor: colors.brandTertiaryMuted }]}>
+              <Ionicons name="calendar-outline" size={22} color={colors.brandTertiary} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Ma semaine</Text>
+              <Text style={styles.cardDesc}>7 jours, menus, courses et préparation guidée.</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={colors.muted} />
+          </Pressable>
+        )}
       </ScrollView>
     </View>
   );

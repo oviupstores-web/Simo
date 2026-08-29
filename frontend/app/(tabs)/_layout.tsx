@@ -31,8 +31,15 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="meals"
         options={{
-          title: "Mes repas",
+          title: "Menus",
           tabBarIcon: ({ color, size }) => <Ionicons name="restaurant-outline" color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="courses"
+        options={{
+          title: "Courses",
+          tabBarIcon: ({ color, size }) => <Ionicons name="cart-outline" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
@@ -40,13 +47,6 @@ export default function TabsLayout() {
         options={{
           title: "Réserves",
           tabBarIcon: ({ color, size }) => <Ionicons name="basket-outline" color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="tracking"
-        options={{
-          title: "Suivi",
-          tabBarIcon: ({ color, size }) => <Ionicons name="stats-chart-outline" color={color} size={size} />,
         }}
       />
       <Tabs.Screen

@@ -20,6 +20,13 @@ interface MenooState {
   setMeal: (patch: Partial<MealChoice>) => void;
   cooked: boolean;
   setCooked: (v: boolean) => void;
+  // Menu de la semaine (post-onboarding)
+  weekOverrides: Record<string, { title: string; emoji: string; image: string; time: number; noPurchase: boolean }>;
+  swapMeal: (id: string, next: { title: string; emoji: string; image: string; time: number; noPurchase: boolean }) => void;
+  confirmedMeals: Record<string, boolean>;
+  confirmMeal: (id: string) => void;
+  regenerateWeek: () => void;
+  weekVersion: number;
   // Onboarding 12-step (per organigramme v1)
   parcours: ParcoursType | null;
   setParcours: (v: ParcoursType | null) => void;
@@ -43,6 +50,22 @@ export function MenooProvider({ children }: { children: React.ReactNode }) {
     purchaseRule: 'none',
   });
   const [cooked, setCooked] = useState(false);
+
+  const [weekOverrides, setWeekOverrides] = useState<Record<string, any>>({});
+  const [confirmedMeals, setConfirmedMeals] = useState<Record<string, boolean>>({});
+  const [weekVersion, setWeekVersion] = useState(1);
+
+  const swapMeal = useCallback((id: string, next: any) => {
+    setWeekOverrides((prev) => ({ ...prev, [id]: next }));
+  }, []);
+  const confirmMeal = useCallback((id: string) => {
+    setConfirmedMeals((prev) => ({ ...prev, [id]: true }));
+  }, []);
+  const regenerateWeek = useCallback(() => {
+    setWeekOverrides({});
+    setConfirmedMeals({});
+    setWeekVersion((v) => v + 1);
+  }, []);
 
   const [parcours, setParcoursState] = useState<ParcoursType | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -113,12 +136,13 @@ export function MenooProvider({ children }: { children: React.ReactNode }) {
     () => ({
       pantry, setPantryItem, applyRecipeConsumption, resetPantry,
       meal, setMeal, cooked, setCooked,
+      weekOverrides, swapMeal, confirmedMeals, confirmMeal, regenerateWeek, weekVersion,
       parcours, setParcours,
       currentStep, setCurrentStep,
       answers, setAnswer, resetOnboarding,
       hydrated,
     }),
-    [pantry, setPantryItem, applyRecipeConsumption, resetPantry, meal, setMeal, cooked, parcours, currentStep, answers, setAnswer, resetOnboarding, hydrated, setParcours]
+    [pantry, setPantryItem, applyRecipeConsumption, resetPantry, meal, setMeal, cooked, weekOverrides, swapMeal, confirmedMeals, confirmMeal, regenerateWeek, weekVersion, parcours, currentStep, answers, setAnswer, resetOnboarding, hydrated, setParcours]
   );
 
   return <MenooContext.Provider value={value}>{children}</MenooContext.Provider>;
