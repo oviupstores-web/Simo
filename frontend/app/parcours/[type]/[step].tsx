@@ -34,7 +34,8 @@ export default function ParcoursStepScreen() {
       setCurrentStep(step + 1);
       router.push(`/parcours/${type}/${step + 1}` as any);
     } else {
-      router.replace("/(tabs)");
+      // Après l'étape 12 → on ouvre "Ma semaine" (Créer ma/notre semaine)
+      router.replace("/(tabs)/meals" as any);
     }
   };
   const goBack = () => {

@@ -101,3 +101,76 @@ export const weeklyCurve = [
   { day: 'Sam', value: 2350 },
   { day: 'Dim', value: 2050 },
 ];
+
+// -- Plan de la semaine (démo — sortie de l'étape 12) -----------------------
+
+export interface PlannedMeal {
+  id: string;
+  slot: 'Petit-déj' | 'Déjeuner' | 'Dîner' | 'Collation';
+  title: string;
+  emoji: string;
+  time: number; // minutes
+  noPurchase: boolean; // "0 € d'achat"
+  confirmed: boolean;
+}
+
+export interface DayPlan {
+  day: 'Lun' | 'Mar' | 'Mer' | 'Jeu' | 'Ven' | 'Sam' | 'Dim';
+  meals: PlannedMeal[];
+}
+
+export const weeklyPlan: DayPlan[] = [
+  {
+    day: 'Lun',
+    meals: [
+      { id: 'l1', slot: 'Déjeuner', title: 'Pâtes crémeuses aux champignons', emoji: '🍝', time: 22, noPurchase: true, confirmed: true },
+      { id: 'l2', slot: 'Dîner', title: 'Soupe de légumes rôtis', emoji: '🥣', time: 30, noPurchase: true, confirmed: true },
+    ],
+  },
+  {
+    day: 'Mar',
+    meals: [
+      { id: 'm1', slot: 'Déjeuner', title: 'Salade de riz croquant', emoji: '🥗', time: 15, noPurchase: false, confirmed: true },
+      { id: 'm2', slot: 'Dîner', title: "Omelette aux herbes", emoji: '🍳', time: 12, noPurchase: true, confirmed: false },
+    ],
+  },
+  {
+    day: 'Mer',
+    meals: [
+      { id: 'w1', slot: 'Déjeuner', title: 'Poulet rôti et haricots verts', emoji: '🍗', time: 40, noPurchase: false, confirmed: false },
+      { id: 'w2', slot: 'Dîner', title: 'Risotto aux champignons', emoji: '🍚', time: 35, noPurchase: true, confirmed: false },
+    ],
+  },
+  {
+    day: 'Jeu',
+    meals: [
+      { id: 'j1', slot: 'Déjeuner', title: 'Bol méditerranéen', emoji: '🫒', time: 20, noPurchase: false, confirmed: false },
+      { id: 'j2', slot: 'Dîner', title: 'Curry de lentilles', emoji: '🍛', time: 30, noPurchase: false, confirmed: false },
+    ],
+  },
+  {
+    day: 'Ven',
+    meals: [
+      { id: 'v1', slot: 'Déjeuner', title: 'Wrap poulet-avocat', emoji: '🌯', time: 15, noPurchase: false, confirmed: false },
+      { id: 'v2', slot: 'Dîner', title: 'Pizza maison', emoji: '🍕', time: 45, noPurchase: false, confirmed: false },
+    ],
+  },
+];
+
+export interface ShoppingItem {
+  id: string;
+  label: string;
+  qty: string;
+  rayon: 'Frais' | 'Sec' | 'Fruits & Légumes' | 'Boucherie' | 'Épicerie';
+  store: string;
+  price?: number;
+}
+
+export const shoppingList: ShoppingItem[] = [
+  { id: 's1', label: 'Riz basmati', qty: '500 g', rayon: 'Sec', store: 'Carrefour Market', price: 2.10 },
+  { id: 's2', label: 'Haricots verts', qty: '400 g', rayon: 'Fruits & Légumes', store: 'Grand Frais', price: 3.20 },
+  { id: 's3', label: 'Blanc de poulet', qty: '500 g', rayon: 'Boucherie', store: 'Monoprix', price: 7.90 },
+  { id: 's4', label: 'Pâte à pizza', qty: '2 unités', rayon: 'Frais', store: 'Carrefour Market', price: 2.30 },
+  { id: 's5', label: 'Lentilles corail', qty: '250 g', rayon: 'Sec', store: 'Biocoop', price: 3.10 },
+  { id: 's6', label: 'Avocat', qty: '2 unités', rayon: 'Fruits & Légumes', store: 'Grand Frais', price: 3.00 },
+];
