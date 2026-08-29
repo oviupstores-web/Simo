@@ -170,6 +170,61 @@ export default function TrackingScreen() {
           <Text style={styles.energyAmount}>2,1 kWh</Text>
           <Text style={styles.cardHint}>Estimation basée sur vos temps et modes de cuisson.</Text>
         </View>
+
+        {/* Objectif progression */}
+        <View testID="card-objectif" style={styles.card}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <Ionicons name="flag-outline" size={20} color={colors.brandPrimary} />
+            <Text style={styles.cardTitle}>Objectif</Text>
+          </View>
+          <Text style={styles.cardHint}>Progression et régularité de la semaine.</Text>
+          <View style={styles.progressRow}>
+            <Text style={styles.progressLabel}>Progression</Text>
+            <Text style={styles.progressValue}>68 %</Text>
+          </View>
+          <View style={styles.progressTrack}>
+            <View style={[styles.progressFill, { width: "68%" }]} />
+          </View>
+          <View style={styles.streakRow}>
+            <View style={styles.streakBadge}>
+              <Ionicons name="checkmark-circle" size={14} color={colors.onBrandSecondary} />
+              <Text style={styles.streakText}>5 jours suivis d'affilée</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Diversité */}
+        <View testID="card-diversite" style={styles.card}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <Ionicons name="color-palette-outline" size={20} color={colors.brandTertiary} />
+            <Text style={styles.cardTitle}>Diversité</Text>
+          </View>
+          <Text style={styles.cardHint}>Rotation des recettes — séparée de la nutrition.</Text>
+          <View style={{ marginTop: spacing.md, gap: 10 }}>
+            {[
+              { label: "Italienne", pct: 0.35 },
+              { label: "Méditerranéenne", pct: 0.25 },
+              { label: "Française", pct: 0.2 },
+              { label: "Asiatique", pct: 0.15 },
+              { label: "Autre", pct: 0.05 },
+            ].map((r) => (
+              <View key={r.label}>
+                <View style={styles.diversityRow}>
+                  <Text style={styles.diversityLabel}>{r.label}</Text>
+                  <Text style={styles.diversityValue}>{Math.round(r.pct * 100)} %</Text>
+                </View>
+                <View style={styles.diversityTrack}>
+                  <View
+                    style={[
+                      styles.diversityFill,
+                      { width: `${Math.round(r.pct * 100)}%` },
+                    ]}
+                  />
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
@@ -203,4 +258,21 @@ const styles = StyleSheet.create({
   savedAmount: { fontSize: 40, fontWeight: "800", color: colors.brandTertiary, marginTop: spacing.md },
   savedLabel: { ...typography.body, color: colors.onSurfaceInverse, opacity: 0.9, marginTop: 4 },
   energyAmount: { fontSize: 32, fontWeight: "700", color: colors.brandPrimary, marginTop: spacing.md },
+  progressRow: { flexDirection: "row", justifyContent: "space-between", marginTop: spacing.md, marginBottom: 6 },
+  progressLabel: { ...typography.small, color: colors.muted },
+  progressValue: { ...typography.h3, color: colors.brandPrimary },
+  progressTrack: { height: 10, borderRadius: radius.pill, backgroundColor: colors.brandSecondaryMuted, overflow: "hidden" },
+  progressFill: { height: "100%", backgroundColor: colors.brandPrimary, borderRadius: radius.pill },
+  streakRow: { marginTop: spacing.md, flexDirection: "row" },
+  streakBadge: {
+    flexDirection: "row", alignItems: "center", gap: 6,
+    backgroundColor: colors.brandSecondaryMuted,
+    paddingHorizontal: 10, paddingVertical: 6, borderRadius: radius.pill,
+  },
+  streakText: { ...typography.caption, color: colors.onBrandSecondary, fontWeight: "700" },
+  diversityRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 4 },
+  diversityLabel: { ...typography.small, color: colors.onSurface },
+  diversityValue: { ...typography.caption, color: colors.muted },
+  diversityTrack: { height: 8, borderRadius: radius.pill, backgroundColor: colors.brandSecondaryMuted, overflow: "hidden" },
+  diversityFill: { height: "100%", backgroundColor: colors.brandTertiary, borderRadius: radius.pill },
 });

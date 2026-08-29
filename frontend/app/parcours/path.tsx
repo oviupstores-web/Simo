@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import FlowHeader from "@/src/components/FlowHeader";
+import Logo from "@/src/components/Logo";
 import { useMenoo, ParcoursType } from "@/src/store/menoo";
 import { PARCOURS_LABELS, PARCOURS_DESC } from "@/src/services/steps";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
@@ -34,6 +35,9 @@ export default function PathScreen() {
           paddingTop: spacing.sm,
         }}
       >
+        <View style={styles.brand}>
+          <Logo size={44} />
+        </View>
         <Text style={styles.title}>Comment Menoo doit m'accompagner</Text>
         <Text style={styles.subtitle}>
           Deux parcours en 12 étapes. Tout reste modifiable plus tard.
@@ -70,6 +74,7 @@ export default function PathScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.surface },
+  brand: { alignItems: "flex-start", marginBottom: spacing.lg },
   title: { ...typography.h1, color: colors.onSurface, marginBottom: spacing.xs },
   subtitle: { ...typography.body, color: colors.muted, lineHeight: 22, marginBottom: spacing.lg },
   card: {

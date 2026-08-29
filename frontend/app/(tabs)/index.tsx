@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMenoo } from "@/src/store/menoo";
 import { PARCOURS_LABELS } from "@/src/services/steps";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
+import Logo from "@/src/components/Logo";
 
 export default function AccueilScreen() {
   const insets = useSafeAreaInsets();
@@ -31,7 +32,7 @@ export default function AccueilScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerRow}>
-          <Text style={styles.logo}>Menoo</Text>
+          <Logo testID="app-logo" size={40} />
           <View testID="badge-no-account" style={styles.badge}>
             <Ionicons name="sparkles" size={14} color={colors.onBrandTertiary} />
             <Text style={styles.badgeText}>Sans compte pour commencer</Text>
