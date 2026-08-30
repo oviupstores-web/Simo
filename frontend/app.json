@@ -18,7 +18,7 @@
         "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.emergent.stockmeals.us5t0k"
+      "package": "com.oviupstores.menoo"
     },
     "web": {
       "bundler": "metro",

@@ -1,0 +1,21 @@
+# OSX
+#
+.DS_Store
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+
+# Signing credentials must remain local
+*.jks
+*.keystore
+keystore.properties
+
+# Bundle artifacts
+*.jsbundle
