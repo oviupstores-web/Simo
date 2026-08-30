@@ -296,7 +296,11 @@ export function MenooProvider({ children }: { children: React.ReactNode }) {
     [pantry, setPantryItem, applyRecipeConsumption, resetPantry, meal, setMeal, cooked, weekOverrides, swapMeal, confirmedMeals, confirmMeal, regenerateWeek, weekVersion, purchased, togglePurchased, pinned, togglePinned, voiceEnabled, parcours, currentStep, answers, setAnswer, resetOnboarding, hydrated, setParcours]
   );
 
-  return <MenooContext.Provider value={value}>{hydrated ? children : null}</MenooContext.Provider>;
+  // Render immediately with safe defaults while AsyncStorage hydrates in the
+  // background. Persistence stays disabled until hydration completes, so the
+  // defaults cannot overwrite saved user data. This also prevents a native
+  // startup from remaining on an empty screen if storage initialization is slow.
+  return <MenooContext.Provider value={value}>{children}</MenooContext.Provider>;
 }
 
 export function useMenoo() {

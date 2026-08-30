@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LogBox } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -17,20 +17,28 @@ LogBox.ignoreAllLogs(true);
 // Required because @expo/vector-icons' componentDidMount fallback fires
 // Font.loadAsync against a broken vendor path if any <Icon> mounts before
 // the family is registered — which throws on Android Expo Go.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   const [loaded, error] = useIconFonts();
+  const [fontWaitExpired, setFontWaitExpired] = useState(false);
 
   useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
+    const timeout = setTimeout(() => setFontWaitExpired(true), 1500);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const ready = loaded || !!error || fontWaitExpired;
+
+  useEffect(() => {
+    if (ready) {
+      SplashScreen.hideAsync().catch(() => {});
     }
-  }, [loaded, error]);
+  }, [ready]);
 
   // If the CDN is unreachable we fall through on error rather than wedging
   // the app — icons will tofu, but the app still boots.
-  if (!loaded && !error) return null;
+  if (!ready) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.surface }}>

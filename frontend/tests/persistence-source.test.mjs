@@ -35,12 +35,12 @@ test("tous les états utilisateur attendus sont persistés", () => {
   }
 });
 
-test("l'application attend la fin de l'hydratation et assainit les données", () => {
-  assert.match(store, /\{hydrated\s*\?\s*children\s*:\s*null\}/);
+test("l'application s'affiche pendant l'hydratation sans écraser les données", () => {
+  assert.match(store, /<MenooContext\.Provider value=\{value\}>\{children\}<\/MenooContext\.Provider>/);
+  assert.match(store, /if \(!hydrated\) return;/);
   assert.match(store, /sanitizedPantry\(parsed\.pantry\)/);
   assert.match(store, /sanitizedMeal\(parsed\.meal\)/);
   assert.match(store, /sanitizedOverrides\(parsed\.weekOverrides\)/);
   assert.match(store, /sanitizedPinned\(parsed\.pinned\)/);
   assert.match(store, /finally\s*\{\s*setHydrated\(true\)/);
 });
-
