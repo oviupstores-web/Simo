@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
-import { weeklyPlan, swapAlternatives, shoppingList, PlannedMeal } from "@/src/services/mockData";
+import { weeklyPlan, swapAlternatives, shoppingList, PlannedMeal, resolvePlannedMeal } from "@/src/services/mockData";
 import { exportWeekPdf } from "@/src/services/pdfExport";
 import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
@@ -23,12 +23,7 @@ export default function MenusScreen() {
     () =>
       weeklyPlan.map((d) => ({
         ...d,
-        meals: d.meals.map((m) => {
-          const o = weekOverrides[m.id];
-          return o
-            ? { ...m, title: o.title, emoji: o.emoji, image: o.image, time: o.time, price: o.price, noPurchase: o.noPurchase }
-            : m;
-        }),
+        meals: d.meals.map((m) => resolvePlannedMeal(m, weekOverrides[m.id])),
       })),
     [weekOverrides, weekVersion]
   );
@@ -138,7 +133,7 @@ export default function MenusScreen() {
                           <Ionicons name="checkmark" size={12} color={colors.onSuccess} />
                         </View>
                       )}
-                      {pinned[m.title] && (
+                      {pinned[m.recipeId] && (
                         <View testID={`pinned-badge-${m.id}`} style={styles.pinnedBadge}>
                           <Ionicons name="heart" size={11} color={colors.onBrandTertiary} />
                         </View>
@@ -156,13 +151,13 @@ export default function MenusScreen() {
                       <Text style={styles.slotBadge}>{m.slot}</Text>
                       <Pressable
                         testID={`pin-${m.id}`}
-                        onPress={() => togglePinned(m.title)}
+                        onPress={() => togglePinned(m.recipeId)}
                         hitSlop={8}
                       >
                         <Ionicons
-                          name={pinned[m.title] ? "heart" : "heart-outline"}
+                          name={pinned[m.recipeId] ? "heart" : "heart-outline"}
                           size={13}
-                          color={pinned[m.title] ? colors.brandTertiary : colors.muted}
+                          color={pinned[m.recipeId] ? colors.brandTertiary : colors.muted}
                         />
                       </Pressable>
                     </View>
@@ -201,11 +196,15 @@ export default function MenusScreen() {
             <View style={{ gap: spacing.sm, marginTop: spacing.md }}>
               {swapAlternatives.map((alt, idx) => (
                 <Pressable
-                  key={idx}
+                  key={alt.recipeId}
                   testID={`swap-option-${idx}`}
                   onPress={() => {
                     if (swapFor) {
-                      swapMeal(swapFor.id, alt);
+                      swapMeal(swapFor.id, {
+                        recipeId: alt.recipeId,
+                        emoji: alt.emoji,
+                        noPurchase: alt.noPurchase,
+                      });
                       setSwapFor(null);
                     }
                   }}

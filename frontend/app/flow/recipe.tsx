@@ -9,15 +9,14 @@ import FlowHeader from "@/src/components/FlowHeader";
 import PrimaryButton from "@/src/components/PrimaryButton";
 import { useMenoo } from "@/src/store/menoo";
 import { italianRecipe, italianRecipeNeeds } from "@/src/services/mockData";
+import { getRecipeImage } from "@/src/services/recipes";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
-
-const HERO_IMG =
-  "https://images.unsplash.com/photo-1715249792894-43ad23412d3d?crop=entropy&cs=srgb&fm=jpg&w=1200&q=75";
 
 export default function RecipeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { meal, pantry, applyRecipeConsumption, setCooked } = useMenoo();
+  const recipeImage = getRecipeImage(italianRecipe.recipeId).url;
 
   const factor = meal.people * meal.meals;
   const ingredients = useMemo(
@@ -44,7 +43,7 @@ export default function RecipeScreen() {
         contentContainerStyle={{ paddingBottom: spacing.xxxl + insets.bottom }}
       >
         <View style={styles.heroWrap}>
-          <Image source={{ uri: HERO_IMG }} style={styles.hero} contentFit="cover" />
+          <Image source={{ uri: recipeImage }} style={styles.hero} contentFit="cover" />
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.55)"]}
             style={StyleSheet.absoluteFill}

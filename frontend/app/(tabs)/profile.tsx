@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Logo from "@/src/components/Logo";
 import { useMenoo } from "@/src/store/menoo";
+import { getRecipe } from "@/src/services/recipes";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
 
 const rows: { icon: any; label: string; hint: string }[] = [
@@ -28,7 +29,8 @@ export default function ProfileScreen() {
   const { pinned, togglePinned } = useMenoo();
   const pinnedList = Object.entries(pinned)
     .filter(([, v]) => v)
-    .map(([k]) => k);
+    .map(([recipeId]) => ({ recipeId, recipe: getRecipe(recipeId) }))
+    .filter((item) => item.recipe !== null);
   return (
     <View style={styles.container}>
       <ScrollView
@@ -76,18 +78,18 @@ export default function ProfileScreen() {
               </Text>
             </View>
           ) : (
-            pinnedList.map((title, i) => (
-              <View key={title} testID={`pinned-item-${i}`} style={styles.row}>
+            pinnedList.map(({ recipeId, recipe }, i) => (
+              <View key={recipeId} testID={`pinned-item-${i}`} style={styles.row}>
                 <View style={[styles.rowIcon, { backgroundColor: colors.brandTertiaryMuted }]}>
                   <Ionicons name="heart" size={20} color={colors.brandTertiary} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.rowLabel}>{title}</Text>
+                  <Text style={styles.rowLabel}>{recipe?.title}</Text>
                   <Text style={styles.rowHint}>Reviendra automatiquement dans 2–3 semaines</Text>
                 </View>
                 <Pressable
                   testID={`unpin-${i}`}
-                  onPress={() => togglePinned(title)}
+                  onPress={() => togglePinned(recipeId)}
                   hitSlop={8}
                   style={styles.unpinBtn}
                 >

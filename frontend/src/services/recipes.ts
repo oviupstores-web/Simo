@@ -14,6 +14,7 @@ export interface Recipe {
   time: number;
   price: number;
   image_url: string;
+  image_source_url?: string;
   image_hash: string;
 }
 
@@ -213,7 +214,8 @@ export const RECIPES: Record<string, Recipe> = {
     description: "Poulet rôti dominical, pommes de terre au four.",
     time: 60,
     price: 5.30,
-    image_url: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=600&q=70",
+    image_url: "https://images.unsplash.com/photo-1762154194962-cccc677be031?w=600&q=70",
+    image_source_url: "https://unsplash.com/photos/roasted-chicken-with-vegetables-and-mashed-potatoes-wDtErSkmevs",
   }),
   "light-soup": _make({
     recipe_id: "light-soup",
@@ -223,7 +225,8 @@ export const RECIPES: Record<string, Recipe> = {
     description: "Soupe légère aux légumes.",
     time: 20,
     price: 2.40,
-    image_url: "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=70",
+    image_url: "https://images.pexels.com/photos/5794/soup-leek-potato.jpg?auto=compress&w=600",
+    image_source_url: "https://www.pexels.com/photo/leek-and-potato-soup-5794/",
   }),
   "quinoa-salad-warm": _make({
     recipe_id: "quinoa-salad-warm",
@@ -233,7 +236,8 @@ export const RECIPES: Record<string, Recipe> = {
     description: "Salade tiède de quinoa et légumes sautés.",
     time: 18,
     price: 3.20,
-    image_url: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=70",
+    image_url: "https://images.unsplash.com/photo-1754652327512-3a4166c84cce?w=600&q=70",
+    image_source_url: "https://unsplash.com/photos/quinoa-salad-with-pomegranate-seeds-and-feta-cheese-X2-R25T1A2A",
   }),
   "veg-noodle-wok": _make({
     recipe_id: "veg-noodle-wok",
@@ -243,7 +247,8 @@ export const RECIPES: Record<string, Recipe> = {
     description: "Wok de nouilles sautées aux légumes croquants.",
     time: 15,
     price: 2.80,
-    image_url: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&q=70",
+    image_url: "https://images.unsplash.com/photo-1767324672583-8818531f650a?w=600&q=70",
+    image_source_url: "https://unsplash.com/photos/a-plate-of-noodles-with-vegetables-on-a-stove-irRZ4qnE2eA",
   }),
   "zucchini-gratin": _make({
     recipe_id: "zucchini-gratin",
@@ -253,7 +258,8 @@ export const RECIPES: Record<string, Recipe> = {
     description: "Gratin fondant de courgettes.",
     time: 35,
     price: 3.10,
-    image_url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=70",
+    image_url: "https://images.pexels.com/photos/32039641/pexels-photo-32039641/free-photo-of-cheesy-vegetable-baked-casserole-in-white-dish.jpeg?auto=compress&w=600",
+    image_source_url: "https://www.pexels.com/photo/cheesy-vegetable-baked-casserole-in-white-dish-32039641/",
   }),
 };
 

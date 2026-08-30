@@ -6,7 +6,7 @@ import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import FlowHeader from "@/src/components/FlowHeader";
 import PrimaryButton from "@/src/components/PrimaryButton";
-import { weeklyPlan, prepSteps } from "@/src/services/mockData";
+import { weeklyPlan, prepSteps, resolvePlannedMeal } from "@/src/services/mockData";
 import { speakFr } from "@/src/services/voice";
 import { useMenoo } from "@/src/store/menoo";
 import { colors, radius, spacing, typography, shadow } from "@/src/theme/tokens";
@@ -26,8 +26,7 @@ export default function PrepScreen() {
   const meal = useMemo(() => {
     const all = weeklyPlan.flatMap((d) => d.meals);
     const base = all.find((m) => m.id === mealId) ?? all[0];
-    const o = weekOverrides[base.id];
-    return o ? { ...base, ...o } : base;
+    return resolvePlannedMeal(base, weekOverrides[base.id]);
   }, [mealId, weekOverrides]);
 
   const steps = prepSteps.default;
@@ -95,16 +94,16 @@ export default function PrepScreen() {
         <View style={styles.toolbar}>
           <Pressable
             testID="pin-toggle"
-            onPress={() => togglePinned(meal.title)}
-            style={[styles.toolBtn, pinned[meal.title] && styles.toolBtnActive]}
+            onPress={() => togglePinned(meal.recipeId)}
+            style={[styles.toolBtn, pinned[meal.recipeId] && styles.toolBtnActive]}
           >
             <Ionicons
-              name={pinned[meal.title] ? "heart" : "heart-outline"}
+              name={pinned[meal.recipeId] ? "heart" : "heart-outline"}
               size={16}
-              color={pinned[meal.title] ? colors.onBrandPrimary : colors.brandPrimary}
+              color={pinned[meal.recipeId] ? colors.onBrandPrimary : colors.brandPrimary}
             />
-            <Text style={[styles.toolBtnText, pinned[meal.title] && { color: colors.onBrandPrimary }]}>
-              {pinned[meal.title] ? "Épinglé" : "Épingler"}
+            <Text style={[styles.toolBtnText, pinned[meal.recipeId] && { color: colors.onBrandPrimary }]}>
+              {pinned[meal.recipeId] ? "Épinglé" : "Épingler"}
             </Text>
           </Pressable>
           <Pressable
