@@ -73,7 +73,7 @@ class SummaryScreen extends StatelessWidget {
               : a.$2,
     ];
     final equipmentLabels = [
-      for (final e in KitchenScreen.equipment)
+      for (final e in KitchenScreen.equipment(L.of(context)))
         if (d.equipment.contains(e.$1)) e.$2,
     ];
     final channel = SupermarketScreen.channels(L.of(context)).firstWhere((c) => c.$1 == d.channel).$2;
@@ -218,7 +218,7 @@ class SummaryScreen extends StatelessWidget {
               icon: AppIcons.cutlery,
               text: d.cuisinePreferences.isEmpty
                   ? 'Cuisines : toutes'
-                  : 'Cuisines : ${[for (final c in OnboardingCuisinesScreen.cuisines)
+                  : 'Cuisines : ${[for (final c in OnboardingCuisinesScreen.cuisines(L.of(context)))
                       if (d.cuisinePreferences.contains(c.$1)) c.$2].join(', ')}',
               onTap: () => edit(OnbStep.cuisines),
             ),
@@ -240,7 +240,7 @@ class SummaryScreen extends StatelessWidget {
             _Line(
               icon: AppIcons.clock,
               text:
-                  'Semaine : ${KitchenScreen.timeLabel(d.weekdayMinutes)} · week-end : ${KitchenScreen.timeLabel(d.weekendMinutes)}',
+                  'Semaine : ${KitchenScreen.timeLabel(L.of(context), d.weekdayMinutes)} · week-end : ${KitchenScreen.timeLabel(L.of(context), d.weekendMinutes)}',
             ),
             _Line(icon: AppIcons.oven, text: equipmentLabels.join(', ')),
           ],

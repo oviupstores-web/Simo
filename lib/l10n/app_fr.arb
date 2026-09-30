@@ -452,5 +452,73 @@
   },
   "profileAgeError": "Indiquez un âge entre 14 et 100 ans.",
   "profileHeightError": "Indiquez une taille entre 120 et 230 cm.",
-  "profileWeightError": "Indiquez un poids entre 35 et 250 kg."
+  "profileWeightError": "Indiquez un poids entre 35 et 250 kg.",
+  "commonMultipleChoice": "Choix multiple",
+  "commonSelectedCount": "{count, plural, one{{count} sélectionnée} other{{count} sélectionnées}}",
+  "@commonSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cuisinesEyebrow": "VOS GOÛTS",
+  "cuisinesTitleSolo": "Quelles cuisines aimez-vous ?",
+  "cuisinesTitleHousehold": "Quelles cuisines font l'unanimité ?",
+  "cuisinesSubtitleSolo": "Menoo privilégiera ces saveurs dans vos menus. Sans choix, toutes les cuisines vous seront proposées.",
+  "cuisinesSubtitleHousehold": "Menoo privilégiera ces saveurs pour régaler petits et grands. Sans choix, toutes les cuisines seront proposées.",
+  "cuisinesSection": "Types de cuisine appréciés",
+  "cuisineFrench": "Française",
+  "cuisineItalian": "Italienne",
+  "cuisineMediterranean": "Méditerranéenne",
+  "cuisineMaghrebi": "Maghrébine",
+  "cuisineJapanese": "Japonaise",
+  "cuisineAsian": "Asiatique",
+  "cuisineAsianSubtitle": "Chine, Thaïlande, Vietnam",
+  "cuisineMexican": "Mexicaine",
+  "cuisineAmerican": "Américaine",
+  "cuisinesInfoText": "Vos régimes et allergies restent prioritaires : une cuisine appréciée ne passe jamais avant vos contraintes.",
+  "commonSingleChoice": "Un seul choix",
+  "commonSelectedCountMasc": "{count, plural, one{{count} sélectionné} other{{count} sélectionnés}}",
+  "@commonSelectedCountMasc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kitchenEyebrow": "MA CUISINE",
+  "kitchenTitle": "Comment cuisinez-vous ?",
+  "kitchenSubtitle": "Menoo ne vous proposera que des recettes adaptées à votre niveau, votre temps et votre équipement.",
+  "kitchenCookSection": "Qui cuisine le plus souvent ?",
+  "kitchenCookTakingTurns": "À tour de rôle",
+  "kitchenCookNoteShared": "Le niveau et le temps ci-dessous conviennent à tous ceux qui cuisinent.",
+  "kitchenCookNotePerson": "Le niveau et le temps ci-dessous concernent cette personne.",
+  "kitchenLevelSection": "Niveau en cuisine",
+  "kitchenLevelBeginner": "Débutant",
+  "kitchenLevelBeginnerText": "Gestes guidés, recettes simples",
+  "kitchenLevelIntermediate": "Intermédiaire",
+  "kitchenLevelIntermediateText": "Cuissons et découpes de base",
+  "kitchenLevelAdvanced": "Confirmé",
+  "kitchenLevelAdvancedText": "Plats élaborés, sauces",
+  "kitchenTimeSection": "Temps disponible par repas",
+  "kitchenTimeWeekday": "En semaine",
+  "kitchenTimeWeekend": "Le week-end",
+  "kitchenTimeMax": "60 min et +",
+  "kitchenEquipmentSection": "Équipements disponibles",
+  "kitchenEquipmentError": "Cochez au moins un équipement.",
+  "kitchenInfoTitle": "Recettes toujours réalisables",
+  "kitchenInfoText": "Pas de four ? Aucune recette au four ne vous sera proposée. Modifiable à tout moment dans vos réglages.",
+  "equipOven": "Four",
+  "equipMicrowave": "Micro-ondes",
+  "equipHob": "Plaques",
+  "equipAirFryer": "Air fryer",
+  "equipBlender": "Blender",
+  "equipFoodProcessor": "Robot cuiseur",
+  "equipSteamer": "Cuiseur vapeur",
+  "equipPressureCooker": "Autocuiseur",
+  "equipSlowCooker": "Mijoteuse",
+  "equipGrill": "Plancha / BBQ",
+  "equipWok": "Wok",
+  "equipToaster": "Grille-pain"
 }

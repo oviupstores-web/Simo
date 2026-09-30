@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -14,37 +15,38 @@ class OnboardingCuisinesScreen extends StatelessWidget {
 
   /// Photo : assets/images/cuisines/<code>.jpg (fournies par Simo).
   /// « Asiatique » couvre Chine, Thaïlande et Vietnam ; le Japon a sa propre catégorie.
-  static const cuisines = [
-    ('francaise', 'Française', null),
-    ('italienne', 'Italienne', null),
-    ('mediterraneenne', 'Méditerranéenne', null),
-    ('maghrebine', 'Maghrébine', null),
-    ('japonaise', 'Japonaise', null),
-    ('asiatique', 'Asiatique', 'Chine, Thaïlande, Vietnam'),
-    ('mexicaine', 'Mexicaine', null),
-    ('americaine', 'Américaine', null),
+  static List<(String, String, String?)> cuisines(L l) => [
+    ('francaise', l.cuisineFrench, null),
+    ('italienne', l.cuisineItalian, null),
+    ('mediterraneenne', l.cuisineMediterranean, null),
+    ('maghrebine', l.cuisineMaghrebi, null),
+    ('japonaise', l.cuisineJapanese, null),
+    ('asiatique', l.cuisineAsian, l.cuisineAsianSubtitle),
+    ('mexicaine', l.cuisineMexican, null),
+    ('americaine', l.cuisineAmerican, null),
   ];
 
-  static String label(String code) => cuisines.firstWhere((c) => c.$1 == code).$2;
+  static String label(L l, String code) => cuisines(l).firstWhere((c) => c.$1 == code).$2;
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     final n = d.cuisinePreferences.length;
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.cuisines),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'VOS GOÛTS',
+      eyebrow: l.cuisinesEyebrow,
       eyebrowIcon: AppIcons.cutlery,
-      title: d.isFoyer ? 'Quelles cuisines font l\'unanimité ?' : 'Quelles cuisines aimez-vous ?',
+      title: d.isFoyer ? l.cuisinesTitleHousehold : l.cuisinesTitleSolo,
       subtitle: d.isFoyer
-          ? 'Menoo privilégiera ces saveurs pour régaler petits et grands. Sans choix, toutes les cuisines seront proposées.'
-          : 'Menoo privilégiera ces saveurs dans vos menus. Sans choix, toutes les cuisines vous seront proposées.',
+          ? l.cuisinesSubtitleHousehold
+          : l.cuisinesSubtitleSolo,
       onContinue: () => OnboardingFlow.next(context, OnbStep.cuisines),
       children: [
         StepSectionTitle(
-          'Types de cuisine appréciés',
-          hint: n == 0 ? 'Choix multiple' : '$n sélectionnée${n > 1 ? 's' : ''}',
+          l.cuisinesSection,
+          hint: n == 0 ? l.commonMultipleChoice : l.commonSelectedCount(n),
         ),
         GridView.count(
           crossAxisCount: 2,
@@ -54,7 +56,7 @@ class OnboardingCuisinesScreen extends StatelessWidget {
           crossAxisSpacing: AppSpace.x3,
           childAspectRatio: AppSizes.cuisineTileAspect,
           children: [
-            for (final c in cuisines)
+            for (final c in cuisines(l))
               ProductTile(
                 cover: true,
                 label: c.$2,
@@ -67,9 +69,9 @@ class OnboardingCuisinesScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.bulb,
-          text: 'Vos régimes et allergies restent prioritaires : une cuisine appréciée ne passe jamais avant vos contraintes.',
+          text: l.cuisinesInfoText,
         ),
       ],
     );

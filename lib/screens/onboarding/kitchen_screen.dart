@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -14,47 +15,48 @@ class KitchenScreen extends StatelessWidget {
   const KitchenScreen({super.key});
 
   /// Niveaux : photo « toque de chef + ustensile » détourée (assets/images/levels/<code>.jpg, fournies par Simo).
-  static const levels = [
-    (CookingLevel.debutant, 'debutant', 'Débutant', 'Gestes guidés, recettes simples', AppIcons.egg),
-    (CookingLevel.intermediaire, 'intermediaire', 'Intermédiaire', 'Cuissons et découpes de base', AppIcons.skillet),
-    (CookingLevel.confirme, 'confirme', 'Confirmé', 'Plats élaborés, sauces', AppIcons.chefHat),
+  static List<(CookingLevel, String, String, String, String)> levels(L l) => [
+    (CookingLevel.debutant, 'debutant', l.kitchenLevelBeginner, l.kitchenLevelBeginnerText, AppIcons.egg),
+    (CookingLevel.intermediaire, 'intermediaire', l.kitchenLevelIntermediate, l.kitchenLevelIntermediateText, AppIcons.skillet),
+    (CookingLevel.confirme, 'confirme', l.kitchenLevelAdvanced, l.kitchenLevelAdvancedText, AppIcons.chefHat),
   ];
 
   /// Équipements dans l'ordre demandé par Simo ; codes alignés sur la table `equipment`.
   /// Photo produit détourée : assets/images/equipment/<code>.jpg (fournies par Simo).
-  static const equipment = [
-    ('four', 'Four', AppIcons.oven),
-    ('micro_ondes', 'Micro-ondes', AppIcons.microwave),
-    ('plaques', 'Plaques', AppIcons.stovetop),
-    ('airfryer', 'Air fryer', AppIcons.airfryer),
-    ('mixeur', 'Blender', AppIcons.blender),
-    ('robot', 'Robot cuiseur', AppIcons.robot),
-    ('cuiseur_vapeur', 'Cuiseur vapeur', AppIcons.steamer),
-    ('autocuiseur', 'Autocuiseur', AppIcons.pressureCooker),
-    ('mijoteuse', 'Mijoteuse', AppIcons.slowCooker),
-    ('plancha', 'Plancha / BBQ', AppIcons.grill),
-    ('wok', 'Wok', AppIcons.wok),
-    ('grille_pain', 'Grille-pain', AppIcons.toaster),
+  static List<(String, String, String)> equipment(L l) => [
+    ('four', l.equipOven, AppIcons.oven),
+    ('micro_ondes', l.equipMicrowave, AppIcons.microwave),
+    ('plaques', l.equipHob, AppIcons.stovetop),
+    ('airfryer', l.equipAirFryer, AppIcons.airfryer),
+    ('mixeur', l.equipBlender, AppIcons.blender),
+    ('robot', l.equipFoodProcessor, AppIcons.robot),
+    ('cuiseur_vapeur', l.equipSteamer, AppIcons.steamer),
+    ('autocuiseur', l.equipPressureCooker, AppIcons.pressureCooker),
+    ('mijoteuse', l.equipSlowCooker, AppIcons.slowCooker),
+    ('plancha', l.equipGrill, AppIcons.grill),
+    ('wok', l.equipWok, AppIcons.wok),
+    ('grille_pain', l.equipToaster, AppIcons.toaster),
   ];
 
   static const times = [15, 30, 45, 60];
 
-  static String timeLabel(int m) => m >= 60 ? '60 min et +' : '$m min';
+  static String timeLabel(L l, int m) => m >= 60 ? l.kitchenTimeMax : l.unitMinutes(m);
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.kitchen),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'MA CUISINE',
+      eyebrow: l.kitchenEyebrow,
       eyebrowIcon: AppIcons.chefHat,
-      title: 'Comment cuisinez-vous ?',
-      subtitle: 'Menoo ne vous proposera que des recettes adaptées à votre niveau, votre temps et votre équipement.',
+      title: l.kitchenTitle,
+      subtitle: l.kitchenSubtitle,
       onContinue: d.equipment.isEmpty ? null : () => OnboardingFlow.next(context, OnbStep.kitchen),
       children: [
         if (d.isFoyer) ...[
-          const StepSectionTitle('Qui cuisine le plus souvent ?', hint: 'Un seul choix', icon: AppIcons.people),
+          StepSectionTitle(l.kitchenCookSection, hint: l.commonSingleChoice, icon: AppIcons.people),
           Wrap(
             spacing: AppSpace.x2,
             runSpacing: AppSpace.x2,
@@ -67,7 +69,7 @@ class KitchenScreen extends StatelessWidget {
                   onTap: () => d.update(() => d.mainCookId = m.id),
                 ),
               ToggleChip(
-                label: 'À tour de rôle',
+                label: l.kitchenCookTakingTurns,
                 icon: AppIcons.people,
                 selected: d.mainCookId == null,
                 onTap: () => d.update(() => d.mainCookId = null),
@@ -77,29 +79,29 @@ class KitchenScreen extends StatelessWidget {
           const SizedBox(height: AppSpace.x2),
           Text(
             d.mainCookId == null
-                ? 'Le niveau et le temps ci-dessous conviennent à tous ceux qui cuisinent.'
-                : 'Le niveau et le temps ci-dessous concernent cette personne.',
+                ? l.kitchenCookNoteShared
+                : l.kitchenCookNotePerson,
             style: AppText.caption,
           ),
           const SizedBox(height: AppSpace.x6),
         ],
-        const StepSectionTitle('Niveau en cuisine', hint: 'Un seul choix'),
+        StepSectionTitle(l.kitchenLevelSection, hint: l.commonSingleChoice),
         Row(
           children: [
-            for (final (i, l) in levels.indexed) ...[
+            for (final (i, lvl) in levels(l).indexed) ...[
               if (i > 0) const SizedBox(width: AppSpace.x2),
               Expanded(
                 child: AspectRatio(
                   aspectRatio: AppSizes.levelTileAspect,
                   child: ProductTile(
                     radio: true,
-                    label: l.$3,
-                    subtitle: l.$4,
-                    asset: 'assets/images/levels/${l.$2}.jpg',
+                    label: lvl.$3,
+                    subtitle: lvl.$4,
+                    asset: 'assets/images/levels/${lvl.$2}.jpg',
                     cover: true,
-                    fallbackIcon: l.$5,
-                    selected: d.cookingLevel == l.$1,
-                    onTap: () => d.update(() => d.cookingLevel = l.$1),
+                    fallbackIcon: lvl.$5,
+                    selected: d.cookingLevel == lvl.$1,
+                    onTap: () => d.update(() => d.cookingLevel = lvl.$1),
                   ),
                 ),
               ),
@@ -107,20 +109,20 @@ class KitchenScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        const StepSectionTitle('Temps disponible par repas'),
+        StepSectionTitle(l.kitchenTimeSection),
         AppCard(
           child: Column(
             children: [
               _TimeSlider(
                 icon: AppIcons.briefcase,
-                label: 'En semaine',
+                label: l.kitchenTimeWeekday,
                 minutes: d.weekdayMinutes,
                 onChanged: (m) => d.update(() => d.weekdayMinutes = m),
               ),
               const SizedBox(height: AppSpace.x3),
               _TimeSlider(
                 icon: AppIcons.sun,
-                label: 'Le week-end',
+                label: l.kitchenTimeWeekend,
                 minutes: d.weekendMinutes,
                 onChanged: (m) => d.update(() => d.weekendMinutes = m),
               ),
@@ -129,8 +131,8 @@ class KitchenScreen extends StatelessWidget {
         ),
         const SizedBox(height: AppSpace.x6),
         StepSectionTitle(
-          'Équipements disponibles',
-          hint: '${d.equipment.length} sélectionné${d.equipment.length > 1 ? 's' : ''}',
+          l.kitchenEquipmentSection,
+          hint: l.commonSelectedCountMasc(d.equipment.length),
         ),
         GridView.count(
           crossAxisCount: 2,
@@ -140,7 +142,7 @@ class KitchenScreen extends StatelessWidget {
           crossAxisSpacing: AppSpace.x3,
           childAspectRatio: AppSizes.equipmentTileAspect,
           children: [
-            for (final e in equipment)
+            for (final e in equipment(l))
               ProductTile(
                 label: e.$2,
                 asset: 'assets/images/equipment/${e.$1}.jpg',
@@ -150,13 +152,12 @@ class KitchenScreen extends StatelessWidget {
               ),
           ],
         ),
-        FormError(message: d.equipment.isEmpty ? 'Cochez au moins un équipement.' : null),
+        FormError(message: d.equipment.isEmpty ? l.kitchenEquipmentError : null),
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.bulb,
-          title: 'Recettes toujours réalisables',
-          text:
-              'Pas de four ? Aucune recette au four ne vous sera proposée. Modifiable à tout moment dans vos réglages.',
+          title: l.kitchenInfoTitle,
+          text: l.kitchenInfoText,
         ),
       ],
     );
@@ -173,6 +174,7 @@ class _TimeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     const times = KitchenScreen.times;
     final index = times.indexOf(minutes).clamp(0, times.length - 1);
     return Column(
@@ -184,7 +186,7 @@ class _TimeSlider extends StatelessWidget {
             Expanded(
               child: Text(label, style: AppText.of(AppFont.s14, weight: AppFont.semibold)),
             ),
-            PillBadge(KitchenScreen.timeLabel(minutes), size: AppFont.s13, weight: AppFont.extrabold),
+            PillBadge(KitchenScreen.timeLabel(L.of(context), minutes), size: AppFont.s13, weight: AppFont.extrabold),
           ],
         ),
         MenooSlider(
@@ -192,7 +194,7 @@ class _TimeSlider extends StatelessWidget {
           min: 0,
           max: (times.length - 1).toDouble(),
           divisions: times.length - 1,
-          semanticLabel: '$label : ${KitchenScreen.timeLabel(minutes)}',
+          semanticLabel: '$label : ${KitchenScreen.timeLabel(L.of(context), minutes)}',
           onChanged: (v) => onChanged(times[v.round()]),
         ),
         Padding(
