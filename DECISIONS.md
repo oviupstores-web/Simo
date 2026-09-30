@@ -1,0 +1,102 @@
+# DECISIONS.md — Choix validés
+
+- 2026-09-23 · Couleur principale : `#0B6B43` (DESIGN_V2.md), et non `#1E4620` (PRD.md §6, obsolète). DESIGN_V2 est prioritaire.
+- 2026-09-23 · Outils installés hors dossier projet : Flutter `C:\src\flutter`, Supabase CLI `C:\src\supabase`. Java = celui d'Android Studio.
+- 2026-09-23 · Projet Supabase : `menoo-dev` (ref `pqdreuptzhenowqucvbl`, Francfort). Les autres projets du compte (menoo-rork-sandbox, Menoo-nutrition…) ne sont pas utilisés.
+- 2026-09-23 · Identifiant de l'app : `com.menoo.app` (définitif après publication).
+- 2026-09-23 · Norton 360 : on ne touche pas à ses réglages ; Gradle utilise un magasin de certificats séparé (`C:\src\certs\menoo-truststore.jks`).
+- 2026-09-23 · Design : les images `design/masters/ref/05-08` sont la référence visuelle des 4 types ; les maîtres HTML donnent structure et contenu à jour (9 écrans maîtres au total).
+- 2026-09-23 · Progression d'onboarding = segments + « ÉTAPE X SUR N » (DESIGN_V2, maître HTML, réf. 04), pas les points de la réf. 05.
+- 2026-09-23 · Réserve : statut « Frais » affiché en toutes lettres (vide dans le maître HTML, présent dans la réf. 08).
+- 2026-09-23 · Icône « Perte de poids » descendante (réf. 04) au lieu de montante (maître HTML).
+- 2026-09-23 · Micro-animations : rétrécissement 2 % au toucher, transitions glissement + fondu, bascule animée des sélections, jauges/anneaux animés à l'affichage.
+- 2026-09-23 · Méthode : PLAN.md et DECISIONS.md sont mis à jour à la fin de chaque jalon et avant toute tâche longue ; PLAN.md indique toujours l'état actuel et la prochaine action (règle ajoutée à CLAUDE.md).
+- 2026-09-23 · Onglet Semaine : icône couverts (comme les maîtres), pas calendar_month (validé par Simo).
+- 2026-09-23 · Menu provisoire des écrans maîtres : réservé aux tests, supprimé au jalon 4 dès que la vraie navigation existe.
+- 2026-09-23 · Cartes avec photo : la photo occupe au moins 50 % de la largeur de la carte, cartes plus hautes pour laisser respirer les photos ; règle appliquée à toutes les cartes à photo.
+- 2026-09-23 · Images : priorité aux photos HD des écrans Stitch (design/stitch_images/), redimensionnées à 1080 px max dans l'app ; les manques sont listés dans design/stitch_images/A_FOURNIR.md.
+- 2026-09-23 · Landing : tout l'écran visible sans défilement (visuel flexible), avec les 4 points du carrousel.
+- 2026-09-23 · Rayons : cartes 14 px (au lieu de 18, DESIGN_V2.md mis à jour), vignettes internes 10 px (pastilles d'icône, macros, jours), boutons 14 px, champs 12 px — tout dans `AppRadius`. Remplace le « rayon 18 px » de SPEC §0.
+- 2026-09-23 · Progression d'onboarding : 4 segments fins (4 px) en fenêtre glissante sur les N étapes (l'étape en cours est le 3e segment), remplissage + glissement animés à l'arrivée sur chaque écran ; « ÉTAPE X SUR N » à droite.
+- 2026-09-23 · Décor basilic : feuilles entières (leaf_a) + grains de poivre noirs et rouges, toujours à l'intérieur de l'écran (marge 8 px), jamais sous la barre système. leaf_b (tronquée à la source) n'est plus utilisée.
+- 2026-09-23 · Landing : photo au format 5:4 non rognée (recadrage 5:4 fait sur l'original HD), à la plus grande taille qui laisse boutons et points visibles ; phrase manuscrite posée sur son coin haut gauche.
+- 2026-09-23 · Cartes à photo latérale : photo = exactement la moitié de la carte (2 moitiés égales), pleine hauteur ; bordure dessinée par-dessus la photo (pas de bande).
+- 2026-09-23 · Landing (remplace les décisions précédentes sur la landing) : photo 5:4 pleine largeur, bord à bord, sans coins arrondis ; la page peut défiler ; « Commencer gratuitement » visible sans défiler (liste des 4 avantages compacte, pastilles 34 px).
+- 2026-09-23 · Régimes : « halal » fusionné avec « sans porc » (un seul régime « Sans porc / halal », code sans_porc).
+- 2026-09-23 · Base : Solo = foyer d'un seul membre ; montants en centimes ; RLS sur toutes les tables ; `premium` non modifiable par l'app ; menus et listes écrits uniquement par la génération (Edge Function) ; un menu « prêt » ne peut pas dépasser le budget (contrainte SQL).
+- 2026-09-23 · Démo : tous les foyers de démo (Karim, Martin, 4 pièges) appartiennent au compte de test f0d6936f-c874-47e5-9767-eb7756095d72 (créé par Simo) ; Karim est le foyer actif.
+- 2026-09-23 · Piège « budget impossible » = foyer de 4 personnes à 20 € (la semaine la moins chère coûte ≈ 63 €) ; en Solo, 20 € restait faisable (≈ 15,68 €).
+- 2026-09-23 · Onboarding : réponses gardées en mémoire (OnboardingData) jusqu'à la création du compte (jalon 6), puis enregistrées en base. Aliments exclus saisis librement (rapprochés du catalogue au jalon 6).
+- 2026-09-23 · Balance (étape 4) : pas de faux appareils détectés ; l'utilisateur choisit « Associer via Health Connect » (autorisation demandée après la création du compte, jalon 11) ou « Passer ».
+- 2026-09-23 · Code-barres et photo IA dans le détour Réserve : écrans « bientôt disponible » avec repli sur l'ajout manuel ; fonctions réelles au jalon 10.
+- 2026-09-23 · Équipements (écran « Ma cuisine ») : 12 choix = les 9 de l'écran design/new + wok, grille-pain, cuiseur vapeur (utilisés par des recettes). Autocuiseur, mijoteuse et plancha à ajouter en base (migration à valider).
+- 2026-09-23 · Chiffres retirés (SPEC §0.4) : « moins de 20 min », « moins de 3 minutes », « jusqu'à 45 min », « 35 € de réduction », « 22 € par semaine », rayons « synchronisés ». Remplacés par des promesses vérifiables (« Budget respecté chaque semaine », « 11 étapes rapides »).
+- 2026-09-23 · Titres : traits d'union insécables (« sur-mesure », « souhaitez-vous » ne se coupent plus).
+- 2026-09-24 · Retours jalon 4 (Simo) : poids cible et rythme hebdomadaire sur l'étape Profil (garde-fous IMC ≥ 18,5, ≤ 1 kg/semaine, date estimée) ; icônes sur pastilles pastel par famille ; photos d'aliments partout où elles existent, sinon icône sur pastille ; enseignes = icônes stylisées neutres (jamais de logo officiel sans accord) ; vert dominant, pastels doux.
+- 2026-09-24 · Poids cible : saisi à l'étape Profil après le poids actuel. Perte : rythmes 0,25 / 0,5 / 0,75 kg/sem ; prise de masse : 0,25 / 0,5 ; sèche : poids cible + déficit fixe 0,5 kg/sem, protéines 2 g/kg (« masse musculaire préservée ») ; maintien : aucun. Refus si IMC < 18,5 (message expliquant le seuil et le minimum conseillé), si le sens est incohérent ; perte jamais > 1 kg/sem. Projection « X kg → Y kg, environ N semaines », date estimée.
+- 2026-09-24 · Calcul calorique : besoin = métabolisme (Mifflin-St Jeor) × activité ± rythme × 7 700 kcal / 7 (0,5 kg/sem ≈ 550 kcal/jour), plancher = max(métabolisme de base, 1 500 kcal homme / 1 200 kcal femme).
+- 2026-09-24 · Base : household_members.target_weight_kg et weekly_rate_kg, contraintes SQL (IMC ≥ 18,5, rythme permis, pas de cible en maintien, prise ≤ 0,5 kg/sem). Changer d'objectif depuis le récapitulatif renvoie à l'étape Profil si le poids visé n'est plus cohérent.
+- 2026-09-24 · Pastilles : familles menthe / pêche / vert tendre / bleu clair / lavande / sable (enum Tint). Objectifs, activité, mode de gestion, niveaux, régimes, allergènes, équipements, modes de récupération, emplacements et blocs du récapitulatif ont chacun leur teinte ; la sélection reste en vert.
+- 2026-09-24 · Photos d'aliments : 18 vignettes carrées (assets/images/food/) tirées de design/stitch_images, associées par mots-clés (FoodImages) ; sinon icône sur pastille de l'emplacement. Photo « flocons d'avoine » écartée (marque visible).
+- 2026-09-24 · Enseignes : monogramme (initiales) sur pastille de notre palette, sans logo ni couleur de marque.
+- 2026-09-24 · Régimes : « Omnivore » ajouté et choisi par défaut (= aucune restriction, aucune ligne en base) ; « Sans porc / halal » renommé « Sans porc » (migration 20260924120000, remplace la décision « Sans porc / halal » du 2026-09-23).
+- 2026-09-24 · Parcours Solo en 12 étapes : nouvelle étape 9 « Types de cuisine appréciés » (méditerranéenne, française, asiatique, orientale/maghrébine, italienne, indienne, mexicaine, africaine ; choix multiple ; aucun choix = toutes), juste après les contraintes. Remplace le compteur 11 de SPEC §2 (validé par Simo).
+- 2026-09-24 · Équipements et niveaux de cuisine : tuiles photo produit détourée sur fond blanc (équipements sur 2 colonnes, niveaux sur 3), case verte en haut à droite, bordure verte si sélectionné ; en attendant les photos : cadre gris clair + icône sobre, jamais de pastille colorée sur l'écran « Ma cuisine ». Les pastilles restent sur les autres écrans.
+- 2026-09-24 · Enseignes : monogramme neutre + nom + modes de retrait habituels (le mode choisi est mis en avant) ; logos officiels uniquement en cas de partenariat signé.
+- 2026-09-24 · Contrôle qualité : plus de captures automatiques du téléphone (demande de Simo, coût et durée). J'installe l'app et j'indique quoi tester ; Simo vérifie lui-même. Remplace la règle « capture + comparaison côte à côte » de CLAUDE.md jusqu'à nouvel ordre.
+- 2026-09-24 · Types de cuisine (liste de Simo, remplace celle du matin) : française, italienne, méditerranéenne, maghrébine, japonaise, asiatique (= Chine, Thaïlande, Vietnam), mexicaine, américaine. Indienne, africaine, orientale abandonnées. Choix = préférence (Menoo privilégie), jamais un filtre qui bloquerait la génération.
+- 2026-09-24 · Images de Simo : originaux PNG conservés dans design/originals/, versions JPG allégées dans l'app (équipements et niveaux 512 px, cuisines 600 px). Les 3 niveaux sont des photos en scène (fond sombre) : affichés plein cadre, pas détourés.
+- 2026-09-24 · Jalon 4 validé par Simo. Migration 20260924120000 (« Sans porc ») envoyée sur menoo-dev avec son accord.
+- 2026-09-24 · Images : générées par l'API OpenAI (gpt-image, qualité medium), essai de 10 images validé par Simo avant le reste. La clé est créée et déposée par Simo dans une variable d'environnement de son PC ; elle n'apparaît jamais dans la conversation ni dans l'app.
+- 2026-09-24 · Objectifs, niveaux d'activité et modes de gestion : icônes sur pastilles conservées (concepts abstraits, écran Objectif validé). Photos réservées à ce qui se mange : ingrédients, catégories, régimes, allergènes, recettes, cuisines.
+- 2026-09-24 · Cuisines peu couvertes : on complète la base (aucune cuisine masquée), 10 à 15 plats principaux par cuisine (cible 12 → 80 recettes à créer), dans un jalon à part (5c).
+- 2026-09-24 · Ordre de travail : Foyer (jalon 5) → images par API (5b) → recettes des 8 cuisines (5c) → jalons 6 et suivants, pour valider des écrans complets avec les vraies images.
+- 2026-09-24 · Foyer (jalon 5) : 10 étapes dans l'ordre SPEC §3 ; les étapes communes réutilisent les écrans Solo avec des textes « foyer ». Famille Martin (SPEC §9) préremplie comme Karim en Solo. Membres affichés avec une pastille à l'initiale (pas de photos de personnes). Allergies saisies par membre, rappelées aux contraintes partagées et exclues pour tout le foyer.
+- 2026-09-24 · Foyer : repas par défaut = tous les dîners + déjeuners du week-end (9) ; budget conseillé = 30 € × adultes + 20 € × enfants + 10 € × bébés (le 10 € bébé est un ajout, SPEC muet) ; prix affiché « par portion ». Pas de cible calorique au récapitulatif Foyer (chaque profil aura la sienne au jalon 6). « À tour de rôle » = aucun cuisinier principal en base.
+- 2026-09-24 · Couverture Foyer : « configuration en 3 minutes » remplacé par « 10 étapes rapides » (SPEC §0.4) ; photo 16:10 pour garder les 4 membres de la famille.
+- 2026-09-28 · Jalon 5b : 125 visuels générés par l'API OpenAI en 2 passes (0 échec, ≈ 6 $). Validés par Simo : 80 ingrédients, 11 catégories, 3 emplacements. À refaire : `leaf_b.png` (tronquée) et `mode_solo.jpg` (rendu hors sujet).
+- 2026-09-28 · **Régimes ne sont pas photographiables** : les 7 photos IA du lot 5b sont écartées (le sens du régime ne se lit pas — sans_lactose contient du yaourt qui lit « lait », sans_porc contient de la viande sans indice « pas de porc »). Cible = pictogramme stylisé sur pastille, même traitement que les objectifs / concepts abstraits (décision 2026-09-24 étendue). Les allergènes en photo restent valides (ce sont des ingrédients, pas des concepts).
+- 2026-09-28 · **Photos de recettes : pas d'IA**. Les 80 photos de recettes du jalon 5c seront photographiées ou prises en banque d'images (les textures des plats ratent en génération IA). Les 6 recettes petit-déj + tablée famille du lot 5b passent quand même car acceptables. Réduit la portée de 5c au travail base + recettes + ingrédients ; les photos plats seront traitées à part.
+- 2026-09-30 · Jalon 5 (Foyer) validé par Simo.
+- 2026-09-30 · Budget conseillé Foyer : **25 € par bébé** (remplace les 10 € du 2026-09-24) ; adulte 30 €, enfant 20 € inchangés.
+- 2026-09-30 · Avatars des membres du foyer : pastille avec initiale, validé par Simo (pas de photos de personnes).
+- 2026-09-30 · Régimes en pictogrammes sur pastille (validé par Simo) ; les régimes « sans … » montrent l'aliment barré (cochon, bouteille de lait, épi de blé). Les 7 photos de régimes ne sont pas embarquées dans l'app.
+- 2026-09-30 · **Photos de recettes : générées par API** comme les 125 autres (annule la décision « pas d'IA » du 2026-09-28). Coût estimé ≈ 4 à 6 $ pour 80 photos. À lancer au jalon 5c, pas avant.
+- 2026-09-30 · Photos d'aliments : la photo du catalogue (assets/images/ingredients/) est choisie d'après le nom, la plus précise d'abord ; les 18 anciennes vignettes servent de secours.
+- 2026-09-30 · Jalon 5c suspendu : Simo donnera d'abord des changements qui touchent la structure de l'app.
+- 2026-09-30 · **Aucune référence à l'alcool dans les visuels** (app classée 3 ans et plus sur Google Play) : le visuel « sulfites » montre uniquement des fruits secs (abricots, raisins, fruits confits). Règle valable pour tous les visuels à venir, recettes comprises.
+- 2026-09-30 · Les 125 visuels du jalon 5b sont validés par Simo. leaf_a régénérée (l'ancienne, 60 × 90 px, avait un détourage en escalier) et recadrée au ras des feuilles ; leaf_b validée (PNG transparent).
+- 2026-09-30 · Jalon 5b validé par Simo.
+- 2026-09-30 · Budget bébé à 25 € confirmé et voulu : lait infantile et petits pots coûtent plus cher au kilo qu'un repas d'enfant, qui mange en partie comme les adultes.
+- 2026-09-30 · Photos de recettes (5c) : essai de 5 photos montré à Simo avant de lancer le lot complet de 80.
+
+## Changements de structure du 2026-09-30 (demandés par Simo ; rédaction dans SPEC.md v4 en attente de sa validation)
+- 2026-09-30 · Barre de navigation : Accueil · Menus · Courses · Réserve · Suivi. « Semaine » devient « Menus » partout. Réglages par l'avatar. La barre ne s'affiche jamais avant la création du compte.
+- 2026-09-30 · Nouveau jalon 6b, improvisation + paywall construits ensemble après le jalon 6. Parcours en 6 étapes : scan ou sélection manuelle, convives, condiments (6 à 8 cases ; sel, poivre et huile supposés présents), équipement, choix de cuisine (disponible / presque / indisponible, liste dépliable, nombre de recettes), recette.
+- 2026-09-30 · **L'IA ne crée rien** : elle reconnaît les ingrédients puis cherche dans le catalogue. Recette générée librement en dernier recours seulement, marquée comme telle et hors budget garanti.
+- 2026-09-30 · Le scan met la réserve à jour : ajouts, retraits avec confirmation, périmés en rouge d'après les dates en base. L'IA ne lit pas les dates sur une photo.
+- 2026-09-30 · Trois portes vers l'improvisation : ligne légère sous les cartes de Path_Choice, cercle animé sur l'Accueil quand aucun repas n'est prévu (pulsation de 3 à 4 s, seule forme ronde de l'app), accès permanent depuis l'onglet Réserve.
+- 2026-09-30 · Fiche recette à trois onglets : Ingrédients et Ustensiles visibles, Instructions floutées après 3 lignes. Options : 0,90 € la recette, 9,99 €/mois résiliable, 49,99 €/an. Jamais de carte bancaire pour essayer. Résiliation simple via Google Play Billing. Lots de 5 et 15 recettes à chiffrer.
+- 2026-09-30 · Le compte arrive après la valeur : bouton Google formulé comme une sauvegarde, « Plus tard » toujours visible, données d'avant le compte conservées à sa création.
+- 2026-09-30 · Drive supprimé : plus de ShoppingList_Checkout ni de ShoppingList_Confirmation, plus de choix Drive / Livraison / En magasin. L'enseigne ne sert qu'aux prix et au tri par rayon. À la place : mode magasin, partager, imprimer en A4, PDF, copier en texte. Liste partagée en temps réel : phase 2.
+- 2026-09-30 · Landing : page déroulante (promesse et 4 avantages, puis 4 cartes Scan IA / Menus / Courses / Suivi sans bouton), un seul bouton « Commencer » collé en bas.
+- 2026-09-30 · 5 écrans de réassurance hors compteur : trajectoire de poids, métabolisme, économies, gaspillage évité, plan prêt. Jamais de silhouette avant/après. Aucun chiffre inventé : réponses de l'utilisateur ou source publique citée.
+- 2026-09-30 · Photo IA = Premium, saisie manuelle et code-barres = gratuits, partout (détour Réserve compris). L'abonnement achète du confort, pas l'accès.
+- 2026-09-30 · International avant les 500 recettes : textes sortis du code, tables de traduction (français en référence), 6 langues (français, anglais, espagnol, allemand, italien, arabe), unités métriques sauf États-Unis, devises et dates par pays, arabe de droite à gauche, enseignes en champ libre hors de France, prix en trois niveaux avec origine toujours affichée, badge « Estimation dans votre budget ».
+- 2026-09-30 · Anti-fraude planifiée (jalon 12b), non codée : App Set ID côté serveur, Play Integrity, contrôle en Edge Function avant l'IA, déclaration dans la politique de confidentialité.
+- 2026-09-30 · Maquettes de `design/maquettes/` : référence visuelle seulement ; SPEC.md fait foi (barre de navigation fausse, écran de cuisines qui mélange deux parcours).
+
+### Propositions de Claude, à valider par Simo (pas encore des décisions)
+- Compte invité créé à la première ouverture puis converti en vrai compte à l'inscription : les données d'avant le compte n'ont pas à être recopiées.
+- Essai de 7 jours supprimé (il exigerait une carte bancaire).
+- Lots : 5 recettes à 3,49 €, 15 recettes à 7,99 €.
+- Foyer : 3 écrans de réassurance seulement (pas de trajectoire de poids ni de métabolisme).
+- Fiche recette : « 4,3 note » retiré (chiffre inventé) ; « Interrogez le coach » écarté pour l'instant.
+- Landing : « J'ai déjà un compte » en lien discret dans l'en-tête.
+- Ordre des jalons : 5i → 5d → 5c → 6 → 6b → 7 → 8 → 9 → 10 → 11 → 12 → 12b → 13.
+- 2026-09-30 · Écran Scan IA (improvisation, étape 1) : **deux états**. Au repos, la zone photo est un aperçu (illustration `scan_frigo_main.jpg` : une main tient un téléphone devant le frigo ouvert, étiquettes posées par l'app). Un appui sur l'onglet Frigo ou Garde-manger active la **caméra en direct** dans cette même zone, et un bouton **« Scanner »** apparaît pour déclencher la prise de vue.
+- 2026-09-30 · Cercle d'improvisation de l'Accueil : **variante A retenue** (photo ronde du frigo). La variante B (assiette de plat préparé) est **abandonnée** : contresens, on scanne son frigo pour savoir quoi cuisiner, pas un plat terminé.
+- 2026-09-30 · Règles de maquette (après le refus des versions 1 et 2) : partir des images de `design/maquettes/` pour le rendu et de SPEC.md pour la structure ; n'utiliser que les jetons du thème pour les arrondis, ombres et espacements (aucune valeur en dur, même en HTML) ; présenter chaque écran **côte à côte** avec sa maquette de référence, avec la liste des écarts.
+- 2026-09-30 · **Vocabulaire figé** : `landing` = la page déroulante d'avant le compte (4 cartes de fonctions, bouton « Commencer ») ; `home` = l'onglet 1 de l'app après connexion (« Bonjour Karim », repas du jour, indicateurs, cercle d'improvisation). Deux écrans distincts, jamais fusionnés. Le mot « accueil » ne désigne jamais la Landing. Appliqué dans SPEC.md §0.13 et dans le code (`DashboardScreen` → `HomeScreen`).
+- 2026-09-30 · **Règle de nommage** : un nom = un écran. Minuscules et tirets bas, pas de numérotation Stitch, suffixe `_household` pour le Foyer (jamais `_foyer`), nom nu = Solo. Les états d'un écran (gratuit/premium, repos/caméra) ne créent pas de nouveau nom. Inventaire complet et 14 corrections proposées en SPEC.md §15.
+- 2026-09-30 · Cercle d'improvisation : **photo du frigo seule** (l'illustration avec la main serait illisible à cette taille).

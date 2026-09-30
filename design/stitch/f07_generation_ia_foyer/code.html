@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_blank" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "tertiary-fixed-dim": "#a4d29f", "on-secondary-fixed": "#0a2100", "inverse-surface": "#2f3130", "primary": "#964900", "inverse-on-surface": "#f1f1ef", "primary-fixed-dim": "#ffb786", "surface-bright": "#f9f9f7", "surface-container-low": "#f4f4f2", "on-surface-variant": "#564336", "on-tertiary-fixed": "#002105", "surface-dim": "#dadad8", "surface": "#f9f9f7", "on-error": "#ffffff", "surface-container-high": "#e8e8e6", "outline": "#8a7264", "tertiary-fixed": "#c0efba", "surface-variant": "#e2e3e1", "secondary": "#306c00", "on-surface": "#1a1c1b", "background": "#f9f9f7", "on-secondary": "#ffffff", "on-background": "#1a1c1b", "tertiary-container": "#80ac7c", "secondary-container": "#abf37b", "on-tertiary-fixed-variant": "#274f28", "surface-tint": "#964900", "surface-container-lowest": "#ffffff", "on-primary-fixed-variant": "#723600", "secondary-fixed": "#aef67d", "on-secondary-container": "#327000", "error-container": "#ffdad6", "outline-variant": "#ddc1b0", "on-primary": "#ffffff", "on-error-container": "#93000a", "error": "#ba1a1a", "secondary-fixed-dim": "#93d964", "on-primary-fixed": "#311400", "on-tertiary": "#ffffff", "tertiary": "#3f683e", "on-tertiary-container": "#18401a", "primary-container": "#f5821f", "surface-container-highest": "#e2e3e1", "inverse-primary": "#ffb786", "primary-fixed": "ffdcc6", "on-primary-container": "#5b2a00", "surface-container": "#eeeeec", "on-secondary-fixed-variant": "#235100" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "space-lg": "1.25rem", "gutter": "1rem", "margin-lg": "2rem", "margin-sm": "1rem", "gutter-sm": "0.75rem", "margin": "1.25rem", "space-xl": "1.75rem", "space-md": "1rem", "space-2xl": "2.5rem", "space-sm": "0.5rem" }, fontFamily: { "body-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"] }, fontSize: { "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script><style>@layer base { html, body { width: 100vw; margin: 0; padding: 0; min-height: 100%; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><main class="flex-1 flex flex-col relative w-full pt-safe pb-safe bg-surface"><div class="flex flex-col w-full px-margin pb-margin-lg space-y-space-lg">
+<!-- Top Bar: Discrete Back + AI Model Badge -->
+<div class="flex items-center justify-between pt-space-xs">
+<button aria-label="Retour" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-tertiary transition-transform active:scale-95" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-sm uppercase tracking-wider">Menoo IA Foyer • 4 personnes</span>
+</div>
+<div class="w-10 h-10 flex items-center justify-center">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-ping"></span>
+</div>
+</div>
+<!-- Central Dynamic Visual Card with Orbiting Family Avatars & AI Core -->
+<div class="relative w-full rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm overflow-hidden flex flex-col items-center justify-center min-h-[290px]">
+<!-- Ambient glowing backdrop blobs -->
+<div class="absolute -top-16 -left-16 w-44 h-44 rounded-full bg-secondary-container/30 blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-16 -right-16 w-44 h-44 rounded-full bg-primary-container/20 blur-2xl pointer-events-none"></div>
+<!-- Orbit System Container -->
+<div class="relative w-64 h-64 flex items-center justify-center my-2">
+<!-- Outer Orbit Ring (Static decorative) -->
+<svg class="absolute inset-0 w-full h-full text-surface-container" fill="none" viewBox="0 0 256 256">
+<circle cx="128" cy="128" opacity="0.8" r="102" stroke="currentColor" stroke-dasharray="4 6" stroke-width="2"></circle>
+<circle cx="128" cy="128" opacity="0.5" r="70" stroke="currentColor" stroke-width="1.5"></circle>
+</svg>
+<!-- Animated Rotating AI Conic Energy Ring -->
+<div class="absolute w-44 h-44 rounded-full animate-spin [animation-duration:9s] opacity-70" style="background: conic-gradient(from 0deg, #F5821F 0deg, #6BAE3F 160deg, transparent 280deg, #F5821F 360deg); mask: radial-gradient(farthest-side, transparent calc(100% - 6px), black calc(100% - 6px)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), black calc(100% - 5px));">
+</div>
+<!-- Core AI Pulse Plate -->
+<div class="relative z-10 w-24 h-24 rounded-full bg-gradient-to-br from-surface-container-lowest to-surface-container-low shadow-md flex flex-col items-center justify-center p-3 text-center">
+<div class="w-10 h-10 rounded-full bg-primary-container/15 flex items-center justify-center text-primary-container mb-1">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+</div>
+<span class="font-label-sm text-primary font-bold">IA MENOO</span>
+<span class="text-[9px] text-tertiary font-semibold tracking-tighter uppercase">Optimisation</span>
+</div>
+<!-- Avatar 1: Thomas (Top Left) -->
+<div class="absolute -top-1 left-7 flex flex-col items-center group">
+<div class="w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-secondary to-primary-container shadow-sm">
+<img class="w-full h-full rounded-full object-cover" data-alt="Warm photographic portrait of Thomas, an energetic French father in his late 30s with a cheerful smile and casual linen shirt, softly lit kitchen background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMWfa9w-a2rGU8R0KWrV_9HZNWDtNK6Umr9cDwLzvcjO0JY2RkUMW3laz3EqdrnmdazsZw6eg3Sjxrql7EE4Hc8LsIna__Gye3P9b96ZBMI42eK_0j031vjSdcVITDLHL9LNrLiy7HxvCmyDNxddd8zZ1MErz97Ve-doJDDJNOHwSmnsm63HEHBBJZY3s1Fj101h5Zc28YJxB3OK9h59C_wZ_RUDdQEtUWKSaI7G4">
+</div>
+<div class="mt-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface shadow-xs">
+<p class="font-label-sm font-semibold text-[10px]">Thomas</p>
+</div>
+</div>
+<!-- Avatar 2: Sarah (Top Right) -->
+<div class="absolute -top-1 right-7 flex flex-col items-center">
+<div class="w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-primary-container to-secondary-container shadow-sm">
+<img class="w-full h-full rounded-full object-cover" data-alt="Natural lifestyle portrait of Sarah, an active French mother in her mid-30s smiling gently, outdoors green garden setting with golden hour sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUZZOqsb1waPwUYNE46wyDXLG32jCQQEPyGvveGmYi88TR8YW81mRzErGUy26-z9IoA1EU-yoikx0LiCIRSxCS-N5Di0199cntU5txerVLAPin8oJrHA-zBCxuoy38ByFc5I9vH9KM-3iVaBrXJLYfvEsZUPDN08xeHafErQrl5DH9FERi-0UABG7nn657xBIBHM8Hq_nW6jKGn_brPFtD-ik36glStUaO8jLN6Ak">
+</div>
+<div class="mt-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface shadow-xs">
+<p class="font-label-sm font-semibold text-[10px]">Sarah</p>
+</div>
+</div>
+<!-- Avatar 3: Lucas (Bottom Left) -->
+<div class="absolute -bottom-1 left-7 flex flex-col items-center">
+<div class="w-12 h-12 rounded-full p-0.5 bg-secondary shadow-sm">
+<img class="w-full h-full rounded-full object-cover" data-alt="Bright candid portrait of Lucas, a playful 9-year-old boy with a sporty haircut and striped cotton t-shirt, cheerful bright indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeb3cB2sbzI3yWZ_0-Yh-ZZmAUGBEhDHbvipAMevPeafB0hrkqldwJgjqI8UsCoN3eGt5xFa7-wYvMUQHvuBVfhr31QnDXEKHk8N50GuJ3QydFyp9LySBvV6iZrE2G3I9KJQBoUuINm3x68Tn-cVpiiP3LihDwWn7y2A5I7k0tlJJ8KNyN7iaz0iC8EFsc9CqfORUjhDOeci5Ved9okwaHrlaHh63jEC04_4SXGAU">
+</div>
+<div class="mt-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface shadow-xs">
+<p class="font-label-sm font-semibold text-[10px]">Lucas</p>
+</div>
+</div>
+<!-- Avatar 4: Emma (Bottom Right) -->
+<div class="absolute -bottom-1 right-7 flex flex-col items-center">
+<div class="relative w-12 h-12 rounded-full p-0.5 bg-primary-container shadow-sm">
+<img class="w-full h-full rounded-full object-cover" data-alt="Delightful warm portrait of Emma, a smiling 6-year-old girl with curly light brown hair wearing a yellow sweater, soft morning kitchen atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV2C6-bJ2sGI0VbcX3GAqNneWUSQnOHUZPnrJXE5d_JE6cZNrKZ6iyB-441ExIyj8t48tt_pBikzV0Nm751mQsox2oDGomafsVS50ZXZf1renLIxtYSj0mC90zKgC36_CYKY-7A9AkOVyoDeqs8Bo9qRxThkmvo4MR47K3x3jQ4Tn_H4CUw_zMB7MQo_pbjIBcqTmQRk-KTqesIxY2AZITnXJNMn16ndjAOHp8I1k">
+<!-- Allergy shield badge -->
+<div class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-error text-on-error flex items-center justify-center text-[10px]">
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+</div>
+<div class="mt-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface shadow-xs">
+<p class="font-label-sm font-semibold text-[10px]">Emma</p>
+</div>
+</div>
+</div>
+<!-- Small family balance badge -->
+<div class="inline-flex items-center gap-2 mt-1 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">diversity_1</span>
+<span class="">Foyer Martin • Équilibre 100% calibré</span>
+</div>
+</div>
+<!-- Header Titles & Smart Subtitle -->
+<div class="space-y-space-xs text-center px-space-xs">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">
+      Élaboration du planning familial Martin en cours…
+    </h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+      Conciliation des goûts des enfants, des apports sportifs et respect strict de l’allergie arachides &amp; sans gluten d’Emma.
+    </p>
+</div>
+<!-- Real-time Multi-step Progress Cards -->
+<div class="space-y-2.5 w-full">
+<!-- Step 1: Completed -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-3.5 shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div class="min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface truncate">Harmonisation des 4 profils du foyer…</p>
+<p class="font-body-sm text-body-sm text-secondary font-medium">Préférences et exclusions appliquées</p>
+</div>
+</div>
+<span class="font-label-sm text-secondary bg-secondary-fixed/50 px-2 py-0.5 rounded-md shrink-0 ml-2">Terminé</span>
+</div>
+<!-- Step 2: In Progress -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-3.5 shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+</div>
+<div class="min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface truncate">Calcul des portions (x4) &amp; anti-gaspillage…</p>
+<p class="font-body-sm text-body-sm text-primary-container font-medium">Mutualisation des ingrédients frais</p>
+</div>
+</div>
+<span class="font-label-sm text-primary bg-primary-fixed/60 px-2 py-0.5 rounded-md shrink-0 ml-2 animate-pulse">En cours</span>
+</div>
+<!-- Step 3: Pending -->
+<div class="w-full rounded-xl bg-surface-container-low p-3.5 flex items-center justify-between opacity-80">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">hourglass_empty</span>
+</div>
+<div class="min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface-variant truncate">Optimisation du budget sous le plafond de 110 €…</p>
+<p class="font-body-sm text-body-sm text-outline">Panier drive synchronisé</p>
+</div>
+</div>
+<span class="font-label-sm text-on-surface-variant bg-surface-container-highest px-2 py-0.5 rounded-md shrink-0 ml-2">En attente</span>
+</div>
+</div>
+<!-- Primary Vibrant Action CTA -->
+<div class="pt-space-xs">
+<button class="w-full rounded-full text-on-primary py-4 px-space-lg flex items-center justify-center gap-2 font-label-lg text-label-lg tracking-wide shadow-lg transition-all duration-200 active:scale-[0.98]" id="cta-household-planning" type="button" style="background-color: #1E4620; color: #ffffff; box-shadow: 0 10px 15px -3px rgba(30, 70, 32, 0.3);">
+<span class="">Accéder au planning du foyer</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<p class="text-center font-body-sm text-[11px] text-outline mt-2">
+      Génération temps réel basée sur vos stocks et préférences
+    </p>
+</div>
+</div>
+<script>
+  // Micro-interaction for simulated real-time step progression
+  (function() {
+    const ctaBtn = document.getElementById('cta-household-planning');
+    if (ctaBtn) {
+      ctaBtn.addEventListener('click', () => {
+        // Smooth feedback interaction
+        ctaBtn.classList.add('opacity-90');
+      });
+    }
+  })();
+</script></main>
+
+</body></html>

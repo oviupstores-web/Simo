@@ -1,0 +1,285 @@
+<!DOCTYPE html><html class="h-full bg-[#FAFAF8]" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Menoo - Choix du profil</title>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#F5821F',
+              'orange-light': '#FFF5EB',
+              'orange-soft': '#FFF3E0',
+              green: '#6BAE3F',
+              'green-light': '#E8F5E9',
+              'green-soft': '#F1F8F0',
+              dark: '#1E4620',
+              bg: '#FAFAF8',
+              card: '#FFFFFF',
+              muted: '#6B7280'
+            }
+          },
+          boxShadow: {
+            'soft-card': '0 8px 24px -4px rgba(30, 70, 32, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+            'card-active': '0 12px 28px -6px rgba(107, 174, 63, 0.18), 0 4px 10px -2px rgba(107, 174, 63, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Mobile Device Preview and Layout Controls -->
+<style data-purpose="mobile-layout">
+    /* Ensure proper font rendering and iOS smooth scrolling */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Dynamic active card transition behavior */
+    .choice-card {
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="h-full flex justify-center items-center p-0 sm:p-4 bg-[#EAE8E3]">
+<!-- BEGIN: MobileDeviceFrame -->
+<!-- Screen Device Simulator (width ~390px-412px, full mobile viewport) -->
+<main class="w-full max-w-[412px] h-full sm:h-[844px] bg-[#FAFAF8] sm:rounded-[44px] shadow-2xl relative flex flex-col justify-between overflow-hidden border border-neutral-200/70 sm:border-neutral-800/10">
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto px-5 pt-3 pb-6 flex flex-col no-scrollbar">
+<!-- BEGIN: iOSStatusBar -->
+<!-- Emulated iOS status bar with time, wifi, and battery -->
+<header class="w-full flex justify-between items-center pt-1 pb-2 text-[#1E4620] text-xs font-semibold select-none">
+<span class="">9:41</span>
+<div class="flex items-center space-x-1.5">
+<!-- Signal Icon -->
+<svg class="w-4 h-3.5 fill-current" viewBox="0 0 16 12">
+<path d="M1 10.5h2v1H1v-1zm4-3h2v4H5v-4zm4-3h2v7H9v-7zm4-3h2v10h-2v-10z"></path>
+</svg>
+<!-- Wifi Icon -->
+<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 16 16">
+<path d="M8 12.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-4.24-4.24a6 6 0 0 1 8.48 0 .75.75 0 0 0 1.06-1.06 7.5 7.5 0 0 0-10.6 0 .75.75 0 0 0 1.06 1.06zm-2.12-2.12a9 9 0 0 1 12.72 0 .75.75 0 0 0 1.06-1.06 10.5 10.5 0 0 0-14.84 0 .75.75 0 1 0 1.06 1.06z"></path>
+</svg>
+<!-- Battery Icon -->
+<div class="w-5 h-2.5 border border-current rounded-sm p-0.5 flex items-center relative">
+<div class="h-full w-3.5 bg-current rounded-2xs"></div>
+<div class="absolute -right-1 top-0.5 w-0.5 h-1.5 bg-current rounded-r-xs"></div>
+</div>
+</div>
+</header>
+<!-- END: iOSStatusBar -->
+<!-- BEGIN: TopNavigationBar -->
+<!-- Navigation bar featuring back arrow, centered brand logo & name, and subtle helper icon -->
+<nav aria-label="Navigation principale" class="flex items-center justify-between py-2 mb-2 select-none">
+<!-- Back Button (leads back to Landing_Hook) -->
+<button aria-label="Retour à l'écran précédent" class="w-10 h-10 rounded-full bg-surface-container-lowest border border-outline-variant/30 flex items-center justify-center text-on-surface shadow-xs active:scale-95 transition-transform" type="button">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-on-surface" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+</button>
+<!-- Brand Center: Logo & Name -->
+<div class="flex items-center space-x-2">
+<img alt="Menoo Logo" class="w-[38px] h-[38px] object-contain drop-shadow-sm rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFR9o1VA-cV3Hhpfndmtmh59evBPhNLok2CfgZ_EjpDFEj6OwXWhbz0Ti7YZR98E3fBO8Db38ERvoKu-cy3xPBsNljq2BJhJTH9ZuUrreaCBDKEmpLuZaRjfJR9afGPFvhCA3XSfbmhCL-9MhS71UUmvWXULRhnR7oXSjTkVTdfBErIRQN5TaAKmh_shd15dNBumiTjDHksK-hJlR7KfXO49q78hyH-0gH9RAz6UkxIlQW7BVUhqG0F8vdWhp60y0EpA">
+<span class="text-2xl font-black tracking-tight text-brand-dark">Menoo</span>
+</div>
+<!-- Help Action / Spacer -->
+<button aria-label="Aide et assistance" class="w-10 h-10 rounded-full bg-white border border-neutral-200/80 flex items-center justify-center text-brand-dark/70 shadow-sm active:scale-95 transition-transform" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+<line x1="12" x2="12.01" y1="17" y2="17"></line>
+</svg>
+</button>
+</nav>
+<!-- END: TopNavigationBar -->
+<!-- BEGIN: ProgressIndicator -->
+<!-- Onboarding step pill and progress tracker -->
+<section aria-label="Progression de l'onboarding" class="mt-2 mb-4">
+<div class="flex items-center justify-between mb-1.5">
+<span class="inline-flex items-center text-[11px] font-semibold uppercase tracking-wider text-brand-green bg-brand-green-light px-2.5 py-0.5 rounded-full">
+            Étape 1 sur 4
+          </span>
+<span class="text-[12px] font-medium text-neutral-400">Choix du mode</span>
+</div>
+<!-- Progress Bar Indicator -->
+<div class="w-full h-1.5 bg-neutral-200/70 rounded-full overflow-hidden">
+<div class="h-full bg-brand-green rounded-full w-1/4 transition-all duration-300"></div>
+</div>
+</section>
+<!-- END: ProgressIndicator -->
+<!-- BEGIN: HeaderSection -->
+<!-- Welcoming text and core selection question -->
+<header class="mb-5 mt-1 text-left">
+<span class="inline-block text-xs font-semibold text-brand-green mb-1.5 tracking-tight">
+          Bienvenue sur Menoo 🌱
+        </span>
+<h1 class="text-[25px] leading-tight font-extrabold text-brand-dark tracking-tight">
+          Pour qui cuisinez-vous ?
+        </h1>
+<p class="text-[13.5px] text-neutral-600 mt-1.5 leading-relaxed font-normal">
+          Choisissez votre mode pour personnaliser vos recettes, portions et courses.
+        </p>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: SelectionCardsSection -->
+<!-- Interactive mode selection cards stacked vertically with generous touch area -->
+<div aria-label="Options de profil de cuisine" class="space-y-4" role="radiogroup">
+<!-- Card 1: Individuel (Default Active State) -->
+<div aria-checked="true" class="choice-card cursor-pointer relative bg-white border-2 border-brand-green rounded-2xl p-4 shadow-card-active active:scale-[0.99]" data-purpose="choice-card-solo" id="option-solo" onclick="selectOption('solo')" role="radio" tabindex="0">
+<!-- Top Row: Icon, Title, Badge & Radio -->
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-3">
+<!-- Visual Icon: Person Avatar -->
+<div class="w-12 h-12 rounded-2xl bg-brand-green-light flex items-center justify-center text-brand-green shrink-0 shadow-inner">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+</div>
+<!-- Title & Tag Badge -->
+<div>
+<div class="flex items-center space-x-2">
+<h2 class="text-[19px] font-bold text-brand-dark tracking-tight leading-none">Individuel</h2>
+<span class="text-[11px] font-bold bg-brand-green/10 text-brand-green px-2 py-0.5 rounded-md">Solo</span>
+</div>
+<p class="text-[13px] text-neutral-500 mt-1 font-medium">Un menu et un suivi rien que pour toi</p>
+</div>
+</div>
+<!-- Radio Selection Circle Indicator -->
+<div class="w-6 h-6 rounded-full border-2 border-brand-green flex items-center justify-center bg-brand-green shrink-0 mt-1" id="radio-indicator-solo">
+<div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+</div>
+</div>
+<!-- Feature Pills / Highlights -->
+<div class="mt-3.5 pt-3 border-t border-neutral-100 flex flex-wrap gap-2">
+<span class="inline-flex items-center text-[11.5px] font-medium text-brand-dark/80 bg-brand-green-soft px-2.5 py-1 rounded-lg">
+<svg class="w-3.5 h-3.5 mr-1 text-brand-green" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              Portions sur-mesure
+            </span>
+<span class="inline-flex items-center text-[11.5px] font-medium text-brand-dark/80 bg-brand-green-soft px-2.5 py-1 rounded-lg">
+<svg class="w-3.5 h-3.5 mr-1 text-brand-green" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              Calcul macro individuel
+            </span>
+</div>
+</div>
+<!-- Card 2: Foyer / Famille -->
+<div aria-checked="false" class="choice-card cursor-pointer relative bg-white border border-neutral-200/90 rounded-2xl p-4 shadow-soft-card active:scale-[0.99] hover:border-brand-orange/60" data-purpose="choice-card-family" id="option-family" onclick="selectOption('family')" role="radio" tabindex="0">
+<!-- Top Row: Icon, Title, Badge & Radio -->
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-3">
+<!-- Visual Icon: Group / Family Icon -->
+<div class="w-12 h-12 rounded-2xl bg-brand-orange-soft flex items-center justify-center text-brand-orange shrink-0 shadow-inner">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+</div>
+<!-- Title & Tag Badge -->
+<div>
+<div class="flex items-center space-x-2">
+<h2 class="text-[19px] font-bold text-brand-dark tracking-tight leading-none">Foyer / Famille</h2>
+<span class="text-[11px] font-bold bg-brand-orange/15 text-brand-orange px-2 py-0.5 rounded-md">2 pers. et +</span>
+</div>
+<p class="text-[13px] text-neutral-500 mt-1 font-medium">Des menus pensés pour tout le monde à la maison</p>
+</div>
+</div>
+<!-- Radio Selection Circle Indicator -->
+<div class="w-6 h-6 rounded-full border-2 border-neutral-300 flex items-center justify-center bg-white shrink-0 mt-1" id="radio-indicator-family">
+<div class="w-2.5 h-2.5 bg-transparent rounded-full"></div>
+</div>
+</div>
+<!-- Feature Pills / Highlights -->
+<div class="mt-3.5 pt-3 border-t border-neutral-100 flex flex-wrap gap-2">
+<span class="inline-flex items-center text-[11.5px] font-medium text-brand-dark/80 bg-brand-orange-light px-2.5 py-1 rounded-lg">
+<svg class="w-3.5 h-3.5 mr-1 text-brand-orange" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              Multi-profils
+            </span>
+<span class="inline-flex items-center text-[11.5px] font-medium text-brand-dark/80 bg-brand-orange-light px-2.5 py-1 rounded-lg">
+<svg class="w-3.5 h-3.5 mr-1 text-brand-orange" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              Courses groupées &amp; anti-gaspi
+            </span>
+</div>
+</div>
+</div>
+<!-- END: SelectionCardsSection -->
+</div>
+<!-- BEGIN: BottomActionSection -->
+<!-- Reassurance hint, action button, and iOS home bar indicator -->
+<footer class="w-full px-5 pt-2 pb-3 bg-gradient-to-t from-[#FAFAF8] via-[#FAFAF8] to-transparent shrink-0">
+<!-- Informative hint banner -->
+<div class="flex items-center justify-center space-x-1.5 mb-3.5 text-center">
+<span class="text-xs text-neutral-500 font-medium">
+          💡 Vous pourrez modifier ce choix à tout moment dans votre profil.
+        </span>
+</div>
+<!-- Main Continue CTA Button -->
+<button class="w-full py-4 px-6 rounded-2xl bg-brand-dark hover:bg-[#153416] text-white font-bold text-base flex items-center justify-center space-x-2 shadow-lg shadow-brand-dark/20 active:scale-[0.98] transition-all" data-purpose="continue-button" id="submit-choice-btn" type="button">
+<span class="">Continuer</span>
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<line x1="5" x2="19" y1="12" y2="12"></line>
+<polyline points="12 5 19 12 12 19"></polyline>
+</svg>
+</button>
+<!-- iOS Home Indicator Bar -->
+<div class="mt-4 flex justify-center pb-1">
+<div class="w-32 h-1 bg-neutral-300 rounded-full"></div>
+</div>
+</footer>
+<!-- END: BottomActionSection -->
+</main>
+<!-- END: MobileDeviceFrame -->
+<!-- BEGIN: InteractiveCardToggleScript -->
+<script data-purpose="toggle-selection-script">
+    function selectOption(mode) {
+      const soloCard = document.getElementById('option-solo');
+      const familyCard = document.getElementById('option-family');
+      const soloRadio = document.getElementById('radio-indicator-solo');
+      const familyRadio = document.getElementById('radio-indicator-family');
+      const submitBtn = document.getElementById('submit-choice-btn');
+
+      if (mode === 'solo') {
+        // Activate Solo Card
+        soloCard.setAttribute('aria-checked', 'true');
+        soloCard.className = 'choice-card cursor-pointer relative bg-white border-2 border-brand-green rounded-2xl p-4 shadow-card-active active:scale-[0.99]';
+        soloRadio.className = 'w-6 h-6 rounded-full border-2 border-brand-green flex items-center justify-center bg-brand-green shrink-0 mt-1';
+        soloRadio.innerHTML = '<div class="w-2.5 h-2.5 bg-white rounded-full"></div>';
+
+        // Deactivate Family Card
+        familyCard.setAttribute('aria-checked', 'false');
+        familyCard.className = 'choice-card cursor-pointer relative bg-white border border-neutral-200/90 rounded-2xl p-4 shadow-soft-card active:scale-[0.99] hover:border-brand-orange/60';
+        familyRadio.className = 'w-6 h-6 rounded-full border-2 border-neutral-300 flex items-center justify-center bg-white shrink-0 mt-1';
+        familyRadio.innerHTML = '<div class="w-2.5 h-2.5 bg-transparent rounded-full"></div>';
+        
+        submitBtn.style.backgroundColor = '#1E4620';
+      } else {
+        // Activate Family Card
+        familyCard.setAttribute('aria-checked', 'true');
+        familyCard.className = 'choice-card cursor-pointer relative bg-white border-2 border-brand-orange rounded-2xl p-4 shadow-[0_12px_28px_-6px_rgba(245,130,31,0.22),0_4px_10px_-2px_rgba(245,130,31,0.1)] active:scale-[0.99]';
+        familyRadio.className = 'w-6 h-6 rounded-full border-2 border-brand-orange flex items-center justify-center bg-brand-orange shrink-0 mt-1';
+        familyRadio.innerHTML = '<div class="w-2.5 h-2.5 bg-white rounded-full"></div>';
+
+        // Deactivate Solo Card
+        soloCard.setAttribute('aria-checked', 'false');
+        soloCard.className = 'choice-card cursor-pointer relative bg-white border border-neutral-200/90 rounded-2xl p-4 shadow-soft-card active:scale-[0.99] hover:border-brand-green/60';
+        soloRadio.className = 'w-6 h-6 rounded-full border-2 border-neutral-300 flex items-center justify-center bg-white shrink-0 mt-1';
+        soloRadio.innerHTML = '<div class="w-2.5 h-2.5 bg-transparent rounded-full"></div>';
+        
+        submitBtn.style.backgroundColor = '#1E4620';
+      }
+    }
+  </script>
+<!-- END: InteractiveCardToggleScript -->
+
+
+</body></html>

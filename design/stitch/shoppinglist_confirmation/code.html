@@ -1,0 +1,252 @@
+<!DOCTYPE html><html class="light" lang="fr"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100%;min-height:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}}::-webkit-scrollbar{display:none;}*{-ms-overflow-style:none;scrollbar-width:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-variant": "#e2e3e1", "error-container": "#ffdad6", "on-background": "#1a1c1b", "background": "#f9f9f7", "surface-container-high": "#e8e8e6", "surface-container-low": "#f4f4f2", "inverse-surface": "#2f3130", "surface-tint": "#964900", "inverse-primary": "#ffb786", "outline": "#8a7264", "surface-container": "#eeeeec", "on-tertiary-container": "#18401a", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#c0efba", "error": "#ba1a1a", "tertiary-container": "#80ac7c", "on-secondary": "#ffffff", "on-tertiary-fixed": "#002105", "outline-variant": "#ddc1b0", "on-secondary-container": "#327000", "on-primary": "#ffffff", "on-tertiary-fixed-variant": "#274f28", "on-secondary-fixed": "#0a2100", "surface-bright": "#f9f9f7", "on-primary-fixed": "#311400", "on-surface": "#1a1c1b", "on-primary-container": "#5b2a00", "on-tertiary": "#ffffff", "surface-container-highest": "#e2e3e1", "primary": "#964900", "on-secondary-fixed-variant": "#235100", "tertiary-fixed-dim": "#a4d29f", "on-surface-variant": "#564336", "surface-dim": "#dadad8", "secondary-fixed": "#aef67d", "on-primary-fixed-variant": "#723600", "surface": "#f9f9f7", "primary-fixed-dim": "#ffb786", "secondary-container": "#abf37b", "on-error-container": "#93000a", "secondary-fixed-dim": "#93d964", "primary-container": "#f5821f", "on-error": "#ffffff", "tertiary": "#3f683e", "inverse-on-surface": "#f1f1ef", "primary-fixed": "#ffdcc6", "secondary": "#306c00" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-sm": "0.5rem", "space-lg": "1.25rem", "space-xs": "0.25rem", "margin-sm": "1rem", "margin-lg": "2rem", "space-md": "1rem", "gutter": "1rem", "margin": "1.25rem", "space-xl": "1.75rem", "space-2xl": "2.5rem", "gutter-sm": "0.75rem" }, fontFamily: { "headline-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, fontSize: { "headline-lg": ["32px", { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "700" }], "label-lg": ["14px", { lineHeight: "18px", letterSpacing: "0.01em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "700" }], "headline-lg-mobile": ["26px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }], "display-lg": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "headline-md": ["22px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "700" }], "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }], "body-lg": ["16px", { lineHeight: "24px", fontWeight: "500" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-white pt-safe pb-safe"><main class="flex-1 flex flex-col relative w-full bg-surface"><div class="flex flex-col w-full px-margin pb-space-2xl space-y-space-lg relative overflow-hidden" id="confirmation-screen">
+<!-- Micro Confetti Canvas for Delight -->
+<div class="absolute inset-0 pointer-events-none z-10 overflow-hidden" id="confetti-container"></div>
+<!-- Celebration Header & Icon -->
+<div class="flex flex-col items-center text-center pt-space-md">
+<!-- Success Badge -->
+<div class="relative flex items-center justify-center mb-space-md">
+<div class="w-24 h-24 rounded-full bg-secondary-container/40 flex items-center justify-center animate-pulse"></div>
+<div class="absolute w-20 h-20 rounded-full bg-secondary-container shadow-lg flex items-center justify-center transition-transform hover:scale-105 duration-300">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1, 'wght' 700;">
+          check_circle
+        </span>
+</div>
+<!-- Decorative Sparkle Chips -->
+<div class="absolute -top-1 -right-2 bg-surface-container-lowest shadow-sm rounded-full p-1.5 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">arrow_back_ios_new</span>
+</div>
+<div class="absolute -bottom-1 -left-2 bg-surface-container-lowest shadow-sm rounded-full p-1.5 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+</div>
+<!-- Title & Subtitle -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">
+      Commande validée avec succès&nbsp;! 🎉
+    </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mt-space-xs leading-relaxed">
+      Vos courses sont transmises et seront prêtes pour votre retrait au créneau choisi.
+    </p>
+<!-- Quick Calendar Reminder Pill Action -->
+<button class="mt-space-md inline-flex items-center space-x-space-sm bg-surface-container-lowest px-space-md py-space-sm rounded-full shadow-sm text-secondary hover:bg-secondary-container/20 transition-all duration-200 active:scale-95" id="calendar-btn" onclick="toggleCalendarReminder(this)" type="button">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">event_available</span>
+<span class="font-label-lg text-label-lg font-semibold" id="cal-text">Ajouter le rappel à mon calendrier</span>
+</button>
+</div>
+<!-- Pickup Detail Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col space-y-space-md">
+<!-- Header with Order Reference Tag -->
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center space-x-space-xs">
+<span class="material-symbols-outlined text-secondary text-xl">shopping_bag</span>
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Retrait Drive</span>
+</div>
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-space-sm py-1 rounded-full font-bold tracking-wide">
+        #MN-2024-8842
+      </span>
+</div>
+<!-- Store Info & Location Data -->
+<div class="flex items-start space-x-space-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-2xl">storefront</span>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">E.Leclerc Drive</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Bordeaux Ouest • 1,4 km</p>
+</div>
+</div>
+<!-- Time Slot Highlight Banner -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-center space-x-space-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container/60 flex items-center justify-center shrink-0 text-on-secondary-container">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">schedule</span>
+</div>
+<div class="min-w-0">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Créneau réservé</p>
+<p class="font-body-lg text-body-lg font-bold text-on-surface">Ven. 18 Oct. • 17h30 - 18h00</p>
+</div>
+</div>
+<!-- Address & GPS Deep Link -->
+<a class="flex items-center justify-between pt-space-xs text-on-surface-variant hover:text-primary transition-colors" href="https://maps.google.com" rel="noopener noreferrer" target="_blank">
+<div class="flex items-center space-x-space-xs truncate">
+<span class="material-symbols-outlined text-lg shrink-0">pin_drop</span>
+<span class="font-body-md text-body-md truncate">12 Avenue des Gravières</span>
+</div>
+<span class="font-label-md text-label-md text-primary font-semibold shrink-0 ml-space-sm flex items-center">
+        Waze / Maps
+        <span class="material-symbols-outlined text-sm ml-0.5">north_east</span>
+</span>
+</a>
+</div>
+<!-- Reserve & Smart Savings Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center">
+<span class="material-symbols-outlined text-primary-container mr-space-xs" style="font-variation-settings: 'FILL' 1;">insights</span>
+        Bilan Menoo
+      </h3>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm px-space-sm py-0.5 rounded-full font-bold">
+        Anti-Gaspillage
+      </span>
+</div>
+<!-- Financial Stats Grid -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Montant réglé</span>
+<span class="font-headline-md text-headline-md text-on-surface mt-1 font-bold">64,80&nbsp;€</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Paiement sécurisé</span>
+</div>
+<div class="bg-secondary-container/30 rounded-xl p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-secondary-container font-semibold">Économie nette</span>
+<span class="material-symbols-outlined text-secondary text-sm">trending_down</span>
+</div>
+<span class="font-headline-md text-headline-md text-secondary mt-1 font-extrabold">+46,10&nbsp;€</span>
+<span class="font-body-sm text-body-sm text-secondary font-medium mt-0.5">Optimisation Menoo</span>
+</div>
+</div>
+<!-- Key Intelligent Synchronization Milestones -->
+<div class="space-y-space-sm pt-space-xs">
+<!-- Item 1: Recettes -->
+<div class="flex items-start space-x-space-md p-space-sm rounded-lg bg-surface-container-low/60">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-sm text-primary">
+<span class="material-symbols-outlined text-lg">restaurant_menu</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">
+<span class="font-bold">18 ingrédients</span> intégrés directement dans vos recettes prévues cette semaine.
+          </p>
+</div>
+</div>
+<!-- Item 2: Réserve synchronisée -->
+<div class="flex items-start space-x-space-md p-space-sm rounded-lg bg-surface-container-low/60">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-sm text-secondary">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">kitchen</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">
+<span class="font-bold">5 articles de votre Réserve</span> ont été déduits et synchronisés dans votre inventaire.
+          </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Weekly Preview Mini Carousel / Image Accents -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Au menu ce week-end</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">3 repas prêts à cuisiner</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs">
+<div class="relative h-20 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Close up warm appetizing bowl of creamy butternut squash risotto garnished with fresh herbs and roasted pine nuts, soft studio light, warm earthy tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVfUnt4tVIyBeEYFjyOcj2xzVnh9XXh8HkbHWNa9BH5YCVzqEJMdl5rd17szWRiDdRhjTHS3RkRRXeClLvFpJRfkSBKK9iVCEtNY8wj1_AO5o6t4tIq6q5AMGRDqwPU3eceD64A7lQJljgIJO7QQEjGTYa6QRKnR7kt4hu6thDuVyftr9JJMpJav4oIjlY2HQE8TSe1qWVMBwiL0U1S9e6jRszDgzFWTID7LWX3vriRETeN7YTRTlm">
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/70 to-transparent flex items-end p-1">
+<span class="text-white font-label-sm text-label-sm leading-tight truncate">Risotto courge</span>
+</div>
+</div>
+<div class="relative h-20 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Bright fresh salmon poke bowl with sliced avocado, crisp edamame, red cabbage, and sesame seeds on wooden surface, natural sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrlVaNfF_zCeMSEHV0YH3cVIKANXxdZWx5HdqOJGmZu5SMY9mMUJbGXi8vkKhZq1TDlVt6T1fr_Ji7azv_TLUo_uO5hSvbqrpVQGQuV9Phm4mtrqxSREAzxGxxGuLbZln0vfEci5OXjAwM7fWBBBbBWsZX_ekg1zJJxIWHNbPTbBWWACqT8Tp8hg1PW9BzlLTD4n9mmvdfFVz1EcZK0lmCpsH1q7fUpyo0J6-EKrDlVmlTJmZ-QJ1L">
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/70 to-transparent flex items-end p-1">
+<span class="text-white font-label-sm text-label-sm leading-tight truncate">Bowl Saumon</span>
+</div>
+</div>
+<div class="relative h-20 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Artisanal rustic Mediterranean vegetable tart with caramelized onions, zucchini ribbons, and goat cheese on golden flaky crust, warm kitchen lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAixvOiJ348qZeR6C76KAK7LtMOpZguba-_kRcUAJWJLINz9_qyO-FLyuHBZ-kI8rkEMPkth7K2hZqRjHdPGTkHfi3Gl459WdurK01EVrnG1ycwRuRxSLwN88VxjDMcgmF3Ilmct7vCo0vlBE0XwTKYpmwNzXDbw9N8tXqnDLguoQpqxmKnSesEr9Ny6mF1aoCskJeuxnSc1kCUF7ap19X5pcHekreRMkFTnbV3iuGL-4vY6xUG2lS-">
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/70 to-transparent flex items-end p-1">
+<span class="text-white font-label-sm text-label-sm leading-tight truncate">Tarte Chèvre</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary & Secondary CTA Block -->
+<div class="flex flex-col space-y-space-sm pt-space-xs">
+<!-- Main Dashboard CTA -->
+<a class="w-full bg-primary-container hover:bg-primary-container/90 text-on-primary py-4 px-space-lg rounded-full font-label-lg text-label-lg font-bold flex items-center justify-center space-x-space-sm shadow-md transition-all duration-200 active:scale-95 text-center" href="#dashboard">
+<span>Aller au tableau de bord</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</a>
+<!-- Secondary Soft CTA -->
+<button class="w-full bg-secondary-container/30 hover:bg-secondary-container/50 text-secondary py-3.5 px-space-lg rounded-full font-label-lg text-label-lg font-semibold flex items-center justify-center space-x-space-xs transition-all duration-200 active:scale-98" onclick="showReceiptModal()" type="button">
+<span class="material-symbols-outlined text-lg">receipt_long</span>
+<span>Voir le reçu détaillé</span>
+</button>
+</div>
+<!-- Minimalist Receipt Modal Simulator -->
+<div class="fixed inset-0 z-50 flex items-end justify-center bg-on-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="receipt-modal">
+<div class="w-full max-w-lg bg-surface-container-lowest rounded-t-2xl p-space-lg shadow-xl transform translate-y-full transition-transform duration-300 ease-out" id="receipt-modal-card">
+<div class="w-12 h-1 bg-surface-variant rounded-full mx-auto mb-space-md"></div>
+<div class="flex items-center justify-between pb-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Reçu de commande</h3>
+<button class="p-1 rounded-full text-on-surface-variant hover:bg-surface-container-high" onclick="hideReceiptModal()" type="button">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<div class="space-y-space-sm py-space-sm text-on-surface-variant font-body-md text-body-md">
+<div class="flex justify-between"><span>Panier brut (23 articles)</span><span class="text-on-surface">110,90 €</span></div>
+<div class="flex justify-between text-secondary"><span>Réserve déduite Menoo (-5)</span><span>-31,20 €</span></div>
+<div class="flex justify-between text-secondary"><span>Promotions Drive Leclerc</span><span>-14,90 €</span></div>
+<div class="pt-space-sm flex justify-between font-bold text-on-surface font-headline-sm text-headline-sm">
+<span>Total Débité</span>
+<span>64,80 €</span>
+</div>
+</div>
+<button class="w-full mt-space-md bg-surface-container-high text-on-surface font-label-lg text-label-lg py-3 rounded-full font-semibold" onclick="hideReceiptModal()" type="button">
+        Fermer
+      </button>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interactions for calendar and receipt modal
+  function toggleCalendarReminder(btn) {
+    const textSpan = document.getElementById('cal-text');
+    const iconSpan = btn.querySelector('.material-symbols-outlined');
+    
+    if (btn.classList.contains('bg-secondary')) {
+      btn.className = 'mt-space-md inline-flex items-center space-x-space-sm bg-surface-container-lowest px-space-md py-space-sm rounded-full shadow-sm text-secondary hover:bg-secondary-container/20 transition-all duration-200 active:scale-95';
+      iconSpan.textContent = 'event_available';
+      textSpan.textContent = 'Ajouter le rappel à mon calendrier';
+    } else {
+      btn.className = 'mt-space-md inline-flex items-center space-x-space-sm bg-secondary px-space-md py-space-sm rounded-full shadow-sm text-white transition-all duration-200 active:scale-95';
+      iconSpan.textContent = 'check';
+      textSpan.textContent = 'Rappel programmé (Ven. 17h00)';
+    }
+  }
+
+  function showReceiptModal() {
+    const modal = document.getElementById('receipt-modal');
+    const card = document.getElementById('receipt-modal-card');
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    card.classList.remove('translate-y-full');
+  }
+
+  function hideReceiptModal() {
+    const modal = document.getElementById('receipt-modal');
+    const card = document.getElementById('receipt-modal-card');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    card.classList.add('translate-y-full');
+  }
+
+  // Micro-confetti generator for subtle celebratory pop
+  (function spawnConfetti() {
+    const container = document.getElementById('confetti-container');
+    if (!container) return;
+    const colors = ['#f5821f', '#abf37b', '#306c00', '#ffdcc6'];
+    for (let i = 0; i < 18; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'absolute rounded-full opacity-80';
+      const size = Math.floor(Math.random() * 6) + 4;
+      dot.style.width = size + 'px';
+      dot.style.height = size + 'px';
+      dot.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      dot.style.left = Math.random() * 100 + '%';
+      dot.style.top = (Math.random() * 140) + 'px';
+      dot.style.transform = `scale(${Math.random() + 0.5})`;
+      container.appendChild(dot);
+    }
+  })();
+</script></main></body></html>

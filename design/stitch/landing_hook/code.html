@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Menoo - Landing Hook</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-orange': '#F5821F',
+            'brand-green': '#6BAE3F',
+            'brand-dark': '#1E4620',
+            'brand-bg': '#FAFAF8',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 8px 24px -4px rgba(30, 70, 32, 0.08)',
+            'card': '0 12px 32px -8px rgba(0, 0, 0, 0.07)',
+            'cta': '0 10px 25px -4px rgba(245, 130, 31, 0.42)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style data-purpose="custom-layout">
+    body {
+      background-color: #ECECE9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Safe container simulation for iOS viewport height */
+    .app-screen {
+      width: 100%;
+      max-width: 412px;
+      min-height: 100vh;
+      background-color: #FAFAF8;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      position: relative;
+      margin: 0 auto;
+      overflow-x: hidden;
+    }
+    /* Hide scrollbars for slick mobile aesthetics */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+<!-- BEGIN: MobileContainer -->
+<div class="app-screen flex flex-col justify-between select-none">
+<!-- Top Container: Status Bar + App Bar + Main Content -->
+<div class="flex-1 flex flex-col">
+<!-- BEGIN: StatusBar -->
+<!-- iOS Standard Dynamic Status Bar -->
+<div class="w-full pt-3 px-7 pb-2 flex justify-between items-center text-zinc-900 text-xs font-semibold z-20" data-purpose="status-bar">
+<span class="">9:41</span>
+<div class="flex items-center space-x-2">
+<!-- Cellular Signal -->
+<svg class="w-4 h-3.5 fill-current" fill="none" viewBox="0 0 16 12">
+<rect height="3" rx="0.5" width="2.5" x="0" y="9"></rect>
+<rect height="6" rx="0.5" width="2.5" x="4.5" y="6"></rect>
+<rect height="9" rx="0.5" width="2.5" x="9" y="3"></rect>
+<rect height="11.5" rx="0.5" width="2.5" x="13.5" y="0.5"></rect>
+</svg>
+<!-- Wifi -->
+<svg class="w-4 h-3.5 fill-current" viewBox="0 0 16 12">
+<path clip-rule="evenodd" d="M8 2.5C11.1 2.5 13.9 3.8 15.8 5.8L8 14.5L0.2 5.8C2.1 3.8 4.9 2.5 8 2.5ZM13.8 6.5C12.3 5 10.3 4 8 4C5.7 4 3.7 5 2.2 6.5L8 12.8L13.8 6.5Z" fill-rule="evenodd"></path>
+</svg>
+<!-- Battery -->
+<div class="w-6 h-3 rounded-md border border-zinc-800 p-0.5 flex items-center">
+<div class="w-3.5 h-full bg-zinc-900 rounded-[1.5px]"></div>
+</div>
+</div>
+</div>
+<!-- END: StatusBar -->
+<!-- BEGIN: MainHeader -->
+<!-- Top Brand Header with Logo and AI Badge -->
+<header class="px-5 pt-1 pb-3 flex items-center justify-between" data-purpose="app-header">
+<div class="flex items-center space-x-3">
+<!-- Logo Image -->
+<div class="w-12 h-12 rounded-2xl bg-white p-1 shadow-soft flex items-center justify-center border border-zinc-100">
+<img alt="Menoo Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP9quWJbcJgLeCRDjPcWoizaNpVN5PcgQC9hdgw3TkNGpe6FBzjhHCGT8GkPgZJiEjqbuB1AXmDFiyMv3QCY7VeEuOh7x-d5JNZu2kntkU5TpXap9J1S6ThwXC5fmxfkIKU-cjmh8FfaKYTdHsUr1wz3rDzESxd_O0MUHjrbBY1MT7b0uqUHRHGN1M5UeLAm5cl0IVAdqZ_HU7G-0e236jxc_vwqqUf4wRz6YL4CadpgSL7FnwMsUVGLC9TCgfb3cjPA">
+</div>
+<!-- Wordmark -->
+<div class="flex flex-col">
+<span class="text-2xl font-extrabold tracking-tight text-brand-dark leading-tight">Menoo</span>
+<span class="text-[11px] font-semibold text-brand-green tracking-wide -mt-0.5">Planificateur intelligent</span>
+</div>
+</div>
+<!-- Smart AI Badge -->
+<span class="inline-flex items-center space-x-1.5 px-3 py-1 bg-emerald-50 border border-emerald-100/80 rounded-full text-emerald-800 text-[11px] font-bold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="">IA Nutrition &amp; Budget</span>
+</span>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: HeroSection -->
+<!-- Food Showcase Collage with Floating Social Proof Badge -->
+<section class="px-5 pt-2 pb-4" data-purpose="hero-banner">
+<div class="relative w-full rounded-[24px] overflow-hidden shadow-card border border-stone-100 bg-white">
+<img alt="Repas équilibré et gourmand Menoo" class="w-full h-48 object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB70nkx6Rvm76Y6XZj8nx_SObzPK4EbdiPgdZgzERBZhSZ-TTEVTWoOzdNz8VADpbKPzwxfUtalXCfozYRrZ89jY5He0okUXxQBomJwBy6gw7zQjXRIBoqLJwAbVJUbR8aBJtvyqDzMJk_fy08xC_C2aRtTu-gW1wZWrGVHXC6yn93sqyC3gJkGdCIel_fbh1_lhC9ys8R-kWFCj6yZ-pU6ivISsTn7-lvLgkum155wxNjG175OPahV">
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+<!-- Social Proof Badge -->
+<div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-white/60 flex items-center space-x-1.5">
+<div class="flex items-center text-amber-500 text-xs">
+<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+</svg>
+<span class="font-bold ml-1 text-zinc-900 text-xs">4.9</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-zinc-300"></span>
+<span class="text-zinc-600 font-semibold text-[11px]">+50k repas planifiés</span>
+</div>
+</div>
+</section>
+<!-- END: HeroSection -->
+<!-- BEGIN: HeadlineSection -->
+<!-- Value Proposition Header -->
+<section class="px-6 pt-1 pb-3" data-purpose="lead-text">
+<h1 class="text-[25px] leading-[1.2] font-extrabold text-brand-dark tracking-tight">
+          Mangez mieux, dépensez moins, <span class="text-brand-orange">sans prise de tête.</span>
+</h1>
+<p class="mt-2 text-stone-600 text-sm leading-relaxed">
+          L'application intelligente qui planifie vos repas sur-mesure et optimise vos courses au meilleur prix.
+        </p>
+</section>
+<!-- END: HeadlineSection -->
+<!-- BEGIN: ValuePropositionList -->
+<!-- Interactive Core Benefit Cards -->
+<section class="px-5 space-y-2.5 py-1" data-purpose="value-propositions">
+<!-- Feature 1: IA Menus & Budget -->
+<article class="flex items-center p-3 rounded-2xl bg-white border border-stone-100 shadow-soft">
+<div class="flex-shrink-0 w-11 h-11 rounded-xl bg-orange-100/70 text-brand-orange flex items-center justify-center mr-3.5">
+<!-- Sparkles / AI Icon -->
+<svg class="w-6 h-6 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24">
+<path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1">
+<h2 class="text-sm font-bold text-zinc-900 leading-snug">Menus générés par IA</h2>
+<p class="text-xs text-stone-500 font-medium">Recettes adaptées à vos goûts et votre budget</p>
+</div>
+</article>
+<!-- Feature 2: Anti-gaspillage & Économies -->
+<article class="flex items-center p-3 rounded-2xl bg-white border border-stone-100 shadow-soft">
+<div class="flex-shrink-0 w-11 h-11 rounded-xl bg-emerald-100/70 text-brand-green flex items-center justify-center mr-3.5">
+<!-- Piggy Bank / Savings Icon -->
+<svg class="w-6 h-6 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1">
+<h2 class="text-sm font-bold text-zinc-900 leading-snug">Fini le gaspillage alimentaire</h2>
+<p class="text-xs text-stone-500 font-medium">Économisez jusqu'à 150€ chaque mois</p>
+</div>
+</article>
+<!-- Feature 3: Objectifs Nutritionnels -->
+<article class="flex items-center p-3 rounded-2xl bg-white border border-stone-100 shadow-soft">
+<div class="flex-shrink-0 w-11 h-11 rounded-xl bg-emerald-900/10 text-brand-dark flex items-center justify-center mr-3.5">
+<!-- Heart / Pulse Nutrition Icon -->
+<svg class="w-6 h-6 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1">
+<h2 class="text-sm font-bold text-zinc-900 leading-snug">Objectifs &amp; nutrition précise</h2>
+<p class="text-xs text-stone-500 font-medium">Macros calculés : perte de poids, muscle ou santé</p>
+</div>
+</article>
+<!-- Feature 4: Course au meilleur prix -->
+<article class="flex items-center p-3 rounded-2xl bg-white border border-stone-100 shadow-soft">
+<div class="flex-shrink-0 w-11 h-11 rounded-xl bg-amber-100/70 text-amber-600 flex items-center justify-center mr-3.5">
+<!-- Shopping Cart / Location Icon -->
+<svg class="w-6 h-6 stroke-current" fill="none" stroke-width="2" viewBox="0 0 24 24">
+<path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1">
+<h2 class="text-sm font-bold text-zinc-900 leading-snug">Courses optimisées en supermarché</h2>
+<p class="text-xs text-stone-500 font-medium">Liste automatique triée par rayon et enseigne</p>
+</div>
+</article>
+</section>
+<!-- END: ValuePropositionList -->
+</div>
+<!-- BEGIN: BottomActionSection -->
+<!-- Sticky Call To Action Footer -->
+<footer class="w-full px-6 pt-4 pb-2 bg-gradient-to-t from-[#FAFAF8] via-[#FAFAF8] to-transparent" data-purpose="cta-actions">
+<!-- Primary Action CTA -->
+<button class="w-full h-14 rounded-full bg-[#2D5A27] text-white font-extrabold text-base tracking-wide flex items-center justify-center space-x-2 shadow-lg hover:bg-[#23481e] active:scale-[0.98] transition-all duration-200" type="button">
+<span class="">Commencer gratuitement</span>
+<svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Secondary Login Option -->
+<div class="text-center mt-3">
+<button class="text-xs font-semibold text-brand-dark/80 hover:text-brand-dark hover:underline transition-colors py-1" type="button">
+          J'ai déjà un compte
+        </button>
+</div>
+<!-- iOS Home Bar Indicator -->
+<div class="w-full flex justify-center pt-2 pb-1">
+<div class="w-32 h-1 bg-stone-300 rounded-full"></div>
+</div>
+</footer>
+<!-- END: BottomActionSection -->
+</div>
+<!-- END: MobileContainer -->
+
+
+
+
+</body></html>

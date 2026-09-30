@@ -1,0 +1,634 @@
+<!DOCTYPE html><html lang="fr" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><title>Menoo - Scanner Aliment</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+  @keyframes scanline {
+    0% { top: 6%; opacity: 0.8; }
+    50% { top: 90%; opacity: 1; }
+    100% { top: 6%; opacity: 0.8; }
+  }
+  .animate-scanline {
+    animation: scanline 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.08); opacity: 0.3; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+  }
+  .animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  body {
+    min-height: max(884px, 100dvh);
+  }
+</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "error": "#ba1a1a", "secondary-fixed": "#aef67d", "surface-container-highest": "#e2e3e1", "on-primary-fixed-variant": "#723600", "inverse-primary": "#ffb786", "background": "#f9f9f7", "inverse-on-surface": "#f1f1ef", "outline-variant": "#ddc1b0", "primary": "#964900", "surface-container-lowest": "#ffffff", "on-tertiary-container": "#18401a", "secondary-fixed-dim": "#93d964", "on-secondary-container": "#327000", "primary-fixed": "#ffdcc6", "surface-container-high": "#e8e8e6", "on-tertiary": "#ffffff", "on-secondary": "#ffffff", "tertiary": "#3f683e", "surface": "#f9f9f7", "tertiary-fixed-dim": "#a4d29f", "on-surface-variant": "#564336", "on-surface": "#1a1c1b", "secondary-container": "#abf37b", "on-tertiary-fixed-variant": "#274f28", "on-secondary-fixed": "#0a2100", "tertiary-container": "#80ac7c", "outline": "#8a7264", "inverse-surface": "#2f3130", "on-primary-fixed": "#311400", "on-error": "#ffffff", "primary-fixed-dim": "#ffb786", "on-primary-container": "#5b2a00", "on-secondary-fixed-variant": "#235100", "surface-container-low": "#f4f4f2", "surface-bright": "#f9f9f7", "on-error-container": "#93000a", "secondary": "#306c00", "primary-container": "#f5821f", "on-tertiary-fixed": "#002105", "on-background": "#1a1c1b", "surface-tint": "#964900", "tertiary-fixed": "#c0efba", "on-primary": "#ffffff", "surface-variant": "#e2e3e1", "error-container": "#ffdad6", "surface-container": "#eeeeec", "surface-dim": "#dadad8" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter-sm": "0.75rem", "margin-sm": "1rem", "space-md": "1rem", "gutter": "1rem", "space-lg": "1.25rem", "margin-lg": "2rem", "space-2xl": "2.5rem", "space-sm": "0.5rem", "space-xl": "1.75rem", "space-xs": "0.25rem", "margin": "1.25rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Retour" class="w-10 h-10 rounded-full bg-surface-container-lowest border border-outline-variant/30 flex items-center justify-center text-on-surface shadow-xs active:scale-95 transition-transform flex-shrink-0" onclick="history.back()"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-on-surface" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg></button><div class="flex items-center gap-2 min-w-0"><img alt="Menoo Logo" class="w-8 h-8 rounded-lg object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgXkvWckxr4WxoP8NiEdrxqYhURz3EaWK-t2PZCWN-ru9DEqZFRzVV5JLxtvmYAR63M-Zq_fDN1smwsjCIM9ylF7VYNkNaYjD3UxTTj1cYRFknvMoVNmKizu39-jg3V6yJvhki2gfKFIW307Vzv67wyaSVIDmG8NZ1x8smBbt2yS8iKZ2WBjYoHumRfz5fUO3vC7bMZDcrYccTcRwlQolStU2ymDlwsUt0vfK17WP1hKNrHVRHkKitla-zq7oB7nEa9A"><span class="font-headline-sm font-bold text-[20px] text-on-surface tracking-tight truncate">Menoo</span></div></div><div class="flex items-center gap-space-xs flex-shrink-0"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface"><div class="flex flex-col w-full pb-36">
+<!-- Zone Viseur Caméra Interactive -->
+<section class="px-margin pt-space-sm pb-space-xs flex flex-col gap-space-sm">
+<div class="relative w-full h-80 rounded-2xl overflow-hidden shadow-md bg-neutral-900 flex items-center justify-center group" id="camera-viewport-container">
+<!-- Video stream -->
+<video autoplay="" class="w-full h-full object-cover hidden" id="camera-feed" muted="" playsinline=""></video>
+<!-- Fallback image preview (visible if camera denied or captured) -->
+<img alt="Prévisualisation caméra Menoo" class="w-full h-full object-cover" id="camera-preview-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZeeWdCnbAucyKWpUf7nYt48QPgaykSrJCDzRwQpdwhyghavpO-7Mqpzir5PyOjA51sIaCSQYR1K-XYzFH8ufuYrB665iu_j3XOmIox2Cmg5HHAlNITuIqEpHvTlYfDGOMbuG3Rt5lroScBKGnGpJ2o3ew55mJ_mpXsbalMw49TnAjCc7vhDx6GpDVtdx2L1PACoVTg_ugEVcSm-q-XQ4eepiaAVmo8MXHoSAFhWkyGkVHfoA9xcPg">
+<!-- Hidden Canvas for frame snapshot -->
+<canvas class="hidden" id="capture-canvas"></canvas>
+<!-- Hidden File Input for photo upload -->
+<input accept="image/*" capture="environment" class="hidden" id="camera-file-input" type="file">
+<!-- Gradient Scrim for Contrast -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 pointer-events-none"></div>
+<!-- Scanning Grid & Reticle Overlay -->
+<div class="absolute inset-4 pointer-events-none rounded-xl border border-white/20">
+<!-- Framing Corners -->
+<span class="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-4 border-l-4 border-primary-container rounded-tl-lg"></span>
+<span class="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-4 border-r-4 border-primary-container rounded-tr-lg"></span>
+<span class="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-4 border-l-4 border-primary-container rounded-bl-lg"></span>
+<span class="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-4 border-r-4 border-primary-container rounded-br-lg"></span>
+<!-- Laser scan beam -->
+<div class="absolute left-1 right-1 h-0.5 bg-gradient-to-r from-transparent via-primary-container to-transparent shadow-[0_0_12px_#f5821f] animate-scanline" id="scan-laser"></div>
+</div>
+<!-- Camera Status Badge -->
+<div class="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2 shadow-sm z-10" id="camera-status-badge">
+<span class="w-2.5 h-2.5 rounded-full animate-pulse bg-primary-container" id="status-dot"></span>
+<span class="font-label-sm text-label-sm text-on-surface tracking-wide uppercase font-semibold" id="status-text">Prêt à scanner</span>
+</div>
+<!-- Floating Detected Bounding Boxes (Overlaid on capture) -->
+<div class="detected-floating-tags transition-opacity duration-300" id="floating-tags">
+<div class="absolute top-12 left-6 bg-surface-container-lowest/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5 animate-bounce" style="animation-duration: 3s;">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Courgettes</span>
+</div>
+<div class="absolute top-16 right-8 bg-surface-container-lowest/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5 animate-bounce" style="animation-duration: 2.7s; animation-delay: 0.4s;">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Tomates</span>
+</div>
+<div class="absolute bottom-24 left-8 bg-surface-container-lowest/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Lait</span>
+</div>
+<div class="absolute bottom-20 right-10 bg-surface-container-lowest/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Œufs</span>
+</div>
+</div>
+<!-- Live Analysis Overlay State (Hidden until capture) -->
+<div class="absolute inset-0 bg-black/75 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-white text-center hidden" id="analysis-overlay">
+<div class="w-16 h-16 relative flex items-center justify-center mb-3">
+<div class="absolute inset-0 rounded-full border-4 border-primary-container/30"></div>
+<div class="absolute inset-0 rounded-full border-4 border-primary-container border-t-transparent animate-spin"></div>
+<span class="material-symbols-outlined text-[28px] text-primary-container">auto_awesome</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm font-bold tracking-tight mb-1">Analyse IA des aliments...</h3>
+<p class="font-body-sm text-body-sm text-surface-variant max-w-xs mb-3">Identification des produits, calcul des portions et dates estimées.</p>
+<div class="w-48 bg-white/20 h-1.5 rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full transition-all duration-700 w-3/4 animate-pulse"></div>
+</div>
+</div>
+<!-- Top Camera Controls (Torch / Flip Camera / Upload) -->
+<div class="absolute top-3 left-3 flex items-center gap-2 z-10">
+<button class="w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md flex items-center justify-center text-white transition-all shadow" id="btn-toggle-camera" title="Basculer de caméra" type="button">
+<span class="material-symbols-outlined text-[19px]">flip_camera_ios</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md flex items-center justify-center text-white transition-all shadow" id="btn-toggle-flash" title="Lampe torche" type="button">
+<span class="material-symbols-outlined text-[19px]">flash_on</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md flex items-center justify-center text-white transition-all shadow" id="btn-import-file" title="Importer une photo" type="button">
+<span class="material-symbols-outlined text-[19px]">photo_library</span>
+</button>
+</div>
+<!-- Bottom Shutter & Capture Bar -->
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white z-10">
+<div class="flex items-center gap-1.5 text-xs text-white/90">
+<span class="material-symbols-outlined text-[16px] text-primary-container">videocam</span>
+<span class="font-label-sm" id="camera-meta-label">Aperçu frigo</span>
+</div>
+<!-- Big Shutter Trigger Button -->
+<div class="absolute left-1/2 -translate-x-1/2 -bottom-1">
+<button class="relative w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border-[3px] border-primary-container active:scale-90 transition-transform cursor-pointer group" id="btn-capture-shutter" title="Prendre la photo et analyser" type="button">
+<div class="w-12 h-12 rounded-full bg-white group-hover:bg-primary-container/10 flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[26px] text-primary-container">camera</span>
+</div>
+<div class="absolute -inset-1 rounded-full border-2 border-primary-container/60 animate-pulse-ring pointer-events-none"></div>
+</button>
+</div>
+<button class="flex items-center gap-1 bg-black/40 hover:bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-xs transition-all" id="btn-live-crop" type="button">
+<span class="material-symbols-outlined text-[14px]">crop_free</span>
+<span class="font-label-sm">Recadrer</span>
+</button>
+</div>
+</div>
+<!-- Screen Title & Guidance -->
+<div class="flex flex-col gap-1 mt-space-xs">
+<div class="flex items-center gap-2">
+<span class="text-xl">📸</span>
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight" id="results-headline">6 aliments détectés par l'IA</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant" id="results-subhead">
+        Vérifiez et ajustez les quantités avant d'ajouter à votre réserve.
+      </p>
+</div>
+</section>
+<!-- Filter & Quick Action Strip -->
+<section class="px-margin py-space-xs flex items-center justify-between gap-space-sm" id="filter-strip">
+<div class="flex items-center gap-1.5 bg-surface-container-high px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-[18px] text-tertiary">auto_awesome</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Précision globale: 92%</span>
+</div>
+<button class="font-label-md text-label-md text-primary font-semibold hover:opacity-80 transition-opacity" id="toggle-all-btn" type="button">
+      Tout décocher
+    </button>
+</section>
+<!-- AI Detected Items List -->
+<section class="px-margin flex flex-col gap-space-sm mt-space-xs transition-all duration-300" id="items-container">
+<!-- Item 1: Courgettes bio -->
+<div class="item-card bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-start gap-space-sm transition-all duration-200" data-checked="true">
+<button class="checkbox-btn mt-0.5 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center flex-shrink-0 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</button>
+<div class="flex-1 min-w-0 flex flex-col gap-1">
+<div class="flex items-start justify-between gap-2">
+<input class="item-title font-body-lg text-body-lg text-on-surface font-semibold bg-transparent truncate focus:outline-none focus:bg-surface-container-low px-1 -ml-1 rounded transition-colors" type="text" value="Courgettes bio">
+<span class="inline-flex items-center gap-1 bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            98%
+          </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-outline">scale</span>
+            2 pièces (~400g)
+          </span>
+<span class="text-outline">•</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">Légumes frais</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline self-center">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors" title="Modifier quantité" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Item 2: Tomates grappe -->
+<div class="item-card bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-start gap-space-sm transition-all duration-200" data-checked="true">
+<button class="checkbox-btn mt-0.5 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center flex-shrink-0 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</button>
+<div class="flex-1 min-w-0 flex flex-col gap-1">
+<div class="flex items-start justify-between gap-2">
+<input class="item-title font-body-lg text-body-lg text-on-surface font-semibold bg-transparent truncate focus:outline-none focus:bg-surface-container-low px-1 -ml-1 rounded transition-colors" type="text" value="Tomates grappe">
+<span class="inline-flex items-center gap-1 bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            95%
+          </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-outline">shopping_basket</span>
+            5 pièces
+          </span>
+<span class="text-outline">•</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">Légumes frais</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline self-center">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors" title="Modifier quantité" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Item 3: Lait demi-écrémé -->
+<div class="item-card bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-start gap-space-sm transition-all duration-200" data-checked="true">
+<button class="checkbox-btn mt-0.5 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center flex-shrink-0 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</button>
+<div class="flex-1 min-w-0 flex flex-col gap-1">
+<div class="flex items-start justify-between gap-2">
+<input class="item-title font-body-lg text-body-lg text-on-surface font-semibold bg-transparent truncate focus:outline-none focus:bg-surface-container-low px-1 -ml-1 rounded transition-colors" type="text" value="Lait demi-écrémé">
+<span class="inline-flex items-center gap-1 bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            92%
+          </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-outline">water_bottle</span>
+            1 bouteille (1L)
+          </span>
+<span class="text-outline">•</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">Produits laitiers</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline self-center">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors" title="Modifier quantité" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Item 4: Boîte de 6 oeufs plein air -->
+<div class="item-card bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-start gap-space-sm transition-all duration-200" data-checked="true">
+<button class="checkbox-btn mt-0.5 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center flex-shrink-0 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</button>
+<div class="flex-1 min-w-0 flex flex-col gap-1">
+<div class="flex items-start justify-between gap-2">
+<input class="item-title font-body-lg text-body-lg text-on-surface font-semibold bg-transparent truncate focus:outline-none focus:bg-surface-container-low px-1 -ml-1 rounded transition-colors" type="text" value="Boîte de 6 œufs plein air">
+<span class="inline-flex items-center gap-1 bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            89%
+          </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-outline">egg</span>
+            6 œufs
+          </span>
+<span class="text-outline">•</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">Frais</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline self-center">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors" title="Modifier quantité" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Item 5: Parmesan AOP râpé -->
+<div class="item-card bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-start gap-space-sm transition-all duration-200" data-checked="true">
+<button class="checkbox-btn mt-0.5 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center flex-shrink-0 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</button>
+<div class="flex-1 min-w-0 flex flex-col gap-1">
+<div class="flex items-start justify-between gap-2">
+<input class="item-title font-body-lg text-body-lg text-on-surface font-semibold bg-transparent truncate focus:outline-none focus:bg-surface-container-low px-1 -ml-1 rounded transition-colors" type="text" value="Parmesan AOP râpé">
+<span class="inline-flex items-center gap-1 bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+            84%
+          </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-outline">lunch_dining</span>
+            1 sachet (100g)
+          </span>
+<span class="text-outline">•</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">Fromages</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline self-center">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors" title="Modifier quantité" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Item 6: Sauce pesto vert (Unchecked suggestion) -->
+<div class="item-card bg-surface-container-lowest/60 p-space-md rounded-xl flex items-start gap-space-sm transition-all duration-200 opacity-75" data-checked="false">
+<button class="checkbox-btn mt-0.5 w-6 h-6 rounded-full bg-surface-container-high text-transparent flex items-center justify-center flex-shrink-0 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</button>
+<div class="flex-1 min-w-0 flex flex-col gap-1">
+<div class="flex items-start justify-between gap-2">
+<input class="item-title font-body-lg text-body-lg text-on-surface-variant line-through font-semibold bg-transparent truncate focus:outline-none focus:bg-surface-container-low px-1 -ml-1 rounded transition-colors" type="text" value="Sauce pesto vert">
+<span class="inline-flex items-center gap-1 bg-surface-container text-outline px-2 py-0.5 rounded-full font-label-sm text-label-sm whitespace-nowrap flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]">help_outline</span>
+            71% à vérifier
+          </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-outline">kitchen</span>
+            1 bocal (190g)
+          </span>
+<span class="text-outline">•</span>
+<span class="bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">Épicerie</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-outline self-center">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors" title="Modifier quantité" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Quick Add More Item Button -->
+<button class="w-full py-3 px-space-md rounded-xl bg-surface-container hover:bg-surface-container-high flex items-center justify-center gap-2 text-on-surface-variant font-label-lg text-label-lg transition-colors mt-space-xs" type="button">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+      Ajouter un aliment oublié
+    </button>
+</section>
+<!-- Sticky Bottom Action Bar -->
+<aside class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/90 backdrop-blur-xl px-margin pt-3 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.06)]">
+<div class="max-w-md mx-auto flex flex-col gap-2">
+<!-- Validation Summary -->
+<div class="flex items-center justify-between px-1">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium" id="selected-summary">
+          5 aliments sélectionnés
+        </span>
+<span class="font-label-sm text-label-sm text-secondary font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">inventory_2</span>
+          Réserve Menoo
+        </span>
+</div>
+<!-- Primary Action CTA Button -->
+<button class="w-full h-12 rounded-full text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 hover:brightness-105 active:scale-[0.98] transition-all bg-secondary shadow-md" id="submit-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">done_all</span>
+<span id="cta-label" class="">Confirmer et ajouter (5)</span>
+</button>
+<!-- Secondary Retake Photo Link -->
+<div class="flex justify-center pb-1">
+<button class="inline-flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors py-1" id="btn-retake-photo" type="button">
+<span class="material-symbols-outlined text-[17px]">camera_enhance</span>
+          Reprendre une photo
+        </button>
+</div>
+</div>
+</aside>
+</div>
+<!-- Script d'interaction caméra et détection IA -->
+<script>
+  (function() {
+    let currentStream = null;
+    let facingMode = "environment"; // Caméra arrière par défaut
+    let torchActive = false;
+
+    const video = document.getElementById('camera-feed');
+    const previewImg = document.getElementById('camera-preview-img');
+    const canvas = document.getElementById('capture-canvas');
+    const fileInput = document.getElementById('camera-file-input');
+    const shutterBtn = document.getElementById('btn-capture-shutter');
+    const toggleCamBtn = document.getElementById('btn-toggle-camera');
+    const toggleFlashBtn = document.getElementById('btn-toggle-flash');
+    const importFileBtn = document.getElementById('btn-import-file');
+    const retakeBtn = document.getElementById('btn-retake-photo');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const metaLabel = document.getElementById('camera-meta-label');
+    const analysisOverlay = document.getElementById('analysis-overlay');
+    const floatingTags = document.getElementById('floating-tags');
+    const scanLaser = document.getElementById('scan-laser');
+
+    // Démarrage flux caméra
+    async function startCamera() {
+      stopCamera();
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.warn("getUserMedia non supporté ou environnement sécurisé requis");
+        previewImg.classList.remove('hidden');
+        video.classList.add('hidden');
+        statusText.textContent = "Aperçu simulé";
+        metaLabel.textContent = "Mode fichier / photo";
+        return;
+      }
+
+      try {
+        const constraints = {
+          video: {
+            facingMode: { ideal: facingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        currentStream = stream;
+        video.srcObject = stream;
+        video.classList.remove('hidden');
+        previewImg.classList.add('hidden');
+        statusDot.classList.remove('bg-orange-500', 'bg-red-500');
+        statusDot.classList.add('bg-secondary', 'animate-pulse');
+        statusText.textContent = "Caméra active";
+        metaLabel.textContent = facingMode === 'environment' ? 'Objectif arrière HD' : 'Objectif avant HD';
+        if (scanLaser) scanLaser.classList.remove('hidden');
+      } catch (err) {
+        console.info("Accès caméra refusé ou non disponible : bascule vers aperçu de démonstration.", err);
+        previewImg.classList.remove('hidden');
+        video.classList.add('hidden');
+        statusText.textContent = "Prêt à scanner";
+        statusDot.classList.remove('bg-secondary');
+        statusDot.classList.add('bg-primary-container');
+        metaLabel.textContent = "Aperçu frigo";
+      }
+    }
+
+    function stopCamera() {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+      }
+    }
+
+    // Basculer face avant / arrière
+    if (toggleCamBtn) {
+      toggleCamBtn.addEventListener('click', () => {
+        facingMode = facingMode === "environment" ? "user" : "environment";
+        startCamera();
+      });
+    }
+
+    // Contrôle Flash / Torche si supporté
+    if (toggleFlashBtn) {
+      toggleFlashBtn.addEventListener('click', async () => {
+        if (!currentStream) return;
+        const track = currentStream.getVideoTracks()[0];
+        const capabilities = track.getCapabilities ? track.getCapabilities() : {};
+        if (capabilities.torch) {
+          torchActive = !torchActive;
+          try {
+            await track.applyConstraints({ advanced: [{ torch: torchActive }] });
+            toggleFlashBtn.classList.toggle('text-yellow-400', torchActive);
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          // Feedback visuel flash simulation
+          torchActive = !torchActive;
+          toggleFlashBtn.classList.toggle('bg-white/40', torchActive);
+          toggleFlashBtn.classList.toggle('text-yellow-300', torchActive);
+        }
+      });
+    }
+
+    // Déclenchement via sélecteur de fichier
+    if (importFileBtn && fileInput) {
+      importFileBtn.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            previewImg.src = event.target.result;
+            previewImg.classList.remove('hidden');
+            video.classList.add('hidden');
+            stopCamera();
+            launchAIAnalysis();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Processus de capture et analyse IA
+    function captureFrame() {
+      if (!video.classList.contains('hidden') && video.videoWidth) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        previewImg.src = dataUrl;
+        previewImg.classList.remove('hidden');
+        video.classList.add('hidden');
+      }
+      launchAIAnalysis();
+    }
+
+    function launchAIAnalysis() {
+      // Afficher l'overlay d'analyse
+      if (analysisOverlay) analysisOverlay.classList.remove('hidden');
+      if (statusText) statusText.textContent = "Scan IA en cours...";
+      if (statusDot) {
+        statusDot.classList.remove('bg-secondary');
+        statusDot.classList.add('bg-primary-container');
+      }
+      if (floatingTags) floatingTags.classList.add('opacity-30');
+
+      // Simulation temps d'analyse neurale 1.4s
+      setTimeout(() => {
+        if (analysisOverlay) analysisOverlay.classList.add('hidden');
+        if (floatingTags) floatingTags.classList.remove('opacity-30');
+        if (statusText) statusText.textContent = "Vision IA active";
+        if (statusDot) {
+          statusDot.classList.remove('bg-primary-container');
+          statusDot.classList.add('bg-secondary');
+        }
+
+        // Notification toast discret
+        const summary = document.getElementById('selected-summary');
+        if (summary) {
+          summary.classList.add('text-secondary');
+          setTimeout(() => summary.classList.remove('text-secondary'), 1200);
+        }
+
+        // Scroll fluide vers les aliments détectés
+        const itemsContainer = document.getElementById('items-container');
+        if (itemsContainer) {
+          itemsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 1400);
+    }
+
+    if (shutterBtn) {
+      shutterBtn.addEventListener('click', () => {
+        captureFrame();
+      });
+    }
+
+    if (retakeBtn) {
+      retakeBtn.addEventListener('click', () => {
+        startCamera();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Démarrage automatique de la caméra au chargement
+    startCamera();
+
+    // Gestion des cartes et compteurs existants
+    const cards = document.querySelectorAll('.item-card');
+    const summaryText = document.getElementById('selected-summary');
+    const ctaLabel = document.getElementById('cta-label');
+    const toggleAllBtn = document.getElementById('toggle-all-btn');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function updateCounts() {
+      const checkedCards = document.querySelectorAll('.item-card[data-checked="true"]');
+      const count = checkedCards.length;
+      if (summaryText) summaryText.textContent = `${count} aliment${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`;
+      if (ctaLabel) ctaLabel.textContent = `Confirmer et ajouter (${count})`;
+      if (toggleAllBtn) {
+        toggleAllBtn.textContent = count === 0 ? 'Tout sélectionner' : 'Tout décocher';
+      }
+    }
+
+    cards.forEach(card => {
+      const btn = card.querySelector('.checkbox-btn');
+      const title = card.querySelector('.item-title');
+
+      function toggle() {
+        const isChecked = card.getAttribute('data-checked') === 'true';
+        if (isChecked) {
+          card.setAttribute('data-checked', 'false');
+          card.classList.add('opacity-75', 'bg-surface-container-lowest/60');
+          card.classList.remove('bg-surface-container-lowest');
+          btn.classList.remove('bg-secondary', 'text-on-secondary');
+          btn.classList.add('bg-surface-container-high', 'text-transparent');
+          if (title) title.classList.add('line-through', 'text-on-surface-variant');
+        } else {
+          card.setAttribute('data-checked', 'true');
+          card.classList.remove('opacity-75', 'bg-surface-container-lowest/60');
+          card.classList.add('bg-surface-container-lowest');
+          btn.classList.add('bg-secondary', 'text-on-secondary');
+          btn.classList.remove('bg-surface-container-high', 'text-transparent');
+          if (title) title.classList.remove('line-through', 'text-on-surface-variant');
+        }
+        updateCounts();
+      }
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggle();
+      });
+
+      card.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'INPUT' && !e.target.closest('button')) {
+          toggle();
+        }
+      });
+    });
+
+    if (toggleAllBtn) {
+      toggleAllBtn.addEventListener('click', () => {
+        const checkedCards = document.querySelectorAll('.item-card[data-checked="true"]');
+        const makeActive = checkedCards.length === 0;
+
+        cards.forEach(card => {
+          const btn = card.querySelector('.checkbox-btn');
+          const title = card.querySelector('.item-title');
+          if (makeActive) {
+            card.setAttribute('data-checked', 'true');
+            card.classList.remove('opacity-75', 'bg-surface-container-lowest/60');
+            card.classList.add('bg-surface-container-lowest');
+            btn.classList.add('bg-secondary', 'text-on-secondary');
+            btn.classList.remove('bg-surface-container-high', 'text-transparent');
+            if (title) title.classList.remove('line-through', 'text-on-surface-variant');
+          } else {
+            card.setAttribute('data-checked', 'false');
+            card.classList.add('opacity-75', 'bg-surface-container-lowest/60');
+            card.classList.remove('bg-surface-container-lowest');
+            btn.classList.remove('bg-secondary', 'text-on-secondary');
+            btn.classList.add('bg-surface-container-high', 'text-transparent');
+            if (title) title.classList.add('line-through', 'text-on-surface-variant');
+          }
+        });
+        updateCounts();
+      });
+    }
+
+    if (submitBtn) {
+      submitBtn.addEventListener('click', () => {
+        const checkedCount = document.querySelectorAll('.item-card[data-checked="true"]').length;
+        submitBtn.innerHTML = `<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span> Ajout en cours...`;
+        setTimeout(() => {
+          submitBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">check_circle</span> Ajouté à la réserve !`;
+          submitBtn.classList.remove('bg-primary-container');
+          submitBtn.classList.add('bg-secondary');
+          setTimeout(() => {
+            submitBtn.classList.remove('bg-secondary');
+            submitBtn.classList.add('bg-primary-container');
+            updateCounts();
+          }, 2000);
+        }, 800);
+      });
+    }
+  })();
+</script></main>
+
+
+
+
+
+
+
+</body></html>

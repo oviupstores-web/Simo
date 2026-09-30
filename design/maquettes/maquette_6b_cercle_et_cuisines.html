@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette 6b (v4) — Scan IA en deux états, cuisines, cercle</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Jetons du thème (lib/theme/app_tokens.dart, app_colors.dart). Aucune forme n'est écrite ailleurs. */
+  :root {
+    --primary: #0B6B43; --primary-dark: #06502F; --mint: #EAF6EB; --mint2: #DCEFE0; --leaf: #3F8F5F;
+    --orange: #F58A1F; --orange-soft: #FFEBD6; --warn: #E67A12; --bg: #FAFBF8; --card: #fff;
+    --line: #E7ECE8; --ink: #17231C; --ink2: #5B6660; --ink3: #8D9690; --neutral: #F1F3F1;
+    --r-card: 14px; --r-btn: 14px; --r-field: 12px; --r-tile: 10px; --r-logo: 11px; --r-check: 6px; --r-pill: 999px;
+    --sh-card: 0 2px 10px rgba(16,40,28,.05); --sh-btn: 0 6px 16px rgba(11,107,67,.22);
+    --x1: 4px; --x1_5: 6px; --x2: 8px; --x2_5: 10px; --x3: 12px; --x3_5: 14px; --x4: 16px; --x5: 20px; --x6: 24px; --x7: 28px; --x8: 32px;
+    --gutter: var(--x5); --btn-h: 54px; --tile: 40px; --tile-md: 44px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #EEF1EE; color: var(--ink); padding: var(--x7) var(--x4) 56px; }
+  h1.page { font-size: 20px; font-weight: 800; text-align: center; }
+  p.page { text-align: center; color: var(--ink2); font-size: 14px; margin: var(--x1_5) auto var(--x8); max-width: 700px; line-height: 1.5; }
+  section { max-width: 900px; margin: 0 auto 56px; }
+  section.wide { max-width: 1320px; }
+  section > h2 { font-size: 17px; font-weight: 800; margin-bottom: var(--x1); }
+  section > p { font-size: 13.5px; color: var(--ink2); line-height: 1.5; margin-bottom: var(--x4); }
+  .pair { display: flex; gap: var(--x8); justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+  .col { width: 393px; max-width: 100%; }
+  .label { font-size: 12px; font-weight: 800; letter-spacing: .4px; color: var(--ink3); margin-bottom: var(--x2); text-transform: uppercase; }
+  .label.mine { color: var(--primary); }
+  .label.mine em { font-style: normal; color: var(--ink3); font-weight: 700; }
+  .ref { width: 100%; display: block; border: 1px solid var(--line); background: #fff; }
+  .phone { position: relative; background: var(--bg); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; }
+  .body { padding: var(--x4) var(--gutter) var(--x7); flex: 1; }
+  ul.diff { margin: var(--x4) 0 0; padding-left: 18px; font-size: 13px; color: var(--ink2); line-height: 1.6; }
+  ul.diff b { color: var(--ink); }
+  .ask { background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: var(--r-card); padding: var(--x3_5) var(--x4); font-size: 13px; line-height: 1.55; color: var(--ink2); margin-top: var(--x4); }
+  .ask b { color: var(--ink); }
+
+  svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .head { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
+  .brand { display: flex; align-items: center; gap: var(--x2); font-weight: 800; font-size: 20px; color: var(--primary-dark); }
+  .brand img { width: 32px; height: 32px; border-radius: var(--r-logo); }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+  h3.title { font-size: 27px; font-weight: 800; letter-spacing: -.4px; line-height: 1.18; }
+  .lead { color: var(--ink2); font-size: 15px; line-height: 1.5; margin-top: var(--x2); }
+  .leafdeco { position: absolute; pointer-events: none; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); box-shadow: var(--sh-card); }
+  .steps { display: flex; align-items: center; gap: var(--x1_5); margin: var(--x3_5) 0 var(--x5); }
+  .steps i { flex: 1; height: 4px; border-radius: var(--r-pill); background: var(--mint2); }
+  .steps i.on { background: var(--primary); }
+  .steps span { font-size: 11px; font-weight: 700; color: var(--ink3); letter-spacing: .4px; margin-left: var(--x1_5); }
+  .btn { height: var(--btn-h); border-radius: var(--r-btn); background: var(--primary); color: #fff; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: var(--x2_5); box-shadow: var(--sh-btn); }
+  .btn svg { stroke-width: 2.1; }
+  .link { text-align: center; color: var(--primary); font-weight: 700; font-size: 14px; margin-top: var(--x3_5); }
+  .badge { display: inline-flex; align-items: center; gap: var(--x1_5); border-radius: var(--r-pill); font-weight: 700; }
+  .scanbadge { background: var(--orange); color: #fff; font-size: 13px; padding: var(--x1_5) var(--x3); }
+  .scanbadge svg { width: 15px; height: 15px; stroke-width: 2; }
+  .tag { position: absolute; background: #fff; border-radius: var(--r-pill); padding: var(--x1) var(--x2_5); font-size: 12.5px; font-weight: 700; box-shadow: 0 2px 8px rgba(16,40,28,.14); white-space: nowrap; }
+
+  /* ——— Improvisation, étape 1 ——— */
+  .segment { display: flex; background: var(--mint); border-radius: var(--r-field); padding: var(--x1); margin-top: var(--x5); }
+  .segment div { flex: 1; height: 44px; border-radius: var(--r-tile); display: flex; align-items: center; justify-content: center; gap: var(--x2); font-weight: 600; font-size: 14.5px; color: var(--ink2); }
+  .segment .on { background: var(--primary); color: #fff; font-weight: 700; }
+  .hero { margin-top: var(--x4); overflow: hidden; }
+  .hero .ph { position: relative; height: 250px; background: #17231C; }
+  .hero .ph > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero .ph .scanbadge { position: absolute; top: var(--x3); left: var(--x3); }
+  .hero p { padding: var(--x3_5) var(--x4) var(--x4); font-size: 14px; line-height: 1.5; color: var(--ink2); }
+  /* vue caméra */
+  .live > img { opacity: .82; }
+  .frame { position: absolute; inset: var(--x4); pointer-events: none; }
+  .frame span { position: absolute; width: 26px; height: 26px; border: 2.5px solid #fff; }
+  .frame span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: var(--r-tile); }
+  .frame span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: var(--r-tile); }
+  .frame span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: var(--r-tile); }
+  .frame span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: var(--r-tile); }
+  .livebadge { position: absolute; top: var(--x3); left: var(--x3); background: rgba(23,35,28,.72); color: #fff; font-size: 12px; padding: var(--x1) var(--x2_5); }
+  .livebadge i { width: 7px; height: 7px; border-radius: 50%; background: #FF5A4E; display: block; animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+  .tag.found { background: rgba(255,255,255,.95); animation: pop .5s ease-out both; }
+  .tag.found:nth-of-type(2) { animation-delay: .35s; }
+  @keyframes pop { from { transform: scale(.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .livebadge i, .tag.found { animation: none; } }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--x2_5); margin-top: var(--x3); }
+  .opt { position: relative; padding: var(--x4) var(--x2) var(--x3_5); text-align: center; }
+  .opt.sel { border-color: var(--primary); }
+  .opt .ic { width: var(--tile-md); height: var(--tile-md); border-radius: var(--r-tile); display: grid; place-items: center; margin: 0 auto var(--x2_5); }
+  .opt b { display: block; font-size: 13px; font-weight: 700; line-height: 1.25; }
+  .opt small { display: block; font-size: 11.5px; color: var(--ink2); line-height: 1.35; margin-top: var(--x1); }
+  .opt .st { position: absolute; top: var(--x2); right: var(--x2); font-size: 10px; padding: 2px var(--x1_5); }
+  .prem { background: var(--orange-soft); color: var(--warn); } .free { background: var(--mint); color: var(--primary); }
+  .checks { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--mint); border-radius: var(--r-card); padding: var(--x3_5) var(--x2); margin: var(--x3) 0 var(--x5); }
+  .checks div { text-align: center; font-size: 12px; font-weight: 600; line-height: 1.35; padding: 0 var(--x1); }
+  .checks div + div { border-left: 1px solid var(--mint2); }
+  .checks svg { color: var(--primary); width: 18px; height: 18px; stroke-width: 2.2; display: block; margin: 0 auto var(--x1_5); }
+
+  /* ——— Improvisation, étape 5 ——— */
+  .eyebrow { background: var(--mint); color: var(--primary); font-size: 12px; font-weight: 800; letter-spacing: .3px; padding: var(--x1) var(--x3); margin-bottom: var(--x2_5); }
+  .eyebrow svg { width: 14px; height: 14px; }
+  .rowtitle { display: flex; justify-content: space-between; align-items: baseline; margin: var(--x6) 0 var(--x3); }
+  .rowtitle b { font-size: 16px; font-weight: 800; } .rowtitle span { font-size: 12.5px; color: var(--ink3); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--x3); align-items: start; }
+  .cuisine { overflow: hidden; }
+  .cuisine summary { list-style: none; cursor: pointer; display: block; }
+  .cuisine summary::-webkit-details-marker { display: none; }
+  .photo { position: relative; height: 118px; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .count { position: absolute; top: var(--x2); left: var(--x2); background: #fff; color: var(--primary); font-size: 11.5px; padding: var(--x1) var(--x2); }
+  .count.near { color: var(--warn); }
+  .toggle { position: absolute; top: var(--x2); right: var(--x2); width: 26px; height: 26px; border-radius: var(--r-check); background: #fff; color: var(--ink2); display: grid; place-items: center; border: 1px solid var(--line); }
+  .toggle svg { width: 16px; height: 16px; stroke-width: 2.2; transition: transform .25s; }
+  .cuisine[open] { border-color: var(--primary); }
+  .cuisine[open] .toggle { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .cuisine[open] .toggle svg { transform: rotate(180deg); }
+  .cname { text-align: center; font-size: 15px; font-weight: 700; padding: var(--x2_5) var(--x1_5); }
+  .miss { display: block; text-align: center; color: var(--warn); font-size: 11.5px; font-weight: 700; margin: calc(-1 * var(--x1)) var(--x2) var(--x2_5); }
+  .recipes { padding: 0 var(--x2) var(--x2); display: grid; gap: var(--x1_5); }
+  .recipe { display: flex; align-items: center; gap: var(--x2); border: 1px solid var(--line); border-radius: var(--r-tile); overflow: hidden; background: #fff; padding-right: var(--x1); }
+  .recipe img { width: 48px; height: 48px; object-fit: cover; flex: none; }
+  .recipe .t { flex: 1; min-width: 0; font-size: 12px; font-weight: 600; line-height: 1.25; }
+  .recipe .t small { display: block; font-weight: 500; color: var(--ink2); font-size: 10.5px; margin-top: 1px; }
+  .recipe .t small.m { color: var(--warn); font-weight: 700; }
+  .recipe svg { width: 14px; height: 14px; color: var(--ink3); stroke-width: 2.2; }
+  .cuisine.disabled { box-shadow: none; }
+  .cuisine.disabled .photo img { filter: grayscale(.55); opacity: .42; }
+  .cuisine.disabled .cname { color: var(--ink2); }
+  .reason { margin: 0 var(--x2) var(--x2_5); background: var(--neutral); border-radius: var(--r-tile); padding: var(--x2_5) var(--x2); text-align: center; font-size: 12px; color: var(--ink3); line-height: 1.35; }
+  .hint { display: flex; gap: var(--x3); align-items: center; background: var(--mint); border-radius: var(--r-card); padding: var(--x3_5) var(--x4); font-size: 13px; color: var(--ink2); line-height: 1.45; margin: var(--x6) 0 var(--x5); }
+  .hint b { color: var(--primary-dark); display: block; }
+  .hint svg { color: var(--primary); width: 24px; height: 24px; }
+
+  /* ——— Accueil : cercle d'improvisation (seule forme ronde) ——— */
+  .improv { position: relative; margin-top: var(--x5); padding: var(--x7) var(--x4) var(--x6); text-align: center; background: linear-gradient(160deg, #F4FAF5 0%, #fff 60%, #FFF9F2 100%); }
+  .improv .scanbadge { position: absolute; top: var(--x3); left: var(--x3); }
+  .orb { position: relative; width: 224px; height: 224px; margin: var(--x2) auto var(--x5); border: 0; padding: 0; background: none; border-radius: 50%; cursor: pointer; display: block; animation: breathe 3.6s ease-in-out infinite; }
+  .orb::before, .orb::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 1.5px solid var(--leaf); opacity: 0; animation: halo 3.6s ease-out infinite; }
+  .orb::after { animation-delay: 1.8s; }
+  .orb > img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 8px 24px rgba(16,40,28,.12); display: block; }
+  .improv h4 { font-size: 21px; font-weight: 800; letter-spacing: -.3px; }
+  .improv p { color: var(--ink2); font-size: 14px; line-height: 1.5; margin-top: var(--x1_5); }
+  .go { display: inline-flex; align-items: center; gap: var(--x1_5); margin-top: var(--x3_5); color: var(--primary); font-weight: 700; font-size: 14.5px; }
+  .go svg { width: 17px; height: 17px; stroke-width: 2.2; }
+  @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+  @keyframes halo { 0% { transform: scale(1); opacity: .4; } 100% { transform: scale(1.24); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .orb, .orb::before, .orb::after { animation: none; } }
+  .plan { text-align: center; font-size: 13.5px; color: var(--ink2); margin-top: var(--x4); }
+  .plan b { color: var(--primary); }
+  .sect { font-size: 17px; font-weight: 800; margin: var(--x7) 0 var(--x3); }
+  .budget { padding: var(--x4); display: flex; gap: var(--x3); align-items: center; }
+  .tile { width: var(--tile); height: var(--tile); border-radius: var(--r-tile); background: var(--mint); color: var(--primary); display: grid; place-items: center; flex: none; }
+  .budget b { font-size: 15px; font-weight: 700; } .budget small { color: var(--ink2); font-size: 12.5px; display: block; margin-top: 2px; }
+  .gauge { height: 6px; border-radius: var(--r-pill); background: var(--mint2); margin-top: var(--x2); overflow: hidden; }
+  .gauge i { display: block; height: 100%; width: 38%; background: var(--primary); }
+  .nav { display: flex; background: var(--card); border-top: 1px solid var(--line); padding: var(--x2) var(--x1_5) var(--x3); }
+  .nav div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 500; color: var(--ink3); }
+  .nav .on { color: var(--primary); font-weight: 800; }
+</style>
+</head>
+<body>
+<h1 class="page">Maquette du jalon 6b — version 4</h1>
+<p class="page">L'écran Scan IA a maintenant ses deux états : au repos et caméra active. La variante B du cercle est retirée. Arrondis du thème uniquement.</p>
+
+<!-- ═══════ 1. SCAN IA, DEUX ÉTATS ═══════ -->
+<section class="wide">
+  <h2>1. Improvisation, étape 1 — Scan IA</h2>
+  <p>Référence : <code>scan_ia_accueil.png</code>. Un appui sur « Frigo » ou « Garde-manger » — ou sur le bouton principal — fait basculer l'écran du premier état au second.</p>
+  <div class="pair">
+
+    <div class="col">
+      <div class="label">Ta maquette</div>
+      <img class="ref" src="scan_ia_accueil.png" alt="Maquette Scan IA de Simo">
+    </div>
+
+    <!-- État 1 : au repos -->
+    <div class="col">
+      <div class="label mine">Ma version — <em>état 1 : au repos</em></div>
+      <div class="phone">
+        <div class="body">
+          <div class="head">
+            <svg class="i" viewBox="0 0 24 24" style="width:24px;height:24px"><path d="m15 18-6-6 6-6"/></svg>
+            <div class="brand"><img src="../logo.png" alt="">Menoo</div>
+            <span style="width:24px"></span>
+          </div>
+          <div class="steps"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><span>ÉTAPE 1 SUR 6</span></div>
+          <h3 class="title" style="text-align:center">Scan IA</h3>
+          <p class="lead" style="text-align:center">Scannez votre frigo ou votre garde-manger pour trouver quoi cuisiner avec ce que vous avez déjà.</p>
+
+          <div class="segment">
+            <div><svg class="i" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M5 10h14M9 6v2M9 13v3"/></svg>Frigo</div>
+            <div><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg>Garde-manger</div>
+          </div>
+
+          <div class="card hero">
+            <div class="ph">
+              <img src="../../assets/images/scan_frigo_main.jpg" alt="">
+              <span class="badge scanbadge"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l1.8 4.9L19 10l-5.2 2.1L12 17l-1.8-4.9L5 10l5.2-2.1zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg>Scan IA</span>
+              <span class="tag" style="top:52px;right:20px">Salade</span>
+              <span class="tag" style="top:116px;right:58px">Tomates</span>
+              <span class="tag" style="bottom:66px;right:16px">Poivron</span>
+              <span class="tag" style="bottom:22px;left:120px">Œufs</span>
+            </div>
+            <p>Prenez une photo, Menoo détecte vos ingrédients et vous propose des recettes adaptées.</p>
+          </div>
+
+          <div class="three">
+            <div class="card opt"><span class="badge st prem">Abonnés</span><div class="ic" style="background:var(--orange-soft);color:var(--warn)"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div><b>Prendre une photo</b><small>Scannez votre frigo en un instant.</small></div>
+            <div class="card opt"><span class="badge st prem">Abonnés</span><div class="ic" style="background:var(--mint);color:var(--primary)"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.5"/><path d="m5 17 5-5 4 4 2-2 3 3"/></svg></div><b>Importer une photo</b><small>Depuis votre galerie.</small></div>
+            <div class="card opt"><span class="badge st free">Gratuit</span><div class="ic" style="background:var(--orange-soft);color:var(--warn)"><svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/></svg></div><b>Saisie manuelle</b><small>Entrez vos ingrédients.</small></div>
+          </div>
+
+          <div class="checks">
+            <div><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>Identification des ingrédients</div>
+            <div><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>Quantités à vérifier</div>
+            <div><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>Recettes du catalogue</div>
+          </div>
+
+          <div class="btn">Analyser mes ingrédients <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div class="link">Voir un exemple de recettes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- État 2 : caméra active -->
+    <div class="col">
+      <div class="label mine">Ma version — <em>état 2 : caméra active</em></div>
+      <div class="phone">
+        <div class="body">
+          <div class="head">
+            <svg class="i" viewBox="0 0 24 24" style="width:24px;height:24px"><path d="m15 18-6-6 6-6"/></svg>
+            <div class="brand"><img src="../logo.png" alt="">Menoo</div>
+            <span style="width:24px"></span>
+          </div>
+          <div class="steps"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><span>ÉTAPE 1 SUR 6</span></div>
+          <h3 class="title" style="text-align:center">Scan IA</h3>
+          <p class="lead" style="text-align:center">Cadrez l'intérieur de votre frigo, puis appuyez sur Scanner.</p>
+
+          <div class="segment">
+            <div class="on"><svg class="i" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M5 10h14M9 6v2M9 13v3"/></svg>Frigo</div>
+            <div><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/></svg>Garde-manger</div>
+          </div>
+
+          <div class="card hero">
+            <div class="ph live">
+              <img src="../../assets/images/locations/fridge.jpg" alt="">
+              <span class="frame"><span></span><span></span><span></span><span></span></span>
+              <span class="badge livebadge"><i></i>En direct</span>
+              <span class="tag found" style="top:74px;left:34px">Salade</span>
+              <span class="tag found" style="bottom:86px;right:28px">Carottes</span>
+            </div>
+            <p>Menoo reconnaît les ingrédients visibles. Vous pourrez corriger la liste juste après.</p>
+          </div>
+
+          <div class="three">
+            <div class="card opt sel"><span class="badge st prem">Abonnés</span><div class="ic" style="background:var(--primary);color:#fff"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div><b>Prendre une photo</b><small>Caméra en cours.</small></div>
+            <div class="card opt"><span class="badge st prem">Abonnés</span><div class="ic" style="background:var(--mint);color:var(--primary)"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.5"/><path d="m5 17 5-5 4 4 2-2 3 3"/></svg></div><b>Importer une photo</b><small>Depuis votre galerie.</small></div>
+            <div class="card opt"><span class="badge st free">Gratuit</span><div class="ic" style="background:var(--orange-soft);color:var(--warn)"><svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/></svg></div><b>Saisie manuelle</b><small>Entrez vos ingrédients.</small></div>
+          </div>
+
+          <div class="checks">
+            <div><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>Identification des ingrédients</div>
+            <div><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>Quantités à vérifier</div>
+            <div><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>Recettes du catalogue</div>
+          </div>
+
+          <div class="btn"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Scanner</div>
+          <div class="link">Annuler</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ul class="diff">
+    <li><b>La photo :</b> nouvelle illustration avec la main qui tient le téléphone devant le frigo ouvert (<code>assets/images/scan_frigo_main.jpg</code>, générée ce jour, environ 0,05 $). Les étiquettes restent dessinées par l'app, pas par l'image.</li>
+    <li><b>Passage d'un état à l'autre :</b> appuyer sur un onglet, ou sur le bouton principal, remplace l'illustration par la vue caméra. L'illustration revient si on annule.</li>
+    <li><b>État 2 :</b> cadre de visée blanc aux quatre coins, pastille « En direct » avec point qui clignote, étiquettes qui apparaissent au fur et à mesure de la reconnaissance, carte « Prendre une photo » marquée en cours, bouton principal « Scanner » et lien « Annuler ».</li>
+    <li><b>Corrigé selon la charte :</b> bandeau Frigo / Garde-manger en rectangle arrondi au lieu de la pilule ; bouton à 14 px ; pastilles d'icône carrées arrondies ; ombres et espacements du thème.</li>
+    <li><b>Corrigé selon SPEC.md :</b> pas de barre de navigation (écran possible avant le compte) ; compteur « Étape 1 sur 6 » ; mentions « Abonnés » et « Gratuit » ; « Suggestions de recettes » devient « Recettes du catalogue » et « Estimation des quantités » devient « Quantités à vérifier ».</li>
+  </ul>
+  <p class="ask"><b>Une question de ta règle « photo IA = abonnés ».</b> Si un appui sur l'onglet allume la caméra, une personne non abonnée tombe sur le paywall dès son premier geste, avant d'avoir rien vu de l'app. Trois façons de faire : <b>(a)</b> l'onglet allume la caméra et le paywall s'affiche par-dessus ; <b>(b)</b> l'onglet ne fait que choisir la cible, et le paywall n'apparaît qu'au moment de « Scanner » ; <b>(c)</b> un scan offert par appareil, puis paywall. Je recommande la <b>(b)</b>, qui laisse voir l'écran avant de demander de payer. Cela rejoint la question 1 des points ouverts de SPEC.md.</p>
+</section>
+
+<!-- ═══════ 2. CUISINES ═══════ -->
+<section>
+  <h2>2. Improvisation, étape 5 — choix de cuisine</h2>
+  <p>Référence : <code>cuisines_grisees.png</code>. Inchangé depuis la version 3.</p>
+  <div class="pair">
+    <div class="col">
+      <div class="label">Ta maquette</div>
+      <img class="ref" src="cuisines_grisees.png" alt="Maquette des cuisines de Simo">
+    </div>
+    <div class="col">
+      <div class="label mine">Ma version</div>
+      <div class="phone">
+        <div class="body">
+          <div class="head">
+            <svg class="i" viewBox="0 0 24 24" style="width:24px;height:24px"><path d="m15 18-6-6 6-6"/></svg>
+            <div class="brand"><img src="../logo.png" alt="">Menoo</div>
+            <span style="width:24px"></span>
+          </div>
+          <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><span>ÉTAPE 5 SUR 6</span></div>
+          <span class="badge eyebrow"><svg class="i" viewBox="0 0 24 24"><path d="M7 3v7a2 2 0 0 0 4 0V3M9 12v9M17 3c-2 1.5-2.5 5-2.5 8H17v10"/></svg>VOS RECETTES POSSIBLES</span>
+          <h3 class="title">Quelle cuisine ce soir ?</h3>
+          <p class="lead">À partir de vos 14 ingrédients, de vos condiments et de votre équipement, pour 2 personnes.</p>
+
+          <div class="rowtitle"><b>Cuisines disponibles</b><span>Touchez pour ouvrir</span></div>
+          <div class="grid">
+            <details class="card cuisine" open>
+              <summary>
+                <div class="photo"><img src="../../assets/images/cuisines/francaise.jpg" alt=""><span class="badge count">3 recettes</span><span class="toggle"><svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
+                <div class="cname">Française</div>
+              </summary>
+              <div class="recipes">
+                <div class="recipe"><img src="../stitch_images/plats/plat_gratin_pommes_de_terre.jpg" alt=""><div class="t">Gratin de pommes de terre<small>45 min</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+                <div class="recipe"><img src="../stitch_images/plats/plat_poulet_roti_romarin_asperges_patate.jpg" alt=""><div class="t">Poulet rôti au romarin<small>50 min</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+                <div class="recipe"><img src="../../assets/images/recipes/omelette_epinards_feta.jpg" alt=""><div class="t">Omelette aux épinards<small>15 min</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+              </div>
+            </details>
+            <details class="card cuisine" open>
+              <summary>
+                <div class="photo"><img src="../../assets/images/cuisines/italienne.jpg" alt=""><span class="badge count">2 recettes</span><span class="toggle"><svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
+                <div class="cname">Italienne</div>
+              </summary>
+              <div class="recipes">
+                <div class="recipe"><img src="../stitch_images/plats/plat_tagliatelles_tomate.jpg" alt=""><div class="t">Tagliatelles à la tomate<small>20 min</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+                <div class="recipe"><img src="../stitch_images/plats/plat_risotto_butternut.jpg" alt=""><div class="t">Risotto à la butternut<small>35 min</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+              </div>
+            </details>
+          </div>
+
+          <div class="rowtitle"><b>Presque possibles</b><span>1 ou 2 éléments manquent</span></div>
+          <div class="grid">
+            <details class="card cuisine" open>
+              <summary>
+                <div class="photo"><img src="../../assets/images/cuisines/mediterraneenne.jpg" alt=""><span class="badge count near">2 recettes</span><span class="toggle"><svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
+                <div class="cname">Méditerranéenne</div>
+                <span class="miss">Il manque : chèvre</span>
+              </summary>
+              <div class="recipes">
+                <div class="recipe"><img src="../stitch_images/plats/plat_salade_lentilles_chevre_grenade.jpg" alt=""><div class="t">Salade de lentilles<small class="m">Sans le chèvre</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+                <div class="recipe"><img src="../stitch_images/plats/plat_bowl_cereales_mediterraneen.jpg" alt=""><div class="t">Bowl méditerranéen<small>20 min</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+              </div>
+            </details>
+            <details class="card cuisine">
+              <summary>
+                <div class="photo"><img src="../../assets/images/cuisines/maghrebine.jpg" alt=""><span class="badge count near">1 recette</span><span class="toggle"><svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
+                <div class="cname">Maghrébine</div>
+                <span class="miss">Il manque : cumin, pois chiches</span>
+              </summary>
+              <div class="recipes">
+                <div class="recipe"><img src="../stitch_images/plats/plat_poelee_pois_chiches_legumes.jpg" alt=""><div class="t">Poêlée de légumes épicée<small class="m">Cumin, pois chiches</small></div><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></div>
+              </div>
+            </details>
+          </div>
+
+          <div class="rowtitle"><b>Pas ce soir</b><span>Avec la raison</span></div>
+          <div class="grid">
+            <div class="card cuisine disabled"><div class="photo"><img src="../../assets/images/cuisines/japonaise.jpg" alt=""></div><div class="cname">Japonaise</div><div class="reason">Pas de sauce soja</div></div>
+            <div class="card cuisine disabled"><div class="photo"><img src="../../assets/images/cuisines/asiatique.jpg" alt=""></div><div class="cname">Asiatique</div><div class="reason">Pas de wok</div></div>
+          </div>
+
+          <div class="hint">
+            <svg class="i" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
+            <span><b>Des recettes du catalogue Menoo :</b>macros vérifiées et prix connus.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="diff">
+    <li><b>Repris de ta maquette :</b> cartes photo sur deux colonnes, nombre de recettes sur la photo, nom centré, recettes avec vignette et chevron, cartes voilées avec la raison dans un encadré gris, bandeau d'astuce en bas.</li>
+    <li><b>Corrigé selon la charte :</b> cartes à 14 px et lignes de recette à 10 px ; bordure fine d'un pixel, verte quand la carte est ouverte ; ombre du thème.</li>
+    <li><b>Corrigé selon SPEC.md :</b> « Étape 5 sur 6 » et un titre d'improvisation ; la case à cocher devient un bouton ouvrir / fermer ; un groupe « Presque possibles » ; pas de bouton « Continuer », on choisit une recette.</li>
+  </ul>
+</section>
+
+<!-- ═══════ 3. CERCLE ═══════ -->
+<section>
+  <h2>3. Accueil (<code>home</code>, onglet 1 après connexion) — cercle d'improvisation</h2>
+  <p>Variante A retenue par Simo (le frigo). La variante B, qui montrait une assiette déjà préparée, est abandonnée : on scanne son frigo pour savoir quoi cuisiner, pas un plat terminé.</p>
+  <div class="pair">
+    <div class="col">
+      <div class="label mine">Le cercle, dans l'Accueil</div>
+      <div class="phone">
+        <img class="leafdeco" src="../../assets/images/leaf_a.png" alt="" style="width:64px;top:64px;right:-12px;transform:rotate(18deg)">
+        <div class="body">
+          <div class="head">
+            <div class="brand"><img src="../logo.png" alt="">Menoo</div>
+            <img class="avatar" src="../../assets/images/avatar.jpg" alt="">
+          </div>
+          <h3 class="title" style="margin-top:var(--x6)">Bonjour Karim</h3>
+          <p class="lead">Aucun repas n'est prévu ce soir.</p>
+          <div class="card improv">
+            <span class="badge scanbadge"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l1.8 4.9L19 10l-5.2 2.1L12 17l-1.8-4.9L5 10l5.2-2.1zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg>Scan IA</span>
+            <button class="orb" type="button" aria-label="Improviser avec ma réserve">
+              <img src="../../assets/images/locations/fridge.jpg" alt="">
+              <span class="tag" style="top:30px;left:-4px">Salade</span>
+              <span class="tag" style="top:88px;right:-14px">Œufs</span>
+              <span class="tag" style="bottom:50px;left:-10px">Brocoli</span>
+              <span class="tag" style="bottom:22px;right:10px">Poivron</span>
+            </button>
+            <h4>Pas d'idée pour ce soir ?</h4>
+            <p>Menoo trouve une recette avec ce que vous avez déjà à la maison.</p>
+            <span class="go">Improviser avec ma réserve <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+          <p class="plan">ou <b>planifier ma semaine</b></p>
+          <div class="sect">Mes indicateurs</div>
+          <div class="card budget">
+            <div class="tile"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M16 15h2"/></svg></div>
+            <div style="flex:1"><b>Budget de la semaine</b><small>24,60 € dépensés sur 65 €</small><div class="gauge"><i></i></div></div>
+          </div>
+        </div>
+        <div class="nav">
+          <div class="on"><svg class="i" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</div>
+          <div><svg class="i" viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"/></svg>Menus</div>
+          <div><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h11L21 7H6"/></svg>Courses</div>
+          <div><svg class="i" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M5 10h14M9 6v2M9 13v3"/></svg>Réserve</div>
+          <div><svg class="i" viewBox="0 0 24 24"><path d="M5 20v-6M10 20V9M15 20v-9M20 20V5"/></svg>Suivi</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <ul class="diff" style="margin-top:32px">
+        <li><b>Photo du frigo</b>, seule forme ronde de l'app : bord blanc de 4 px, ombre légère, deux halos fins, respiration de 3,6 secondes. Immobile si les animations sont désactivées sur le téléphone.</li>
+        <li><b>Il ne s'affiche que</b> lorsque aucun repas n'est prévu ; sinon la carte « Ce soir » reprend sa place.</li>
+        <li><b>Le lien « planifier ma semaine »</b> garde la planification à portée de main, pour que l'improvisation ne la remplace pas.</li>
+        <li><b>Barre de navigation</b> : Accueil · Menus · Courses · Réserve · Suivi. Elle n'apparaît ici que parce que l'Accueil existe seulement une fois le compte créé.</li>
+        <li><b>Photo du frigo seule</b>, retenue par Simo : l'illustration avec la main serait illisible à cette taille.</li>
+        <li><b>Cet écran est l'Accueil</b> (`home`), premier onglet de l'app après connexion. Ce n'est pas la Landing (`landing`), qui est la page déroulante d'avant le compte. SPEC.md §0.13.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</body>
+</html>
