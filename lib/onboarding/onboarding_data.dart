@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import '../l10n/app_localizations.dart';
+
 import 'package:flutter/material.dart' show ChangeNotifier, DateUtils, VoidCallback;
 
 import '../models/pantry_location.dart';
@@ -25,14 +27,25 @@ enum AppMode { solo, foyer }
 
 /// Rôle d'un membre du foyer (enum `member_role` de la base).
 enum MemberRole {
-  adulte('Adulte', 'Adultes (14 ans et plus)', 14, 100, 1),
-  enfant('Enfant', 'Enfants (4 à 13 ans)', 4, 13, 0.65),
-  bebe('Bébé', 'Bébés et tout-petits (0 à 3 ans)', 0, 3, 0.3);
+  adulte(14, 100, 1),
+  enfant(4, 13, 0.65),
+  bebe(0, 3, 0.3);
 
-  const MemberRole(this.label, this.groupLabel, this.minAge, this.maxAge, this.portion);
+  const MemberRole(this.minAge, this.maxAge, this.portion);
 
-  final String label;
-  final String groupLabel;
+  /// Libellé court (« Adulte »).
+  String label(L l) => switch (this) {
+    MemberRole.adulte => l.roleAdult,
+    MemberRole.enfant => l.roleChild,
+    MemberRole.bebe => l.roleBaby,
+  };
+
+  /// Libellé du groupe, avec la tranche d'âge (« Adultes (14 ans et plus) »).
+  String groupLabel(L l) => switch (this) {
+    MemberRole.adulte => l.roleAdultGroup,
+    MemberRole.enfant => l.roleChildGroup,
+    MemberRole.bebe => l.roleBabyGroup,
+  };
   final int minAge;
   final int maxAge;
 
@@ -81,7 +94,7 @@ class MemberDraft {
     MemberRole.bebe => MemberDraft(id: id, role: role, age: 1),
   };
 
-  String get ageLabel => age == 0 ? 'moins d\'un an' : '$age an${age > 1 ? 's' : ''}';
+  String ageLabel(L l) => age == 0 ? l.roleAgeMonths : l.roleAgeYears(age);
 
   /// Copie de travail pour la fiche d'édition (validée par « Enregistrer »).
   MemberDraft copy() => MemberDraft(

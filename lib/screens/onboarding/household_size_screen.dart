@@ -43,7 +43,7 @@ class HouseholdSizeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(r.$1.groupLabel, style: AppText.of(AppFont.s15, weight: AppFont.bold, lineHeight: 21)),
+                      Text(r.$1.groupLabel(l), style: AppText.of(AppFont.s15, weight: AppFont.bold, lineHeight: 21)),
                       Text(r.$2, style: AppText.caption),
                     ],
                   ),

@@ -520,5 +520,165 @@
   "equipSlowCooker": "Mijoteuse",
   "equipGrill": "Plancha / BBQ",
   "equipWok": "Wok",
-  "equipToaster": "Grille-pain"
+  "equipToaster": "Grille-pain",
+  "constraintsEyebrowSolo": "PRESQUE FINI !",
+  "constraintsEyebrowHousehold": "CUISINE UNIFIÉE",
+  "constraintsTitleSolo": "Régimes & contraintes alimentaires",
+  "constraintsTitleHousehold": "Régimes & contraintes partagées",
+  "constraintsSubtitleSolo": "Indiquez vos régimes, allergies et aliments exclus : aucun menu ne les contiendra.",
+  "constraintsSubtitleHousehold": "Définissez les règles communes à toute la tablée : aucun repas du foyer ne les enfreindra.",
+  "constraintsDietsSection": "Régimes alimentaires",
+  "constraintsAllergensSection": "Allergènes",
+  "constraintsAllergensHint": "Exclusion stricte",
+  "constraintsMemberAllergensTitle": "Déjà exclus grâce aux profils",
+  "constraintsOtherAllergens": "Autres allergènes",
+  "constraintsOtherAllergensCount": "Autres allergènes ({count})",
+  "@constraintsOtherAllergensCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "constraintsExcludedSection": "Aliments exclus",
+  "constraintsExcludedHint": "Sur-mesure",
+  "constraintsExcludedPlaceholder": "Ex. : coriandre, anchois, poivron…",
+  "constraintsInfoTitle": "Zéro compromis sur votre bien-être",
+  "constraintsInfoText": "Vous pourrez affiner vos goûts et ajouter d'autres exclusions à tout moment dans vos réglages.",
+  "dietOmnivore": "Omnivore",
+  "@dietOmnivore": {
+    "description": "SANTÉ — relecture humaine obligatoire avant publication (SPEC §10)"
+  },
+  "dietVegetarian": "Végétarien",
+  "dietVegan": "Végan",
+  "dietPescatarian": "Pescétarien",
+  "dietNoPork": "Sans porc",
+  "dietNoLactose": "Sans lactose",
+  "dietNoGluten": "Sans gluten",
+  "allergenGluten": "Gluten",
+  "@allergenGluten": {
+    "description": "SANTÉ — relecture humaine obligatoire avant publication (SPEC §10)"
+  },
+  "allergenGlutenText": "Blé, seigle, orge",
+  "allergenPeanuts": "Arachides",
+  "allergenPeanutsText": "Cacahuètes & dérivés",
+  "allergenSeafood": "Fruits de mer",
+  "allergenSeafoodText": "Crustacés, mollusques",
+  "allergenEggs": "Œufs",
+  "allergenEggsText": "Jaune, blanc",
+  "allergenSoy": "Soja",
+  "allergenSoyText": "Tofu, sauce soja",
+  "allergenTreeNuts": "Fruits à coque",
+  "allergenTreeNutsText": "Noix, amandes",
+  "allergenFish": "Poisson",
+  "allergenMilk": "Lait",
+  "allergenSesame": "Sésame",
+  "allergenMustard": "Moutarde",
+  "allergenCelery": "Céleri",
+  "allergenSulphites": "Sulfites",
+  "allergenLupin": "Lupin",
+  "roleAdult": "Adulte",
+  "roleChild": "Enfant",
+  "roleBaby": "Bébé",
+  "roleAdultGroup": "Adultes (14 ans et plus)",
+  "roleChildGroup": "Enfants (4 à 13 ans)",
+  "roleBabyGroup": "Bébés et tout-petits (0 à 3 ans)",
+  "roleAgeYears": "{age} ans",
+  "@roleAgeYears": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "roleAgeMonths": "moins d’un an",
+  "membersEyebrow": "PROFILS DES MEMBRES",
+  "membersTitle": "Qui sont les membres de votre foyer ?",
+  "membersSubtitle": "Complétez chaque profil pour adapter les portions, les besoins et les allergies de chacun.",
+  "membersAdd": "Ajouter un membre",
+  "membersAllergyInfoTitle": "Allergies protégées",
+  "membersAllergyInfoText": "Une allergie déclarée pour un membre est exclue de tous les repas partagés du foyer.",
+  "membersNoAllergy": "Aucune allergie",
+  "membersAllergyChip": "Allergie : {name}",
+  "@membersAllergyChip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "membersRoleAndAge": "{role}, {age}",
+  "@membersRoleAndAge": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "memberEyebrowNew": "NOUVEAU MEMBRE",
+  "memberEyebrowEdit": "PROFIL",
+  "memberTitleNew": "Ajouter un membre",
+  "memberTitleEdit": "Profil de {name}",
+  "@memberTitleEdit": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "memberSubtitle": "Ces informations servent à calculer ses portions et à protéger ses allergies.",
+  "memberSave": "Enregistrer",
+  "memberRemove": "Retirer ce membre du foyer",
+  "memberFirstNameLabel": "Prénom",
+  "memberFirstNameHint": "Ex. : Léa",
+  "memberAgeGroupLabel": "Tranche d’âge",
+  "memberSexBoy": "Garçon / homme",
+  "memberSexGirl": "Fille / femme",
+  "memberAgeLabel": "Âge",
+  "memberHeightLabel": "Taille",
+  "memberWeightLabel": "Poids",
+  "memberGoalSection": "Objectif",
+  "memberActivitySection": "Activité physique",
+  "memberAllergySection": "Allergies",
+  "memberNameError": "Indiquez un prénom.",
+  "memberBabyAgeError": "Un bébé a de 0 à 3 ans (0 = moins d’un an).",
+  "memberAgeRangeError": "Pour un {role}, indiquez un âge entre {min} et {max} ans.",
+  "@memberAgeRangeError": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "memberHeightError": "Indiquez une taille entre {min} et {max} cm.",
+  "@memberHeightError": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "memberWeightError": "Indiquez un poids entre {min} et {max} kg.",
+  "@memberWeightError": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }

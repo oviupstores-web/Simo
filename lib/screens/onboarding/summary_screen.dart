@@ -18,11 +18,11 @@ import 'supermarket_screen.dart';
 class SummaryScreen extends StatelessWidget {
   const SummaryScreen({super.key});
 
-  static const goals = {
-    HealthGoal.pertePoids: ('Perte de poids', AppIcons.trendDown),
-    HealthGoal.priseMasse: ('Prise de masse', AppIcons.dumbbell),
-    HealthGoal.seche: ('Sèche & Définition', AppIcons.bolt),
-    HealthGoal.maintien: ('Maintien & Équilibre', AppIcons.lotus),
+  static Map<HealthGoal, (String, String)> goals(L l) => {
+    HealthGoal.pertePoids: (l.goalLossTitle, AppIcons.trendDown),
+    HealthGoal.priseMasse: (l.goalGainTitle, AppIcons.dumbbell),
+    HealthGoal.seche: (l.goalCutTitle, AppIcons.bolt),
+    HealthGoal.maintien: (l.goalMaintainTitle, AppIcons.lotus),
   };
   static const activities = {
     ActivityLevel.sedentaire: 'Sédentaire',
@@ -49,7 +49,7 @@ class SummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = OnboardingScope.of(context);
-    final goal = goals[d.goal]!;
+    final goal = goals(L.of(context))[d.goal]!;
     final m = d.macros;
     void edit(OnbStep step) => OnboardingFlow.open(context, step, fromSummary: true);
     final weight = d.weightKg == d.weightKg.roundToDouble()
@@ -60,13 +60,13 @@ class SummaryScreen extends StatelessWidget {
         if (d.slots.any((s) => s.$2 == t)) '${d.slots.where((s) => s.$2 == t).length} ${mealNames[t]}',
     ].join(', ');
     final dietLabels = [
-      for (final diet in ConstraintsScreen.diets)
+      for (final diet in ConstraintsScreen.diets(L.of(context)))
         if (d.diets.contains(diet.$1)) diet.$2,
     ];
     // Foyer : allergènes partagés + ceux des profils (avec les prénoms concernés)
     final byMember = d.isFoyer ? d.memberAllergens : const <String, List<String>>{};
     final allergenLabels = [
-      for (final a in ConstraintsScreen.allergenChoices)
+      for (final a in ConstraintsScreen.allergenChoices(L.of(context)))
         if (a.$1.any(d.allAllergens.contains))
           a.$1.any(byMember.containsKey) && !a.$1.any(d.allergens.contains)
               ? '${a.$2} (${{for (final c in a.$1) ...?byMember[c]}.join(', ')})'
@@ -127,7 +127,7 @@ class SummaryScreen extends StatelessWidget {
                   },
                   text: [
                     '${d.displayName(m)}, ${m.ageLabel}',
-                    if (m.role == MemberRole.adulte) goals[m.goal]!.$1,
+                    if (m.role == MemberRole.adulte) goals(L.of(context))[m.goal]!.$1,
                   ].join(' · '),
                   onTap: () => edit(OnbStep.members),
                 ),

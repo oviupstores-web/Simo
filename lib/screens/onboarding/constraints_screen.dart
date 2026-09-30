@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -12,45 +13,45 @@ import '../../widgets/widgets.dart';
 class ConstraintsScreen extends StatefulWidget {
   const ConstraintsScreen({super.key});
 
-  static const diets = [
-    ('vegetarien', 'Végétarien', AppIcons.leaf, Tint.leafy),
-    ('vegan', 'Végan', AppIcons.sprout, Tint.mint),
-    ('pescetarien', 'Pescétarien', AppIcons.fish, Tint.sky),
-    ('sans_porc', 'Sans porc', AppIcons.noPork, Tint.lavender),
-    ('sans_lactose', 'Sans lactose', AppIcons.noMilk, Tint.sky),
-    ('sans_gluten', 'Sans gluten', AppIcons.noGluten, Tint.peach),
+  static List<(String, String, String, Tint)> diets(L l) => [
+    ('vegetarien', l.dietVegetarian, AppIcons.leaf, Tint.leafy),
+    ('vegan', l.dietVegan, AppIcons.sprout, Tint.mint),
+    ('pescetarien', l.dietPescatarian, AppIcons.fish, Tint.sky),
+    ('sans_porc', l.dietNoPork, AppIcons.noPork, Tint.lavender),
+    ('sans_lactose', l.dietNoLactose, AppIcons.noMilk, Tint.sky),
+    ('sans_gluten', l.dietNoGluten, AppIcons.noGluten, Tint.peach),
   ];
 
   /// Allergènes courants (un choix peut couvrir plusieurs codes). Dernier champ : photo (assets/images/allergens/).
-  static const commonAllergens = [
-    (['gluten'], 'Gluten', 'Blé, seigle, orge', AppIcons.wheat, Tint.peach, 'gluten'),
-    (['arachides'], 'Arachides', 'Cacahuètes & dérivés', AppIcons.nut, Tint.sand, 'arachides'),
-    (['crustaces', 'mollusques'], 'Fruits de mer', 'Crustacés, mollusques', AppIcons.shrimp, Tint.sky, 'fruits_de_mer'),
-    (['oeufs'], 'Œufs', 'Jaune, blanc', AppIcons.egg, Tint.peach, 'oeufs'),
-    (['soja'], 'Soja', 'Tofu, sauce soja', AppIcons.sprout, Tint.leafy, 'soja'),
-    (['fruits_a_coque'], 'Fruits à coque', 'Noix, amandes', AppIcons.nut, Tint.leafy, 'fruits_a_coque'),
+  static List<(List<String>, String, String, String, Tint, String)> commonAllergens(L l) => [
+    (['gluten'], l.allergenGluten, l.allergenGlutenText, AppIcons.wheat, Tint.peach, 'gluten'),
+    (['arachides'], l.allergenPeanuts, l.allergenPeanutsText, AppIcons.nut, Tint.sand, 'arachides'),
+    (['crustaces', 'mollusques'], l.allergenSeafood, l.allergenSeafoodText, AppIcons.shrimp, Tint.sky, 'fruits_de_mer'),
+    (['oeufs'], l.allergenEggs, l.allergenEggsText, AppIcons.egg, Tint.peach, 'oeufs'),
+    (['soja'], l.allergenSoy, l.allergenSoyText, AppIcons.sprout, Tint.leafy, 'soja'),
+    (['fruits_a_coque'], l.allergenTreeNuts, l.allergenTreeNutsText, AppIcons.nut, Tint.leafy, 'fruits_a_coque'),
   ];
 
   /// Le code est aussi le nom de la photo.
-  static const otherAllergens = [
-    ('poisson', 'Poisson', AppIcons.fish, Tint.sky),
-    ('lait', 'Lait', AppIcons.drop, Tint.sky),
-    ('sesame', 'Sésame', AppIcons.sparkles, Tint.sand),
-    ('moutarde', 'Moutarde', AppIcons.drop, Tint.peach),
-    ('celeri', 'Céleri', AppIcons.leaf, Tint.leafy),
-    ('sulfites', 'Sulfites', AppIcons.drop, Tint.lavender),
-    ('lupin', 'Lupin', AppIcons.sprout, Tint.leafy),
+  static List<(String, String, String, Tint)> otherAllergens(L l) => [
+    ('poisson', l.allergenFish, AppIcons.fish, Tint.sky),
+    ('lait', l.allergenMilk, AppIcons.drop, Tint.sky),
+    ('sesame', l.allergenSesame, AppIcons.sparkles, Tint.sand),
+    ('moutarde', l.allergenMustard, AppIcons.drop, Tint.peach),
+    ('celeri', l.allergenCelery, AppIcons.leaf, Tint.leafy),
+    ('sulfites', l.allergenSulphites, AppIcons.drop, Tint.lavender),
+    ('lupin', l.allergenLupin, AppIcons.sprout, Tint.leafy),
   ];
 
   /// Tous les choix d'allergènes (codes couverts, libellé, icône, teinte).
-  static List<(List<String>, String, String, Tint)> get allergenChoices => [
-    for (final a in commonAllergens) (a.$1, a.$2, a.$4, a.$5),
-    for (final a in otherAllergens) ([a.$1], a.$2, a.$3, a.$4),
+  static List<(List<String>, String, String, Tint)> allergenChoices(L l) => [
+    for (final a in commonAllergens(l)) (a.$1, a.$2, a.$4, a.$5),
+    for (final a in otherAllergens(l)) ([a.$1], a.$2, a.$3, a.$4),
   ];
 
   /// Libellés des allergènes d'un ensemble de codes (« Fruits de mer » couvre 2 codes).
-  static List<String> allergenLabels(Set<String> codes) => [
-    for (final a in allergenChoices)
+  static List<String> allergenLabels(L l, Set<String> codes) => [
+    for (final a in allergenChoices(l))
       if (a.$1.any(codes.contains)) a.$2,
   ];
 
@@ -80,35 +81,36 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
-    final othersSelected = ConstraintsScreen.otherAllergens.where((a) => d.allergens.contains(a.$1)).length;
+    final othersSelected = ConstraintsScreen.otherAllergens(l).where((a) => d.allergens.contains(a.$1)).length;
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.constraints),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: d.isFoyer ? 'CUISINE UNIFIÉE' : 'PRESQUE FINI !',
+      eyebrow: d.isFoyer ? l.constraintsEyebrowHousehold : l.constraintsEyebrowSolo,
       eyebrowIcon: AppIcons.checkCircle,
-      title: d.isFoyer ? 'Régimes & contraintes partagées' : 'Régimes & contraintes alimentaires',
+      title: d.isFoyer ? l.constraintsTitleHousehold : l.constraintsTitleSolo,
       subtitle: d.isFoyer
-          ? 'Définissez les règles communes à toute la tablée : aucun repas du foyer ne les enfreindra.'
-          : 'Indiquez vos régimes, allergies et aliments exclus : aucun menu ne les contiendra.',
+          ? l.constraintsSubtitleHousehold
+          : l.constraintsSubtitleSolo,
       onContinue: () {
         _addFood();
         OnboardingFlow.next(context, OnbStep.constraints);
       },
       children: [
-        const StepSectionTitle('Régimes alimentaires', hint: 'Choix multiple', icon: AppIcons.leaf, tint: Tint.leafy),
+        StepSectionTitle(l.constraintsDietsSection, hint: l.commonMultipleChoice, icon: AppIcons.leaf, tint: Tint.leafy),
         Wrap(
           spacing: AppSpace.x2,
           runSpacing: AppSpace.x2,
           children: [
             ToggleChip(
-              label: 'Omnivore',
+              label: l.dietOmnivore,
               icon: AppIcons.cutlery,
               tint: Tint.peach,
               selected: d.diets.isEmpty,
               onTap: () => d.update(d.diets.clear),
             ),
-            for (final diet in ConstraintsScreen.diets)
+            for (final diet in ConstraintsScreen.diets(l))
               ToggleChip(
                 label: diet.$2,
                 icon: diet.$3,
@@ -119,13 +121,13 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        const StepSectionTitle('Allergènes', hint: 'Exclusion stricte', icon: AppIcons.shield, tint: Tint.peach),
+        StepSectionTitle(l.constraintsAllergensSection, hint: l.constraintsAllergensHint, icon: AppIcons.shield, tint: Tint.peach),
         if (d.isFoyer && d.memberAllergens.isNotEmpty) ...[
           InfoBanner(
             icon: AppIcons.shield,
-            title: 'Déjà exclus grâce aux profils',
+            title: l.constraintsMemberAllergensTitle,
             text: [
-              for (final a in ConstraintsScreen.allergenChoices)
+              for (final a in ConstraintsScreen.allergenChoices(l))
                 if (a.$1.any(d.memberAllergens.containsKey))
                   '${a.$2} (${{for (final c in a.$1) ...?d.memberAllergens[c]}.join(', ')})',
             ].join(' · '),
@@ -141,7 +143,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           crossAxisSpacing: AppSpace.x2,
           childAspectRatio: AppSizes.allergenTileRatio,
           children: [
-            for (final a in ConstraintsScreen.commonAllergens)
+            for (final a in ConstraintsScreen.commonAllergens(l))
               OptionTile(
                 label: a.$2,
                 subtitle: a.$3,
@@ -165,7 +167,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           child: Row(
             children: [
               Text(
-                othersSelected > 0 ? 'Autres allergènes ($othersSelected)' : 'Autres allergènes',
+                othersSelected > 0 ? l.constraintsOtherAllergensCount(othersSelected) : l.constraintsOtherAllergens,
                 style: AppText.of(AppFont.s14, weight: AppFont.bold, color: AppColors.primary),
               ),
               const SizedBox(width: AppSpace.x1),
@@ -188,7 +190,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
                     spacing: AppSpace.x2,
                     runSpacing: AppSpace.x2,
                     children: [
-                      for (final a in ConstraintsScreen.otherAllergens)
+                      for (final a in ConstraintsScreen.otherAllergens(l))
                         ToggleChip(
                           label: a.$2,
                           leading: FoodThumb(
@@ -207,10 +209,10 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
               : const SizedBox(width: double.infinity),
         ),
         const SizedBox(height: AppSpace.x6),
-        const StepSectionTitle('Aliments exclus', hint: 'Sur-mesure', icon: AppIcons.block, tint: Tint.lavender),
+        StepSectionTitle(l.constraintsExcludedSection, hint: l.constraintsExcludedHint, icon: AppIcons.block, tint: Tint.lavender),
         IconTextField(
           icon: AppIcons.search,
-          hint: 'Ex. : coriandre, anchois, poivron…',
+          hint: l.constraintsExcludedPlaceholder,
           controller: _food,
           textInputAction: TextInputAction.done,
           onSubmitted: (_) => _addFood(),
@@ -229,10 +231,10 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           ),
         ],
         const SizedBox(height: AppSpace.x5),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.sparkles,
-          title: 'Zéro compromis sur votre bien-être',
-          text: 'Vous pourrez affiner vos goûts et ajouter d\'autres exclusions à tout moment dans vos réglages.',
+          title: l.constraintsInfoTitle,
+          text: l.constraintsInfoText,
         ),
       ],
     );
