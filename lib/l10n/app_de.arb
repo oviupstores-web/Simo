@@ -630,5 +630,9 @@
   "scanPhotoTitle": "Foto Ihres Kühlschranks",
   "scanPhotoText": "Fotografieren Sie Ihren Kühlschrank oder Kassenbon: Die KI erkennt Lebensmittel, die Sie vor dem Hinzufügen prüfen. Diese Funktion kommt mit dem Reiter Vorrat.",
   "scanAddManually": "Manuell hinzufügen",
-  "scanBackToPantry": "Zurück zu meinem Vorrat"
+  "scanBackToPantry": "Zurück zu meinem Vorrat",
+  "targetErrorMissing": "Geben Sie Ihr Zielgewicht an.",
+  "targetErrorLosing": "Um abzunehmen, muss das Ziel unter Ihrem aktuellen Gewicht liegen ({current}).",
+  "targetErrorGaining": "Für Muskelaufbau muss das Ziel über Ihrem aktuellen Gewicht liegen ({current}).",
+  "targetErrorTooLow": "Dieses Gewicht ergäbe einen BMI von {bmi}. Unter 18,5 gilt das als Untergewicht mit Gesundheitsrisiken. Streben Sie für {height} mindestens {min} an."
 }

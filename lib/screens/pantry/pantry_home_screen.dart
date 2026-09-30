@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../l10n/app_localizations.dart';
 import '../../models/pantry_location.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -99,7 +98,7 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
                             text: l.pantryDemoChicken,
                             style: AppText.of(AppFont.s12_5, weight: AppFont.bold, color: AppColors.alertInk),
                           ),
-                          TextSpan(text: ' ' + l.pantryHomeUrgent(PantryLocation.fridge.label(l))),
+                          TextSpan(text: ' ${l.pantryHomeUrgent(PantryLocation.fridge.label(l))}'),
                         ],
                       ),
                     ),

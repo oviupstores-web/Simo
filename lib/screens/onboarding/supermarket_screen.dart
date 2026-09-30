@@ -135,7 +135,6 @@ class _StoreRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Semantics(
       selected: selected,
       button: true,
@@ -205,7 +204,6 @@ class StoreMonogram extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Container(
       width: AppSizes.iconTile,
       height: AppSizes.iconTile,

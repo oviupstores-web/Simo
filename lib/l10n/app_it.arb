@@ -630,5 +630,9 @@
   "scanPhotoTitle": "Foto del tuo frigo",
   "scanPhotoText": "Fotografa il tuo frigo o lo scontrino: l’IA rileva gli alimenti e li verifichi prima di aggiungerli. Questa funzione arriva con la scheda Dispensa.",
   "scanAddManually": "Aggiungi manualmente",
-  "scanBackToPantry": "Torna alla mia dispensa"
+  "scanBackToPantry": "Torna alla mia dispensa",
+  "targetErrorMissing": "Indica il peso che vuoi raggiungere.",
+  "targetErrorLosing": "Per perdere peso, l’obiettivo deve essere inferiore al tuo peso attuale ({current}).",
+  "targetErrorGaining": "Per la massa, l’obiettivo deve essere superiore al tuo peso attuale ({current}).",
+  "targetErrorTooLow": "Questo peso corrisponderebbe a un IMC di {bmi}. Sotto 18,5 si parla di sottopeso, con rischi per la salute. Per {height}, punta ad almeno {min}."
 }

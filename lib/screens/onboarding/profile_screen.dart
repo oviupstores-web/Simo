@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else if (weight == null || weight < 35 || weight > 250) {
       error = L.of(context).profileWeightError;
     }
-    final targetError = error == null ? d.targetError(target: target, current: weight!, heightCm: height!) : null;
+    final targetError = error == null ? d.targetError(L.of(context), Formats.of(context), target: target, current: weight!, heightCm: height!) : null;
     setState(() {
       _error = error;
       _showTargetError = targetError != null;
@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final target = _num(_target.text);
     final liveError = (height == null || current == null)
         ? null
-        : d.targetError(target: target, current: current, heightCm: height);
+        : d.targetError(l, Formats.of(context), target: target, current: current, heightCm: height);
     final showError = liveError != null && (_showTargetError || (target != null && _target.text.length >= 2));
     final weeks = liveError == null ? d.weeksToTarget(target: target, current: current) : null;
     final date = liveError == null ? d.targetDate(target: target, current: current) : null;
@@ -244,7 +244,6 @@ class _RateTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     final fg = selected ? AppColors.primary : AppColors.ink;
     return Semantics(
       selected: selected,
@@ -302,7 +301,6 @@ class _Projection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     TextStyle big(Color c) => AppText.of(AppFont.s22, weight: AppFont.extrabold, color: c, lineHeight: 28);
     return Container(
       padding: const EdgeInsets.all(AppSpace.x4),

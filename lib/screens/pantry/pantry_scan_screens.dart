@@ -37,7 +37,6 @@ class _ComingSoon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return OnboardingStepScaffold(
       eyebrow: L.of(context).scanComingSoon,
       eyebrowIcon: AppIcons.sparkles,

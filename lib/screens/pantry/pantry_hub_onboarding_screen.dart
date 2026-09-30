@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../l10n/app_localizations.dart';
 import '../../models/food_images.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
@@ -97,8 +96,8 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                             ),
                             TextSpan(
                               text: urgent.length > 1
-                                  ? ' ' + l.pantryHubUrgentOthers(urgent.length - 1)
-                                  : ' ' + l.pantryHomeUrgent(urgent.first.location.label(l)),
+                                  ? ' ${l.pantryHubUrgentOthers(urgent.length - 1)}'
+                                  : ' ${l.pantryHomeUrgent(urgent.first.location.label(l))}',
                             ),
                           ],
                         ),
@@ -252,7 +251,6 @@ class _QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Pressable(
       onTap: onTap,
       child: Container(
@@ -280,7 +278,6 @@ class _EmptyPantry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return AppCard(
       padding: const EdgeInsets.all(AppSpace.x5),
       child: Column(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/formats.dart';
 import '../screens/onboarding/activity_screen.dart';
 import '../screens/onboarding/budget_screen.dart';
 import '../screens/onboarding/constraints_screen.dart';
@@ -128,7 +130,7 @@ abstract final class OnboardingFlow {
       final d = OnboardingScope.read(context);
       if (!d.needsTarget) {
         d.update(() => d.targetWeightKg = null);
-      } else if (d.targetError(target: d.targetWeightKg, current: d.weightKg, heightCm: d.heightCm) != null) {
+      } else if (d.targetError(L.of(context), Formats.of(context), target: d.targetWeightKg, current: d.weightKg, heightCm: d.heightCm) != null) {
         nav.pushReplacement(_route(screenFor(OnbStep.profile), fromSummary: true));
         return;
       }

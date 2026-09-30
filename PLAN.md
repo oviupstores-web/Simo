@@ -3,18 +3,12 @@
 Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 
 ## 📍 Où on en est
-- **État actuel (2026-09-30)** : jalons 0 à 5b **validés**. Simo a donné 8 changements de structure. **SPEC.md (v4), PRD.md (v1.2), DECISIONS.md et ce fichier sont mis à jour et attendent sa validation. Rien n'est codé.**
-- **Maquette proposée** : `design/maquettes/maquette_6b_cercle_et_cuisines.html`. **v1 refusée** (aplat vert, liste grise : sans rapport avec les maquettes de Simo). **v2 refusée** (arrondis trop marqués, rendu pas au niveau). **v4 en attente** : page de comparaison, chaque écran à côté de la maquette de Simo, avec la liste des écarts. Écrans : Scan IA (étape 1) **en deux états — au repos et caméra active**, choix de cuisine (étape 5), cercle de l'Accueil (**variante A frigo retenue**, variante B abandonnée). Illustration `assets/images/scan_frigo_main.jpg` générée le 2026-09-30 (≈ 0,05 $).
-- **Règles de maquette retenues** : (1) partir des images de `design/maquettes/` pour le rendu, SPEC.md pour la structure ; (2) **aucun arrondi, espacement ni ombre en dur** — uniquement les jetons du thème (cartes et boutons 14 px, champs 12 px, vignettes 10 px, pilule réservée aux badges) ; (3) toujours présenter le résultat **côte à côte** avec la maquette de référence.
-- **Point signalé à Simo (2026-09-30)** : 3 des écarts qu'il a listés (bandeau en pilule, bouton « Analyser mes ingrédients », barre « Semaine / Profil ») venaient de **sa propre maquette** `scan_ia_ecran1.png`, pas de la mienne — cet écran n'était pas encore dessiné. Il l'est en v3, corrigé selon la charte.
-- **Audit des noms d'écrans (2026-09-30)** : les **14 renommages sont validés et appliqués**, dans SPEC.md §15 et dans le code (analyse et tests au vert). « Régime » est désormais réservé aux restrictions alimentaires ; le suivi du poids est `tracking_weight`. Maquette `accueil_deroulant.png` → `landing.png`.
-- **Git** : projet sous version depuis le 2026-09-30. Commit avant les renommages (« Mise sous Git du projet Menoo »), commit après. 807 fichiers suivis, `build/` et `.dart_tool/` exclus.
-- **Landing** : la carte Scan IA reste inerte ; une ligne légère sous « Commencer » mène à l'improvisation (option (c) retenue par Simo).
-- **Tous les points sont tranchés (2026-09-30)** : les 13 questions ont reçu une réponse de Simo, reportées dans SPEC.md §14. Notamment : **1 scan photo offert par appareil** (paywall après, jamais avant), pas d'essai de 7 jours, lots à 3,49 € et 7,99 €, coach écarté, **relecture humaine obligatoire des allergènes et des régimes**, catalogue de départ ≈ 120 recettes.
-- **⛔ Ne rien coder** tant que Simo n'a pas validé SPEC.md v4 dans son ensemble et l'ordre des jalons ci-dessous.
-- **Prochaine action — jalon 5i en cours, étape 1 sur 4 faite.** Reprendre à « Jalon 5i » plus bas.
-- **À faire après validation** : mettre `CLAUDE.md` en accord (liste des jalons, « Semaine » → « Menus », drive supprimé).
-- **Visuels du 5b** : tous validés. Pour en refaire un : `node --use-system-ca tools/generate_images.mjs --only <fichier> --force`. Pas encore affichés (écrans à venir) : 6 recettes, `famille_table`, `leaf_b`.
+- **État actuel (2026-09-30)** : jalons 0 à 5b **validés**. **SPEC.md v4 validée par Simo dans son ensemble.** Les 14 renommages d'écrans et les 13 points ouverts sont tranchés (SPEC §14-15). **Jalon 5i (International) terminé** : socle technique, police arabe Readex Pro, et **28 écrans + les widgets partagés traduits dans les 6 langues, sans aucun texte en dur restant** (`test/i18n_test.dart` passe sans exclusion). Détail complet dans la section « Jalon 5i » plus bas.
+- **Git** : projet sous version depuis le 2026-09-30. 807+ fichiers suivis, `build/`, `.dart_tool/` et les fichiers `app_localizations*.dart` générés exclus.
+- **Prochaine action** : jalon 5d (Entrée et réassurance : landing déroulante, 5 écrans de réassurance, étape Enseigne sans drive), puis 5c (recettes des 8 cuisines, avec l'essai de 5 photos avant le lot). Voir « Ordre recommandé » plus bas.
+- **À faire au fil de l'eau** : mettre `CLAUDE.md` en accord au prochain jalon qui touche la Landing/le drive (déjà partiellement à jour depuis le 2026-09-30).
+- **Visuels du 5b** : tous validés. Pour en refaire un : `node --use-system-ca tools/generate_images.mjs --only <fichier> --force`. Pas encore affichés (écrans à venir) : 6 recettes, `famille_table`.
+- **Maquette 6b** (`design/maquettes/maquette_6b_cercle_et_cuisines.html`) : v4 en attente du retour de Simo — page de comparaison côte à côte, Scan IA en deux états (repos/caméra), choix de cuisine, cercle de l'Accueil (variante A frigo retenue). Pas de blocage : le 6b vient après 5d, 5c et 6 de toute façon.
 
 | # | Jalon | Statut |
 |---|---|---|
@@ -25,8 +19,8 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 4 | Entrée + onboarding Solo (12 étapes) + détour Réserve | ✅ Validé |
 | 5 | Onboarding Foyer (10 étapes) + détour Réserve | ✅ Validé |
 | 5b | Images par API OpenAI (125 visuels) + pictogrammes régimes + branchement | ✅ Validé |
-| 5i | **International, socle** : textes sortis du code, 6 langues, arabe de droite à gauche, tables de traduction, unités / devises / dates | 🆕 Proposé |
-| 5d | **Entrée et réassurance** : landing déroulante, 5 écrans de réassurance, onglet « Menus », étape Enseigne sans drive, photo IA verrouillée dans le détour Réserve | 🆕 Proposé |
+| 5i | **International, socle** : textes sortis du code, 6 langues, arabe de droite à gauche, unités / devises / dates | ✅ Validé (2026-09-30) — tables de traduction Supabase pour les contenus restent au 5c |
+| 5d | **Entrée et réassurance** : landing déroulante, 5 écrans de réassurance, onglet « Menus », étape Enseigne sans drive, photo IA verrouillée dans le détour Réserve | ⏳ Prochain |
 | 5c | Recettes des 8 cuisines (96 recettes, première tranche vers 500), créées dans les tables de traduction ; photos par API après essai de 5 | ⏳ (après 5i) |
 | 6 | Compte invité converti à l'inscription + génération des menus sous budget / Ma cuisine | ⏳ |
 | 6b | **Improvisation (6 étapes) + paywall de la fiche recette**, à construire ensemble | 🆕 Proposé |
@@ -40,29 +34,27 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 13 | APK de test (Firebase App Distribution) | ⏳ |
 | — | Catalogue : ≈ **120 recettes** au lancement (12 à 15 × 8 cuisines) ; les 500 **après le lancement**, une fois qu'il y a des utilisateurs | 🆕 En continu |
 
-## Jalon 5i — International (en cours, étapes 1 à 3 sur 4 faites)
+## Jalon 5i — International (✅ socle et 28 écrans traduits, 2026-09-30)
 
-**Fait (2026-09-30) :**
-- **Socle** : `l10n.yaml`, `generate: true`, paquet `intl`. Classe générée `L` (`L.of(context)`), branchée dans `main.dart` (`L.supportedLocales`, `L.localizationsDelegates`).
-- **6 langues** dans `lib/l10n/` : `app_fr.arb` (référence) + en, es, de, it, ar. Les fichiers `app_localizations*.dart` sont générés, donc exclus de Git.
-- **Changement de langue** : appui long sur le logo Menoo, en haut de n'importe quel écran (provisoire, jusqu'à l'écran Réglages du jalon 12). Une langue non choisie suit celle du téléphone.
-- **Arabe** : Noto Sans Arabic (5 graisses, licence libre, téléchargée le 2026-09-30) déclarée en police de secours dans `AppText`. Plus Jakarta Sans reste la police principale, donc « Menoo » garde son dessin au milieu d'un texte arabe. Le sens de lecture de droite à gauche est géré par Flutter.
-- **6 écrans traduits** : landing, connexion, inscription, choix du mode, couverture Solo, couverture Foyer, plus l'en-tête partagé.
-- **Unités, devises, dates** : `lib/l10n/formats.dart`. Métrique partout, impérial aux États-Unis ; devise et formats de date selon le pays ; les prix partent des centimes de la base. Couvert par `test/formats_test.dart`.
-- Les tests forcent le français (`platformDispatcher.localesTestValue`), sinon ils tomberaient sur l'anglais.
-- `flutter analyze` sans problème, **10 tests au vert**, APK installé sur le téléphone.
+**Socle technique :**
+- `l10n.yaml`, `generate: true`, paquet `intl`. Classe générée `L` (`L.of(context)`), branchée dans `main.dart` (`L.supportedLocales`, `L.localizationsDelegates`).
+- **6 langues** dans `lib/l10n/` : `app_fr.arb` (référence) + en, es, de, it, ar. Les fichiers `app_localizations*.dart` sont générés, donc exclus de Git (regénérés par `flutter gen-l10n` ou `flutter pub get`).
+- **Changement de langue** : appui long sur le logo Menoo, en haut de n'importe quel écran (provisoire, jusqu'à l'écran Réglages du jalon 12). Une langue non choisie suit celle du téléphone ; **langue non proposée → repli sur l'anglais**, jamais le français (SPEC §0.10).
+- **Police arabe : Readex Pro** (SIL Open Font License, choisie par Simo — même esprit géométrique que Frutiger Arabic, sans le coût d'une police Monotype), déclarée en police de secours dans `AppText`. Plus Jakarta Sans reste la police principale, donc « Menoo » garde son dessin au milieu d'un texte arabe.
+- **Sens de lecture** : positions `start`/`end` partout (jamais `left`/`right`), icônes directionnelles retournées (`AppIcon` teste `Directionality`), décor de basilic inversé, bloc de marque gardé dans l'ordre (logo à gauche de « Menoo »).
+- **Unités, devises, dates** : `lib/l10n/formats.dart`. Métrique partout, impérial aux États-Unis ; devise et format de date selon le pays ; les prix partent des centimes de la base ; les nombres arrondis enlèvent les zéros inutiles (75 kg, jamais 75,0 kg). Couvert par `test/formats_test.dart`.
+- **Détecteur automatique** `test/i18n_test.dart` : scanne tout `lib/`, signale fichier + ligne + texte pour tout texte d'interface resté en dur. **Passe sans aucune exclusion.**
+- Captures de contrôle en arabe (Readex Pro) : `design/qa/arabe_6_ecrans.jpg`, régénérables par `flutter test test/golden_ar_test.dart --update-goldens`.
 
-**Corrigé le 2026-09-30, après le test de Simo :**
-- Les 6 écrans sont **entièrement** traduits : il restait les avantages des deux couvertures, les libellés de la barre de navigation et le compteur d'étapes.
-- **Vérification automatique** `test/i18n_test.dart` : signale tout texte d'interface resté en dur, avec fichier, ligne et texte. Sa liste `notYetTranslated` recense les écrans du reste du 5i et **doit finir vide**.
-- **Sens de lecture repris partout** : positions `start`/`end` au lieu de `left`/`right`, icônes directionnelles retournées, décor de basilic inversé, bloc de marque gardé dans l'ordre (logo à gauche de « Menoo »).
-- **Captures** des 6 écrans en arabe : `design/qa/arabe_6_ecrans.jpg`, produites par `flutter test test/golden_ar_test.dart --update-goldens` (tests de rendu, pas le téléphone).
+**Les 29 écrans/fichiers traduits dans les 6 langues** (recherche exhaustive, plus aucun texte en dur dans `lib/`) :
+landing, login, signup, path_choice, cover_solo, cover_household, goal, activity, management_mode, household_size, smart_scale, supermarket, weekly_grid, budget, profile, constraints, kitchen, onboarding_cuisines, member_profiles, summary, home, recipe_sheet, shopping_list, pantry_add_manual, pantry_home, pantry_hub_onboarding, pantry_quick_check, pantry_scan, onboarding_data (dont `targetError`) — plus les widgets partagés (`menoo_header`, `menoo_nav_bar`, `step_progress`, `onboarding_step`, `list_section`/`FreshnessStatus`, `pantry_location`/`PantryLocation`).
 
-**Reste à faire (étape 4 sur 4) :**
-1. **Traduire les ~22 écrans restants** : environ 500 textes. Compter 2 à 3 séances. Les écrans les plus chargés : `pantry_add_manual`, `summary`, `constraints`, `kitchen`, `profile`, `member_profiles`.
-2. **Tables de traduction Supabase** pour les contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements), français en référence. Migration à montrer à Simo **avant envoi**.
-3. **Brancher `Formats`** dans les écrans qui affichent poids, tailles, prix et dates (profil, budget, réserve, courses), à la place des formats français écrits en dur.
-4. **Relecture humaine des allergènes et des régimes** dans les 5 autres langues, avant publication (SPEC §10) — bloquant, non négociable.
+**23/23 tests au vert, `flutter analyze` sans aucun problème, APK compilé et installé sur le téléphone.**
+
+**Reste (hors du socle i18n, pour plus tard) :**
+1. **Tables de traduction Supabase** pour les contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements), français en référence. Migration à montrer à Simo **avant envoi**. À faire avec le jalon 5c.
+2. **Relecture humaine des allergènes et des régimes** dans les 5 autres langues, avant publication (SPEC §10) — **bloquant, non négociable**. Volume modeste (≈ 105 termes par langue).
+3. Brancher `Formats` plus largement à mesure que de nouveaux écrans affichent poids/prix/dates (déjà fait partout où c'est affiché aujourd'hui).
 
 ## Changements de structure du 2026-09-30 — chiffrage et ordre proposés
 Unité : **1 séance** = un bloc de travail de la taille du jalon 5 (construction + installation + test par Simo). Ce sont des estimations, à ±30 %.

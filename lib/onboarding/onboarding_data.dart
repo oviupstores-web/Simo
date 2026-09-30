@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import '../l10n/app_localizations.dart';
+import '../l10n/formats.dart';
 
 import 'package:flutter/material.dart' show ChangeNotifier, DateUtils, VoidCallback;
 
@@ -388,21 +389,20 @@ class OnboardingData extends ChangeNotifier {
   static double bmi(double weightKg, int heightCm) => weightKg / math.pow(heightCm / 100, 2);
 
   /// Message d'erreur si le poids visé n'est pas acceptable (null si tout va bien).
-  String? targetError({required double? target, required double current, required int heightCm}) {
+  String? targetError(L l, Formats fmt, {required double? target, required double current, required int heightCm}) {
     if (!needsTarget) return null;
-    if (target == null) return 'Indiquez le poids que vous visez.';
+    if (target == null) return l.targetErrorMissing;
     final losing = goal != HealthGoal.priseMasse;
     if (losing && target >= current) {
-      return 'Pour perdre du poids, le poids visé doit être inférieur à votre poids actuel (${formatKg(current)} kg).';
+      return l.targetErrorLosing(fmt.weight(l, current));
     }
     if (!losing && target <= current) {
-      return 'Pour une prise de masse, le poids visé doit être supérieur à votre poids actuel (${formatKg(current)} kg).';
+      return l.targetErrorGaining(fmt.weight(l, current));
     }
     final min = minHealthyWeight(heightCm);
     if (target < min) {
       final b = bmi(target, heightCm).toStringAsFixed(1).replaceAll('.', ',');
-      return 'Ce poids correspondrait à un IMC de $b. En dessous de 18,5, on parle d\'insuffisance pondérale, '
-          'ce qui présente des risques pour la santé. Pour $heightCm cm, visez au moins ${formatKg(min)} kg.';
+      return l.targetErrorTooLow(b, fmt.height(l, heightCm.toDouble()), fmt.weight(l, min));
     }
     return null;
   }
@@ -425,23 +425,6 @@ class OnboardingData extends ChangeNotifier {
       v == v.roundToDouble() ? '${v.round()}' : v.toStringAsFixed(1).replaceAll('.', ',');
 
   static String formatRate(double r) => r.toString().replaceAll('.', ',');
-
-  static const _months = [
-    'janvier',
-    'février',
-    'mars',
-    'avril',
-    'mai',
-    'juin',
-    'juillet',
-    'août',
-    'septembre',
-    'octobre',
-    'novembre',
-    'décembre',
-  ];
-
-  static String formatDate(DateTime d) => '${d.day == 1 ? '1er' : d.day} ${_months[d.month - 1]} ${d.year}';
 
   // --- Calculs -------------------------------------------------------
 

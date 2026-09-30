@@ -630,5 +630,9 @@
   "scanPhotoTitle": "Photo of your fridge",
   "scanPhotoText": "Photograph your fridge or receipt: the AI detects the food and you check it before adding. This feature arrives with the Pantry tab.",
   "scanAddManually": "Add manually",
-  "scanBackToPantry": "Back to my pantry"
+  "scanBackToPantry": "Back to my pantry",
+  "targetErrorMissing": "Enter the weight you are aiming for.",
+  "targetErrorLosing": "To lose weight, your target must be lower than your current weight ({current}).",
+  "targetErrorGaining": "To gain muscle, your target must be higher than your current weight ({current}).",
+  "targetErrorTooLow": "That weight would give a BMI of {bmi}. Below 18.5, this is considered underweight, which carries health risks. For {height}, aim for at least {min}."
 }

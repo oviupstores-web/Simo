@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../l10n/app_localizations.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -142,7 +141,6 @@ class _DayStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return AppCard(
       padding: const EdgeInsets.all(AppSpace.x1_5),
       child: Row(
@@ -249,7 +247,6 @@ class _SnippetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Row(
       children: [
         IconTile(icon: icon, circle: true, iconSize: 20),
@@ -329,7 +326,6 @@ class _NutritionSnippet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     Widget legend(Color c, String t) => Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -374,7 +370,6 @@ class _DietSnippet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return AppCard(
       onTap: () {},
       child: Column(

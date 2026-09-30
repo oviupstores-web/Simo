@@ -165,7 +165,6 @@ class _GridCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Semantics(
       checked: selected,
       button: true,

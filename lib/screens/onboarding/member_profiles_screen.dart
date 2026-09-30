@@ -148,7 +148,6 @@ class MemberAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Container(
       width: size,
       height: size,

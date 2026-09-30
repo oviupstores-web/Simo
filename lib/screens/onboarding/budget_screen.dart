@@ -54,7 +54,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
-    final perMeal = d.budgetPerMeal.toStringAsFixed(2).replaceAll('.', ',');
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.budget),
       totalSteps: OnboardingFlow.total(context),

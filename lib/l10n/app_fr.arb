@@ -1343,5 +1343,36 @@
   "scanPhotoTitle": "Photo de votre frigo",
   "scanPhotoText": "Photographiez votre frigo ou votre ticket de caisse : l'IA détecte les aliments et vous les vérifiez avant l'ajout. Cette fonction arrive avec l'onglet Réserve.",
   "scanAddManually": "Ajouter manuellement",
-  "scanBackToPantry": "Revenir à ma réserve"
+  "scanBackToPantry": "Revenir à ma réserve",
+  "targetErrorMissing": "Indiquez le poids que vous visez.",
+  "targetErrorLosing": "Pour perdre du poids, le poids visé doit être inférieur à votre poids actuel ({current}).",
+  "@targetErrorLosing": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "targetErrorGaining": "Pour une prise de masse, le poids visé doit être supérieur à votre poids actuel ({current}).",
+  "@targetErrorGaining": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "targetErrorTooLow": "Ce poids correspondrait à un IMC de {bmi}. En dessous de 18,5, on parle d’insuffisance pondérale, ce qui présente des risques pour la santé. Pour {height}, visez au moins {min}.",
+  "@targetErrorTooLow": {
+    "placeholders": {
+      "bmi": {
+        "type": "String"
+      },
+      "height": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      }
+    }
+  }
 }

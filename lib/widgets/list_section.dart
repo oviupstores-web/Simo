@@ -24,7 +24,6 @@ class ListSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return AppCard(
       padding: const EdgeInsets.fromLTRB(AppSpace.x4, AppSpace.x3, AppSpace.x4, AppSpace.x1),
       child: Column(
@@ -71,7 +70,6 @@ class ItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpace.x2_5),
       child: Row(

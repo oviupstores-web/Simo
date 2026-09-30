@@ -174,7 +174,6 @@ class _TimeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     const times = KitchenScreen.times;
     final index = times.indexOf(minutes).clamp(0, times.length - 1);
     return Column(

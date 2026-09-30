@@ -630,5 +630,9 @@
   "scanPhotoTitle": "Foto de tu nevera",
   "scanPhotoText": "Fotografía tu nevera o tu ticket: la IA detecta los alimentos y los verificas antes de añadirlos. Esta función llega con la pestaña Despensa.",
   "scanAddManually": "Añadir manualmente",
-  "scanBackToPantry": "Volver a mi despensa"
+  "scanBackToPantry": "Volver a mi despensa",
+  "targetErrorMissing": "Indica el peso que quieres alcanzar.",
+  "targetErrorLosing": "Para perder peso, el objetivo debe ser inferior a tu peso actual ({current}).",
+  "targetErrorGaining": "Para ganar masa, el objetivo debe ser superior a tu peso actual ({current}).",
+  "targetErrorTooLow": "Ese peso daría un IMC de {bmi}. Por debajo de 18,5 se considera bajo peso, lo que conlleva riesgos para la salud. Para {height}, apunta al menos a {min}."
 }

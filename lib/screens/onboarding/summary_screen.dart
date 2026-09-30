@@ -379,7 +379,6 @@ class _Line extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,

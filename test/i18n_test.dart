@@ -18,6 +18,8 @@ void main() {
     'Karim',
     // Mot-clé de détection de catégorie (pantry_add_manual_screen.dart), pas un texte affiché.
     'pois chiche',
+    // Famille de démo (SPEC §9, famille Martin) : prénoms, jamais traduits.
+    'Thomas', 'Sarah', 'Lucas', 'Emma',
   };
 
   /// Fichiers sans texte d'interface : données, icônes, mots-clés de détection.
@@ -25,13 +27,6 @@ void main() {
     'lib/theme/app_icons.dart', // tracés SVG
     'lib/widgets/app_icon.dart', // assemblage d'attributs SVG
     'lib/models/food_images.dart', // mots-clés de correspondance
-  };
-
-  /// Écrans pas encore traduits (jalon 5i, étape 4). **Cette liste doit finir vide.**
-  const notYetTranslated = {
-    'lib/onboarding/onboarding_data.dart',
-    
-    
   };
 
   /// Dossiers à ne pas scanner.
@@ -72,7 +67,6 @@ void main() {
         .map((f) => f.path.replaceAll(r'\', '/'))
         .where((p) => !skippedFiles.contains(p))
         .where((p) => !skippedDirs.any(p.startsWith))
-        .where((p) => !notYetTranslated.any(p.startsWith))
         .where((p) => !p.contains('app_localizations'))
         .toList()
       ..sort();

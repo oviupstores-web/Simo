@@ -165,7 +165,6 @@ class _UnlockCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Container(
       padding: const EdgeInsets.all(AppSpace.x5),
       decoration: BoxDecoration(

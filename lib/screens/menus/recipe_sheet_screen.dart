@@ -179,7 +179,6 @@ class _MacroTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppSpace.x2_5),
       decoration: const BoxDecoration(color: AppColors.card, borderRadius: AppRadius.tileR, boxShadow: AppShadows.card),
@@ -209,7 +208,6 @@ class _Tabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = L.of(context);
     return Container(
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.line)),
