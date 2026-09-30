@@ -12,7 +12,7 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 - **Landing** : la carte Scan IA reste inerte ; une ligne légère sous « Commencer » mène à l'improvisation (option (c) retenue par Simo).
 - **Tous les points sont tranchés (2026-09-30)** : les 13 questions ont reçu une réponse de Simo, reportées dans SPEC.md §14. Notamment : **1 scan photo offert par appareil** (paywall après, jamais avant), pas d'essai de 7 jours, lots à 3,49 € et 7,99 €, coach écarté, **relecture humaine obligatoire des allergènes et des régimes**, catalogue de départ ≈ 120 recettes.
 - **⛔ Ne rien coder** tant que Simo n'a pas validé SPEC.md v4 dans son ensemble et l'ordre des jalons ci-dessous.
-- **Prochaine action** : attendre la validation d'ensemble de SPEC.md v4. Ensuite, premier jalon : **5i (International, socle)**, puis 5d, puis 5c (avec l'essai de 5 photos de recettes avant le lot).
+- **Prochaine action — jalon 5i en cours, étape 1 sur 4 faite.** Reprendre à « Jalon 5i » plus bas.
 - **À faire après validation** : mettre `CLAUDE.md` en accord (liste des jalons, « Semaine » → « Menus », drive supprimé).
 - **Visuels du 5b** : tous validés. Pour en refaire un : `node --use-system-ca tools/generate_images.mjs --only <fichier> --force`. Pas encore affichés (écrans à venir) : 6 recettes, `famille_table`, `leaf_b`.
 
@@ -39,6 +39,22 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 12b | **Anti-fraude** — App Set ID vérifié côté serveur dans une Edge Function avant l'appel à l'IA | 🔴 **BLOQUANT AVANT PUBLICATION** (validé par Simo le 2026-09-30). Pas codé maintenant |
 | 13 | APK de test (Firebase App Distribution) | ⏳ |
 | — | Catalogue : ≈ **120 recettes** au lancement (12 à 15 × 8 cuisines) ; les 500 **après le lancement**, une fois qu'il y a des utilisateurs | 🆕 En continu |
+
+## Jalon 5i — International (en cours, commencé le 2026-09-30)
+
+**Fait (étape 1 sur 4) — le socle technique :**
+-  +  dans pubspec ; paquet  ajouté. Classe générée :  ().
+- **6 fichiers de traduction** dans  :  (référence) + en, es, de, it, ar. Ils couvrent le parcours d'entrée (landing, connexion, inscription, choix du mode, 2 couvertures), la barre de navigation, et les unités.
+- Les fichiers  sont **générés**, donc exclus de Git ( les recrée).
+-  sans problème.
+
+**Reste à faire (étapes 2 à 4) :**
+1. **Brancher dans ** : , , et un sélecteur de langue provisoire pour tester avant l'écran Réglages (jalon 12).
+2. **Remplacer les textes en dur** des 6 écrans d'entrée par , puis des ~22 écrans restants. **569 textes distincts** au total dans  : compter environ 3 séances.
+3. **Arabe** : police compatible à télécharger (Plus Jakarta Sans ne contient pas l'alphabet arabe — Noto Sans Arabic, licence libre, **à faire valider par Simo avant téléchargement**) + vérification de l'écriture de droite à gauche sur le téléphone.
+4. **Unités, devises, dates** : classe d'aide (métrique par défaut, impérial aux États-Unis) ; **tables de traduction Supabase** pour les contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements), migration à montrer à Simo avant envoi.
+
+**Rappel** : allergènes et régimes → relecture humaine obligatoire avant publication (SPEC §10).
 
 ## Changements de structure du 2026-09-30 — chiffrage et ordre proposés
 Unité : **1 séance** = un bloc de travail de la taille du jalon 5 (construction + installation + test par Simo). Ce sont des estimations, à ±30 %.
