@@ -15,7 +15,8 @@ Les écrans Stitch et les maquettes donnent la structure, les textes et le rendu
 5. **Le budget est la contrainte n°1** : aucun menu généré ne dépasse le budget ; le budget apparaît en premier sur les accueils.
 6. **Mode Solo / Foyer** : un seul code, des variantes d'écran selon le mode (`_Household` = Foyer).
 7. **L'IA ne crée rien** : elle reconnaît des ingrédients et choisit dans le **catalogue** (macros vérifiées, prix connus, photo existante). Une recette générée librement n'arrive qu'en **dernier recours**, marquée « Recette générée par IA, non vérifiée » et **hors budget garanti** (§8).
-8. **Photo IA = Premium, saisie = gratuit** : partout, y compris dans le détour Réserve, la reconnaissance par photo est réservée aux abonnés ; la saisie manuelle et le code-barres restent gratuits. L'abonnement achète du confort, pas l'accès.
+8. **Photo IA = Premium, saisie = gratuit, avec un scan offert** : partout, y compris dans le détour Réserve, la reconnaissance par photo est réservée aux abonnés ; la saisie manuelle et le code-barres restent gratuits. L'abonnement achète du confort, pas l'accès.
+   **Un scan est offert par appareil** : sans lui, la promesse « Scan IA » de la Landing serait trompeuse. Le compte n'est pas nécessaire pour l'utiliser. Le paywall n'apparaît qu'**après** ce scan offert, jamais avant : on voit son écran avant qu'on lui demande de payer. Le quota est tenu **côté serveur** par l'identifiant d'appareil du jalon 12b (§16) — jamais dans l'app, qu'une réinstallation remettrait à zéro.
 9. **Le compte arrive après la valeur**, jamais avant (§5).
 10. **Origine du prix toujours affichée** : estimation, communautaire ou réel (§10). Quand les prix sont estimés, le badge « Dans le budget ✓ » devient « Estimation dans votre budget ».
 11. **Visuels** : aucune référence à l'alcool (app classée 3 ans et plus) ; jamais de silhouette corporelle avant/après.
@@ -46,7 +47,7 @@ Référence visuelle : `design/maquettes/landing.png`.
 4. **Un seul bouton « Commencer »**, collé en bas pendant tout le défilement, avec « Vos données sont sécurisées » dessous.
 5. **Sous le bouton, la même ligne légère que sur `path_choice`** : « Juste une idée pour ce soir ? Improviser avec ce que j'ai » → `improv_scan`, sans compte. C'est le seul accès direct depuis la Landing : les cartes, elles, restent inertes. Ce n'est pas une quatrième porte d'entrée, c'est la même ligne qu'ailleurs (§8).
 
-Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de la maquette) ; la carte Scan IA précise « Photo réservée aux abonnés, saisie manuelle gratuite » si la règle §0.8 reste sans scan offert (*point ouvert n°1*) ; `path_choice` reste hors compteur.
+Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de la maquette) ; la carte Scan IA porte la mention **« 1 scan offert »**, qui rend la promesse tenable (§0.8) ; `path_choice` reste hors compteur.
 
 ## 2. Onboarding Solo (12 étapes + écrans de réassurance)
 
@@ -139,7 +140,7 @@ Parcours planification : `onboarding_summary(_household)` → « Générer mon/n
   - Liste de courses : total estimé, budget et premier rayon en clair ; rayons suivants floutés (modèle `master_courses_gratuit`).
   - Fiche recette : onglets Ingrédients et Ustensiles visibles, Instructions floutées après 3 lignes.
   - Photo IA : réservée aux abonnés.
-  - **Plus d'essai de 7 jours** : il exigerait une carte bancaire (*point ouvert n°2*).
+  - **Pas d'essai de 7 jours** : il exigerait une carte bancaire, ce qui est exclu (§9). Le scan offert et le repas offert tiennent ce rôle.
 - **Courses** : l'enseigne ne sert qu'aux **prix** et au **tri par rayon**. Aucune commande, aucun panier drive, aucune livraison (§7, onglet 3).
 
 ## 7. App (après création du compte)
@@ -198,18 +199,19 @@ Trouver quoi cuisiner **maintenant** avec ce qu'on a. Parcours en **6 étapes** 
 
 | # | Écran | Contenu |
 |---|---|---|
-| 1 | `improv_scan` | **Scan** du frigo et des réserves (photo : Premium) **ou sélection manuelle** d'ingrédients (gratuit). Onglets Frigo / Garde-manger. **Deux états, voir ci-dessous.** Puis liste « Ingrédients détectés » : cases à cocher, quantité, emplacement, corriger, retirer, ajouter. |
+| 1 | `improv_scan` | **Scan** du frigo et des réserves (photo : **1 scan offert par appareil**, puis Premium) **ou sélection manuelle** d'ingrédients (toujours gratuite). Onglets Frigo / Garde-manger. **Deux états, voir ci-dessous.** Puis liste « Ingrédients détectés » : cases à cocher, quantité, emplacement, corriger, retirer, ajouter. |
 | 2 | `improv_guests` | **Nombre de convives** : valeur du foyer par défaut, réglable en plus ou en moins. |
 | 3 | `improv_condiments` | **Condiments à cocher : 6 à 8 cases maximum**, déduites des ingrédients retenus (huiles, épices, bouillons, vinaigres, sauces). En petit : « Sel, poivre et huile sont supposés présents. » |
 | 4 | `improv_equipment` | **Équipement disponible**, pré-coché depuis « Ma cuisine » si elle est connue. |
 | 5 | `improv_cuisines` | **Choix de cuisine** (voir ci-dessous). |
 | 6 | Fiche recette (§9) | **La recette.** |
 
-**Étape 1 — deux états du même écran** (maquette `maquette_6b_cercle_et_cuisines.html`, référence `scan_ia_accueil.png`) :
+**Étape 1 — deux états du même écran** (maquette `maquette_6b_cercle_et_cuisines.html`, référence `scan_ia_ecran1.png`) :
 - **Au repos** : la zone photo n'est qu'un aperçu de ce qui va se passer — l'illustration `assets/images/scan_frigo_main.jpg` (une main qui tient un téléphone devant le frigo ouvert), la pastille orange « Scan IA » et les étiquettes d'ingrédients posées par l'app (jamais dans l'image). Bouton principal « Analyser mes ingrédients ».
 - **Caméra active** : un appui sur l'onglet « Frigo » ou « Garde-manger », ou sur le bouton principal, fait disparaître l'illustration ; **la caméra s'active en direct dans cette même zone**, avec un cadre de visée aux quatre coins, une pastille « En direct » et les étiquettes qui apparaissent au fil de la reconnaissance. Le bouton principal devient **« Scanner »** et déclenche la prise de vue ; un lien « Annuler » ramène au premier état.
 - Les trois cartes (Prendre une photo, Importer une photo, Saisie manuelle) restent visibles dans les deux états ; celle qui correspond à l'action en cours est marquée. Mentions « Abonnés » ou « Gratuit » sur chacune (§0.8).
-- **À trancher** (*point ouvert n°10*) : à quel moment le paywall s'affiche pour une personne non abonnée — dès l'activation de la caméra, ou seulement à l'appui sur « Scanner ».
+- **Quand le paywall s'affiche** : jamais avant le scan offert. La caméra s'active et le premier scan se déroule entièrement, jusqu'à la liste des ingrédients détectés et la recette. Le paywall n'arrive qu'au **deuxième** scan photo, avec un message qui rappelle ce qui reste gratuit (saisie manuelle et code-barres). Le quota est vérifié **côté serveur** avant l'appel à l'IA (§16).
+- Tant que le scan offert n'a pas servi, les cartes « Prendre une photo » et « Importer une photo » portent la mention **« 1 scan offert »** plutôt que « Abonnés ».
 
 **Étape 5 — trois états par cuisine**, avec le **nombre de recettes** :
 - **Disponible** : tout est là.
@@ -250,7 +252,7 @@ Sous le flou, **trois options** :
 | Abonnement mensuel, résiliable à tout moment | **9,99 € / mois** |
 | Abonnement annuel | **49,99 € / an** |
 
-Lots de recettes (*proposition à valider, point ouvert n°4*) : **5 recettes = 3,49 €** (0,70 € l'une), **15 recettes = 7,99 €** (0,53 € l'une).
+Lots de recettes : **5 recettes = 3,49 €** (0,70 € l'une), **15 recettes = 7,99 €** (0,53 € l'une).
 
 Règles :
 - **Jamais de carte bancaire pour essayer** : ce qui est gratuit est visible sans rien saisir.
@@ -259,13 +261,16 @@ Règles :
 - Les mêmes options s'affichent sur le menu flouté et la liste de courses floutée.
 - Tant que l'app n'est pas publiée, les achats sont **simulés** (champ `premium` et recettes débloquées dans Supabase).
 
-Corrections des maquettes : ordre des onglets (la maquette met Instructions en premier) ; **« 4,3 note » retiré** (chiffre inventé, §0.4) ; **« Interrogez le coach »** n'est pas retenu dans cette version (*point ouvert n°7*).
+Corrections des maquettes : ordre des onglets (la maquette met Instructions en premier) ; **« 4,3 note » retiré** (chiffre inventé, §0.4) ; **« Interrogez le coach » écarté** — il vient des maquettes d'Eatr, et une IA présentée comme une personne, photo de femme à l'appui, pose un problème d'honnêteté. La fonction pourra revenir plus tard, mais **annoncée clairement comme une IA**, sans visage ni prénom humains.
 
 ## 10. International (avant de créer les recettes)
 
 **Prioritaire** : si les recettes sont créées en français seulement, il faudra tout refaire.
 - **Textes de l'app** : internationalisation Flutter, tous les textes sortis du code.
 - **Contenus** : tables de traduction pour recettes (titre, étapes), ingrédients, catégories, allergènes, régimes, cuisines, équipements. **Français en référence** ; une traduction manquante retombe sur le français.
+- **Qualité des traductions, deux niveaux** :
+  - **Allergènes et régimes** : **relecture obligatoire par une personne dont c'est la langue**, avant publication. Une erreur y est un risque de santé, ce n'est pas négociable. Aucune langue n'est mise en production sans cette relecture.
+  - **Tout le reste** (recettes, ingrédients, catégories, cuisines, équipements, textes de l'app) : traduction automatique, corrigée au fil des retours.
 - **6 langues au lancement** : français, anglais, espagnol, allemand, italien, arabe.
 - **Arabe** : écriture de droite à gauche (mise en page inversée, icônes directionnelles retournées) et police compatible (Plus Jakarta Sans ne contient pas l'alphabet arabe).
 - **Unités** : métriques par défaut, impériales aux États-Unis. **Devises et formats de date** selon le pays. Tout est réglable dans les réglages.
@@ -290,28 +295,32 @@ Solo : Karim, 32 ans, 180 cm, 75 kg, objectif perte de poids, budget 65 €. Foy
 | Fichier | Sert pour | À ne pas reprendre |
 |---|---|---|
 | `landing.png` | **`landing`** (malgré son nom : ce n'est pas l'Accueil, §0.13) | Logo « MENOO » en capitales |
-| `scan_ia_accueil.png` | Improvisation, étape 1 (état au repos) | Barre de navigation ; bandeau et bouton en pilule ; « Estimation des quantités » à présenter comme modifiable |
+| `scan_ia_ecran1.png` | Improvisation, étape 1 (état au repos) | Barre de navigation ; bandeau et bouton en pilule ; « Estimation des quantités » à présenter comme modifiable |
 | `scan_ia_ingredients.png` | Improvisation, étape 1 (liste détectée) | Barre de navigation |
 | `condiments_equipement.png` | Improvisation, étapes 3 et 4 | Un seul écran pour deux étapes ; plus de 8 condiments ; le bloc « Niveau en cuisine » |
 | `cuisines_grisees.png` | Improvisation, étape 5 (aperçus de recettes, états grisés) | Le compteur « Étape 9 sur 12 » et le titre d'onboarding |
 | `fiche_recette_infos.png`, `fiche_recette_ustensiles.png` | Fiche recette (§9) | « 4,3 note », « Interrogez le coach », ordre des onglets |
 | `maquette_6b_cercle_et_cuisines.html` | Cercle animé de l'Accueil et étape 5 (proposition de Claude, à valider) | — |
 
-## 14. Points ouverts (à trancher par Simo)
-1. **Scan offert ?** La photo IA est Premium, mais la landing promet le Scan IA et l'improvisation est proposée avant le compte. Faut-il 1 scan offert par appareil (ce que l'anti-fraude permettrait de limiter), ou saisie manuelle seulement en gratuit ?
-2. **Essai de 7 jours** : supprimé, car incompatible avec « jamais de carte bancaire pour essayer ». À confirmer.
-3. **Menu et liste de courses floutés** : conservés, avec les mêmes trois options que la fiche recette. À confirmer.
-4. **Lots** : 5 recettes à 3,49 € et 15 recettes à 7,99 €. À valider.
-5. **Comparateur de prix entre enseignes** : conservé (il ne sert qu'aux prix) ou supprimé avec le reste du tunnel ?
-6. **« J'ai déjà un compte »** sur la landing : lien discret dans l'en-tête, pour respecter « un seul bouton ». À confirmer.
-7. **« Interrogez le coach »** (maquettes de la fiche recette) : fonction non décrite ; écartée pour l'instant.
-8. **500 recettes** : échéance et découpage (le jalon 5c en prévoit 96).
-9. **Traductions des allergènes et des régimes** : relecture par une personne dont c'est la langue, avant publication (une erreur y est un risque de santé).
-10. **Paywall du scan** : pour une personne non abonnée, le paywall s'affiche-t-il dès l'activation de la caméra, seulement à l'appui sur « Scanner » (recommandé), ou après un scan offert par appareil ? Lié à la question 1.
-11. ~~Renommages d'écrans~~ — **tranché le 2026-09-30** : les 14 corrections sont adoptées et appliquées (§15).
-12. ~~Carte « Scan IA » de la Landing~~ — **tranché le 2026-09-30** : les cartes restent inertes, une ligne légère sous « Commencer » mène à l'improvisation (§1).
-13. **Maquette `scan_ia_accueil.png`** : la renommer `scan_ia_ecran1.png` ? Elle montre l'écran d'accueil du Scan IA, pas l'Accueil de l'app.
+## 14. Points tranchés le 2026-09-30
 
+Les 13 questions ouvertes ont toutes reçu une réponse de Simo. Elles sont reportées ici pour mémoire, avec l'endroit où la règle est écrite.
+
+| # | Question | Réponse | Où |
+|---|---|---|---|
+| 1 | Un scan offert ? | **Oui, 1 par appareil.** Sans lui, la promesse « Scan IA » de la Landing serait trompeuse | §0.8, §8 |
+| 2 | Essai de 7 jours | **Non.** Jamais de carte bancaire pour essayer | §6, §9 |
+| 3 | Menu et liste de courses floutés | **Conservés**, avec les trois mêmes options d'achat que la fiche recette | §6, §9 |
+| 4 | Lots de recettes | **5 = 3,49 € · 15 = 7,99 €** | §9 |
+| 5 | Comparateur de prix entre enseignes | **Conservé** : il ne sert qu'aux prix | §7, onglet 3 |
+| 6 | « J'ai déjà un compte » | **Lien discret dans l'en-tête** de la Landing | §1 |
+| 7 | « Interrogez le coach » | **Écarté.** Vient des maquettes d'Eatr ; une IA présentée comme une personne pose un problème d'honnêteté. Reviendra peut-être, **annoncée clairement comme une IA** | §9 |
+| 8 | Combien de recettes | **12 à 15 par cuisine sur 8 cuisines, soit environ 120** pour commencer (96 au jalon 5c). Les 500 viendront **après le lancement**, une fois qu'il y aura des utilisateurs | §10, PLAN.md |
+| 9 | Traductions | **Relecture humaine obligatoire pour les allergènes et les régimes** (risque de santé, non négociable) ; traduction automatique pour le reste | §10 |
+| 10 | Moment du paywall | **Après le scan offert**, jamais avant : on voit son écran avant qu'on lui demande de payer | §8 |
+| 11 | Renommages d'écrans | **Adoptés et appliqués** | §15 |
+| 12 | Carte « Scan IA » de la Landing | **Cartes inertes** ; une ligne légère sous « Commencer » mène à l'improvisation | §1 |
+| 13 | Maquette `scan_ia_accueil.png` | **Renommée `scan_ia_ecran1.png`** | §13 |
 
 ## 15. Noms d'écrans — audit du 2026-09-30, **appliqué**
 
@@ -350,4 +359,14 @@ Les écrans qui n'existent pas encore seront créés directement sous leur nom d
 
 ### 15.4 Maquettes renommées
 `landing.png` → **`landing.png`** : le fichier montre la Landing, pas l'Accueil.
-Reste à trancher : `scan_ia_accueil.png` montre l'écran d'accueil du Scan IA, pas l'Accueil de l'app — le renommer en `scan_ia_ecran1.png` ?
+Reste à trancher : `scan_ia_ecran1.png` montre l'écran d'accueil du Scan IA, pas l'Accueil de l'app — le renommer en `scan_ia_ecran1.png` ?
+
+## 16. Anti-fraude et quota du scan offert (jalon 12b — planifié, pas codé)
+
+But : empêcher qu'on recrée des comptes ou qu'on réinstalle l'app pour consommer sans fin les appels à l'IA, tout en tenant la promesse du **scan offert par appareil** (§0.8).
+
+- **App Set ID**, vérifié **côté serveur**. Pas le Firebase Installations ID (il disparaît à la désinstallation), pas l'`ANDROID_ID` (usage restreint par Google).
+- **Play Integrity** pour écarter les émulateurs et les applications modifiées.
+- **Vérification dans une Edge Function avant chaque appel à l'IA** : quota par appareil et par compte. Le compteur du scan offert vit **en base**, jamais dans l'app — sinon une réinstallation le remettrait à zéro.
+- **Déclaration obligatoire** dans la politique de confidentialité et dans le formulaire Sécurité des données de Google Play.
+- Tant que ce jalon n'est pas fait, le scan offert est compté localement : c'est **suffisant pour tester, pas pour publier**. L'app ne peut pas être publiée sans le jalon 12b.

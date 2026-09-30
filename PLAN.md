@@ -6,13 +6,13 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 - **État actuel (2026-09-30)** : jalons 0 à 5b **validés**. Simo a donné 8 changements de structure. **SPEC.md (v4), PRD.md (v1.2), DECISIONS.md et ce fichier sont mis à jour et attendent sa validation. Rien n'est codé.**
 - **Maquette proposée** : `design/maquettes/maquette_6b_cercle_et_cuisines.html`. **v1 refusée** (aplat vert, liste grise : sans rapport avec les maquettes de Simo). **v2 refusée** (arrondis trop marqués, rendu pas au niveau). **v4 en attente** : page de comparaison, chaque écran à côté de la maquette de Simo, avec la liste des écarts. Écrans : Scan IA (étape 1) **en deux états — au repos et caméra active**, choix de cuisine (étape 5), cercle de l'Accueil (**variante A frigo retenue**, variante B abandonnée). Illustration `assets/images/scan_frigo_main.jpg` générée le 2026-09-30 (≈ 0,05 $).
 - **Règles de maquette retenues** : (1) partir des images de `design/maquettes/` pour le rendu, SPEC.md pour la structure ; (2) **aucun arrondi, espacement ni ombre en dur** — uniquement les jetons du thème (cartes et boutons 14 px, champs 12 px, vignettes 10 px, pilule réservée aux badges) ; (3) toujours présenter le résultat **côte à côte** avec la maquette de référence.
-- **Point signalé à Simo (2026-09-30)** : 3 des écarts qu'il a listés (bandeau en pilule, bouton « Analyser mes ingrédients », barre « Semaine / Profil ») venaient de **sa propre maquette** `scan_ia_accueil.png`, pas de la mienne — cet écran n'était pas encore dessiné. Il l'est en v3, corrigé selon la charte.
+- **Point signalé à Simo (2026-09-30)** : 3 des écarts qu'il a listés (bandeau en pilule, bouton « Analyser mes ingrédients », barre « Semaine / Profil ») venaient de **sa propre maquette** `scan_ia_ecran1.png`, pas de la mienne — cet écran n'était pas encore dessiné. Il l'est en v3, corrigé selon la charte.
 - **Audit des noms d'écrans (2026-09-30)** : les **14 renommages sont validés et appliqués**, dans SPEC.md §15 et dans le code (analyse et tests au vert). « Régime » est désormais réservé aux restrictions alimentaires ; le suivi du poids est `tracking_weight`. Maquette `accueil_deroulant.png` → `landing.png`.
 - **Git** : projet sous version depuis le 2026-09-30. Commit avant les renommages (« Mise sous Git du projet Menoo »), commit après. 807 fichiers suivis, `build/` et `.dart_tool/` exclus.
 - **Landing** : la carte Scan IA reste inerte ; une ligne légère sous « Commencer » mène à l'improvisation (option (c) retenue par Simo).
-- **Points ouverts à trancher par Simo** : les 12 questions de SPEC.md §14 (scan offert, essai 7 jours, flous conservés, prix des lots, comparateur, lien « J'ai déjà un compte », coach, échéance des 500 recettes, relecture des traductions d'allergènes).
-- **⛔ Ne rien coder** tant que Simo n'a pas validé les documents et l'ordre des jalons ci-dessous.
-- **Prochaine action** : attendre la validation de Simo. Ensuite, premier jalon proposé : **5i (International, socle)**, puis 5d, puis 5c (avec l'essai de 5 photos de recettes avant le lot).
+- **Tous les points sont tranchés (2026-09-30)** : les 13 questions ont reçu une réponse de Simo, reportées dans SPEC.md §14. Notamment : **1 scan photo offert par appareil** (paywall après, jamais avant), pas d'essai de 7 jours, lots à 3,49 € et 7,99 €, coach écarté, **relecture humaine obligatoire des allergènes et des régimes**, catalogue de départ ≈ 120 recettes.
+- **⛔ Ne rien coder** tant que Simo n'a pas validé SPEC.md v4 dans son ensemble et l'ordre des jalons ci-dessous.
+- **Prochaine action** : attendre la validation d'ensemble de SPEC.md v4. Ensuite, premier jalon : **5i (International, socle)**, puis 5d, puis 5c (avec l'essai de 5 photos de recettes avant le lot).
 - **À faire après validation** : mettre `CLAUDE.md` en accord (liste des jalons, « Semaine » → « Menus », drive supprimé).
 - **Visuels du 5b** : tous validés. Pour en refaire un : `node --use-system-ca tools/generate_images.mjs --only <fichier> --force`. Pas encore affichés (écrans à venir) : 6 recettes, `famille_table`, `leaf_b`.
 
@@ -38,7 +38,7 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 12 | Réglages (langue, pays, unités, abonnement), états vides/erreurs, suppression du compte | ⏳ |
 | 12b | **Anti-fraude** (voir plus bas) | 🆕 Planifié, pas codé |
 | 13 | APK de test (Firebase App Distribution) | ⏳ |
-| — | Catalogue vers 500 recettes, par tranches | 🆕 En continu, échéance à fixer |
+| — | Catalogue : ≈ **120 recettes** au lancement (12 à 15 × 8 cuisines) ; les 500 **après le lancement**, une fois qu'il y a des utilisateurs | 🆕 En continu |
 
 ## Changements de structure du 2026-09-30 — chiffrage et ordre proposés
 Unité : **1 séance** = un bloc de travail de la taille du jalon 5 (construction + installation + test par Simo). Ce sont des estimations, à ±30 %.
@@ -53,7 +53,9 @@ Unité : **1 séance** = un bloc de travail de la taille du jalon 5 (constructio
 | 6. Photo IA = Premium | Verrou sur les entrées photo, saisie et code-barres libres | 0,25 séance | 0 | 6b pour le paywall |
 | 2. Jalon 6b | 5 écrans d'improvisation, reconnaissance par photo, correspondance catalogue, mise à jour de la réserve, 3 portes d'accès, cercle animé, fiche recette à 3 onglets avec flou, options d'achat simulées, compte invité et sauvegarde Google | 4 à 5 séances | Reconnaissance photo : de l'ordre de 0,01 à 0,03 $ par scan, à mesurer | 6, 5c, 7 |
 | 8. Anti-fraude | Planifié seulement (jalon 12b) | 1 séance plus tard | 0 | avant publication |
-| Catalogue 500 recettes | Recettes, macros vérifiées, prix, 6 langues, photos | 3 à 4 séances par tranches | Photos ≈ 25 $ pour 500 ; rédaction et traduction par IA ≈ 10 à 20 $ | 7, 5c |
+| Catalogue ≈ 120 recettes (lancement) | Recettes, macros vérifiées, prix, 6 langues, photos | 1 à 1,5 séance en plus du 5c | Photos ≈ 6 $ ; rédaction et traduction par IA ≈ 3 à 5 $ | 7, 5c |
+| Relecture humaine des allergènes et régimes | 14 allergènes + 7 régimes × 5 langues | hors développement | à chiffrer avec un traducteur (volume très faible : ≈ 105 termes par langue) | 7 |
+| Catalogue vers 500 recettes | Après le lancement, par tranches | 3 à 4 séances | Photos ≈ 25 $ ; rédaction et traduction ≈ 10 à 20 $ | utilisateurs réels |
 
 **Total des nouveautés : environ 14 à 17 séances**, en plus des jalons déjà prévus.
 

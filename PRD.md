@@ -107,14 +107,15 @@ Les réglages sont accessibles via l'avatar. La barre de navigation n'apparaît 
 - **Anti-gaspillage (Foyer) :** part de la réserve valorisée, euros épargnés.
 
 ### 5.8 Monétisation
-- **Principe :** l'abonnement achète du confort, pas l'accès. Saisie manuelle et code-barres gratuits ; photo IA réservée aux abonnés.
-- **Gratuit :** un repas offert par semaine ; ingrédients et ustensiles de chaque recette ; les 3 premières lignes des instructions ; le premier rayon de la liste de courses.
+- **Principe :** l'abonnement achète du confort, pas l'accès. Saisie manuelle et code-barres gratuits ; photo IA réservée aux abonnés, **après un scan offert par appareil** — sans lui, la promesse « Scan IA » de la Landing serait trompeuse.
+- **Gratuit :** un scan photo offert par appareil ; un repas offert par semaine ; ingrédients et ustensiles de chaque recette ; les 3 premières lignes des instructions ; le premier rayon de la liste de courses. Le paywall n'arrive jamais avant que l'utilisateur ait vu son écran.
 - **Payant :** 0,90 € la recette ; lots de 5 et 15 recettes ; 9,99 €/mois résiliable à tout moment ; 49,99 €/an.
-- **Jamais de carte bancaire pour essayer.** Résiliation simple dans l'app, via Google Play Billing (RevenueCat).
+- **Jamais de carte bancaire pour essayer**, donc **pas d'essai de 7 jours** : le scan offert et le repas offert tiennent ce rôle. Résiliation simple dans l'app, via Google Play Billing (RevenueCat).
 
 ### 5.9 International
 - 6 langues au lancement : français, anglais, espagnol, allemand, italien, arabe (écriture de droite à gauche).
 - Textes de l'app et contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements) traduits ; français en référence.
+- **Allergènes et régimes : relecture obligatoire par une personne dont c'est la langue** avant publication (risque de santé). Traduction automatique pour tout le reste.
 - Unités métriques par défaut, impériales aux États-Unis ; devises et dates selon le pays.
 - Enseignes : liste en France, champ libre ailleurs.
 
@@ -135,6 +136,6 @@ Design system v2 (voir `design/DESIGN_V2.md` et les écrans maîtres). Le rendu 
 - **Conformité :** RGPD (données de santé), suppression du compte dans l'app, formulaire Sécurité des données de Google Play, politique de confidentialité à jour.
 
 ## 8. Roadmap
-- **Phase 1 :** MVP Android international : les deux parcours, l'improvisation, la génération sous budget, la réserve, les courses (mode magasin et exports) et le paywall.
-- **Phase 2 :** liste de courses partagée en temps réel au sein du foyer.
+- **Phase 1 :** MVP Android international : les deux parcours, l'improvisation, la génération sous budget, la réserve, les courses (mode magasin et exports) et le paywall. Catalogue de départ : **12 à 15 recettes par cuisine sur 8 cuisines, soit environ 120**.
+- **Phase 2 :** liste de courses partagée en temps réel au sein du foyer ; montée du catalogue vers 500 recettes, une fois qu'il y a des utilisateurs.
 - **Phase 3 :** version iOS et assistant vocal en cuisine.

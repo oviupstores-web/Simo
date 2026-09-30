@@ -104,3 +104,15 @@
 - 2026-09-30 · **Landing** : les 4 cartes de fonctions restent **inertes**. Une **ligne légère sous le bouton « Commencer »** mène à l'improvisation, la même que sur `path_choice` — ce n'est donc pas une quatrième porte d'entrée. (Option (c) de SPEC §15.4, la carte Scan IA cliquable est écartée.)
 - 2026-09-30 · **Projet sous Git**, à la demande de Simo, avec un commit avant et un commit après les renommages. `build/` et `.dart_tool/` exclus ; aucune clé dans les fichiers (la clé OpenAI reste dans une variable d'environnement Windows).
 - 2026-09-30 · Maquette `accueil_deroulant.png` renommée `landing.png` (elle montre la Landing, pas l'Accueil).
+
+## Les 13 points tranchés le 2026-09-30 (détail dans SPEC.md §14)
+- 2026-09-30 · **1 scan photo offert par appareil**, sans compte. Sans lui, la promesse « Scan IA » de la Landing serait trompeuse. Le paywall n'arrive qu'**après** ce scan, jamais avant : on voit son écran avant qu'on lui demande de payer. Quota tenu côté serveur (jalon 12b), jamais dans l'app.
+- 2026-09-30 · **Pas d'essai de 7 jours** : il exigerait une carte bancaire. Le scan offert et le repas offert tiennent ce rôle.
+- 2026-09-30 · Menu et liste de courses floutés **conservés**, avec les trois mêmes options d'achat que la fiche recette.
+- 2026-09-30 · **Lots : 5 recettes = 3,49 €, 15 recettes = 7,99 €.**
+- 2026-09-30 · **Comparateur de prix entre enseignes conservé** : il ne sert qu'aux prix, c'est utile.
+- 2026-09-30 · « J'ai déjà un compte » : **lien discret dans l'en-tête** de la Landing.
+- 2026-09-30 · **« Interrogez le coach » écarté.** Il vient des maquettes d'Eatr, et une IA présentée comme une personne, photo de femme à l'appui, pose un problème d'honnêteté. La fonction pourra revenir plus tard, **annoncée clairement comme une IA**, sans visage ni prénom humains.
+- 2026-09-30 · **Catalogue : 12 à 15 recettes par cuisine sur 8 cuisines, soit ≈ 120 au lancement** (96 au jalon 5c). Les 500 recettes viendront **après le lancement**, une fois qu'il y aura des utilisateurs.
+- 2026-09-30 · **Traductions à deux niveaux** : relecture **humaine obligatoire** pour les allergènes et les régimes (risque de santé, non négociable, aucune langue publiée sans elle) ; traduction automatique pour tout le reste.
+- 2026-09-30 · Maquette `scan_ia_accueil.png` renommée `scan_ia_ecran1.png` (elle montre l'écran 1 du Scan IA, pas l'Accueil).
