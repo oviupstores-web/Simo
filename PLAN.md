@@ -43,14 +43,14 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 ## Jalon 5i — International (en cours, commencé le 2026-09-30)
 
 **Fait (étape 1 sur 4) — le socle technique :**
--  +  dans pubspec ; paquet  ajouté. Classe générée :  ().
-- **6 fichiers de traduction** dans  :  (référence) + en, es, de, it, ar. Ils couvrent le parcours d'entrée (landing, connexion, inscription, choix du mode, 2 couvertures), la barre de navigation, et les unités.
-- Les fichiers  sont **générés**, donc exclus de Git ( les recrée).
--  sans problème.
+- `l10n.yaml` + `generate: true` dans pubspec ; paquet `intl` ajouté. Classe générée : `L` (`L.of(context)`).
+- **6 fichiers de traduction** dans `lib/l10n/` : `app_fr.arb` (référence) + en, es, de, it, ar. Ils couvrent le parcours d'entrée (landing, connexion, inscription, choix du mode, 2 couvertures), la barre de navigation, et les unités.
+- Les fichiers `app_localizations*.dart` sont **générés**, donc exclus de Git (`flutter pub get` les recrée).
+- `flutter analyze` sans problème.
 
 **Reste à faire (étapes 2 à 4) :**
-1. **Brancher dans ** : , , et un sélecteur de langue provisoire pour tester avant l'écran Réglages (jalon 12).
-2. **Remplacer les textes en dur** des 6 écrans d'entrée par , puis des ~22 écrans restants. **569 textes distincts** au total dans  : compter environ 3 séances.
+1. **Brancher dans `main.dart`** : `localizationsDelegates: L.localizationsDelegates`, `supportedLocales: L.supportedLocales`, et un sélecteur de langue provisoire pour tester avant l'écran Réglages (jalon 12).
+2. **Remplacer les textes en dur** des 6 écrans d'entrée par `L.of(context).xxx`, puis des ~22 écrans restants. **569 textes distincts** au total dans `lib/` : compter environ 3 séances.
 3. **Arabe** : police compatible à télécharger (Plus Jakarta Sans ne contient pas l'alphabet arabe — Noto Sans Arabic, licence libre, **à faire valider par Simo avant téléchargement**) + vérification de l'écriture de droite à gauche sur le téléphone.
 4. **Unités, devises, dates** : classe d'aide (métrique par défaut, impérial aux États-Unis) ; **tables de traduction Supabase** pour les contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements), migration à montrer à Simo avant envoi.
 
