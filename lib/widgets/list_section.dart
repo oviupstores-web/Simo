@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../theme/app_tokens.dart';
@@ -23,6 +24,7 @@ class ListSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       padding: const EdgeInsets.fromLTRB(AppSpace.x4, AppSpace.x3, AppSpace.x4, AppSpace.x1),
       child: Column(
@@ -69,6 +71,7 @@ class ItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpace.x2_5),
       child: Row(
@@ -106,6 +109,7 @@ class FreshnessStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final color = urgent ? AppColors.warn : AppColors.leaf;
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -113,7 +117,7 @@ class FreshnessStatus extends StatelessWidget {
         Dot(color),
         const SizedBox(width: AppSpace.x1_5),
         Text(
-          urgent ? 'À consommer' : 'Frais',
+          urgent ? l.freshnessToUse : l.freshnessFresh,
           style: AppText.of(AppFont.s12, weight: AppFont.semibold, color: color, lineHeight: 16),
         ),
       ],

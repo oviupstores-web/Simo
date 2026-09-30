@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/pantry_location.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -16,31 +18,34 @@ class PantryHomeScreen extends StatefulWidget {
 }
 
 class _PantryHomeScreenState extends State<PantryHomeScreen> {
-  static const Map<PantryLocation, List<_Item>> _stock = {
+  static Map<PantryLocation, List<_Item>> _stock(L l) => {
     PantryLocation.fridge: [
-      ('p_poulet.jpg', 'Poulet', '2 filets (300 g)', true, '2 j'),
-      ('p_yaourt.jpg', 'Yaourt nature', '2 pots', false, '8 j'),
-      ('p_lait.jpg', 'Lait demi-écrémé', '1 L · entamé', false, '3 j'),
-      ('p_carotte.jpg', 'Carottes', '500 g · bac à légumes', false, '5 j'),
+      ('p_poulet.jpg', l.pantryDemoChicken, l.pantryDemoChicken2Fillets, true, l.pantryDaysLeft(2)),
+      ('p_yaourt.jpg', l.pantryDemoYogurt, l.pantryDemo2Pots, false, l.pantryDaysLeft(8)),
+      ('p_lait.jpg', l.pantryDemoMilk, l.pantryDemoMilkOpen, false, l.pantryDaysLeft(3)),
+      ('p_carotte.jpg', l.pantryDemoCarrots, l.pantryDemoCarrotsDrawer, false, l.pantryDaysLeft(5)),
     ],
     PantryLocation.fruitBasket: [
-      ('i_citron.jpg', 'Citrons', '2 pièces', false, '9 j'),
-      ('i_tomates.jpg', 'Tomates cerises', '250 g', false, '4 j'),
+      ('i_citron.jpg', l.pantryDemoLemons2, l.qty2Pieces, false, l.pantryDaysLeft(9)),
+      ('i_tomates.jpg', l.pantryDemoCherryTomatoes2, l.unitGrams('250'), false, l.pantryDaysLeft(4)),
     ],
     PantryLocation.pantry: [
-      ('i_quinoa.jpg', 'Quinoa', '500 g · entamé', false, '2027'),
-      ('i_huile.jpg', 'Huile d\'olive', '75 cl', false, '2027'),
+      ('i_quinoa.jpg', l.recipeDemoQuinoa, l.pantryDemoQuinoaOpen, false, '2027'),
+      ('i_huile.jpg', l.recipeDemoOliveOil, '75 cl', false, '2027'),
     ],
-    PantryLocation.freezer: [('i_brocoli.jpg', 'Brocoli surgelé', '1 kg', false, '3 mois')],
+    PantryLocation.freezer: [('i_brocoli.jpg', l.pantryDemoFrozenBroccoli, l.unitKilograms('1'), false, l.pantryDemo3Months)],
   };
 
   /// null = « Tous ».
   PantryLocation? _filter;
 
-  int get _total => _stock.values.fold(0, (s, l) => s + l.length);
+  int _total(L l) => _stock(l).values.fold(0, (s, items) => s + items.length);
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
+    final stock = _stock(l);
+    final total = _total(l);
     final shown = _filter == null ? PantryLocation.values : [_filter!];
     return Scaffold(
       bottomNavigationBar: const MenooNavBar(current: MenooTab.reserve),
@@ -55,7 +60,7 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
                 showBack: false,
                 trailing: Semantics(
                   button: true,
-                  label: 'Scanner',
+                  label: l.pantryHomeScan,
                   child: AppIcon(AppIcons.scan, size: 26, color: AppColors.primary),
                 ),
               ),
@@ -75,10 +80,10 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Ma réserve alimentaire',
+                                  l.pantryHomeTitle,
                                   style: AppText.of(AppFont.s16, weight: AppFont.extrabold, lineHeight: 24),
                                 ),
-                                Text('$_total produits · 4 emplacements', style: AppText.caption),
+                                Text(l.pantryHomeSummary(total, 4), style: AppText.caption),
                               ],
                             ),
                           ),
@@ -91,26 +96,26 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Poulet',
+                            text: l.pantryDemoChicken,
                             style: AppText.of(AppFont.s12_5, weight: AppFont.bold, color: AppColors.alertInk),
                           ),
-                          const TextSpan(text: ' à consommer d\'ici 2 jours · Réfrigérateur'),
+                          TextSpan(text: ' ' + l.pantryHomeUrgent(PantryLocation.fridge.label(l))),
                         ],
                       ),
                     ),
                     const SizedBox(height: AppSpace.x3),
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
-                          child: _QuickAction(icon: AppIcons.plus, label: 'Manuel'),
+                          child: _QuickAction(icon: AppIcons.plus, label: l.pantryQuickManual),
                         ),
-                        SizedBox(width: AppSpace.x2),
+                        const SizedBox(width: AppSpace.x2),
                         Expanded(
-                          child: _QuickAction(icon: AppIcons.barcode, label: 'Code-barres'),
+                          child: _QuickAction(icon: AppIcons.barcode, label: l.pantryQuickBarcode),
                         ),
-                        SizedBox(width: AppSpace.x2),
+                        const SizedBox(width: AppSpace.x2),
                         Expanded(
-                          child: _QuickAction(icon: AppIcons.camera, label: 'Photo IA'),
+                          child: _QuickAction(icon: AppIcons.camera, label: l.pantryQuickPhotoAi),
                         ),
                       ],
                     ),
@@ -124,14 +129,14 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
                 child: Row(
                   children: [
                     FilterPill(
-                      label: 'Tous · $_total',
+                      label: l.pantryHomeAll(total),
                       selected: _filter == null,
                       onTap: () => setState(() => _filter = null),
                     ),
                     for (final loc in PantryLocation.values) ...[
                       const SizedBox(width: AppSpace.x2),
                       FilterPill(
-                        label: '${loc.short} · ${_stock[loc]!.length}',
+                        label: '${loc.short(l)} · ${stock[loc]!.length}',
                         icon: loc.icon,
                         selected: _filter == loc,
                         onTap: () => setState(() => _filter = loc),
@@ -151,7 +156,7 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
                     children: [
                       for (final loc in shown) ...[
                         const SizedBox(height: AppSpace.x3),
-                        _LocationSection(location: loc, items: _stock[loc]!),
+                        _LocationSection(location: loc, items: stock[loc]!),
                       ],
                       const SizedBox(height: AppSpace.x4),
                       AppCard(
@@ -165,10 +170,10 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'À acheter cette semaine',
+                                    l.pantryHomeToBuyTitle,
                                     style: AppText.of(AppFont.s15, weight: AppFont.extrabold, lineHeight: 22),
                                   ),
-                                  Text('Réserve déjà déduite de la liste', style: AppText.meta),
+                                  Text(l.pantryHomeToBuyText, style: AppText.meta),
                                 ],
                               ),
                             ),
@@ -232,6 +237,7 @@ class _LocationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return ListSectionCard(
       leading: IconTile(
         icon: location.icon,
@@ -239,8 +245,8 @@ class _LocationSection extends StatelessWidget {
         background: location.soft,
         foreground: location.ink,
       ),
-      title: location.label,
-      count: '${items.length} produit${items.length > 1 ? 's' : ''}',
+      title: location.label(l),
+      count: l.pantryHomeProductCount(items.length),
       rows: [
         for (final it in items)
           ItemRow(
@@ -251,7 +257,7 @@ class _LocationSection extends StatelessWidget {
               FreshnessStatus(urgent: it.$4),
               SizedBox(
                 width: AppSizes.thumbW,
-                child: Text(it.$5, textAlign: TextAlign.right, style: AppText.meta),
+                child: Text(it.$5, textAlign: TextAlign.end, style: AppText.meta),
               ),
             ],
           ),

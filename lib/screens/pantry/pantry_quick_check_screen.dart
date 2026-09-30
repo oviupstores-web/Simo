@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../theme/theme.dart';
@@ -12,16 +13,16 @@ enum _Stock { none, present, some }
 class PantryQuickCheckScreen extends StatefulWidget {
   const PantryQuickCheckScreen({super.key});
 
-  static const categories = [
-    ('Pâtes, riz & féculents', AppIcons.wheat, PantryLocation.pantry, 'categories/epicerie_salee'),
-    ('Huile, vinaigre & condiments', AppIcons.drop, PantryLocation.pantry, 'ingredients/huile_olive'),
-    ('Œufs & produits laitiers', AppIcons.egg, PantryLocation.fridge, 'categories/laitiers_oeufs'),
-    ('Conserves & sauces tomate', AppIcons.cupboard, PantryLocation.pantry, 'categories/conserves_sauces'),
-    ('Légumes frais', AppIcons.leaf, PantryLocation.fridge, 'categories/legumes'),
-    ('Fruits', AppIcons.basket, PantryLocation.fruitBasket, 'categories/fruits'),
-    ('Farine, sucre & levure', AppIcons.bag, PantryLocation.pantry, 'categories/farine_sucre'),
-    ('Épices & herbes', AppIcons.sparkles, PantryLocation.pantry, 'categories/epices_herbes'),
-    ('Viandes & poissons surgelés', AppIcons.snowflake, PantryLocation.freezer, 'categories/viandes_poissons_surgeles'),
+  static List<(String, String, PantryLocation, String)> categories(L l) => [
+    (l.quickCheckPastaRice, AppIcons.wheat, PantryLocation.pantry, 'categories/epicerie_salee'),
+    (l.quickCheckOilCondiments, AppIcons.drop, PantryLocation.pantry, 'ingredients/huile_olive'),
+    (l.quickCheckEggsDairy, AppIcons.egg, PantryLocation.fridge, 'categories/laitiers_oeufs'),
+    (l.quickCheckCansAndSauce, AppIcons.cupboard, PantryLocation.pantry, 'categories/conserves_sauces'),
+    (l.quickCheckFreshVeg, AppIcons.leaf, PantryLocation.fridge, 'categories/legumes'),
+    (l.quickCheckFruit, AppIcons.basket, PantryLocation.fruitBasket, 'categories/fruits'),
+    (l.quickCheckFlourSugar, AppIcons.bag, PantryLocation.pantry, 'categories/farine_sucre'),
+    (l.quickCheckSpicesHerbs, AppIcons.sparkles, PantryLocation.pantry, 'categories/epices_herbes'),
+    (l.quickCheckFrozenMeatFish, AppIcons.snowflake, PantryLocation.freezer, 'categories/viandes_poissons_surgeles'),
   ];
 
   @override
@@ -42,16 +43,17 @@ class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
   });
 
   void _save() {
+    final l = L.of(context);
     final d = OnboardingScope.read(context);
     d.update(() {
       for (final e in _state.entries) {
         if (e.value == _Stock.none) continue;
-        final c = PantryQuickCheckScreen.categories[e.key];
+        final c = PantryQuickCheckScreen.categories(l)[e.key];
         d.pantry.add(
           PantryDraft(
             name: c.$1,
             quantity: 1,
-            unitLabel: e.value == _Stock.some ? 'quelques restes' : 'en stock',
+            unitLabel: e.value == _Stock.some ? l.quickCheckSomeStored : l.quickCheckInStock,
             location: c.$3,
             source: 'verification_rapide',
           ),
@@ -63,12 +65,13 @@ class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return OnboardingStepScaffold(
-      eyebrow: 'INVENTAIRE RAPIDE',
+      eyebrow: l.quickCheckEyebrow,
       eyebrowIcon: AppIcons.list,
-      title: 'Que reste-t-il dans vos placards ?',
-      subtitle: 'Touchez les catégories déjà présentes chez vous : Menoo évitera de les racheter inutilement.',
-      continueLabel: _count == 0 ? 'Revenir sans ajouter' : 'Ajouter à ma réserve ($_count)',
+      title: l.quickCheckTitle,
+      subtitle: l.quickCheckSubtitle,
+      continueLabel: _count == 0 ? l.quickCheckSkip : l.quickCheckAddCount(_count),
       showArrow: _count > 0,
       onContinue: _count == 0 ? () => Navigator.of(context).pop() : _save,
       children: [
@@ -82,7 +85,7 @@ class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
           ),
         ),
         const SizedBox(height: AppSpace.x4),
-        for (final (i, c) in PantryQuickCheckScreen.categories.indexed) ...[
+        for (final (i, c) in PantryQuickCheckScreen.categories(l).indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x2),
           _CategoryRow(
             label: c.$1,
@@ -94,9 +97,9 @@ class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.bulb,
-          text: 'Pour plus de précision, ajoutez vos produits un par un depuis la réserve : emplacement et date de péremption compris.',
+          text: l.quickCheckInfoText,
         ),
       ],
     );
@@ -123,15 +126,16 @@ class _CategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final on = stock != _Stock.none;
     final (tag, tagBg, tagFg) = switch (stock) {
-      _Stock.present => ('Présent ✓', AppColors.mint, AppColors.primary),
-      _Stock.some => ('Quelques restes', AppColors.orangeSoft, AppColors.warn),
-      _Stock.none => ('Non', AppColors.neutralSoft, AppColors.ink3),
+      _Stock.present => (l.quickCheckPresent, AppColors.mint, AppColors.primary),
+      _Stock.some => (l.quickCheckSome, AppColors.orangeSoft, AppColors.warn),
+      _Stock.none => (l.quickCheckNone, AppColors.neutralSoft, AppColors.ink3),
     };
     return Semantics(
       button: true,
-      label: '$label : $tag',
+      label: l.quickCheckLabelStatus(label, tag),
       child: Pressable(
         onTap: onTap,
         child: AnimatedContainer(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/theme.dart';
 import 'buttons.dart';
 import 'menoo_header.dart';
@@ -19,7 +20,7 @@ class OnboardingStepScaffold extends StatelessWidget {
     this.eyebrow,
     this.eyebrowIcon,
     this.onContinue,
-    this.continueLabel = 'Continuer',
+    this.continueLabel,
     this.showArrow = true,
     this.below,
     this.decor = const [],
@@ -37,7 +38,7 @@ class OnboardingStepScaffold extends StatelessWidget {
   final String? eyebrowIcon;
   final List<Widget> children;
   final VoidCallback? onContinue;
-  final String continueLabel;
+  final String? continueLabel;
   final bool showArrow;
 
   /// Contenu sous le bouton (lien « Passer », mention discrète…).
@@ -48,6 +49,7 @@ class OnboardingStepScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -90,7 +92,7 @@ class OnboardingStepScaffold extends StatelessWidget {
                         const SizedBox(height: AppSpace.x5),
                         ...children,
                         const SizedBox(height: AppSpace.x6),
-                        PrimaryButton(label: continueLabel, showArrow: showArrow, onPressed: onContinue),
+                        PrimaryButton(label: continueLabel ?? l.commonContinue, showArrow: showArrow, onPressed: onContinue),
                         if (below != null) ...[const SizedBox(height: AppSpace.x3), below!],
                       ],
                     ),

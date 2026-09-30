@@ -16,6 +16,8 @@ void main() {
     'E.Leclerc', 'Carrefour', 'Intermarché', 'Auchan', 'Super U', 'Lidl', 'Monoprix', 'Biocoop',
     // Prénom de démo (jalon 3, compte de test) : reste tel quel dans toutes les langues.
     'Karim',
+    // Mot-clé de détection de catégorie (pantry_add_manual_screen.dart), pas un texte affiché.
+    'pois chiche',
   };
 
   /// Fichiers sans texte d'interface : données, icônes, mots-clés de détection.
@@ -27,13 +29,9 @@ void main() {
 
   /// Écrans pas encore traduits (jalon 5i, étape 4). **Cette liste doit finir vide.**
   const notYetTranslated = {
-    'lib/models/pantry_location.dart',
     'lib/onboarding/onboarding_data.dart',
     
     
-    'lib/screens/pantry/',
-    'lib/widgets/list_section.dart',
-    'lib/widgets/onboarding_step.dart',
   };
 
   /// Dossiers à ne pas scanner.

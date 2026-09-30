@@ -1125,5 +1125,223 @@
   "shoppingUnlockTitle": "Débloquez la liste complète",
   "shoppingUnlockText": "8 articles de plus, le comparateur de prix entre enseignes et l'envoi au drive.",
   "shoppingTrial": "Essayer 7 jours gratuits",
-  "shoppingThenPrice": "Puis 9,99 €/mois · sans engagement"
+  "shoppingThenPrice": "Puis 9,99 €/mois · sans engagement",
+  "locationFridge": "Réfrigérateur",
+  "locationFridgeShort": "Frigo",
+  "locationFruitBasket": "Corbeille à fruits",
+  "locationFruitBasketShort": "Corbeille",
+  "locationPantry": "Placard",
+  "locationPantryShort": "Placard",
+  "locationFreezer": "Congélateur",
+  "locationFreezerShort": "Congél.",
+  "freshnessFresh": "Frais",
+  "freshnessToUse": "À consommer",
+  "categoryFruits": "Fruits",
+  "categoryVegetables": "Légumes frais",
+  "categoryDairy": "Laitiers & œufs",
+  "categoryMeatFish": "Viandes & poissons",
+  "categorySavoryGrocery": "Épicerie salée",
+  "categorySweetGrocery": "Épicerie sucrée",
+  "categoryFrozen": "Surgelés",
+  "pantryAddEyebrow": "MA RÉSERVE",
+  "pantryAddTitle": "Ajouter un aliment",
+  "pantryAddSubtitle": "L'emplacement et la date de péremption sont proposés automatiquement : ajustez-les si besoin.",
+  "pantryAddSubmit": "Ajouter à ma réserve",
+  "pantryAddNameSection": "Nom de l'aliment",
+  "pantryAddNameHint": "Ex. : avocat, saumon, pâtes…",
+  "pantryAddQuantitySection": "Quantité",
+  "pantryAddCategorySection": "Catégorie",
+  "pantryAddCategoryAuto": "Détectée automatiquement",
+  "pantryAddLocationSection": "Emplacement dans la cuisine",
+  "pantryAddLocationRequired": "Obligatoire",
+  "pantryAddExpirySection": "Date de péremption",
+  "pantryAddExpiryEstimated": "Estimée",
+  "pantryAddPickDate": "Choisir une date",
+  "pantryAddToday": "aujourd'hui",
+  "pantryAddTomorrow": "demain",
+  "pantryAddInDays": "dans {days} jours",
+  "@pantryAddInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryAdd3Days": "+3 jours",
+  "pantryAdd1Week": "+1 semaine",
+  "pantryAdd2Weeks": "+2 semaines",
+  "pantryAdd1Month": "+1 mois",
+  "pantryAddNameError": "Indiquez le nom de l'aliment.",
+  "pantryAddLocationError": "Choisissez où l'aliment est rangé.",
+  "pantrySuggestAvocado": "Avocat",
+  "pantrySuggestFreshSalmon": "Saumon frais",
+  "pantrySuggestEggs": "Œufs",
+  "pantrySuggestPasta": "Pâtes",
+  "pantrySuggestPlainYogurt": "Yaourt nature",
+  "pantrySuggestMilk": "Lait",
+  "unitPieces2": "pièce(s)",
+  "unitPacks2": "paquet(s)",
+  "pantryHomeScan": "Scanner",
+  "pantryHomeTitle": "Ma réserve alimentaire",
+  "pantryHomeSummary": "{count, plural, one{{count} produit} other{{count} produits}} · {locations, plural, one{{locations} emplacement} other{{locations} emplacements}}",
+  "@pantryHomeSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "locations": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryHomeUrgent": "à consommer d'ici 2 jours · {location}",
+  "@pantryHomeUrgent": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "pantryQuickManual": "Manuel",
+  "pantryQuickBarcode": "Code-barres",
+  "pantryQuickPhotoAi": "Photo IA",
+  "pantryHomeAll": "Tous · {count}",
+  "@pantryHomeAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryHomeToBuyTitle": "À acheter cette semaine",
+  "pantryHomeToBuyText": "Réserve déjà déduite de la liste",
+  "pantryHomeProductCount": "{count, plural, one{{count} produit} other{{count} produits}}",
+  "@pantryHomeProductCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryDemoChicken": "Poulet",
+  "pantryDemoChicken2Fillets": "2 filets (300 g)",
+  "pantryDemoYogurt": "Yaourt nature",
+  "pantryDemo2Pots": "2 pots",
+  "pantryDemoMilk": "Lait demi-écrémé",
+  "pantryDemoMilkOpen": "1 L · entamé",
+  "pantryDemoCarrots": "Carottes",
+  "pantryDemoCarrotsDrawer": "500 g · bac à légumes",
+  "pantryDemoLemons2": "Citrons",
+  "pantryDemoCherryTomatoes2": "Tomates cerises",
+  "pantryDemoQuinoaOpen": "500 g · entamé",
+  "pantryDemoFrozenBroccoli": "Brocoli surgelé",
+  "pantryDemo3Months": "3 mois",
+  "pantryHubOptional": "FACULTATIF",
+  "pantryHubTitle": "Remplissez votre réserve",
+  "pantryHubSubtitle": "Ajoutez ce que vous avez déjà : Menoo en tiendra compte pour vos menus et vos courses. Vous pourrez compléter plus tard.",
+  "pantryHubCardTitle": "Ma réserve",
+  "pantryHubEmptyForNow": "Vide pour l'instant",
+  "pantryHubSummary": "{count, plural, one{{count} produit} other{{count} produits}} · {locations, plural, one{{locations} emplacement} other{{locations} emplacements}}",
+  "@pantryHubSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "locations": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryHubUrgentOthers": "et {count, plural, one{{count} autre} other{{count} autres}} à consommer d'ici 2 jours",
+  "@pantryHubUrgentOthers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryHubQuickCheckTitle": "Vérification rapide",
+  "pantryHubQuickCheckText": "Cochez en quelques secondes ce que vos placards contiennent",
+  "pantryHubAll": "Tous · {count}",
+  "@pantryHubAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryHubFinish": "Terminer et continuer",
+  "pantryHubSkip": "Passer pour l'instant",
+  "pantryHubEmptyTitle": "Votre réserve est vide",
+  "pantryHubEmptyText": "Commencez par la vérification rapide ou ajoutez un aliment : ils apparaîtront ici, rangés par emplacement.",
+  "pantryExpired": "Périmé",
+  "pantryDaysLeft": "{days} j",
+  "@pantryDaysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryMonthsLeft": "{months} mois",
+  "@pantryMonthsLeft": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "pantryRemoveItem": "Retirer {name}",
+  "@pantryRemoveItem": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "quickCheckEyebrow": "INVENTAIRE RAPIDE",
+  "quickCheckTitle": "Que reste-t-il dans vos placards ?",
+  "quickCheckSubtitle": "Touchez les catégories déjà présentes chez vous : Menoo évitera de les racheter inutilement.",
+  "quickCheckSkip": "Revenir sans ajouter",
+  "quickCheckAddCount": "Ajouter à ma réserve ({count})",
+  "@quickCheckAddCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quickCheckInfoText": "Pour plus de précision, ajoutez vos produits un par un depuis la réserve : emplacement et date de péremption compris.",
+  "quickCheckPastaRice": "Pâtes, riz & féculents",
+  "quickCheckOilCondiments": "Huile, vinaigre & condiments",
+  "quickCheckEggsDairy": "Œufs & produits laitiers",
+  "quickCheckCansAndSauce": "Conserves & sauces tomate",
+  "quickCheckFreshVeg": "Légumes frais",
+  "quickCheckFruit": "Fruits",
+  "quickCheckFlourSugar": "Farine, sucre & levure",
+  "quickCheckSpicesHerbs": "Épices & herbes",
+  "quickCheckFrozenMeatFish": "Viandes & poissons surgelés",
+  "quickCheckPresent": "Présent ✓",
+  "quickCheckSome": "Quelques restes",
+  "quickCheckNone": "Non",
+  "quickCheckSomeStored": "quelques restes",
+  "quickCheckInStock": "en stock",
+  "quickCheckLabelStatus": "{label} : {status}",
+  "@quickCheckLabelStatus": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "scanComingSoon": "BIENTÔT DISPONIBLE",
+  "scanBarcodeTitle": "Scanner un code-barres",
+  "scanBarcodeText": "Visez le code-barres d'un produit : Menoo le reconnaît grâce à Open Food Facts et propose son emplacement. Cette fonction arrive avec l'onglet Réserve.",
+  "scanPhotoTitle": "Photo de votre frigo",
+  "scanPhotoText": "Photographiez votre frigo ou votre ticket de caisse : l'IA détecte les aliments et vous les vérifiez avant l'ajout. Cette fonction arrive avec l'onglet Réserve.",
+  "scanAddManually": "Ajouter manuellement",
+  "scanBackToPantry": "Revenir à ma réserve"
 }

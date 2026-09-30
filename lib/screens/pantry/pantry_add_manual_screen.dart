@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../l10n/formats.dart';
 import '../../models/food_images.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -8,23 +10,32 @@ import '../../widgets/widgets.dart';
 
 /// Catégorie de produit : emplacement et durée de conservation proposés par défaut.
 enum FoodCategory {
-  fruits('Fruits', AppIcons.basket, PantryLocation.fruitBasket, 7, 'fruits'),
-  legumes('Légumes frais', AppIcons.leaf, PantryLocation.fridge, 5, 'legumes'),
-  laitiers('Laitiers & œufs', AppIcons.egg, PantryLocation.fridge, 10, 'laitiers_oeufs'),
-  viandes('Viandes & poissons', AppIcons.fish, PantryLocation.fridge, 3, 'viandes_poissons'),
-  epicerie('Épicerie salée', AppIcons.cupboard, PantryLocation.pantry, 180, 'epicerie_salee'),
-  sucre('Épicerie sucrée', AppIcons.sparkles, PantryLocation.pantry, 180, 'epicerie_sucree'),
-  surgeles('Surgelés', AppIcons.snowflake, PantryLocation.freezer, 90, 'surgeles');
+  fruits(AppIcons.basket, PantryLocation.fruitBasket, 7, 'fruits'),
+  legumes(AppIcons.leaf, PantryLocation.fridge, 5, 'legumes'),
+  laitiers(AppIcons.egg, PantryLocation.fridge, 10, 'laitiers_oeufs'),
+  viandes(AppIcons.fish, PantryLocation.fridge, 3, 'viandes_poissons'),
+  epicerie(AppIcons.cupboard, PantryLocation.pantry, 180, 'epicerie_salee'),
+  sucre(AppIcons.sparkles, PantryLocation.pantry, 180, 'epicerie_sucree'),
+  surgeles(AppIcons.snowflake, PantryLocation.freezer, 90, 'surgeles');
 
-  const FoodCategory(this.label, this.icon, this.location, this.shelfDays, this.photo);
+  const FoodCategory(this.icon, this.location, this.shelfDays, this.photo);
 
-  final String label;
   final String icon;
   final PantryLocation location;
   final int shelfDays;
 
   /// Vignette photo (assets/images/categories/).
   final String photo;
+
+  String label(L l) => switch (this) {
+    FoodCategory.fruits => l.categoryFruits,
+    FoodCategory.legumes => l.categoryVegetables,
+    FoodCategory.laitiers => l.categoryDairy,
+    FoodCategory.viandes => l.categoryMeatFish,
+    FoodCategory.epicerie => l.categorySavoryGrocery,
+    FoodCategory.sucre => l.categorySweetGrocery,
+    FoodCategory.surgeles => l.categoryFrozen,
+  };
 
   /// Mots-clés sans accents (le nom saisi est ramené à la même forme par [FoodImages.fold]).
   static const _keywords = {
@@ -131,33 +142,20 @@ class PantryAddManualScreen extends StatefulWidget {
 }
 
 class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
-  static const _units = ['pièce(s)', 'g', 'kg', 'ml', 'L', 'paquet(s)'];
-  static const _suggestions = [
-    ('Avocat', 'pièce(s)'),
-    ('Saumon frais', 'g'),
-    ('Œufs', 'pièce(s)'),
-    ('Pâtes', 'g'),
-    ('Yaourt nature', 'pièce(s)'),
-    ('Lait', 'L'),
-  ];
-  static const _months = [
-    'janv.',
-    'févr.',
-    'mars',
-    'avr.',
-    'mai',
-    'juin',
-    'juil.',
-    'août',
-    'sept.',
-    'oct.',
-    'nov.',
-    'déc.',
+  static List<String> _units(L l) => [l.unitPieces2, 'g', 'kg', 'ml', 'L', l.unitPacks2];
+  static List<(String, String)> _suggestions(L l) => [
+    (l.pantrySuggestAvocado, l.unitPieces2),
+    (l.pantrySuggestFreshSalmon, 'g'),
+    (l.pantrySuggestEggs, l.unitPieces2),
+    (l.pantrySuggestPasta, 'g'),
+    (l.pantrySuggestPlainYogurt, l.unitPieces2),
+    (l.pantrySuggestMilk, 'L'),
   ];
 
   final _name = TextEditingController();
   double _quantity = 1;
-  String _unit = 'pièce(s)';
+  /// null tant que non choisi : la valeur par défaut dépend de la langue, donc calculée au premier build.
+  String? _unit;
   FoodCategory? _category;
   bool _categoryManual = false;
   PantryLocation? _location;
@@ -197,14 +195,14 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
   String get _quantityLabel =>
       _quantity == _quantity.roundToDouble() ? '${_quantity.round()}' : '$_quantity'.replaceAll('.', ',');
 
-  String _dateLabel(DateTime d) {
+  String _dateLabel(L l, DateTime d) {
     final days = DateUtils.dateOnly(d).difference(_today).inDays;
     final when = days == 0
-        ? 'aujourd\'hui'
+        ? l.pantryAddToday
         : days == 1
-        ? 'demain'
-        : 'dans $days jours';
-    return '${d.day} ${_months[d.month - 1]} ${d.year} · $when';
+        ? l.pantryAddTomorrow
+        : l.pantryAddInDays(days);
+    return '${Formats.of(context).date(d)} · $when';
   }
 
   Future<void> _pickDate() async {
@@ -226,11 +224,11 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
   void _add() {
     final name = _name.text.trim();
     if (name.isEmpty) {
-      setState(() => _error = 'Indiquez le nom de l\'aliment.');
+      setState(() => _error = L.of(context).pantryAddNameError);
       return;
     }
     if (_location == null) {
-      setState(() => _error = 'Choisissez où l\'aliment est rangé.');
+      setState(() => _error = L.of(context).pantryAddLocationError);
       return;
     }
     final d = OnboardingScope.read(context);
@@ -239,7 +237,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
         PantryDraft(
           name: name[0].toUpperCase() + name.substring(1),
           quantity: _quantity,
-          unitLabel: _unit,
+          unitLabel: _unit ?? L.of(context).unitPieces2,
           location: _location!,
           expiresOn: _expires,
         ),
@@ -250,19 +248,21 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
+    final unit = _unit ?? l.unitPieces2;
     return OnboardingStepScaffold(
-      eyebrow: 'MA RÉSERVE',
+      eyebrow: l.pantryAddEyebrow,
       eyebrowIcon: AppIcons.fridge,
-      title: 'Ajouter un aliment',
-      subtitle: 'L\'emplacement et la date de péremption sont proposés automatiquement : ajustez-les si besoin.',
-      continueLabel: 'Ajouter à ma réserve',
+      title: l.pantryAddTitle,
+      subtitle: l.pantryAddSubtitle,
+      continueLabel: l.pantryAddSubmit,
       showArrow: false,
       onContinue: _add,
       children: [
-        const StepSectionTitle('Nom de l\'aliment'),
+        StepSectionTitle(l.pantryAddNameSection),
         IconTextField(
           icon: AppIcons.search,
-          hint: 'Ex. : avocat, saumon, pâtes…',
+          hint: l.pantryAddNameHint,
           controller: _name,
           onChanged: _onName,
         ),
@@ -271,7 +271,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           spacing: AppSpace.x2,
           runSpacing: AppSpace.x2,
           children: [
-            for (final s in _suggestions)
+            for (final s in _suggestions(l))
               ToggleChip(
                 label: s.$1,
                 leading: FoodThumb(
@@ -295,7 +295,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        const StepSectionTitle('Quantité'),
+        StepSectionTitle(l.pantryAddQuantitySection),
         Row(
           children: [
             QuantityStepper(large: true, value: _quantityLabel, onMinus: () => _step(-1), onPlus: () => _step(1)),
@@ -305,11 +305,11 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (final (i, u) in _units.indexed) ...[
+                    for (final (i, u) in _units(l).indexed) ...[
                       if (i > 0) const SizedBox(width: AppSpace.x1_5),
                       ToggleChip(
                         label: u,
-                        selected: _unit == u,
+                        selected: unit == u,
                         onTap: () => setState(() {
                           _unit = u;
                           if ((u == 'g' || u == 'ml') && _quantity < 10) _quantity = 100;
@@ -324,7 +324,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle('Catégorie', hint: _category != null && !_categoryManual ? 'Détectée automatiquement' : null),
+        StepSectionTitle(l.pantryAddCategorySection, hint: _category != null && !_categoryManual ? l.pantryAddCategoryAuto : null),
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
@@ -335,7 +335,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           children: [
             for (final c in FoodCategory.values)
               OptionTile(
-                label: c.label,
+                label: c.label(l),
                 leading: FoodThumb(
                   photo: 'assets/images/categories/${c.photo}.jpg',
                   icon: c.icon,
@@ -348,7 +348,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        const StepSectionTitle('Emplacement dans la cuisine', hint: 'Obligatoire'),
+        StepSectionTitle(l.pantryAddLocationSection, hint: l.pantryAddLocationRequired),
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
@@ -359,7 +359,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           children: [
             for (final loc in PantryLocation.values)
               OptionTile(
-                label: loc.label,
+                label: loc.label(l),
                 leading: FoodThumb(photo: loc.photo, icon: loc.icon, tint: loc.tint, size: AppSizes.iconTileSm),
                 selected: _location == loc,
                 onTap: () => setState(() {
@@ -371,7 +371,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle('Date de péremption', hint: _expires != null && !_expiresManual ? 'Estimée' : null),
+        StepSectionTitle(l.pantryAddExpirySection, hint: _expires != null && !_expiresManual ? l.pantryAddExpiryEstimated : null),
         AppCard(
           onTap: _pickDate,
           padding: const EdgeInsets.all(AppSpace.x3_5),
@@ -381,7 +381,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
               const SizedBox(width: AppSpace.x3),
               Expanded(
                 child: Text(
-                  _expires == null ? 'Choisir une date' : _dateLabel(_expires!),
+                  _expires == null ? l.pantryAddPickDate : _dateLabel(l, _expires!),
                   style: AppText.of(AppFont.s14, weight: AppFont.bold),
                 ),
               ),
@@ -394,7 +394,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           spacing: AppSpace.x2,
           runSpacing: AppSpace.x2,
           children: [
-            for (final s in const [(3, '+3 jours'), (7, '+1 semaine'), (14, '+2 semaines'), (30, '+1 mois')])
+            for (final s in [(3, l.pantryAdd3Days), (7, l.pantryAdd1Week), (14, l.pantryAdd2Weeks), (30, l.pantryAdd1Month)])
               ToggleChip(
                 label: s.$2,
                 selected: _expires != null && DateUtils.dateOnly(_expires!).difference(_today).inDays == s.$1,

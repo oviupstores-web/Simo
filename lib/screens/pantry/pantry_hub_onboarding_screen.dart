@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/food_images.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
@@ -28,6 +30,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     final items = d.pantry;
     final urgent = items.where((i) => (i.daysLeft ?? 99) <= 2).toList();
@@ -46,15 +49,15 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: AppSpace.x5),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: EyebrowTag(label: 'FACULTATIF', icon: AppIcons.fridge),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: EyebrowTag(label: l.pantryHubOptional, icon: AppIcons.fridge),
                     ),
                     const SizedBox(height: AppSpace.x3),
-                    Text('Remplissez votre réserve', style: AppText.h1),
+                    Text(l.pantryHubTitle, style: AppText.h1),
                     const SizedBox(height: AppSpace.x2),
                     Text(
-                      'Ajoutez ce que vous avez déjà : Menoo en tiendra compte pour vos menus et vos courses. Vous pourrez compléter plus tard.',
+                      l.pantryHubSubtitle,
                       style: AppText.of(AppFont.s14_5, color: AppColors.ink2, lineHeight: 21),
                     ),
                     const SizedBox(height: AppSpace.x4),
@@ -68,13 +71,13 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Ma réserve',
+                                  l.pantryHubCardTitle,
                                   style: AppText.of(AppFont.s16, weight: AppFont.extrabold, lineHeight: 24),
                                 ),
                                 Text(
                                   items.isEmpty
-                                      ? 'Vide pour l\'instant'
-                                      : '${items.length} produit${items.length > 1 ? 's' : ''} · ${items.map((i) => i.location).toSet().length} emplacement${items.map((i) => i.location).toSet().length > 1 ? 's' : ''}',
+                                      ? l.pantryHubEmptyForNow
+                                      : l.pantryHubSummary(items.length, items.map((i) => i.location).toSet().length),
                                   style: AppText.caption,
                                 ),
                               ],
@@ -94,8 +97,8 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                             ),
                             TextSpan(
                               text: urgent.length > 1
-                                  ? ' et ${urgent.length - 1} autre${urgent.length > 2 ? 's' : ''} à consommer d\'ici 2 jours'
-                                  : ' à consommer d\'ici 2 jours · ${urgent.first.location.label}',
+                                  ? ' ' + l.pantryHubUrgentOthers(urgent.length - 1)
+                                  : ' ' + l.pantryHomeUrgent(urgent.first.location.label(l)),
                             ),
                           ],
                         ),
@@ -118,11 +121,11 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Vérification rapide',
+                                  l.pantryHubQuickCheckTitle,
                                   style: AppText.of(AppFont.s15, weight: AppFont.extrabold, lineHeight: 21),
                                 ),
                                 Text(
-                                  'Cochez en quelques secondes ce que vos placards contiennent',
+                                  l.pantryHubQuickCheckText,
                                   style: AppText.caption,
                                 ),
                               ],
@@ -138,7 +141,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                         Expanded(
                           child: _QuickAction(
                             icon: AppIcons.plus,
-                            label: 'Manuel',
+                            label: l.pantryQuickManual,
                             onTap: () => push(context, const PantryAddManualScreen()),
                           ),
                         ),
@@ -146,7 +149,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                         Expanded(
                           child: _QuickAction(
                             icon: AppIcons.barcode,
-                            label: 'Code-barres',
+                            label: l.pantryQuickBarcode,
                             onTap: () => push(context, const PantryScanScreen()),
                           ),
                         ),
@@ -154,7 +157,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                         Expanded(
                           child: _QuickAction(
                             icon: AppIcons.camera,
-                            label: 'Photo IA',
+                            label: l.pantryQuickPhotoAi,
                             onTap: () => push(context, const PantryPhotoAiScreen()),
                           ),
                         ),
@@ -176,14 +179,14 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                   child: Row(
                     children: [
                       FilterPill(
-                        label: 'Tous · ${items.length}',
+                        label: l.pantryHubAll(items.length),
                         selected: _filter == null,
                         onTap: () => setState(() => _filter = null),
                       ),
                       for (final loc in PantryLocation.values) ...[
                         const SizedBox(width: AppSpace.x2),
                         FilterPill(
-                          label: '${loc.short} · ${items.where((i) => i.location == loc).length}',
+                          label: '${loc.short(l)} · ${items.where((i) => i.location == loc).length}',
                           icon: loc.icon,
                           selected: _filter == loc,
                           onTap: () => setState(() => _filter = loc),
@@ -220,11 +223,11 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    PrimaryButton(label: 'Terminer et continuer', onPressed: () => widget.onFinish(context)),
+                    PrimaryButton(label: l.pantryHubFinish, onPressed: () => widget.onFinish(context)),
                     const SizedBox(height: AppSpace.x3),
                     Center(
                       child: TextLink(
-                        'Passer pour l\'instant',
+                        l.pantryHubSkip,
                         weight: AppFont.bold,
                         onTap: () => widget.onFinish(context),
                       ),
@@ -249,6 +252,7 @@ class _QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Pressable(
       onTap: onTap,
       child: Container(
@@ -276,16 +280,17 @@ class _EmptyPantry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       padding: const EdgeInsets.all(AppSpace.x5),
       child: Column(
         children: [
           const IconTile(icon: AppIcons.fridge, size: AppSizes.lockCircle, iconSize: 22, circle: true),
           const SizedBox(height: AppSpace.x3),
-          Text('Votre réserve est vide', style: AppText.of(AppFont.s16, weight: AppFont.extrabold)),
+          Text(L.of(context).pantryHubEmptyTitle, style: AppText.of(AppFont.s16, weight: AppFont.extrabold)),
           const SizedBox(height: AppSpace.x1),
           Text(
-            'Commencez par la vérification rapide ou ajoutez un aliment : ils apparaîtront ici, rangés par emplacement.',
+            L.of(context).pantryHubEmptyText,
             textAlign: TextAlign.center,
             style: AppText.of(AppFont.s13, color: AppColors.ink2, lineHeight: 19),
           ),
@@ -308,16 +313,17 @@ class _LocationSection extends StatelessWidget {
     return unit.isEmpty ? q : '$q $unit';
   }
 
-  static String _left(PantryDraft i) {
+  static String _left(L l, PantryDraft i) {
     final days = i.daysLeft;
     if (days == null) return '';
-    if (days < 0) return 'Périmé';
-    if (days > 60) return '${(days / 30).round()} mois';
-    return '$days j';
+    if (days < 0) return l.pantryExpired;
+    if (days > 60) return l.pantryMonthsLeft((days / 30).round());
+    return l.pantryDaysLeft(days);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       padding: const EdgeInsets.fromLTRB(AppSpace.x4, AppSpace.x3, AppSpace.x2, AppSpace.x1),
       child: Column(
@@ -333,8 +339,8 @@ class _LocationSection extends StatelessWidget {
                   foreground: location.ink,
                 ),
                 const SizedBox(width: AppSpace.x2_5),
-                Expanded(child: Text(location.label, style: AppText.sectionTitle)),
-                Text('${items.length} produit${items.length > 1 ? 's' : ''}', style: AppText.meta),
+                Expanded(child: Text(location.label(l), style: AppText.sectionTitle)),
+                Text(L.of(context).pantryHomeProductCount(items.length), style: AppText.meta),
               ],
             ),
           ),
@@ -366,12 +372,12 @@ class _LocationSection extends StatelessWidget {
                     const SizedBox(width: AppSpace.x2),
                     SizedBox(
                       width: AppSizes.thumbW,
-                      child: Text(_left(it), textAlign: TextAlign.right, style: AppText.meta),
+                      child: Text(_left(L.of(context), it), textAlign: TextAlign.end, style: AppText.meta),
                     ),
                   ],
                   Semantics(
                     button: true,
-                    label: 'Retirer ${it.name}',
+                    label: L.of(context).pantryRemoveItem(it.name),
                     child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => onRemove(it),
