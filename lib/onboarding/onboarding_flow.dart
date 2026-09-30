@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/onboarding/activity_screen.dart';
 import '../screens/onboarding/budget_screen.dart';
 import '../screens/onboarding/constraints_screen.dart';
-import '../screens/onboarding/cuisine_types_screen.dart';
+import '../screens/onboarding/onboarding_cuisines_screen.dart';
 import '../screens/onboarding/goal_screen.dart';
 import '../screens/onboarding/household_size_screen.dart';
 import '../screens/onboarding/kitchen_screen.dart';
@@ -14,7 +14,7 @@ import '../screens/onboarding/smart_scale_screen.dart';
 import '../screens/onboarding/summary_screen.dart';
 import '../screens/onboarding/supermarket_screen.dart';
 import '../screens/onboarding/weekly_grid_screen.dart';
-import '../screens/pantry/pantry_onboarding_hub_screen.dart';
+import '../screens/pantry/pantry_hub_onboarding_screen.dart';
 import 'onboarding_data.dart';
 import 'onboarding_scope.dart';
 
@@ -85,7 +85,7 @@ abstract final class OnboardingFlow {
     OnbStep.budget => const BudgetScreen(),
     OnbStep.management => const ManagementModeScreen(),
     OnbStep.constraints => const ConstraintsScreen(),
-    OnbStep.cuisines => const CuisineTypesScreen(),
+    OnbStep.cuisines => const OnboardingCuisinesScreen(),
     OnbStep.kitchen => const KitchenScreen(),
     OnbStep.supermarket => const SupermarketScreen(),
     OnbStep.summary => const SummaryScreen(),
@@ -117,7 +117,7 @@ abstract final class OnboardingFlow {
       final after = order[order.indexOf(OnbStep.management) + 1];
       nav.push(
         _route(
-          PantryOnboardingHubScreen(onFinish: (hub) => finishPantryDetour(hub, editing, after)),
+          PantryHubOnboardingScreen(onFinish: (hub) => finishPantryDetour(hub, editing, after)),
           fromSummary: editing,
         ),
       );

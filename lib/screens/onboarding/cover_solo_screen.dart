@@ -6,8 +6,8 @@ import '../../widgets/widgets.dart';
 
 /// cover_individual — présentation du mode Solo (hors compteur d'étapes).
 /// SPEC §0.4 : pas de chiffre marketing (« moins de 20 min », « moins de 3 minutes » retirés).
-class CoverIndividualScreen extends StatelessWidget {
-  const CoverIndividualScreen({super.key});
+class CoverSoloScreen extends StatelessWidget {
+  const CoverSoloScreen({super.key});
 
   static const _features = [
     (

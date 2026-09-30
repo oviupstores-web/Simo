@@ -23,7 +23,7 @@ Les écrans Stitch et les maquettes donnent la structure, les textes et le rendu
 13. **Vocabulaire — `landing` et `home` sont deux écrans distincts**, jamais confondus ni fusionnés :
     - **`landing`** = la **page déroulante d'avant le compte** : la promesse, ses 4 avantages, les 4 cartes de fonctions, le bouton « Commencer » collé en bas. Pas de barre de navigation. Elle s'appelle « la Landing » dans tous nos échanges.
     - **`home`** = le **premier onglet de l'app, après connexion** : « Bonjour Karim », le repas du jour, les indicateurs, et le cercle d'improvisation quand aucun repas n'est prévu. Barre de navigation présente. Il s'appelle « l'Accueil ».
-    - Le mot « accueil » ne désigne jamais la Landing. Le fichier `design/maquettes/accueil_deroulant.png` montre en réalité la **Landing** : son nom est trompeur (§13).
+    - Le mot « accueil » ne désigne jamais la Landing. Le fichier `design/maquettes/landing.png` montre en réalité la **Landing** : son nom est trompeur (§13).
 14. **Un nom = un écran, un écran = un nom.** Règles : minuscules avec tirets bas, pas de numéro d'ordre Stitch, suffixe `_household` pour la variante Foyer (jamais `_foyer`), et le nom sans suffixe est toujours la variante Solo. Les états d'un même écran (gratuit / premium, repos / caméra) ne créent pas un nouveau nom. L'inventaire complet est en §15.
 
 ## 1. Entrée
@@ -31,19 +31,20 @@ Les écrans Stitch et les maquettes donnent la structure, les textes et le rendu
 | Écran | Bouton | Va vers |
 |---|---|---|
 | `landing` | **Commencer** (seul bouton, collé en bas) | `path_choice` |
-| `landing` | « J'ai déjà un compte » (lien texte discret dans l'en-tête — *point ouvert n°6*) | `c02_auth_login` |
-| `c02_auth_login` | Se connecter / Google | Accueil du mode enregistré |
-| `c02_auth_login` | S'inscrire | `c03_auth_signup` |
-| `path_choice` | Continuer (Pour moi) | `cover_individual` |
+| `landing` | « J'ai déjà un compte » (lien texte discret dans l'en-tête — *point ouvert n°6*) | `login` |
+| `login` | Se connecter / Google | Accueil du mode enregistré |
+| `login` | S'inscrire | `signup` |
+| `path_choice` | Continuer (Pour moi) | `cover_solo` |
 | `path_choice` | Continuer (Pour la famille) | `cover_household` |
 | `path_choice` | Ligne légère sous les deux cartes : « Juste une idée pour ce soir ? Improviser avec ce que j'ai » | Improvisation (§8), sans compte |
 
 ### `landing` — page déroulante (remplace le carrousel)
-Référence visuelle : `design/maquettes/accueil_deroulant.png`.
+Référence visuelle : `design/maquettes/landing.png`.
 1. **La promesse en haut** : titre, phrase d'accroche, photo, et ses **4 avantages** (repas variés et équilibrés ; budget maîtrisé chaque semaine ; liste de courses claire ; suivi personnalisé).
 2. **4 cartes de fonctions**, chacune avec sa **pastille de couleur** et un **aperçu d'écran** : Scan IA (orange), Menus (corail), Courses (vert), Suivi (lavande).
 3. Les cartes **n'ont pas de bouton** et ne sont pas cliquables : ce sont des promesses, pas des fonctions accessibles.
 4. **Un seul bouton « Commencer »**, collé en bas pendant tout le défilement, avec « Vos données sont sécurisées » dessous.
+5. **Sous le bouton, la même ligne légère que sur `path_choice`** : « Juste une idée pour ce soir ? Improviser avec ce que j'ai » → `improv_scan`, sans compte. C'est le seul accès direct depuis la Landing : les cartes, elles, restent inertes. Ce n'est pas une quatrième porte d'entrée, c'est la même ligne qu'ailleurs (§8).
 
 Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de la maquette) ; la carte Scan IA précise « Photo réservée aux abonnés, saisie manuelle gratuite » si la règle §0.8 reste sans scan offert (*point ouvert n°1*) ; `path_choice` reste hors compteur.
 
@@ -51,7 +52,7 @@ Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de l
 
 | # | Écran | Fonction | Remarque |
 |---|---|---|---|
-| — | `cover_individual` | Présentation | — |
+| — | `cover_solo` | Présentation | — |
 | 1 | `onboarding_goal` | Objectif santé | — |
 | 2 | `onboarding_profile` | Sexe, âge, taille, poids, poids visé et rythme | Garde-fous : IMC ≥ 18,5, ≤ 1 kg/semaine |
 | ★ | `reassurance_weight` | **Trajectoire de poids** | Hors compteur (§4b). Sauté si objectif « maintien » |
@@ -64,7 +65,7 @@ Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de l
 | 7 | `onboarding_managementmode` | Courses / Réserves / Mixte | + **détour Réserve** (§4) |
 | ★ | `reassurance_waste` | **Gaspillage évité** | Hors compteur, après le détour s'il a lieu |
 | 8 | `onboarding_constraints` | Régimes, allergènes, exclus | Régimes en pictogrammes |
-| 9 | `onboarding_preferences` | Types de cuisine appréciés | Préférence, jamais un filtre bloquant |
+| 9 | `onboarding_cuisines` | Types de cuisine appréciés | Préférence, jamais un filtre bloquant |
 | 10 | `onboarding_kitchen` | **Ma cuisine** : niveau, temps, équipements | — |
 | 11 | `onboarding_supermarket` | **Enseigne habituelle** | Sert aux prix et au tri par rayon. **Plus de choix Drive / Livraison / En magasin** |
 | ★ | `reassurance_ready` | **Plan prêt** | Hors compteur |
@@ -83,21 +84,21 @@ Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de l
 | 5 | `onboarding_constraints_household` | Régimes partagés | — |
 | 6 | `onboarding_managementmode_household` | Courses / Réserves / Mixte | + **détour Réserve** |
 | ★ | `reassurance_waste` | **Gaspillage évité** | Hors compteur |
-| 7 | `onboarding_preferences` | Types de cuisine | — |
+| 7 | `onboarding_cuisines` | Types de cuisine | — |
 | 8 | `onboarding_kitchen_household` | Ma cuisine + qui cuisine | — |
 | 9 | `onboarding_supermarket_household` | **Enseigne habituelle** | Plus de choix Drive / Livraison / En magasin |
 | ★ | `reassurance_ready` | **Plan prêt** | Hors compteur |
 | 10 | `onboarding_summary_household` | Récapitulatif | — |
 
 Le Foyer n'a ni étape balance ni objectif de poids commun : les écrans « trajectoire de poids » et « métabolisme » n'y apparaissent pas.
-`onboarding_pantrycheck` reste l'option « vérification rapide » du détour Réserve (Solo et Foyer), hors compteur.
+`pantry_quickcheck` reste l'option « vérification rapide » du détour Réserve (Solo et Foyer), hors compteur.
 
 ## 4. Détour Réserve (onboarding)
 
 Au bouton « Continuer » de l'écran Mode de gestion :
 - **« Courses uniquement »** → étape suivante directement.
-- **« Réserves uniquement » ou « Mixte »** → `pantry_home_onboarding` (pas de compteur d'étape, pas de barre de navigation).
-  - Depuis ce hub : `onboarding_pantrycheck` (rapide, gratuit), `pantry_addmanual` (gratuit), `pantry_scanbarcode` (gratuit), `pantry_photoai_1` (**Premium**, règle §0.8 : la carte affiche un cadenas et renvoie vers la saisie manuelle ou le code-barres) → chacun revient au hub après ajout.
+- **« Réserves uniquement » ou « Mixte »** → `pantry_hub_onboarding` (pas de compteur d'étape, pas de barre de navigation).
+  - Depuis ce hub : `pantry_quickcheck` (rapide, gratuit), `pantry_addmanual` (gratuit), `pantry_scanbarcode` (gratuit), `pantry_photoai` (**Premium**, règle §0.8 : la carte affiche un cadenas et renvoie vers la saisie manuelle ou le code-barres) → chacun revient au hub après ajout.
   - « Terminer et continuer » ou « Passer pour l'instant » → retour à l'étape qui suit le mode de gestion.
 
 ## 4b. Écrans de réassurance (5 écrans, hors compteur)
@@ -125,8 +126,8 @@ Règles :
 - Le bouton Google est formulé comme une **sauvegarde** : « Gardez cette recette et votre réserve » (improvisation) ou « Gardez votre menu » (planification), avec un **« Plus tard » toujours visible**.
 - Moments où la sauvegarde est proposée : après la première recette improvisée ; à la fin de l'onboarding, après l'affichage du menu généré ; avant tout achat (un achat exige un compte pour pouvoir être retrouvé).
 
-Parcours planification : `onboarding_summary(_household)` → « Générer mon/notre menu » → `s10_generation_ia_solo` / `f07_generation_ia_foyer` → `menu_blurred(_household)` → proposition de sauvegarde (`c03_auth_signup`, « Plus tard » possible).
-`c03_auth_signup` → « Se connecter » → `c02_auth_login`.
+Parcours planification : `onboarding_summary(_household)` → « Générer mon/notre menu » → `generation` / `generation_household` → `menu_blurred(_household)` → proposition de sauvegarde (`signup`, « Plus tard » possible).
+`signup` → « Se connecter » → `login`.
 
 ## 6. Règles métier
 
@@ -156,37 +157,37 @@ Parcours planification : `onboarding_summary(_household)` → « Générer mon/n
 
 ### Onglet 2 — Menus (ex-Semaine)
 `menu_blurred(_household)` (état gratuit) / `mealoverview_grid(_household)` (Premium) ⇄ `meallist_filter(_household)` → **fiche recette** (§9) → `recipesteps(_household)` (mode cuisine pas-à-pas) → `mealconfirmation(_household)`.
-- Toutes les fiches (`mealdetail_*`, recette improvisée, recette anti-gaspi) utilisent **la même fiche recette à 3 onglets** (§9). `recipeingredientscheck` devient l'onglet Ingrédients.
+- Toutes les fiches (`recipe_sheet`, recette improvisée, recette anti-gaspi) utilisent **la même fiche recette à 3 onglets** (§9). `recipe_sheet` devient l'onglet Ingrédients.
 - `mealconfirmation` (Solo) : boutons « Voir ma liste de courses » et « Accéder au suivi ».
 - Un repas improvisé et validé est inscrit dans le menu du jour et compté dans le Suivi.
 
 ### Onglet 3 — Courses (sans drive)
-`liste_courses` (Solo) ou `liste_courses_household` (Foyer), triée par rayon, réserve déduite. Depuis la liste :
+`shopping_list` (Solo) ou `shopping_list_household` (Foyer), triée par rayon, réserve déduite. Depuis la liste :
 - **Mode magasin** : tri par rayon de l'enseigne, cases à cocher, **total qui se met à jour**, **écran qui reste allumé**.
 - **Partager** (feuille de partage Android), **imprimer en A4**, **exporter en PDF**, **copier en texte**.
-- Changer d'enseigne : `shoppinglist_supermarketselect` (France : liste ; ailleurs : champ libre, §10). Le comparateur `shoppinglist_pricecompare` compare seulement des **prix** entre enseignes (*point ouvert n°5*).
-- **Supprimés** : `shoppinglist_checkout`, `shoppinglist_confirmation`, les boutons « Commander en drive », et toute mention de commande, panier drive ou livraison.
+- Changer d'enseigne : `shopping_list_supermarketselect` (France : liste ; ailleurs : champ libre, §10). Le comparateur `shopping_list_pricecompare` compare seulement des **prix** entre enseignes (*point ouvert n°5*).
+- **Supprimés** : `shopping_list_checkout`, `shopping_list_confirmation`, les boutons « Commander en drive », et toute mention de commande, panier drive ou livraison.
 - La liste partagée en temps réel entre membres du foyer est en **phase 2** (non codée).
 
 ### Onglet 4 — Réserve
 **Emplacement obligatoire pour chaque aliment** : Réfrigérateur, Placard, Congélateur, Corbeille à fruits.
 - `pantry_home` : produits regroupés par emplacement, puces de filtre « Tous · Frigo · Corbeille · Placard · Congél. » avec compteur, statut et délai restant. **Entrée permanente vers l'improvisation** (« Cuisiner avec ma réserve »).
 - `pantry_addmanual` (gratuit) : emplacement obligatoire, pré-rempli selon la catégorie, modifiable.
-- `pantry_scanbarcode` (gratuit) et `pantry_photoai_1` (**Premium**) : après détection, emplacement par défaut de chaque produit, modifiable avant l'ajout.
+- `pantry_scanbarcode` (gratuit) et `pantry_photoai` (**Premium**) : après détection, emplacement par défaut de chaque produit, modifiable avant l'ajout.
 - Les alertes de péremption indiquent l'emplacement (« Poulet · Réfrigérateur · 2 jours »). Les produits **périmés sont signalés en rouge** d'après les dates en base.
 - Données : champ `location` (enum `fridge`, `pantry`, `freezer`, `fruit_basket`) sur `pantry_items`.
 
-`pantry_expiryalert` → `pantry_antiwasterecipe` ; `dashboard_antiwaste` (Solo) accessible d'ici.
+`pantry_expiryalert` → `pantry_antiwasterecipe` ; `pantry_antiwaste` (Solo) accessible d'ici.
 
 ### Onglet 5 — Suivi (sous-onglets Budget | Nutrition | Performance)
 | Sous-onglet | Solo | Foyer |
 |---|---|---|
-| Budget | `dashboard_budget` | `dashboard_budget_household` |
-| Nutrition | `dashboard_nutrition` | `dashboard_nutrition_household` |
-| Performance | `dashboard_diet` (Régime) → `scale_manage`, `weight_manualentry` | `dashboard_antiwaste_household` |
+| Budget | `tracking_budget` | `tracking_budget_household` |
+| Nutrition | `tracking_nutrition` | `tracking_nutrition_household` |
+| Performance | `tracking_weight` (Régime) → `scale_manage`, `weight_manualentry` | `tracking_antiwaste_household` |
 
 ### Réglages (avatar de l'en-tête)
-Solo : `settings_profile_solo`. Foyer : `settings_profile` + bloc « Ma cuisine ». On y trouve aussi la langue, le pays, les unités et la **gestion de l'abonnement** (résiliation simple, via Google Play).
+Solo : `settings`. Foyer : `settings_household` + bloc « Ma cuisine ». On y trouve aussi la langue, le pays, les unités et la **gestion de l'abonnement** (résiliation simple, via Google Play).
 
 ### États vides / erreurs
 3 composants (réserve vide, aucun menu, hors ligne) affichés dans les écrans concernés.
@@ -276,7 +277,7 @@ Corrections des maquettes : ordre des onglets (la maquette met Instructions en p
   Quand les prix sont estimés : badge **« Estimation dans votre budget »** au lieu de « Dans le budget ✓ ».
 
 ## 11. Écrans non utilisés ou supprimés
-- `shoppinglist_checkout`, `shoppinglist_confirmation` : **supprimés** (plus de drive).
+- `shopping_list_checkout`, `shopping_list_confirmation` : **supprimés** (plus de drive).
 - `pantry_photoai_2` : supprimé (doublon).
 - `recipeingredientscheck(_household)` : absorbé par l'onglet Ingrédients de la fiche recette.
 - Carrousel de la landing : remplacé par la page déroulante.
@@ -288,7 +289,7 @@ Solo : Karim, 32 ans, 180 cm, 75 kg, objectif perte de poids, budget 65 €. Foy
 ## 13. Maquettes de référence (`design/maquettes/`)
 | Fichier | Sert pour | À ne pas reprendre |
 |---|---|---|
-| `accueil_deroulant.png` | **`landing`** (malgré son nom : ce n'est pas l'Accueil, §0.13) | Logo « MENOO » en capitales |
+| `landing.png` | **`landing`** (malgré son nom : ce n'est pas l'Accueil, §0.13) | Logo « MENOO » en capitales |
 | `scan_ia_accueil.png` | Improvisation, étape 1 (état au repos) | Barre de navigation ; bandeau et bouton en pilule ; « Estimation des quantités » à présenter comme modifiable |
 | `scan_ia_ingredients.png` | Improvisation, étape 1 (liste détectée) | Barre de navigation |
 | `condiments_equipement.png` | Improvisation, étapes 3 et 4 | Un seul écran pour deux étapes ; plus de 8 condiments ; le bloc « Niveau en cuisine » |
@@ -310,56 +311,42 @@ Solo : Karim, 32 ans, 180 cm, 75 kg, objectif perte de poids, budget 65 €. Foy
 11. **Renommages d'écrans** : les 14 corrections proposées en §15 sont-elles adoptées ? Seul le couple `landing` / `home` est déjà appliqué.
 12. **Carte « Scan IA » de la Landing** : doit-elle mener à l'écran `improv_scan` ? Cela contredit deux règles déjà écrites — voir §15, note finale.
 
-## 15. Inventaire des noms d'écrans (audit du 2026-09-30)
 
-Règle : **un nom = un écran, un écran = un nom** (§0.14). Seul le couple `landing` / `home` est **déjà appliqué** ; les 14 corrections ci-dessous sont **proposées et attendent la validation de Simo** (*point ouvert n°11*).
+## 15. Noms d'écrans — audit du 2026-09-30, **appliqué**
 
-### 15.1 Appliqué
-| Avant | Après | Pourquoi |
-|---|---|---|
-| `landing_hook` | **`landing`** | Page déroulante d'avant le compte |
-| `dashboard_home` / `dashboard_home_household` | **`home`** / **`home_household`** | Onglet 1 après connexion. Le préfixe `dashboard_` désignait aussi les écrans de Suivi (voir 15.2, ligne A) ; « Dashboard » était en plus un troisième mot pour l'Accueil. Code renommé : `DashboardScreen` → `HomeScreen`, `dashboard_screen.dart` → `home_screen.dart` |
+Règle : **un nom = un écran, un écran = un nom** (§0.14). Les 14 corrections ci-dessous ont été validées par Simo le 2026-09-30 et sont **appliquées** dans ce document et dans le code existant. Commit de départ : « Mise sous Git du projet Menoo », pour pouvoir revenir en arrière.
 
-### 15.2 Corrections proposées
+### 15.1 Deux écrans différents portaient le même nom
 
-**Deux écrans différents qui portaient le même nom, ou presque**
+| | Avant | Après | Pourquoi |
+|---|---|---|---|
+| A | `landing_hook` | `landing` | Page déroulante d'avant le compte (§0.13) |
+| B | `dashboard_home` · `dashboard_home_household` | `home` · `home_household` | Onglet 1 après connexion. « Dashboard » était un troisième mot pour l'Accueil |
+| C | `dashboard_budget` · `dashboard_nutrition` · `dashboard_diet` · `dashboard_antiwaste_household` | `tracking_budget` · `tracking_nutrition` · `tracking_weight` · `tracking_antiwaste_household` | Le préfixe `dashboard_` couvrait **deux onglets** : l'Accueil et le Suivi |
+| D | `dashboard_antiwaste` (Solo, atteint **depuis la Réserve**) contre `dashboard_antiwaste_household` (Foyer, sous-onglet **du Suivi**) | `pantry_antiwaste` · `tracking_antiwaste_household` | Noms quasi identiques pour deux emplacements et deux rôles différents |
+| E | `dashboard_diet`, libellé « Régime » | `tracking_weight`, libellé « Poids » | **« Régime » est réservé aux restrictions alimentaires** (végétarien, sans gluten — table `diets`). Le suivi du poids ne s'appelle plus jamais « régime ». Collision la plus dangereuse de l'audit, les deux notions existant déjà en base |
+| F | `pantry_home` (onglet, avec barre) et `pantry_home_onboarding` (hub du détour, sans barre) | `pantry_home` · `pantry_hub_onboarding` | Un « home » qui n'en était pas un |
 
-| | Problème | Correction proposée |
-|---|---|---|
-| A | Le préfixe `dashboard_` couvrait **deux onglets** : l'Accueil (`dashboard_home`) et les sous-onglets de Suivi (`dashboard_budget`, `dashboard_nutrition`, `dashboard_diet`, `dashboard_antiwaste`) | Accueil = `home` (fait). Suivi = **`tracking_budget`**, **`tracking_nutrition`**, **`tracking_weight`**, **`tracking_antiwaste`** |
-| B | `dashboard_antiwaste` (Solo, recette anti-gaspi atteinte **depuis la Réserve**) et `dashboard_antiwaste_household` (Foyer, sous-onglet **Performance du Suivi**) : noms quasi identiques, deux emplacements et deux rôles différents | **`pantry_antiwaste`** (Solo, onglet Réserve) et **`tracking_antiwaste_household`** (Foyer, onglet Suivi) |
-| C | `pantry_home` (onglet Réserve, avec barre de navigation) et `pantry_home_onboarding` (hub du détour, sans barre ni compteur) | **`pantry_home`** et **`pantry_hub_onboarding`** |
-| D | « Régime » désigne à la fois les **restrictions alimentaires** (végétarien, sans gluten — table `diets`) et le **suivi du poids** (`dashboard_diet`). Collision de vocabulaire dangereuse | Le suivi du poids devient **`tracking_weight`**, libellé « Poids ». « Régime » ne désigne plus que les restrictions |
-| E | `onboarding_cuisines` (étape d'onboarding, les goûts) et `improv_cuisines` (étape 5, ce qui est faisable ce soir) sont proches, et la maquette `cuisines_grisees.png` mélange les deux | Noms conservés, mais les préfixes `onboarding_` et `improv_` sont **obligatoires** ; jamais de « écran cuisines » tout court |
+### 15.2 Un même écran portait deux noms
 
-**Un même écran qui portait deux noms**
+| | Avant (SPEC · code) | Après | Note |
+|---|---|---|---|
+| G | `onboarding_preferences` · `CuisineTypesScreen` | `onboarding_cuisines` · `OnboardingCuisinesScreen` | Le préfixe de flux est **obligatoire** : `onboarding_cuisines` (les goûts) ne doit pas être confondu avec `improv_cuisines` (ce qui est faisable ce soir). La maquette `cuisines_grisees.png` mélange précisément ces deux écrans |
+| H | `onboarding_pantrycheck` · `PantryQuickCheckScreen` | `pantry_quickcheck` | Hors compteur d'étapes, donc sans préfixe `onboarding_` |
+| I | `pantry_home_onboarding` · `PantryOnboardingHubScreen` | `pantry_hub_onboarding` · `PantryHubOnboardingScreen` | |
+| J | `liste_courses` (français) et `shoppinglist_*` (anglais) · `ShoppingListFreeScreen` | `shopping_list` · `shopping_list_household` · `ShoppingListScreen` | Gratuit et premium sont deux **états**, pas deux écrans. Le tunnel garde le préfixe `shopping_list_` |
+| K | `mealdetail_breakfast`, `mealdetail_*`, `recipeingredientscheck` · `RecipeScreen` | `recipe_sheet` · `RecipeSheetScreen` | Une seule fiche pour toute l'app (§9), avec ses 3 onglets |
+| L | `menu_blurred` (gratuit) et `mealoverview_grid` (premium) ; `meallist_filter` | `menus_grid` (deux états) · `menus_list` | |
+| M | `s10_generation_ia_solo` · `f07_generation_ia_foyer` | `generation` · `generation_household` | Numérotation Stitch retirée ; suffixe `_foyer` remplacé par `_household` |
+| N | `c02_auth_login` · `c03_auth_signup` | `login` · `signup` | Numérotation Stitch retirée |
+| O | `settings_profile` = **Foyer** et `settings_profile_solo` = **Solo** | `settings` (Solo) · `settings_household` (Foyer) | L'ancien couple inversait la règle : le nom nu est toujours le Solo |
+| P | `pantry_photoai_1` | `pantry_photoai` | Le `_1` venait de `pantry_photoai_2`, supprimé |
+| Q | `cover_individual` · `CoverIndividualScreen` | `cover_solo` · `CoverSoloScreen` | Le mode s'appelle **Solo** partout ailleurs (`AppMode.solo`) |
 
-| | Problème | Correction proposée |
-|---|---|---|
-| F | SPEC : `onboarding_preferences` · Code : `CuisineTypesScreen` / `cuisine_types_screen.dart` | **`onboarding_cuisines`** partout |
-| G | SPEC : `onboarding_pantrycheck` · Code : `PantryQuickCheckScreen` | **`pantry_quickcheck`** partout (hors compteur, donc sans préfixe `onboarding_`) |
-| H | SPEC : `pantry_home_onboarding` · Code : `PantryOnboardingHubScreen` | **`pantry_hub_onboarding`** partout |
-| I | SPEC : `liste_courses(_household)` (français) et `shoppinglist_*` (anglais) pour le même onglet · Code : `ShoppingListFreeScreen` | **`shopping_list`** / **`shopping_list_household`**, avec deux **états** (gratuit, premium) et non deux écrans. Le reste du tunnel garde le préfixe `shopping_list_` |
-| J | `mealdetail_breakfast`, `mealdetail_*`, `recipeingredientscheck` désignaient des morceaux de **la même** fiche recette (§9) | **`recipe_sheet`** unique, avec ses 3 onglets. `recipeingredientscheck` disparaît |
-| K | `menu_blurred(_household)` (gratuit) et `mealoverview_grid(_household)` (premium) sont **deux états** d'un même écran | **`menus_grid`** / **`menus_grid_household`**, états gratuit et premium. La vue liste devient **`menus_list`** |
-| L | `s10_generation_ia_solo` et `f07_generation_ia_foyer` : numérotation Stitch, et suffixe `_foyer` au lieu de `_household` | **`generation`** / **`generation_household`** |
-| M | `c02_auth_login`, `c03_auth_signup` : numérotation Stitch | **`login`**, **`signup`** |
-| N | `settings_profile` = **Foyer** et `settings_profile_solo` = **Solo** : l'inverse de la règle (le nom nu est le Solo) | **`settings`** (Solo) / **`settings_household`** (Foyer) |
-| O | `pantry_photoai_1` : le `_1` venait de `pantry_photoai_2`, supprimé | **`pantry_photoai`** |
-| P | `cover_individual` alors que le mode s'appelle **Solo** partout ailleurs (`AppMode.solo`) | **`cover_solo`** |
+### 15.3 Fait dans le code
+`DashboardScreen` → `HomeScreen` (`home_screen.dart`) · `CuisineTypesScreen` → `OnboardingCuisinesScreen` · `CoverIndividualScreen` → `CoverSoloScreen` · `PantryOnboardingHubScreen` → `PantryHubOnboardingScreen` · `ShoppingListFreeScreen` → `ShoppingListScreen` · `RecipeScreen` → `RecipeSheetScreen` (dossier `screens/week/` → `screens/menus/`) · `MenooTab.semaine` → `MenooTab.menus`, libellé « Semaine » → « Menus ».
+Les écrans qui n'existent pas encore seront créés directement sous leur nom définitif.
 
-### 15.3 Noms de maquettes trompeurs (fichiers de Simo, à renommer si tu veux)
-- `accueil_deroulant.png` montre la **Landing**, pas l'Accueil → `landing_deroulante.png`.
-- `scan_ia_accueil.png` montre l'**écran d'accueil du Scan IA**, pas l'Accueil de l'app → `scan_ia_ecran1.png`.
-
-### 15.4 La carte « Scan IA » de la Landing mène-t-elle à l'écran Scan IA ?
-**Ce n'est pas prévu aujourd'hui, et cela contredit deux règles déjà écrites :**
-1. §1 : « Les cartes **n'ont pas de bouton et ne sont pas cliquables** : ce sont des promesses, pas des fonctions accessibles » — reprise mot pour mot de la demande du 2026-09-30.
-2. §8 : l'improvisation a **trois portes d'accès** (ligne sous `path_choice`, cercle de l'Accueil, onglet Réserve). Un lien depuis la Landing en ferait une quatrième.
-
-Trois façons de lever la contradiction, **à trancher** (*point ouvert n°12*) :
-- **(a)** Garder les cartes inertes. La porte d'entrée avant compte reste la ligne légère de `path_choice`, atteinte par « Commencer ».
-- **(b)** Rendre la seule carte Scan IA cliquable, vers `improv_scan`. Il faut alors réécrire la règle §1 et accepter une quatrième porte.
-- **(c)** Garder les cartes inertes, mais ajouter sur la Landing, sous le bouton « Commencer », la même ligne légère que sur `path_choice`.
-
-Recommandation : **(c)**. Elle donne l'accès direct que tu cherches sans rendre les cartes cliquables et sans multiplier les chemins, puisque c'est la même ligne qu'ailleurs.
+### 15.4 Maquettes renommées
+`landing.png` → **`landing.png`** : le fichier montre la Landing, pas l'Accueil.
+Reste à trancher : `scan_ia_accueil.png` montre l'écran d'accueil du Scan IA, pas l'Accueil de l'app — le renommer en `scan_ia_ecran1.png` ?

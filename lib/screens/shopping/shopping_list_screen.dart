@@ -10,14 +10,14 @@ typedef _Article = (String image, String name, String qty, String price);
 /// liste_courses (version gratuite) — maître : design/masters/master_courses_gratuit.html.
 /// SPEC §6 : total, budget et premier rayon en clair ; rayons suivants floutés
 /// sous la carte « Débloquez la liste complète » → paywall_premium.
-class ShoppingListFreeScreen extends StatefulWidget {
-  const ShoppingListFreeScreen({super.key});
+class ShoppingListScreen extends StatefulWidget {
+  const ShoppingListScreen({super.key});
 
   @override
-  State<ShoppingListFreeScreen> createState() => _ShoppingListFreeScreenState();
+  State<ShoppingListScreen> createState() => _ShoppingListScreenState();
 }
 
-class _ShoppingListFreeScreenState extends State<ShoppingListFreeScreen> {
+class _ShoppingListScreenState extends State<ShoppingListScreen> {
   static const List<_Article> _fruits = [
     ('f_banane.jpg', 'Bananes', '1 kg', '1,99 €'),
     ('f_epinards.jpg', 'Épinards frais', '200 g', '1,89 €'),

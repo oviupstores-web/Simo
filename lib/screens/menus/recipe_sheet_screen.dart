@@ -5,14 +5,14 @@ import '../../widgets/widgets.dart';
 
 /// Fiche recette — maître : design/masters/master_recette.html (réf. 07_type_recette.png).
 /// Gabarit de toutes les fiches repas et recettes.
-class RecipeScreen extends StatefulWidget {
-  const RecipeScreen({super.key});
+class RecipeSheetScreen extends StatefulWidget {
+  const RecipeSheetScreen({super.key});
 
   @override
-  State<RecipeScreen> createState() => _RecipeScreenState();
+  State<RecipeSheetScreen> createState() => _RecipeSheetScreenState();
 }
 
-class _RecipeScreenState extends State<RecipeScreen> {
+class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
   static const _ingredients = [
     ('i_saumon.jpg', 'Saumon frais', '4 pavés (600 g)', false),
     ('i_quinoa.jpg', 'Quinoa', '200 g', true),

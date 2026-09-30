@@ -8,7 +8,7 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../entry/signup_screen.dart';
 import 'constraints_screen.dart';
-import 'cuisine_types_screen.dart';
+import 'onboarding_cuisines_screen.dart';
 import 'kitchen_screen.dart';
 import 'supermarket_screen.dart';
 
@@ -217,7 +217,7 @@ class SummaryScreen extends StatelessWidget {
               icon: AppIcons.cutlery,
               text: d.cuisinePreferences.isEmpty
                   ? 'Cuisines : toutes'
-                  : 'Cuisines : ${[for (final c in CuisineTypesScreen.cuisines)
+                  : 'Cuisines : ${[for (final c in OnboardingCuisinesScreen.cuisines)
                       if (d.cuisinePreferences.contains(c.$1)) c.$2].join(', ')}',
               onTap: () => edit(OnbStep.cuisines),
             ),

@@ -9,8 +9,8 @@ import '../../widgets/widgets.dart';
 /// Types de cuisine appréciés (Solo, après les contraintes) — équivalent de onboarding_preferences
 /// du parcours Foyer. Choix multiple ; aucun choix = toutes les cuisines. Codes enregistrés dans
 /// households.cuisine_preferences.
-class CuisineTypesScreen extends StatelessWidget {
-  const CuisineTypesScreen({super.key});
+class OnboardingCuisinesScreen extends StatelessWidget {
+  const OnboardingCuisinesScreen({super.key});
 
   /// Photo : assets/images/cuisines/<code>.jpg (fournies par Simo).
   /// « Asiatique » couvre Chine, Thaïlande et Vietnam ; le Japon a sa propre catégorie.

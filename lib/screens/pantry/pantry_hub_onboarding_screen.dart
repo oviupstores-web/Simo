@@ -13,17 +13,17 @@ import 'pantry_scan_screens.dart';
 /// pantry_home_onboarding (nouvel écran design/new) — détour Réserve de l'onboarding (SPEC §4) :
 /// pas de compteur d'étape, pas de barre de navigation. Chaque ajout revient ici.
 /// Produits regroupés par emplacement (SPEC §7, maître opérationnel).
-class PantryOnboardingHubScreen extends StatefulWidget {
-  const PantryOnboardingHubScreen({super.key, required this.onFinish});
+class PantryHubOnboardingScreen extends StatefulWidget {
+  const PantryHubOnboardingScreen({super.key, required this.onFinish});
 
   /// « Terminer et continuer » ou « Passer pour l'instant ».
   final void Function(BuildContext context) onFinish;
 
   @override
-  State<PantryOnboardingHubScreen> createState() => _PantryOnboardingHubScreenState();
+  State<PantryHubOnboardingScreen> createState() => _PantryHubOnboardingScreenState();
 }
 
-class _PantryOnboardingHubScreenState extends State<PantryOnboardingHubScreen> {
+class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
   PantryLocation? _filter;
 
   @override

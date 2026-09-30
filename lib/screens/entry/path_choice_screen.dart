@@ -6,7 +6,7 @@ import '../../onboarding/onboarding_scope.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../onboarding/cover_household_screen.dart';
-import '../onboarding/cover_individual_screen.dart';
+import '../onboarding/cover_solo_screen.dart';
 
 /// path_choice — maître : design/masters/master_path_choice.html (réf. 03_path_choice.png).
 /// SPEC §1 : écran hors compteur d'étapes.
@@ -79,7 +79,7 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
                         OnboardingScope.read(context).startMode(_mode);
                         push(
                           context,
-                          _mode == AppMode.solo ? const CoverIndividualScreen() : const CoverHouseholdScreen(),
+                          _mode == AppMode.solo ? const CoverSoloScreen() : const CoverHouseholdScreen(),
                         );
                       },
                     ),

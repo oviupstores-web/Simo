@@ -6,7 +6,7 @@ import '../theme/app_text.dart';
 import '../theme/app_tokens.dart';
 import 'app_icon.dart';
 
-enum MenooTab { accueil, semaine, courses, reserve, suivi }
+enum MenooTab { accueil, menus, courses, reserve, suivi }
 
 /// Barre de navigation unique (5 onglets, mêmes icônes partout — SPEC §0.3).
 class MenooNavBar extends StatelessWidget {
@@ -17,7 +17,7 @@ class MenooNavBar extends StatelessWidget {
 
   static const _items = [
     (MenooTab.accueil, 'Accueil', AppIcons.home),
-    (MenooTab.semaine, 'Semaine', AppIcons.week),
+    (MenooTab.menus, 'Menus', AppIcons.week),
     (MenooTab.courses, 'Courses', AppIcons.cart),
     (MenooTab.reserve, 'Réserve', AppIcons.fridge),
     (MenooTab.suivi, 'Suivi', AppIcons.bars),
