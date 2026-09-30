@@ -308,8 +308,9 @@ Solo : Karim, 32 ans, 180 cm, 75 kg, objectif perte de poids, budget 65 €. Foy
 8. **500 recettes** : échéance et découpage (le jalon 5c en prévoit 96).
 9. **Traductions des allergènes et des régimes** : relecture par une personne dont c'est la langue, avant publication (une erreur y est un risque de santé).
 10. **Paywall du scan** : pour une personne non abonnée, le paywall s'affiche-t-il dès l'activation de la caméra, seulement à l'appui sur « Scanner » (recommandé), ou après un scan offert par appareil ? Lié à la question 1.
-11. **Renommages d'écrans** : les 14 corrections proposées en §15 sont-elles adoptées ? Seul le couple `landing` / `home` est déjà appliqué.
-12. **Carte « Scan IA » de la Landing** : doit-elle mener à l'écran `improv_scan` ? Cela contredit deux règles déjà écrites — voir §15, note finale.
+11. ~~Renommages d'écrans~~ — **tranché le 2026-09-30** : les 14 corrections sont adoptées et appliquées (§15).
+12. ~~Carte « Scan IA » de la Landing~~ — **tranché le 2026-09-30** : les cartes restent inertes, une ligne légère sous « Commencer » mène à l'improvisation (§1).
+13. **Maquette `scan_ia_accueil.png`** : la renommer `scan_ia_ecran1.png` ? Elle montre l'écran d'accueil du Scan IA, pas l'Accueil de l'app.
 
 
 ## 15. Noms d'écrans — audit du 2026-09-30, **appliqué**
