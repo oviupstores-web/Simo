@@ -93,6 +93,20 @@ abstract final class AppText {
   static String noBreakHyphens(String s) =>
       s.replaceAll('-', '‑').replaceAllMapped(RegExp(r' ([?!:;])'), (m) => ' ${m[1]}');
 
+  /// Met en valeur une sous-chaîne (un montant, une valeur) dans une phrase déjà traduite,
+  /// sans dépendre de sa position : utile quand l'ordre des mots change selon la langue.
+  static TextSpan highlightSubstring(String sentence, String needle, TextStyle style) {
+    final i = sentence.indexOf(needle);
+    if (i < 0) return TextSpan(text: sentence);
+    return TextSpan(
+      children: [
+        TextSpan(text: sentence.substring(0, i)),
+        TextSpan(text: needle, style: style),
+        TextSpan(text: sentence.substring(i + needle.length)),
+      ],
+    );
+  }
+
   static TextStyle hand(double size, {Color color = AppColors.primaryDark, double? lineHeight}) => TextStyle(
     fontFamily: AppFont.hand,
     fontFamilyFallback: AppFont.fallback,

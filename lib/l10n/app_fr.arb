@@ -959,5 +959,84 @@
   "summaryGain": "prendre",
   "summaryLose": "perdre",
   "summaryEdit": "Éditer",
-  "summaryKcalPerDaySuffix": " kcal / jour"
+  "summaryKcalPerDaySuffix": " kcal / jour",
+  "dayMonShort": "Lun",
+  "dayTueShort": "Mar",
+  "dayWedShort": "Mer",
+  "dayThuShort": "Jeu",
+  "dayFriShort": "Ven",
+  "daySatShort": "Sam",
+  "daySunShort": "Dim",
+  "homeGreeting": "Bonjour {name} 👋",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeSubtitle": "Voici votre programme du jour",
+  "homeMenuOfDay": "Mon menu du jour",
+  "homeSeeAll": "Voir tout",
+  "homeIndicators": "Mes indicateurs",
+  "homeAntiwasteAlert": "{count, plural, one{{count} produit à consommer d'ici demain} other{{count} produits à consommer d'ici demain}} : une recette anti-gaspi vous attend.",
+  "@homeAntiwasteAlert": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealBreakfastShortLabel": "Petit-déj.",
+  "homeDemoBreakfast": "Porridge aux fruits",
+  "homeDemoLunch": "Bol quinoa poulet",
+  "homeDemoDinner": "Saumon grillé",
+  "homeBudgetTitle": "Budget de la semaine",
+  "homeInBudget": "Dans le budget ✓",
+  "homeRemaining": "Reste {amount}",
+  "@homeRemaining": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCaloriesToday": "Calories du jour",
+  "homeMacroProtein": "P {value} g",
+  "@homeMacroProtein": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "homeMacroCarbs": "G {value} g",
+  "@homeMacroCarbs": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "homeMacroFat": "L {value} g",
+  "@homeMacroFat": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDietTitle": "Mon régime",
+  "homeWeighedThisMorning": "Pesée synchronisée ce matin",
+  "homeWeightTarget": "Objectif : {target} · {rate}/semaine",
+  "@homeWeightTarget": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "String"
+      }
+    }
+  }
 }

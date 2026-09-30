@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -14,17 +16,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const _days = [('Lun', 14), ('Mar', 15), ('Mer', 16), ('Jeu', 17), ('Ven', 18), ('Sam', 19), ('Dim', 20)];
-  static const _meals = [
-    ('meal_breakfast.jpg', 'Petit-déj.', 'Porridge aux fruits', 320),
-    ('meal_lunch.jpg', 'Déjeuner', 'Bol quinoa poulet', 520),
-    ('meal_dinner.jpg', 'Dîner', 'Saumon grillé', 450),
+  static List<(String, int)> _days(L l) => [
+    (l.dayMonShort, 14), (l.dayTueShort, 15), (l.dayWedShort, 16), (l.dayThuShort, 17), (l.dayFriShort, 18), (l.daySatShort, 19), (l.daySunShort, 20),
+  ];
+  static List<(String, String, String, int)> _meals(L l) => [
+    ('meal_breakfast.jpg', l.mealBreakfastShortLabel, l.homeDemoBreakfast, 320),
+    ('meal_lunch.jpg', l.mealLunch, l.homeDemoLunch, 520),
+    ('meal_dinner.jpg', l.mealDinner, l.homeDemoDinner, 450),
   ];
 
   int _day = 1;
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       bottomNavigationBar: const MenooNavBar(current: MenooTab.accueil),
       body: SafeArea(
@@ -58,11 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const SizedBox(height: AppSpace.x5),
-                        Text('Bonjour Karim 👋', style: AppText.h1Dash),
+                        Text(l.homeGreeting('Karim'), style: AppText.h1Dash),
                         const SizedBox(height: AppSpace.x1),
-                        Text('Voici votre programme du jour', style: AppText.lead),
+                        Text(l.homeSubtitle, style: AppText.lead),
                         const SizedBox(height: AppSpace.x4),
-                        _DayStrip(days: _days, selected: _day, onSelect: (i) => setState(() => _day = i)),
+                        _DayStrip(days: _days(l), selected: _day, onSelect: (i) => setState(() => _day = i)),
                       ],
                     ),
                   ),
@@ -77,11 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Mon menu du jour', style: AppText.h2),
+                        Text(l.homeMenuOfDay, style: AppText.h2),
                         Row(
                           children: [
                             Text(
-                              'Voir tout',
+                              l.homeSeeAll,
                               style: AppText.of(AppFont.s13, weight: AppFont.semibold, color: AppColors.primary),
                             ),
                             const AppIcon(AppIcons.chevronRight, size: 15, color: AppColors.primary),
@@ -94,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          for (final (i, m) in _meals.indexed) ...[
+                          for (final (i, m) in _meals(l).indexed) ...[
                             if (i > 0) const SizedBox(width: AppSpace.x2_5),
                             Expanded(
                               child: _MealCard(image: m.$1, label: m.$2, name: m.$3, kcal: m.$4),
@@ -104,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: AppSpace.x6),
-                    Text('Mes indicateurs', style: AppText.h2),
+                    Text(l.homeIndicators, style: AppText.h2),
                     const SizedBox(height: AppSpace.x3),
                     const _BudgetSnippet(),
                     const SizedBox(height: AppSpace.x3),
@@ -112,9 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: AppSpace.x3),
                     const _DietSnippet(),
                     const SizedBox(height: AppSpace.x3),
-                    const AlertBanner(
+                    AlertBanner(
                       text: TextSpan(
-                        text: '2 produits à consommer d\'ici demain : une recette anti-gaspi vous attend.',
+                        text: l.homeAntiwasteAlert(2),
                       ),
                     ),
                   ],
@@ -137,6 +142,7 @@ class _DayStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       padding: const EdgeInsets.all(AppSpace.x1_5),
       child: Row(
@@ -194,6 +200,7 @@ class _MealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       padding: EdgeInsets.zero,
       clip: true,
@@ -212,7 +219,7 @@ class _MealCard extends StatelessWidget {
                 Text(name, style: AppText.of(AppFont.s11, color: AppColors.ink2, lineHeight: 14)),
                 const SizedBox(height: AppSpace.x1),
                 Text(
-                  '$kcal kcal',
+                  l.unitKcal('$kcal'),
                   style: AppText.of(AppFont.s11, weight: AppFont.semibold, color: AppColors.leaf, lineHeight: 16),
                 ),
               ],
@@ -242,6 +249,7 @@ class _SnippetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Row(
       children: [
         IconTile(icon: icon, circle: true, iconSize: 20),
@@ -279,15 +287,16 @@ class _BudgetSnippet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       onTap: () {},
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const _SnippetHeader(
+          _SnippetHeader(
             icon: AppIcons.wallet,
-            title: 'Budget de la semaine',
-            subtitle: 'Dans le budget ✓',
+            title: l.homeBudgetTitle,
+            subtitle: l.homeInBudget,
             subtitleColor: AppColors.leaf,
             subtitleWeight: AppFont.semibold,
           ),
@@ -298,14 +307,10 @@ class _BudgetSnippet extends StatelessWidget {
             children: [
               Text.rich(_valueWithUnit('48,20 €', '/ 65 €')),
               Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(text: 'Reste '),
-                    TextSpan(
-                      text: '16,80 €',
-                      style: AppText.of(AppFont.s12, weight: AppFont.bold, color: AppColors.primary),
-                    ),
-                  ],
+                AppText.highlightSubstring(
+                  L.of(context).homeRemaining('16,80 €'),
+                  '16,80 €',
+                  AppText.of(AppFont.s12, weight: AppFont.bold, color: AppColors.primary),
                 ),
                 style: AppText.meta,
               ),
@@ -324,6 +329,7 @@ class _NutritionSnippet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     Widget legend(Color c, String t) => Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -342,15 +348,15 @@ class _NutritionSnippet extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Calories du jour', style: AppText.of(AppFont.s13, color: AppColors.ink2, lineHeight: 18)),
+                Text(L.of(context).homeCaloriesToday, style: AppText.of(AppFont.s13, color: AppColors.ink2, lineHeight: 18)),
                 Text.rich(_valueWithUnit('1 450', '/ 2 000 kcal')),
                 const SizedBox(height: AppSpace.x1_5),
                 Wrap(
                   spacing: AppSpace.x3,
                   children: [
-                    legend(AppColors.primary, 'P 90 g'),
-                    legend(AppColors.orange, 'G 160 g'),
-                    legend(AppColors.fat, 'L 54 g'),
+                    legend(AppColors.primary, L.of(context).homeMacroProtein(90)),
+                    legend(AppColors.orange, L.of(context).homeMacroCarbs(160)),
+                    legend(AppColors.fat, L.of(context).homeMacroFat(54)),
                   ],
                 ),
               ],
@@ -368,12 +374,13 @@ class _DietSnippet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       onTap: () {},
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const _SnippetHeader(icon: AppIcons.scale, title: 'Mon régime', subtitle: 'Pesée synchronisée ce matin'),
+          _SnippetHeader(icon: AppIcons.scale, title: L.of(context).homeDietTitle, subtitle: L.of(context).homeWeighedThisMorning),
           const SizedBox(height: AppSpace.x3),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -394,7 +401,7 @@ class _DietSnippet extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: AppSpace.x0_5),
-                  Text('Objectif : 72 kg · 0,5 kg/semaine', style: AppText.meta),
+                  Text(L.of(context).homeWeightTarget('72 kg', '0,5 kg'), style: AppText.meta),
                 ],
               ),
               const WeightSparkline(),

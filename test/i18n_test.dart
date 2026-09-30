@@ -14,6 +14,8 @@ void main() {
     // Noms propres : marques et enseignes ne se traduisent pas.
     'Google', 'Apple', 'Health Connect', 'Open Prices',
     'E.Leclerc', 'Carrefour', 'Intermarché', 'Auchan', 'Super U', 'Lidl', 'Monoprix', 'Biocoop',
+    // Prénom de démo (jalon 3, compte de test) : reste tel quel dans toutes les langues.
+    'Karim',
   };
 
   /// Fichiers sans texte d'interface : données, icônes, mots-clés de détection.
@@ -27,18 +29,13 @@ void main() {
   const notYetTranslated = {
     'lib/models/pantry_location.dart',
     'lib/onboarding/onboarding_data.dart',
-    'lib/onboarding/onboarding_flow.dart',
-    'lib/navigation.dart',
-    'lib/screens/home/',
     'lib/screens/menus/',
     
     
     'lib/screens/pantry/',
     'lib/screens/shopping/',
-    'lib/widgets/fields.dart',
     'lib/widgets/list_section.dart',
     'lib/widgets/onboarding_step.dart',
-    'lib/widgets/surfaces.dart',
   };
 
   /// Dossiers à ne pas scanner.
