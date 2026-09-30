@@ -19,8 +19,8 @@ class LoginScreen extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.hardEdge,
             children: [
-              const Positioned(
-                right: AppSpace.x2,
+              const PositionedDirectional(
+                end: AppSpace.x2,
                 top: 0,
                 child: BasilDecor(leafWidth: 46, mirror: true, peppers: false),
               ),
@@ -29,7 +29,7 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Align(alignment: Alignment.centerLeft, child: MenooBrand()),
+                    const Align(alignment: AlignmentDirectional.centerStart, child: MenooBrand()),
                     const SizedBox(height: AppSpace.x8),
                     Text(
                       l.loginTitle,
@@ -64,7 +64,7 @@ class LoginScreen extends StatelessWidget {
                       trailingIcon: AppIcons.eye,
                     ),
                     const SizedBox(height: AppSpace.x3),
-                    Align(alignment: Alignment.centerRight, child: TextLink(l.loginForgotPassword)),
+                    Align(alignment: AlignmentDirectional.centerEnd, child: TextLink(l.loginForgotPassword)),
                     const SizedBox(height: AppSpace.x5),
                     PrimaryButton(
                       label: l.loginSubmit,
@@ -89,9 +89,9 @@ class LoginScreen extends StatelessWidget {
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          const Positioned(left: AppSpace.x2, bottom: 0, child: BasilDecor(leafWidth: 64)),
-                          Positioned(
-                            right: AppSpace.x2,
+                          const PositionedDirectional(start: AppSpace.x2, bottom: 0, child: BasilDecor(leafWidth: 64)),
+                          PositionedDirectional(
+                            end: AppSpace.x2,
                             top: AppSpace.x2,
                             child: Transform.rotate(
                               angle: AppSizes.handTilt,
@@ -100,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     l.loginHandwritten,
-                                    textAlign: TextAlign.right,
+                                    textAlign: TextAlign.end,
                                     style: AppText.hand(AppFont.s22, color: AppColors.ink, lineHeight: 22),
                                   ),
                                   const SizedBox(height: AppSpace.x1),

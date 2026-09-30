@@ -175,7 +175,7 @@ class GaugeBar extends StatelessWidget {
       child: Container(
         height: AppSizes.gaugeHeight,
         color: AppColors.mint2,
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: TweenAnimationBuilder<double>(
           tween: Tween(begin: 0, end: value.clamp(0, 1)),
           duration: const Duration(milliseconds: 700),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../l10n/app_localizations.dart';
 import '../theme/app_text.dart';
 import '../theme/app_tokens.dart';
 
@@ -31,7 +32,7 @@ class StepProgress extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpace.x3),
-        Text('ÉTAPE $step SUR $total', style: AppText.stepLabel),
+        Text(L.of(context).commonStepOf(step, total), style: AppText.stepLabel),
       ],
     );
   }
@@ -61,7 +62,7 @@ class _SlidingSegments extends StatelessWidget {
           child: SizedBox(
             height: AppSizes.progressSegment,
             child: OverflowBox(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               maxWidth: double.infinity,
               child: Transform.translate(
                 offset: Offset(-shift * (segW + gap), 0),
@@ -97,7 +98,7 @@ class _Segment extends StatelessWidget {
         width: width,
         height: AppSizes.progressSegment,
         color: AppColors.line,
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: FractionallySizedBox(
           widthFactor: fill,
           child: Container(color: AppColors.primary),

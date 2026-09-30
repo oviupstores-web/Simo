@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_icons.dart';
 
 /// Icône au trait (contenu SVG de `AppIcons`), rendue à l'identique des écrans maîtres.
 class AppIcon extends StatelessWidget {
@@ -14,16 +15,28 @@ class AppIcon extends StatelessWidget {
 
   static String hex(Color c) => '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
 
+  /// Icônes qui désignent un sens de lecture : elles se retournent en arabe.
+  /// Une horloge ou une coche, elles, gardent leur sens dans toutes les langues.
+  static const _directional = {
+    AppIcons.back,
+    AppIcons.arrowRight,
+    AppIcons.chevronRight,
+    AppIcons.trend,
+    AppIcons.trendDown,
+  };
+
   @override
   Widget build(BuildContext context) {
     final opacity = c255(color) < 255 ? ' stroke-opacity="${(c255(color) / 255).toStringAsFixed(3)}"' : '';
-    return SvgPicture.string(
+    final picture = SvgPicture.string(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" '
       'stroke="${hex(color)}"$opacity stroke-width="$strokeWidth" '
       'stroke-linecap="round" stroke-linejoin="round">$svg</svg>',
       width: size,
       height: size,
     );
+    final flip = _directional.contains(svg) && Directionality.of(context) == TextDirection.rtl;
+    return flip ? Transform.flip(flipX: true, child: picture) : picture;
   }
 
   static int c255(Color c) => (c.toARGB32() >> 24) & 0xFF;

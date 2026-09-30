@@ -15,11 +15,11 @@ class CoverHouseholdScreen extends StatelessWidget {
     (
       AppIcons.cutlery,
       Tint.mint,
-      'Menus adaptés à tous les âges',
-      'Portions enfants et adultes calculées automatiquement',
+      l.coverHouseholdFeature1Title,
+      l.coverHouseholdFeature1Text,
     ),
-    (AppIcons.wallet, Tint.peach, 'Budget courses maîtrisé', 'Un budget global pour tout le foyer, jamais dépassé'),
-    (AppIcons.leaf, Tint.leafy, 'Zéro gaspillage', 'Placards et produits frais utilisés en priorité'),
+    (AppIcons.wallet, Tint.peach, l.coverHouseholdFeature2Title, l.coverHouseholdFeature2Text),
+    (AppIcons.leaf, Tint.leafy, l.coverHouseholdFeature3Title, l.coverHouseholdFeature3Text),
   ];
 
   @override
@@ -42,10 +42,10 @@ class CoverHouseholdScreen extends StatelessWidget {
                     Image.asset(
                       'assets/images/cover_household.jpg',
                       fit: BoxFit.cover,
-                      semanticLabel: 'Famille partageant un repas autour d\'une table en bois',
+                      semanticLabel: l.coverHouseholdHeroAlt,
                     ),
-                    Positioned(
-                      left: AppSpace.gutter,
+                    PositionedDirectional(
+                      start: AppSpace.gutter,
                       bottom: AppSpace.x4,
                       child: PillBadge(
                         l.coverHouseholdBadge,

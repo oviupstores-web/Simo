@@ -18,7 +18,10 @@ class MenooBrand extends StatelessWidget {
     // Appui long = choix de la langue, tant que l'écran Réglages n'existe pas (jalon 12).
     return GestureDetector(
       onLongPress: () => LocaleScope.pick(context),
+      // Le bloc de marque garde son ordre dans toutes les langues : le logo reste à gauche
+      // du mot « Menoo », comme sur nos supports. Seule sa place dans l'écran change.
       child: Row(
+        textDirection: TextDirection.ltr,
         mainAxisSize: MainAxisSize.min,
         children: [
           ClipRRect(
@@ -53,7 +56,7 @@ class HeaderBackButton extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap ?? () => Navigator.of(context).maybePop(),
         child: Transform.translate(
-          offset: const Offset(-AppSpace.x1, 0),
+          offset: Offset(Directionality.of(context) == TextDirection.rtl ? AppSpace.x1 : -AppSpace.x1, 0),
           child: const SizedBox.square(
             dimension: AppSizes.headerIconBox,
             child: Center(child: AppIcon(AppIcons.back, size: 22, strokeWidth: 2.2)),
@@ -186,10 +189,13 @@ class BasilDecor extends StatelessWidget {
         ],
       ),
     );
+    // Le décor est posé dans un coin : en arabe, le coin change de côté, donc les
+    // feuilles doivent se retourner pour continuer à pointer vers l'intérieur de l'écran.
+    final rtl = Directionality.of(context) == TextDirection.rtl;
     return IgnorePointer(
       child: Opacity(
         opacity: opacity,
-        child: mirror ? Transform.flip(flipX: true, child: decor) : decor,
+        child: mirror != rtl ? Transform.flip(flipX: true, child: decor) : decor,
       ),
     );
   }

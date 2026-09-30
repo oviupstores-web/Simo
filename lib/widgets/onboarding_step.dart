@@ -68,19 +68,19 @@ class OnboardingStepScaffold extends StatelessWidget {
                         const SizedBox(height: AppSpace.x5),
                         if (eyebrow != null) ...[
                           Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: AlignmentDirectional.centerStart,
                             child: EyebrowTag(label: eyebrow!, icon: eyebrowIcon ?? AppIcons.target),
                           ),
                           const SizedBox(height: AppSpace.x3),
                         ],
                         Padding(
-                          padding: EdgeInsets.only(right: textRightInset),
+                          padding: EdgeInsetsDirectional.only(end: textRightInset),
                           child: Text(AppText.noBreakHyphens(title), style: AppText.h1),
                         ),
                         if (subtitle != null) ...[
                           const SizedBox(height: AppSpace.x2),
                           Padding(
-                            padding: EdgeInsets.only(right: textRightInset),
+                            padding: EdgeInsetsDirectional.only(end: textRightInset),
                             child: Text(
                               subtitle!,
                               style: AppText.of(AppFont.s14_5, color: AppColors.ink2, lineHeight: 21),

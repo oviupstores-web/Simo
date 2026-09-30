@@ -149,9 +149,9 @@ class _ModeCard extends StatelessWidget {
                             child: Image.asset('assets/images/$image', fit: BoxFit.cover, excludeFromSemantics: true),
                           ),
                           // Indicateur posé sur la photo : le titre garde toute la largeur.
-                          Positioned(
+                          PositionedDirectional(
                             top: AppSpace.x2_5,
-                            left: AppSpace.x2_5,
+                            start: AppSpace.x2_5,
                             child: DecoratedBox(
                               decoration: const BoxDecoration(shape: BoxShape.circle, boxShadow: AppShadows.card),
                               child: SelectionIndicator(

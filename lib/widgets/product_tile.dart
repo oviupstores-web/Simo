@@ -122,9 +122,9 @@ class ProductTile extends StatelessWidget {
                   ],
                 ),
               ),
-              Positioned(
+              PositionedDirectional(
                 top: AppSpace.x2,
-                right: AppSpace.x2,
+                end: AppSpace.x2,
                 child: _Check(selected: selected, radio: radio),
               ),
             ],

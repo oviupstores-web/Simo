@@ -29,8 +29,8 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Stack(
             clipBehavior: Clip.hardEdge,
             children: [
-              const Positioned(
-                right: AppSpace.x2,
+              const PositionedDirectional(
+                end: AppSpace.x2,
                 top: 0,
                 child: BasilDecor(leafWidth: 46, mirror: true, peppers: false),
               ),
@@ -39,9 +39,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Align(alignment: Alignment.centerLeft, child: HeaderBackButton()),
+                    const Align(alignment: AlignmentDirectional.centerStart, child: HeaderBackButton()),
                     const SizedBox(height: AppSpace.x2),
-                    const Align(alignment: Alignment.centerLeft, child: MenooBrand()),
+                    const Align(alignment: AlignmentDirectional.centerStart, child: MenooBrand()),
                     const SizedBox(height: AppSpace.x6),
                     Text(
                       l.signupTitle,

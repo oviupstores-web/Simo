@@ -20,7 +20,7 @@ Les écrans Stitch et les maquettes donnent la structure, les textes et le rendu
 9. **Le compte arrive après la valeur**, jamais avant (§5).
 10. **Origine du prix toujours affichée** : estimation, communautaire ou réel (§10). Quand les prix sont estimés, le badge « Dans le budget ✓ » devient « Estimation dans votre budget ».
 11. **Visuels** : aucune référence à l'alcool (app classée 3 ans et plus) ; jamais de silhouette corporelle avant/après.
-12. **International** : aucun texte en dur dans le code ; 6 langues au lancement (§10).
+12. **International** : aucun texte en dur dans le code ; 6 langues au lancement (§10). Une **vérification automatique** (`test/i18n_test.dart`) échoue si un texte d'interface reste en dur ; sa liste d'écrans encore à traduire doit finir vide.
 13. **Vocabulaire — `landing` et `home` sont deux écrans distincts**, jamais confondus ni fusionnés :
     - **`landing`** = la **page déroulante d'avant le compte** : la promesse, ses 4 avantages, les 4 cartes de fonctions, le bouton « Commencer » collé en bas. Pas de barre de navigation. Elle s'appelle « la Landing » dans tous nos échanges.
     - **`home`** = le **premier onglet de l'app, après connexion** : « Bonjour Karim », le repas du jour, les indicateurs, et le cercle d'improvisation quand aucun repas n'est prévu. Barre de navigation présente. Il s'appelle « l'Accueil ».
@@ -280,6 +280,14 @@ Corrections des maquettes : ordre des onglets (la maquette met Instructions en p
   - **Allergènes et régimes** : **relecture obligatoire par une personne dont c'est la langue**, avant publication. Une erreur y est un risque de santé, ce n'est pas négociable. Aucune langue n'est mise en production sans cette relecture.
   - **Tout le reste** (recettes, ingrédients, catégories, cuisines, équipements, textes de l'app) : traduction automatique, corrigée au fil des retours.
 - **6 langues au lancement** : français, anglais, espagnol, allemand, italien, arabe.
+- **Choix de la langue** :
+  - **À la première ouverture, la langue du téléphone est reprise automatiquement.** On ne demande rien : si le téléphone est en espagnol, l'app s'ouvre en espagnol. Une langue non gérée retombe sur l'anglais.
+  - **Ensuite, elle se change dans les Réglages** (jalon 12), dans une ligne « Langue ». Le choix est enregistré et prime sur celui du téléphone.
+  - **Jamais de drapeau.** Un drapeau désigne un pays, pas une langue : l'espagnol et l'arabe n'appartiennent à aucun pays en particulier. Chaque langue s'écrit **dans sa propre écriture**, pour être reconnue par qui ne lit pas les autres : Français · English · Español · Deutsch · Italiano · العربية.
+  - La langue et le pays sont **deux réglages distincts** : le pays commande les unités, la devise et le format de date (§ ci-dessous), la langue commande les textes. Un Français aux États-Unis garde le français et passe aux unités impériales.
+  - *Provisoire, jusqu'au jalon 12* : le choix se fait par un **appui long sur le logo Menoo**. Invisible pour un utilisateur, donc sans effet sur le design, et remplacé par la ligne des Réglages.
+- **Arabe** : police **Noto Sans Arabic** en **secours**, jamais en police principale — Plus Jakarta Sans reste devant, ce qui garde « Menoo » et les mots latins dans le dessin de la marque au milieu d'un texte arabe.
+- **Sens de lecture** : aucune position figée à gauche ou à droite dans le code. On écrit `start` et `end`, jamais `left` et `right` ; les icônes qui indiquent un sens (retour, flèche, chevron, courbes de tendance) se retournent, les autres non (horloge, coche, panier). Le **bloc de marque garde son ordre** : le logo reste à gauche du mot « Menoo », seule sa place dans l'écran change.
 - **Arabe** : écriture de droite à gauche (mise en page inversée, icônes directionnelles retournées) et police compatible (Plus Jakarta Sans ne contient pas l'alphabet arabe).
 - **Unités** : métriques par défaut, impériales aux États-Unis. **Devises et formats de date** selon le pays. Tout est réglable dans les réglages.
 - **Enseignes** : France = liste curatée ; ailleurs = **champ libre**. Les noms saisis alimentent une table par pays et deviennent des **suggestions** (après validation, pour éviter les saisies abusives).

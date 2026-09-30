@@ -49,8 +49,8 @@ class LandingScreen extends StatelessWidget {
               Stack(
                 clipBehavior: Clip.hardEdge,
                 children: [
-                  const Positioned(
-                    right: AppSpace.x2,
+                  const PositionedDirectional(
+                    end: AppSpace.x2,
                     top: AppSpace.x2,
                     child: BasilDecor(leafWidth: 40, mirror: true, peppers: false),
                   ),
@@ -113,12 +113,12 @@ class LandingScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                       semanticLabel: l.landingHeroAlt,
                     ),
-                    Positioned(
-                      left: AppSpace.x5,
+                    PositionedDirectional(
+                      start: AppSpace.x5,
                       top: AppSpace.x3,
                       child: Transform.rotate(
                         angle: AppSizes.handTilt,
-                        alignment: Alignment.centerLeft,
+                        alignment: AlignmentDirectional.centerStart,
                         child: Text(
                           l.landingHandwritten,
                           style: AppText.hand(AppFont.s23, lineHeight: 24),

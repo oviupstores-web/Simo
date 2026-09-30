@@ -14,11 +14,11 @@ class CoverSoloScreen extends StatelessWidget {
     (
       AppIcons.bars,
       Tint.mint,
-      'Calories & macros calculés',
-      'Selon votre profil et votre objectif, sans calcul fastidieux',
+      l.coverSoloFeature1Title,
+      l.coverSoloFeature1Text,
     ),
-    (AppIcons.clock, Tint.peach, 'Adapté à votre temps', 'Des recettes qui tiennent dans le temps que vous avez'),
-    (AppIcons.leaf, Tint.leafy, 'Zéro gaspillage', 'Liste de courses ajustée, réserve déduite'),
+    (AppIcons.clock, Tint.peach, l.coverSoloFeature2Title, l.coverSoloFeature2Text),
+    (AppIcons.leaf, Tint.leafy, l.coverSoloFeature3Title, l.coverSoloFeature3Text),
   ];
 
   @override
@@ -44,8 +44,8 @@ class CoverSoloScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                       semanticLabel: l.coverSoloHeroAlt,
                     ),
-                    Positioned(
-                      left: AppSpace.gutter,
+                    PositionedDirectional(
+                      start: AppSpace.gutter,
                       bottom: AppSpace.x4,
                       child: PillBadge(
                         l.coverSoloBadge,

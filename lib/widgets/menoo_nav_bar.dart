@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_text.dart';
@@ -15,12 +16,12 @@ class MenooNavBar extends StatelessWidget {
   final MenooTab current;
   final ValueChanged<MenooTab>? onSelect;
 
-  static const _items = [
-    (MenooTab.accueil, 'Accueil', AppIcons.home),
-    (MenooTab.menus, 'Menus', AppIcons.week),
-    (MenooTab.courses, 'Courses', AppIcons.cart),
-    (MenooTab.reserve, 'Réserve', AppIcons.fridge),
-    (MenooTab.suivi, 'Suivi', AppIcons.bars),
+  static List<(MenooTab, String, String)> _items(L l) => [
+    (MenooTab.accueil, l.navHome, AppIcons.home),
+    (MenooTab.menus, l.navMenus, AppIcons.week),
+    (MenooTab.courses, l.navShopping, AppIcons.cart),
+    (MenooTab.reserve, l.navPantry, AppIcons.fridge),
+    (MenooTab.suivi, l.navTracking, AppIcons.bars),
   ];
 
   @override
@@ -37,7 +38,7 @@ class MenooNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            for (final (tab, label, icon) in _items)
+            for (final (tab, label, icon) in _items(L.of(context)))
               _NavItem(label: label, icon: icon, active: tab == current, onTap: () => onSelect?.call(tab)),
           ],
         ),
