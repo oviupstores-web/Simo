@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -22,6 +23,7 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -36,45 +38,45 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: AppSpace.x6),
-                    Text('Quel est votre mode ?', textAlign: TextAlign.center, style: AppText.h1),
+                    Text(l.pathChoiceTitle, textAlign: TextAlign.center, style: AppText.h1),
                     const SizedBox(height: AppSpace.x2),
                     Text(
-                      'Choisissez le mode qui correspond à votre situation. Vous pourrez le modifier plus tard.',
+                      l.pathChoiceSubtitle,
                       textAlign: TextAlign.center,
                       style: AppText.lead,
                     ),
                     const SizedBox(height: AppSpace.x6),
                     _ModeCard(
                       image: 'mode_solo.jpg',
-                      title: 'Pour moi',
-                      description: 'Des menus adaptés à mes objectifs personnels.',
-                      bullets: const ['Perte de poids', 'Prise de masse', 'Maintien', 'Mode de vie sain'],
+                      title: l.pathChoiceSoloTitle,
+                      description: l.pathChoiceSoloDescription,
+                      bullets: [l.pathChoiceSoloBullet1, l.pathChoiceSoloBullet2, l.pathChoiceSoloBullet3, l.pathChoiceSoloBullet4],
                       selected: _mode == AppMode.solo,
                       onTap: () => setState(() => _mode = AppMode.solo),
                     ),
                     const SizedBox(height: AppSpace.x3),
                     _ModeCard(
                       image: 'mode_famille.jpg',
-                      title: 'Pour la famille',
-                      description: 'Des menus adaptés à tous les membres du foyer.',
-                      bullets: const [
-                        'Adultes, enfants, bébés',
-                        'Goûts et régimes différents',
-                        'Budget global',
-                        'Organisation simplifiée',
+                      title: l.pathChoiceHouseholdTitle,
+                      description: l.pathChoiceHouseholdDescription,
+                      bullets: [
+                        l.pathChoiceHouseholdBullet1,
+                        l.pathChoiceHouseholdBullet2,
+                        l.pathChoiceHouseholdBullet3,
+                        l.pathChoiceHouseholdBullet4,
                       ],
                       selected: _mode == AppMode.foyer,
                       onTap: () => setState(() => _mode = AppMode.foyer),
                     ),
                     const SizedBox(height: AppSpace.x4),
-                    const InfoBanner(
+                    InfoBanner(
                       icon: AppIcons.bulb,
-                      title: 'Un seul compte, deux modes',
-                      text: 'Vous pourrez passer du mode Solo au mode Foyer à tout moment dans les réglages.',
+                      title: l.pathChoiceInfoTitle,
+                      text: l.pathChoiceInfoText,
                     ),
                     const SizedBox(height: AppSpace.x6),
                     PrimaryButton(
-                      label: 'Continuer',
+                      label: l.commonContinue,
                       onPressed: () {
                         OnboardingScope.read(context).startMode(_mode);
                         push(

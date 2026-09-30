@@ -40,21 +40,23 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 13 | APK de test (Firebase App Distribution) | ⏳ |
 | — | Catalogue : ≈ **120 recettes** au lancement (12 à 15 × 8 cuisines) ; les 500 **après le lancement**, une fois qu'il y a des utilisateurs | 🆕 En continu |
 
-## Jalon 5i — International (en cours, commencé le 2026-09-30)
+## Jalon 5i — International (en cours, étapes 1 à 3 sur 4 faites)
 
-**Fait (étape 1 sur 4) — le socle technique :**
-- `l10n.yaml` + `generate: true` dans pubspec ; paquet `intl` ajouté. Classe générée : `L` (`L.of(context)`).
-- **6 fichiers de traduction** dans `lib/l10n/` : `app_fr.arb` (référence) + en, es, de, it, ar. Ils couvrent le parcours d'entrée (landing, connexion, inscription, choix du mode, 2 couvertures), la barre de navigation, et les unités.
-- Les fichiers `app_localizations*.dart` sont **générés**, donc exclus de Git (`flutter pub get` les recrée).
-- `flutter analyze` sans problème.
+**Fait (2026-09-30) :**
+- **Socle** : `l10n.yaml`, `generate: true`, paquet `intl`. Classe générée `L` (`L.of(context)`), branchée dans `main.dart` (`L.supportedLocales`, `L.localizationsDelegates`).
+- **6 langues** dans `lib/l10n/` : `app_fr.arb` (référence) + en, es, de, it, ar. Les fichiers `app_localizations*.dart` sont générés, donc exclus de Git.
+- **Changement de langue** : appui long sur le logo Menoo, en haut de n'importe quel écran (provisoire, jusqu'à l'écran Réglages du jalon 12). Une langue non choisie suit celle du téléphone.
+- **Arabe** : Noto Sans Arabic (5 graisses, licence libre, téléchargée le 2026-09-30) déclarée en police de secours dans `AppText`. Plus Jakarta Sans reste la police principale, donc « Menoo » garde son dessin au milieu d'un texte arabe. Le sens de lecture de droite à gauche est géré par Flutter.
+- **6 écrans traduits** : landing, connexion, inscription, choix du mode, couverture Solo, couverture Foyer, plus l'en-tête partagé.
+- **Unités, devises, dates** : `lib/l10n/formats.dart`. Métrique partout, impérial aux États-Unis ; devise et formats de date selon le pays ; les prix partent des centimes de la base. Couvert par `test/formats_test.dart`.
+- Les tests forcent le français (`platformDispatcher.localesTestValue`), sinon ils tomberaient sur l'anglais.
+- `flutter analyze` sans problème, **10 tests au vert**, APK installé sur le téléphone.
 
-**Reste à faire (étapes 2 à 4) :**
-1. **Brancher dans `main.dart`** : `localizationsDelegates: L.localizationsDelegates`, `supportedLocales: L.supportedLocales`, et un sélecteur de langue provisoire pour tester avant l'écran Réglages (jalon 12).
-2. **Remplacer les textes en dur** des 6 écrans d'entrée par `L.of(context).xxx`, puis des ~22 écrans restants. **569 textes distincts** au total dans `lib/` : compter environ 3 séances.
-3. **Arabe** : police compatible à télécharger (Plus Jakarta Sans ne contient pas l'alphabet arabe — Noto Sans Arabic, licence libre, **à faire valider par Simo avant téléchargement**) + vérification de l'écriture de droite à gauche sur le téléphone.
-4. **Unités, devises, dates** : classe d'aide (métrique par défaut, impérial aux États-Unis) ; **tables de traduction Supabase** pour les contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements), migration à montrer à Simo avant envoi.
-
-**Rappel** : allergènes et régimes → relecture humaine obligatoire avant publication (SPEC §10).
+**Reste à faire (étape 4 sur 4) :**
+1. **Traduire les ~22 écrans restants** : environ 500 textes. Compter 2 à 3 séances. Les écrans les plus chargés : `pantry_add_manual`, `summary`, `constraints`, `kitchen`, `profile`, `member_profiles`.
+2. **Tables de traduction Supabase** pour les contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements), français en référence. Migration à montrer à Simo **avant envoi**.
+3. **Brancher `Formats`** dans les écrans qui affichent poids, tailles, prix et dates (profil, budget, réserve, courses), à la place des formats français écrits en dur.
+4. **Relecture humaine des allergènes et des régimes** dans les 5 autres langues, avant publication (SPEC §10) — bloquant, non négociable.
 
 ## Changements de structure du 2026-09-30 — chiffrage et ordre proposés
 Unité : **1 séance** = un bloc de travail de la taille du jalon 5 (construction + installation + test par Simo). Ce sont des estimations, à ±30 %.

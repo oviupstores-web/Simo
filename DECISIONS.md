@@ -116,3 +116,6 @@
 - 2026-09-30 · **Catalogue : 12 à 15 recettes par cuisine sur 8 cuisines, soit ≈ 120 au lancement** (96 au jalon 5c). Les 500 recettes viendront **après le lancement**, une fois qu'il y aura des utilisateurs.
 - 2026-09-30 · **Traductions à deux niveaux** : relecture **humaine obligatoire** pour les allergènes et les régimes (risque de santé, non négociable, aucune langue publiée sans elle) ; traduction automatique pour tout le reste.
 - 2026-09-30 · Maquette `scan_ia_accueil.png` renommée `scan_ia_ecran1.png` (elle montre l'écran 1 du Scan IA, pas l'Accueil).
+- 2026-09-30 · Police arabe : **Noto Sans Arabic** (Google, licence libre), déclarée en **police de secours** et non en police principale — Plus Jakarta Sans reste devant, donc « Menoo » et les mots latins gardent leur dessin au milieu d'un texte arabe.
+- 2026-09-30 · Changement de langue **par appui long sur le logo Menoo**, provisoire jusqu'à l'écran Réglages (jalon 12) : aucun changement visuel, rien à défaire plus tard.
+- 2026-09-30 · Unités et devises déduites du pays de la langue : métrique partout, **impérial aux États-Unis seulement**. Le séparateur décimal suit le pays du format, pas la langue des libellés.

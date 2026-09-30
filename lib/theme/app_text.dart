@@ -7,6 +7,10 @@ abstract final class AppFont {
   static const family = 'PlusJakartaSans';
   static const hand = 'Caveat';
 
+  /// Plus Jakarta Sans ne contient pas l'alphabet arabe : Noto Sans Arabic prend le relais
+  /// caractère par caractère, ce qui garde « Menoo » en Plus Jakarta au milieu d'un texte arabe.
+  static const fallback = ['NotoSansArabic'];
+
   static const double s11 = 11;
   static const double s12 = 12;
   static const double s12_5 = 12.5;
@@ -48,6 +52,7 @@ abstract final class AppText {
   }) {
     return TextStyle(
       fontFamily: AppFont.family,
+      fontFamilyFallback: AppFont.fallback,
       fontSize: size,
       fontWeight: weight,
       color: color,
@@ -90,6 +95,7 @@ abstract final class AppText {
 
   static TextStyle hand(double size, {Color color = AppColors.primaryDark, double? lineHeight}) => TextStyle(
     fontFamily: AppFont.hand,
+    fontFamilyFallback: AppFont.fallback,
     fontSize: size,
     fontWeight: AppFont.semibold,
     color: color,

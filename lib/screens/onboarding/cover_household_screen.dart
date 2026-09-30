@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_flow.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -10,7 +11,7 @@ import '../../widgets/widgets.dart';
 class CoverHouseholdScreen extends StatelessWidget {
   const CoverHouseholdScreen({super.key});
 
-  static const _features = [
+  static List<(String, Tint, String, String)> _features(L l) => [
     (
       AppIcons.cutlery,
       Tint.mint,
@@ -23,6 +24,7 @@ class CoverHouseholdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -42,11 +44,11 @@ class CoverHouseholdScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                       semanticLabel: 'Famille partageant un repas autour d\'une table en bois',
                     ),
-                    const Positioned(
+                    Positioned(
                       left: AppSpace.gutter,
                       bottom: AppSpace.x4,
                       child: PillBadge(
-                        'Mode Foyer & Famille',
+                        l.coverHouseholdBadge,
                         icon: AppIcons.people,
                         background: AppColors.overlayCard,
                         size: AppFont.s13,
@@ -62,14 +64,14 @@ class CoverHouseholdScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: AppSpace.x5),
-                    Text('Des repas sains et savoureux qui rassemblent toute la maison', style: AppText.h1),
+                    Text(l.coverHouseholdTitle, style: AppText.h1),
                     const SizedBox(height: AppSpace.x2),
                     Text(
-                      'Menoo concilie les goûts de chacun, respecte votre budget et limite le gaspillage.',
+                      l.coverHouseholdSubtitle,
                       style: AppText.lead,
                     ),
                     const SizedBox(height: AppSpace.x5),
-                    for (final (i, f) in _features.indexed) ...[
+                    for (final (i, f) in _features(l).indexed) ...[
                       if (i > 0) const SizedBox(height: AppSpace.x3),
                       AppCard(
                         padding: const EdgeInsets.all(AppSpace.x3_5),
@@ -92,14 +94,14 @@ class CoverHouseholdScreen extends StatelessWidget {
                       ),
                     ],
                     const SizedBox(height: AppSpace.x6),
-                    PrimaryButton(label: 'Commencer la configuration', onPressed: () => OnboardingFlow.start(context)),
+                    PrimaryButton(label: l.coverHouseholdStart, onPressed: () => OnboardingFlow.start(context)),
                     const SizedBox(height: AppSpace.x3),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text('10 étapes rapides · modifiable à tout moment', style: AppText.meta),
+                        Text('${l.commonQuickSteps(10)} · ${l.commonEditableAnytime}', style: AppText.meta),
                       ],
                     ),
                   ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../navigation.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -13,15 +14,16 @@ import 'path_choice_screen.dart';
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
 
-  static const _features = [
-    (AppIcons.cutlery, 'Des repas variés et équilibrés', true),
-    (AppIcons.wallet, 'Un budget maîtrisé chaque semaine', false),
-    (AppIcons.cart, 'Une liste de courses claire et optimisée', true),
-    (AppIcons.bars, 'Un suivi personnalisé pour progresser', false),
+  static List<(String, String, bool)> _features(L l) => [
+    (AppIcons.cutlery, l.landingFeatureMeals, true),
+    (AppIcons.wallet, l.landingFeatureBudget, false),
+    (AppIcons.cart, l.landingFeatureShopping, true),
+    (AppIcons.bars, l.landingFeatureTracking, false),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     void toPathChoice() => push(context, const PathChoiceScreen());
     const side = EdgeInsets.symmetric(horizontal: AppSpace.gutter);
     return Scaffold(
@@ -39,7 +41,7 @@ class LandingScreen extends StatelessWidget {
                 trailing: GestureDetector(
                   onTap: toPathChoice,
                   child: Text(
-                    'Passer',
+                    l.commonSkip,
                     style: AppText.of(AppFont.s14, weight: AppFont.medium, color: AppColors.ink2),
                   ),
                 ),
@@ -61,9 +63,9 @@ class LandingScreen extends StatelessWidget {
                         Text.rich(
                           TextSpan(
                             children: [
-                              const TextSpan(text: 'Bien manger\n'),
+                              TextSpan(text: '${l.landingTitleLine1}\n'),
                               TextSpan(
-                                text: 'tout simplement',
+                                text: l.landingTitleLine2,
                                 style: AppText.display.copyWith(color: AppColors.primary),
                               ),
                             ],
@@ -72,12 +74,12 @@ class LandingScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSpace.x2),
                         Text(
-                          'Des menus équilibrés, adaptés à vos goûts, à votre budget et à votre mode de vie.',
+                          l.landingSubtitle,
                           style: AppText.of(AppFont.s15, color: AppColors.ink2, lineHeight: 22),
                         ),
                         const SizedBox(height: AppSpace.x3),
                         // Liste d'avantages compacte (pastilles 34 px)
-                        for (final (i, f) in _features.indexed) ...[
+                        for (final (i, f) in _features(l).indexed) ...[
                           if (i > 0) const SizedBox(height: AppSpace.x1_5),
                           Row(
                             children: [
@@ -109,7 +111,7 @@ class LandingScreen extends StatelessWidget {
                     Image.asset(
                       'assets/images/bowl_landing.jpg',
                       fit: BoxFit.cover,
-                      semanticLabel: 'Bol de quinoa, poulet grillé et légumes',
+                      semanticLabel: l.landingHeroAlt,
                     ),
                     Positioned(
                       left: AppSpace.x5,
@@ -118,7 +120,7 @@ class LandingScreen extends StatelessWidget {
                         angle: AppSizes.handTilt,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Une vie plus saine\n    au quotidien !',
+                          l.landingHandwritten,
                           style: AppText.hand(AppFont.s23, lineHeight: 24),
                         ),
                       ),
@@ -133,12 +135,12 @@ class LandingScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: AppSpace.x3),
                     PrimaryButton(
-                      label: 'Commencer gratuitement',
+                      label: l.landingStart,
                       trailing: const OrangeArrowBadge(),
                       onPressed: toPathChoice,
                     ),
                     const SizedBox(height: AppSpace.x3),
-                    SecondaryButton(label: "J'ai déjà un compte", onPressed: () => push(context, const LoginScreen())),
+                    SecondaryButton(label: l.landingHaveAccount, onPressed: () => push(context, const LoginScreen())),
                     const SizedBox(height: AppSpace.x5),
                     const _PageDots(count: 4, active: 0),
                   ],

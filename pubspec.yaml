@@ -83,6 +83,19 @@ flutter:
           weight: 700
         - asset: assets/fonts/PlusJakartaSans-800.ttf
           weight: 800
+    # Plus Jakarta Sans ne contient pas l'alphabet arabe : Noto Sans Arabic prend le relais.
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-400.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansArabic-500.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansArabic-600.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansArabic-700.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSansArabic-800.ttf
+          weight: 800
     - family: Caveat
       fonts:
         - asset: assets/fonts/Caveat-600.ttf

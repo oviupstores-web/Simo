@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../navigation.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -17,10 +18,11 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   bool _accepted = false;
 
-  void _soon() => showMenooMessage(context, 'La création du compte et la génération du menu arrivent au jalon 6.');
+  void _soon() => showMenooMessage(context, L.of(context).signupSoon);
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -42,22 +44,22 @@ class _SignupScreenState extends State<SignupScreen> {
                     const Align(alignment: Alignment.centerLeft, child: MenooBrand()),
                     const SizedBox(height: AppSpace.x6),
                     Text(
-                      'Créez votre compte',
+                      l.signupTitle,
                       style: AppText.of(AppFont.s30, weight: AppFont.extrabold, lineHeight: 36, tightTracking: true),
                     ),
                     const SizedBox(height: AppSpace.x2),
                     Text(
-                      'Dernière étape avant votre premier menu : vos choix seront enregistrés dans votre compte.',
+                      l.signupSubtitle,
                       style: AppText.of(AppFont.s15_5, color: AppColors.ink2, lineHeight: 23),
                     ),
                     const SizedBox(height: AppSpace.x6),
-                    const IconTextField(icon: AppIcons.user, hint: 'Prénom'),
+                    IconTextField(icon: AppIcons.user, hint: l.commonFirstName),
                     const SizedBox(height: AppSpace.x3),
-                    const IconTextField(icon: AppIcons.mail, hint: 'Email', keyboardType: TextInputType.emailAddress),
+                    IconTextField(icon: AppIcons.mail, hint: l.commonEmail, keyboardType: TextInputType.emailAddress),
                     const SizedBox(height: AppSpace.x3),
-                    const IconTextField(
+                    IconTextField(
                       icon: AppIcons.lock,
-                      hint: 'Mot de passe (8 caractères ou plus)',
+                      hint: l.signupPasswordHint,
                       obscure: true,
                       trailingIcon: AppIcons.eye,
                     ),
@@ -72,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           const SizedBox(width: AppSpace.x2_5),
                           Expanded(
                             child: Text(
-                              'J\'accepte les conditions d\'utilisation et la politique de confidentialité.',
+                              l.signupAcceptTerms,
                               style: AppText.of(AppFont.s13, color: AppColors.ink2, lineHeight: 19),
                             ),
                           ),
@@ -80,13 +82,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                     const SizedBox(height: AppSpace.x5),
-                    PrimaryButton(label: 'Créer mon compte et générer', onPressed: _accepted ? _soon : null),
+                    PrimaryButton(label: l.signupSubmit, onPressed: _accepted ? _soon : null),
                     const SizedBox(height: AppSpace.x5),
                     Row(
                       children: [
                         const Expanded(child: Divider(height: 1, thickness: 1, color: AppColors.line)),
                         const SizedBox(width: AppSpace.x3),
-                        Text('ou continuer avec', style: AppText.of(AppFont.s13, color: AppColors.ink2)),
+                        Text(l.signupOrContinueWith, style: AppText.of(AppFont.s13, color: AppColors.ink2)),
                         const SizedBox(width: AppSpace.x3),
                         const Expanded(child: Divider(height: 1, thickness: 1, color: AppColors.line)),
                       ],
@@ -112,9 +114,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Déjà inscrit ? ', style: AppText.of(AppFont.s14, color: AppColors.ink2)),
+                        Text(l.signupAlreadyMember, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
                         TextLink(
-                          'Se connecter',
+                          l.loginSubmit,
                           weight: AppFont.bold,
                           onTap: () =>
                               Navigator.of(context)
@@ -128,7 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text('Vos données sont sécurisées', style: AppText.meta),
+                        Text(l.commonDataSecure, style: AppText.meta),
                       ],
                     ),
                   ],

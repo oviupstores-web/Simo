@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_flow.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -9,7 +10,7 @@ import '../../widgets/widgets.dart';
 class CoverSoloScreen extends StatelessWidget {
   const CoverSoloScreen({super.key});
 
-  static const _features = [
+  static List<(String, Tint, String, String)> _features(L l) => [
     (
       AppIcons.bars,
       Tint.mint,
@@ -22,6 +23,7 @@ class CoverSoloScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -40,13 +42,13 @@ class CoverSoloScreen extends StatelessWidget {
                     Image.asset(
                       'assets/images/cover_individual.jpg',
                       fit: BoxFit.cover,
-                      semanticLabel: 'Bowl de saumon poêlé, quinoa, avocat et légumes',
+                      semanticLabel: l.coverSoloHeroAlt,
                     ),
-                    const Positioned(
+                    Positioned(
                       left: AppSpace.gutter,
                       bottom: AppSpace.x4,
                       child: PillBadge(
-                        'Mode Individuel',
+                        l.coverSoloBadge,
                         icon: AppIcons.user,
                         background: AppColors.overlayCard,
                         size: AppFont.s13,
@@ -63,16 +65,16 @@ class CoverSoloScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: AppSpace.x5),
                     Text(
-                      AppText.noBreakHyphens('Votre programme sur-mesure pour manger sain sans compromis'),
+                      AppText.noBreakHyphens(l.coverSoloTitle),
                       style: AppText.h1,
                     ),
                     const SizedBox(height: AppSpace.x2),
                     Text(
-                      'Des repas personnalisés selon vos objectifs, votre budget et votre rythme de vie.',
+                      l.coverSoloSubtitle,
                       style: AppText.lead,
                     ),
                     const SizedBox(height: AppSpace.x5),
-                    for (final (i, f) in _features.indexed) ...[
+                    for (final (i, f) in _features(l).indexed) ...[
                       if (i > 0) const SizedBox(height: AppSpace.x3),
                       AppCard(
                         padding: const EdgeInsets.all(AppSpace.x3_5),
@@ -95,14 +97,14 @@ class CoverSoloScreen extends StatelessWidget {
                       ),
                     ],
                     const SizedBox(height: AppSpace.x6),
-                    PrimaryButton(label: 'Commencer mon profil', onPressed: () => OnboardingFlow.start(context)),
+                    PrimaryButton(label: l.coverSoloStart, onPressed: () => OnboardingFlow.start(context)),
                     const SizedBox(height: AppSpace.x3),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text('12 étapes rapides · modifiable à tout moment', style: AppText.meta),
+                        Text('${l.commonQuickSteps(12)} · ${l.commonEditableAnytime}', style: AppText.meta),
                       ],
                     ),
                   ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../navigation.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -11,6 +12,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -30,52 +32,52 @@ class LoginScreen extends StatelessWidget {
                     const Align(alignment: Alignment.centerLeft, child: MenooBrand()),
                     const SizedBox(height: AppSpace.x8),
                     Text(
-                      'Bienvenue sur Menoo',
+                      l.loginTitle,
                       style: AppText.of(AppFont.s30, weight: AppFont.extrabold, lineHeight: 36, tightTracking: true),
                     ),
                     const SizedBox(height: AppSpace.x2),
                     Text(
-                      'Connectez-vous pour retrouver vos menus, votre liste de courses et votre progression.',
+                      l.loginSubtitle,
                       style: AppText.of(AppFont.s15_5, color: AppColors.ink2, lineHeight: 23),
                     ),
                     const SizedBox(height: AppSpace.x7),
-                    const SocialButton(label: 'Continuer avec Google', logoSvg: BrandLogos.google),
+                    SocialButton(label: l.loginWithGoogle, logoSvg: BrandLogos.google),
                     const SizedBox(height: AppSpace.x3),
-                    const SocialButton(label: 'Continuer avec Apple', logoSvg: BrandLogos.apple, logoSize: 19),
+                    SocialButton(label: l.loginWithApple, logoSvg: BrandLogos.apple, logoSize: 19),
                     const SizedBox(height: AppSpace.x5),
                     Row(
                       children: [
                         const Expanded(child: Divider(height: 1, thickness: 1, color: AppColors.line)),
                         const SizedBox(width: AppSpace.x3),
-                        Text('ou', style: AppText.of(AppFont.s13, color: AppColors.ink2)),
+                        Text(l.commonOr, style: AppText.of(AppFont.s13, color: AppColors.ink2)),
                         const SizedBox(width: AppSpace.x3),
                         const Expanded(child: Divider(height: 1, thickness: 1, color: AppColors.line)),
                       ],
                     ),
                     const SizedBox(height: AppSpace.x5),
-                    const IconTextField(icon: AppIcons.mail, hint: 'Email', keyboardType: TextInputType.emailAddress),
+                    IconTextField(icon: AppIcons.mail, hint: l.commonEmail, keyboardType: TextInputType.emailAddress),
                     const SizedBox(height: AppSpace.x3),
-                    const IconTextField(
+                    IconTextField(
                       icon: AppIcons.lock,
-                      hint: 'Mot de passe',
+                      hint: l.commonPassword,
                       obscure: true,
                       trailingIcon: AppIcons.eye,
                     ),
                     const SizedBox(height: AppSpace.x3),
-                    const Align(alignment: Alignment.centerRight, child: TextLink('Mot de passe oublié ?')),
+                    Align(alignment: Alignment.centerRight, child: TextLink(l.loginForgotPassword)),
                     const SizedBox(height: AppSpace.x5),
                     PrimaryButton(
-                      label: 'Se connecter',
+                      label: l.loginSubmit,
                       showArrow: false,
-                      onPressed: () => showMenooMessage(context, 'La connexion arrive au jalon 6.'),
+                      onPressed: () => showMenooMessage(context, l.loginSoon),
                     ),
                     const SizedBox(height: AppSpace.x4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Pas encore de compte ? ', style: AppText.of(AppFont.s14, color: AppColors.ink2)),
+                        Text(l.loginNoAccount, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
                         TextLink(
-                          'Créer un compte',
+                          l.loginCreateAccount,
                           weight: AppFont.bold,
                           onTap: () => push(context, const SignupScreen()),
                         ),
@@ -97,7 +99,7 @@ class LoginScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    'De bons repas\ncommencent ici !',
+                                    l.loginHandwritten,
                                     textAlign: TextAlign.right,
                                     style: AppText.hand(AppFont.s22, color: AppColors.ink, lineHeight: 22),
                                   ),
@@ -122,7 +124,7 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text('Vos données sont sécurisées', style: AppText.meta),
+                        Text(l.commonDataSecure, style: AppText.meta),
                       ],
                     ),
                   ],

@@ -1,0 +1,75 @@
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+
+import 'app_localizations.dart';
+
+/// Système d'unités. SPEC §10 : métrique par défaut, impérial aux États-Unis.
+enum UnitSystem { metric, imperial }
+
+/// Unités, devises et dates selon le pays. Le pays vient de la langue du téléphone
+/// tant que l'écran Réglages n'existe pas (jalon 12), où il deviendra un choix explicite.
+class Formats {
+  Formats(this.locale, {UnitSystem? units, String? currency})
+    : units = units ?? _defaultUnits(locale),
+      currency = currency ?? _defaultCurrency(locale);
+
+  final Locale locale;
+  final UnitSystem units;
+
+  /// Code ISO de la devise (EUR, USD…).
+  final String currency;
+
+  static Formats of(BuildContext context) => Formats(Localizations.localeOf(context));
+
+  /// Seuls les États-Unis utilisent les unités impériales.
+  static UnitSystem _defaultUnits(Locale locale) =>
+      locale.countryCode == 'US' ? UnitSystem.imperial : UnitSystem.metric;
+
+  static const _currencies = {'US': 'USD', 'GB': 'GBP', 'CH': 'CHF', 'MA': 'MAD', 'TN': 'TND', 'DZ': 'DZD'};
+
+  static String _defaultCurrency(Locale locale) => _currencies[locale.countryCode] ?? 'EUR';
+
+  String get _tag => locale.toLanguageTag();
+
+  /// Prix depuis des centimes (la base stocke des centimes, décision du 2026-09-23).
+  String price(int cents) =>
+      NumberFormat.simpleCurrency(locale: _tag, name: currency).format(cents / 100);
+
+  /// Prix sans les centimes, pour les gros montants (« 65 € »).
+  String priceRounded(int cents) =>
+      NumberFormat.simpleCurrency(locale: _tag, name: currency, decimalDigits: 0).format(cents / 100);
+
+  String number(num value, {int decimals = 0}) =>
+      NumberFormat.decimalPatternDigits(locale: _tag, decimalDigits: decimals).format(value);
+
+  /// « 14 septembre 2026 » en français, « September 14, 2026 » en anglais.
+  String date(DateTime d) => DateFormat.yMMMMd(_tag).format(d);
+
+  /// « 14 sept. » — format court des listes et des alertes.
+  String dateShort(DateTime d) => DateFormat.MMMd(_tag).format(d);
+
+  String weekday(DateTime d) => DateFormat.E(_tag).format(d);
+
+  /// Poids : kilogrammes, ou livres aux États-Unis.
+  String weight(L l, double kg) => units == UnitSystem.metric
+      ? l.unitKilograms(number(kg, decimals: 1))
+      : l.unitPounds(number(kg * 2.20462, decimals: 1));
+
+  /// Taille : centimètres, ou pieds et pouces aux États-Unis.
+  String height(L l, double cm) {
+    if (units == UnitSystem.metric) return l.unitCentimeters(number(cm));
+    final totalInches = cm / 2.54;
+    final feet = totalInches ~/ 12;
+    return l.unitFeetInches(feet, (totalInches - feet * 12).round());
+  }
+
+  /// Masse d'un ingrédient : grammes, ou onces aux États-Unis.
+  String mass(L l, double grams) => units == UnitSystem.metric
+      ? l.unitGrams(number(grams))
+      : l.unitOunces(number(grams / 28.3495, decimals: 1));
+
+  /// Volume : millilitres, ou onces liquides aux États-Unis.
+  String volume(L l, double ml) => units == UnitSystem.metric
+      ? l.unitMilliliters(number(ml))
+      : l.unitFluidOunces(number(ml / 29.5735, decimals: 1));
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/locale_scope.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_text.dart';
@@ -13,21 +15,25 @@ class MenooBrand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadius.logo),
-          child: Image.asset(
-            'assets/images/logo_96.png',
-            width: AppSizes.logo,
-            height: AppSizes.logo,
-            semanticLabel: 'Menoo',
+    // Appui long = choix de la langue, tant que l'écran Réglages n'existe pas (jalon 12).
+    return GestureDetector(
+      onLongPress: () => LocaleScope.pick(context),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.logo),
+            child: Image.asset(
+              'assets/images/logo_96.png',
+              width: AppSizes.logo,
+              height: AppSizes.logo,
+              semanticLabel: 'Menoo',
+            ),
           ),
-        ),
-        const SizedBox(width: AppSpace.x2),
-        Text('Menoo', style: AppText.logotype),
-      ],
+          const SizedBox(width: AppSpace.x2),
+          Text('Menoo', style: AppText.logotype, textDirection: TextDirection.ltr),
+        ],
+      ),
     );
   }
 }
@@ -42,7 +48,7 @@ class HeaderBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'Retour',
+      label: L.of(context).commonBack,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap ?? () => Navigator.of(context).maybePop(),
@@ -74,7 +80,7 @@ class HeaderAvatar extends StatelessWidget {
           width: AppSizes.avatar,
           height: AppSizes.avatar,
           fit: BoxFit.cover,
-          semanticLabel: 'Profil',
+          semanticLabel: L.of(context).commonProfile,
         ),
       ),
     );

@@ -36,6 +36,9 @@ void main() {
   }
 
   testWidgets('onboarding Solo complet avec détour Réserve', (t) async {
+    // L'app suit la langue du système ; les tests visent les textes français.
+    t.platformDispatcher.localesTestValue = const [Locale('fr', 'FR')];
+    addTearDown(t.platformDispatcher.clearLocalesTestValue);
     t.view.physicalSize = const Size(1080, 2400);
     t.view.devicePixelRatio = 2.75;
     addTearDown(t.view.reset);
@@ -124,6 +127,9 @@ void main() {
   });
 
   testWidgets('garde-fous du poids visé', (t) async {
+    // L'app suit la langue du système ; les tests visent les textes français.
+    t.platformDispatcher.localesTestValue = const [Locale('fr', 'FR')];
+    addTearDown(t.platformDispatcher.clearLocalesTestValue);
     t.view.physicalSize = const Size(1080, 2400);
     t.view.devicePixelRatio = 2.75;
     addTearDown(t.view.reset);
@@ -158,6 +164,9 @@ void main() {
   });
 
   testWidgets('onboarding Foyer complet avec détour Réserve', (t) async {
+    // L'app suit la langue du système ; les tests visent les textes français.
+    t.platformDispatcher.localesTestValue = const [Locale('fr', 'FR')];
+    addTearDown(t.platformDispatcher.clearLocalesTestValue);
     t.view.physicalSize = const Size(1080, 2400);
     t.view.devicePixelRatio = 2.75;
     addTearDown(t.view.reset);
