@@ -83,19 +83,18 @@ flutter:
           weight: 700
         - asset: assets/fonts/PlusJakartaSans-800.ttf
           weight: 800
-    # Plus Jakarta Sans ne contient pas l'alphabet arabe : Noto Sans Arabic prend le relais.
-    - family: NotoSansArabic
+    # Plus Jakarta Sans ne contient pas l'alphabet arabe : Readex Pro prend le relais.
+    # Readex Pro s'arrete a 700 ; les textes en 800 retombent dessus.
+    - family: ReadexPro
       fonts:
-        - asset: assets/fonts/NotoSansArabic-400.ttf
+        - asset: assets/fonts/ReadexPro-400.ttf
           weight: 400
-        - asset: assets/fonts/NotoSansArabic-500.ttf
+        - asset: assets/fonts/ReadexPro-500.ttf
           weight: 500
-        - asset: assets/fonts/NotoSansArabic-600.ttf
+        - asset: assets/fonts/ReadexPro-600.ttf
           weight: 600
-        - asset: assets/fonts/NotoSansArabic-700.ttf
+        - asset: assets/fonts/ReadexPro-700.ttf
           weight: 700
-        - asset: assets/fonts/NotoSansArabic-800.ttf
-          weight: 800
     - family: Caveat
       fonts:
         - asset: assets/fonts/Caveat-600.ttf

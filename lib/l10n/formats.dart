@@ -50,6 +50,9 @@ class Formats {
 
   String weekday(DateTime d) => DateFormat.E(_tag).format(d);
 
+  /// Nom du jour de la semaine, 1 = lundi. Traduit par intl, donc rien à écrire dans les ARB.
+  String weekdayName(int weekday) => DateFormat.EEEE(_tag).format(DateTime(2024, 1, weekday));
+
   /// Poids : kilogrammes, ou livres aux États-Unis.
   String weight(L l, double kg) => units == UnitSystem.metric
       ? l.unitKilograms(number(kg, decimals: 1))

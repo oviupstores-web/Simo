@@ -7,9 +7,9 @@ abstract final class AppFont {
   static const family = 'PlusJakartaSans';
   static const hand = 'Caveat';
 
-  /// Plus Jakarta Sans ne contient pas l'alphabet arabe : Noto Sans Arabic prend le relais
+  /// Plus Jakarta Sans ne contient pas l'alphabet arabe : Readex Pro prend le relais
   /// caractère par caractère, ce qui garde « Menoo » en Plus Jakarta au milieu d'un texte arabe.
-  static const fallback = ['NotoSansArabic'];
+  static const fallback = ['ReadexPro'];
 
   static const double s11 = 11;
   static const double s12 = 12;

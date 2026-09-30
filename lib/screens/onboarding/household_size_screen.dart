@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_flow.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -10,26 +11,27 @@ import '../../widgets/widgets.dart';
 class HouseholdSizeScreen extends StatelessWidget {
   const HouseholdSizeScreen({super.key});
 
-  static const roles = [
-    (MemberRole.adulte, 'Portions pleines et besoins standards', AppIcons.user, Tint.mint),
-    (MemberRole.enfant, 'Portions adaptées (environ 60 à 70 %)', AppIcons.child, Tint.peach),
-    (MemberRole.bebe, 'Purées, compotes et petites textures', AppIcons.baby, Tint.lavender),
+  static List<(MemberRole, String, String, Tint)> roles(L l) => [
+    (MemberRole.adulte, l.householdAdultText, AppIcons.user, Tint.mint),
+    (MemberRole.enfant, l.householdChildText, AppIcons.child, Tint.peach),
+    (MemberRole.bebe, l.householdBabyText, AppIcons.baby, Tint.lavender),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     final n = d.members.length;
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.household),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'COMPOSITION DU FOYER',
+      eyebrow: l.householdEyebrow,
       eyebrowIcon: AppIcons.people,
-      title: 'Combien de personnes composent votre foyer ?',
-      subtitle: 'Menoo ajuste les portions de chaque recette et les quantités de votre liste de courses.',
+      title: l.householdTitle,
+      subtitle: l.householdSubtitle,
       onContinue: () => OnboardingFlow.next(context, OnbStep.household),
       children: [
-        for (final (i, r) in roles.indexed) ...[
+        for (final (i, r) in roles(l).indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x3),
           AppCard(
             padding: const EdgeInsets.all(AppSpace.x3_5),
@@ -68,11 +70,11 @@ class HouseholdSizeScreen extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Total : ',
+                      text: l.householdTotalLabel,
                       style: AppText.of(AppFont.s15, color: AppColors.ink2),
                     ),
                     TextSpan(
-                      text: '$n personne${n > 1 ? 's' : ''} à table',
+                      text: l.householdPeopleAtTable(n),
                       style: AppText.of(AppFont.s15, weight: AppFont.extrabold, color: AppColors.primaryDark),
                     ),
                   ],
@@ -82,10 +84,10 @@ class HouseholdSizeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.bulb,
-          title: 'Astuce Menoo',
-          text: 'Vous pourrez ajouter des invités pour un repas précis à tout moment depuis votre semaine.',
+          title: l.commonMenooTip,
+          text: l.householdTipText,
         ),
       ],
     );

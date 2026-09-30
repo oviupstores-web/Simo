@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -11,10 +12,10 @@ import '../../widgets/widgets.dart';
 class SupermarketScreen extends StatefulWidget {
   const SupermarketScreen({super.key});
 
-  static const channels = [
-    (ShoppingChannel.drive, 'Drive / Retrait', AppIcons.car, Tint.sky),
-    (ShoppingChannel.magasin, 'En magasin', AppIcons.bag, Tint.peach),
-    (ShoppingChannel.livraison, 'Livraison', AppIcons.truck, Tint.lavender),
+  static List<(ShoppingChannel, String, String, Tint)> channels(L l) => [
+    (ShoppingChannel.drive, l.channelDrive, AppIcons.car, Tint.sky),
+    (ShoppingChannel.magasin, l.channelInStore, AppIcons.bag, Tint.peach),
+    (ShoppingChannel.livraison, l.channelDelivery, AppIcons.truck, Tint.lavender),
   ];
 
   /// Enseignes : monogramme neutre sur pastille (jamais de logo officiel sans accord).
@@ -55,27 +56,28 @@ class _SupermarketScreenState extends State<SupermarketScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.supermarket),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'SUPERMARCHÉ & COURSES',
+      eyebrow: l.supermarketEyebrow,
       eyebrowIcon: AppIcons.store,
-      title: 'Où faites-vous vos courses ?',
-      subtitle: 'Menoo organise votre liste par rayon et estime les prix de votre enseigne.',
+      title: l.supermarketTitle,
+      subtitle: l.supermarketSubtitle,
       onContinue: () {
         d.update(() => d.postalCode = _place.text.trim());
         OnboardingFlow.next(context, OnbStep.supermarket);
       },
       children: [
-        Text('Votre code postal ou ville', style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
+        Text(l.supermarketPostcodeLabel, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x2_5),
-        IconTextField(icon: AppIcons.mapPin, hint: 'Ex. : 69003 ou Lyon', controller: _place),
+        IconTextField(icon: AppIcons.mapPin, hint: l.supermarketPostcodeHint, controller: _place),
         const SizedBox(height: AppSpace.x6),
-        const StepSectionTitle('Mode de récupération favori', icon: AppIcons.car, tint: Tint.sky),
+        StepSectionTitle(l.supermarketChannelSection, icon: AppIcons.car, tint: Tint.sky),
         Row(
           children: [
-            for (final (i, c) in SupermarketScreen.channels.indexed) ...[
+            for (final (i, c) in SupermarketScreen.channels(l).indexed) ...[
               if (i > 0) const SizedBox(width: AppSpace.x2),
               Expanded(
                 child: OptionTile(
@@ -91,7 +93,7 @@ class _SupermarketScreenState extends State<SupermarketScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        const StepSectionTitle('Votre enseigne habituelle', hint: 'Facultatif', icon: AppIcons.store, tint: Tint.sand),
+        StepSectionTitle(l.supermarketStoreSection, hint: l.commonOptional, icon: AppIcons.store, tint: Tint.sand),
         for (final (i, s) in SupermarketScreen.stores.indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x2),
           _StoreRow(
@@ -104,9 +106,9 @@ class _SupermarketScreenState extends State<SupermarketScreen> {
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.info,
-          text: 'Les prix sont estimés à partir de relevés publics (Open Prices) et de vos tickets de caisse scannés.',
+          text: l.supermarketPricesInfo,
           background: AppColors.neutralSoft,
         ),
       ],
@@ -133,6 +135,7 @@ class _StoreRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Semantics(
       selected: selected,
       button: true,
@@ -162,7 +165,7 @@ class _StoreRow extends StatelessWidget {
                       spacing: AppSpace.x1_5,
                       runSpacing: AppSpace.x1,
                       children: [
-                        for (final c in SupermarketScreen.channels)
+                        for (final c in SupermarketScreen.channels(L.of(context)))
                           if (channels.contains(c.$1))
                             PillBadge(
                               c.$2,
@@ -202,6 +205,7 @@ class StoreMonogram extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Container(
       width: AppSizes.iconTile,
       height: AppSizes.iconTile,

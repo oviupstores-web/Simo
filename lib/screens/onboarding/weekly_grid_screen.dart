@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../l10n/formats.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -10,15 +12,15 @@ import '../../widgets/widgets.dart';
 class WeeklyGridScreen extends StatelessWidget {
   const WeeklyGridScreen({super.key});
 
-  static const _days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-  static const _meals = [
-    (MealType.petitDejeuner, 'P.-déj'),
-    (MealType.dejeuner, 'Déjeuner'),
-    (MealType.diner, 'Dîner'),
+  static List<(MealType, String)> _meals(L l) => [
+    (MealType.petitDejeuner, l.mealBreakfastShort),
+    (MealType.dejeuner, l.mealLunch),
+    (MealType.diner, l.mealDinner),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     void preset(Set<MealType> types) => d.update(() {
       d.slots
@@ -34,10 +36,10 @@ class WeeklyGridScreen extends StatelessWidget {
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.grid),
       totalSteps: OnboardingFlow.total(context),
-      title: d.isFoyer ? 'Quels repas souhaitez-vous planifier en famille ?' : 'Quels repas souhaitez-vous planifier ?',
+      title: d.isFoyer ? l.gridTitleHousehold : l.gridTitleSolo,
       subtitle: d.isFoyer
-          ? 'Sélectionnez les repas pris ensemble : Menoo les prépare pour tout le foyer.'
-          : 'Sélectionnez les repas de la semaine que Menoo doit préparer pour vous.',
+          ? l.gridSubtitleHousehold
+          : l.gridSubtitleSolo,
       onContinue: n == 0 ? null : () => OnboardingFlow.next(context, OnbStep.grid),
       children: [
         Wrap(
@@ -46,7 +48,7 @@ class WeeklyGridScreen extends StatelessWidget {
           children: [
             if (d.isFoyer)
               ToggleChip(
-                label: 'Soirs + week-end',
+                label: l.gridPresetEvenings,
                 icon: AppIcons.people,
                 selected: false,
                 onTap: () => d.update(() {
@@ -56,18 +58,18 @@ class WeeklyGridScreen extends StatelessWidget {
                 }),
               ),
             ToggleChip(
-              label: 'Déj + Dîner',
+              label: l.gridPresetLunchDinner,
               icon: AppIcons.week,
               selected: false,
               onTap: () => preset({MealType.dejeuner, MealType.diner}),
             ),
             ToggleChip(
-              label: 'Tout cocher',
+              label: l.gridPresetAll,
               icon: AppIcons.checkCircle,
               selected: false,
               onTap: () => preset(MealType.values.toSet()),
             ),
-            ToggleChip(label: 'Tout décocher', icon: AppIcons.close, selected: false, onTap: () => preset({})),
+            ToggleChip(label: l.gridPresetNone, icon: AppIcons.close, selected: false, onTap: () => preset({})),
           ],
         ),
         const SizedBox(height: AppSpace.x4),
@@ -77,8 +79,8 @@ class WeeklyGridScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(child: Text('Jour', style: AppText.meta)),
-                  for (final m in _meals)
+                  Expanded(child: Text(l.gridDayColumn, style: AppText.meta)),
+                  for (final m in _meals(l))
                     SizedBox(
                       width: AppSizes.gridColumn,
                       child: Text(
@@ -96,8 +98,8 @@ class WeeklyGridScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: AppSpace.x1_5),
                   child: Row(
                     children: [
-                      Expanded(child: Text(_days[day - 1], style: AppText.rowTitle)),
-                      for (final m in _meals)
+                      Expanded(child: Text(Formats.of(context).weekdayName(day), style: AppText.rowTitle)),
+                      for (final m in _meals(l))
                         SizedBox(
                           width: AppSizes.gridColumn,
                           child: Center(
@@ -122,35 +124,33 @@ class WeeklyGridScreen extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: '$n repas',
+                    text: l.gridSelectedCount(n),
                     style: AppText.of(AppFont.s14, weight: AppFont.extrabold),
                   ),
                   TextSpan(
-                    text: ' sélectionnés sur 21',
+                    text: l.gridSelectedOutOf(21),
                     style: AppText.of(AppFont.s14, color: AppColors.ink2),
                   ),
                 ],
               ),
             ),
-            PillBadge('$perDay repas / jour', size: AppFont.s12),
+            PillBadge(l.gridPerDay(perDay), size: AppFont.s12),
           ],
         ),
         if (d.isFoyer) ...[
           const SizedBox(height: AppSpace.x3),
           InfoBanner(
             icon: AppIcons.people,
-            title: 'Adapté à votre foyer',
-            text:
-                'Chaque repas est prévu pour ${d.peopleCount} personnes, soit ${d.weeklyPortions} portions par semaine. '
-                'Les portions des enfants sont ajustées à leur âge.',
+            title: l.gridHouseholdInfoTitle,
+            text: l.gridHouseholdInfoText(d.peopleCount, d.weeklyPortions),
             background: AppColors.leafySoft,
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.bulb,
-          title: 'Astuce Menoo',
-          text: 'Vous pourrez régénérer, échanger ou ajouter des repas à tout moment depuis votre semaine.',
+          title: l.commonMenooTip,
+          text: l.gridTipText,
         ),
       ],
     );
@@ -165,6 +165,7 @@ class _GridCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Semantics(
       checked: selected,
       button: true,

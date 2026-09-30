@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -75,7 +76,7 @@ class SummaryScreen extends StatelessWidget {
       for (final e in KitchenScreen.equipment)
         if (d.equipment.contains(e.$1)) e.$2,
     ];
-    final channel = SupermarketScreen.channels.firstWhere((c) => c.$1 == d.channel).$2;
+    final channel = SupermarketScreen.channels(L.of(context)).firstWhere((c) => c.$1 == d.channel).$2;
     final foyer = d.isFoyer;
     final cook = d.members.where((m) => m.id == d.mainCookId).firstOrNull;
     String plural(int n, String word) => '$n $word${n > 1 ? 's' : ''}';

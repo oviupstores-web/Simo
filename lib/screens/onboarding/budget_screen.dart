@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import '../../l10n/app_localizations.dart';
+import '../../l10n/formats.dart';import 'package:flutter/services.dart';
 
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -38,7 +40,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
       return;
     }
     if (value == null || value < BudgetScreen.min) {
-      setState(() => _error = 'Le budget minimum est de ${BudgetScreen.min} €.');
+      setState(() => _error = L.of(context).budgetMinError(Formats.of(context).priceRounded(BudgetScreen.min * 100)));
       return;
     }
     setState(() => _error = null);
@@ -50,17 +52,18 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     final perMeal = d.budgetPerMeal.toStringAsFixed(2).replaceAll('.', ',');
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.budget),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'PLANIFICATION FUTÉE',
+      eyebrow: l.budgetEyebrow,
       eyebrowIcon: AppIcons.wallet,
-      title: d.isFoyer ? 'Votre budget courses familial par semaine' : 'Votre budget courses hebdomadaire',
+      title: d.isFoyer ? l.budgetTitleHousehold : l.budgetTitleSolo,
       subtitle: d.isFoyer
-          ? 'Menoo compose les menus de tout le foyer pour ne jamais dépasser ce montant.'
-          : 'Menoo compose vos menus pour ne jamais dépasser ce montant.',
+          ? l.budgetSubtitleHousehold
+          : l.budgetSubtitleSolo,
       onContinue: _error != null ? null : () => OnboardingFlow.next(context, OnbStep.budget),
       children: [
         AppCard(
@@ -75,11 +78,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   fit: StackFit.expand,
                   children: [
                     Image.asset('assets/images/budget_marche.jpg', fit: BoxFit.cover, excludeFromSemantics: true),
-                    const Positioned(
-                      left: AppSpace.x3,
+                    PositionedDirectional(
+                      start: AppSpace.x3,
                       bottom: AppSpace.x3,
                       child: PillBadge(
-                        'Budget respecté chaque semaine',
+                        l.budgetBadge,
                         icon: AppIcons.checkCircle,
                         background: AppColors.overlayCard,
                         size: AppFont.s12,
@@ -110,13 +113,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           ' € ',
                           style: AppText.of(AppFont.s22, weight: AppFont.extrabold, color: AppColors.primaryDark),
                         ),
-                        Text('/ semaine', style: AppText.of(AppFont.s14, color: AppColors.ink2)),
+                        Text(l.budgetPerWeek, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
                       ],
                     ),
                     Text(
                       d.isFoyer
-                          ? 'Soit ~${d.budgetPerPortion.toStringAsFixed(2).replaceAll('.', ',')} € par portion (${d.weeklyPortions} portions)'
-                          : 'Soit ~$perMeal € par repas planifié (${d.plannedMeals} repas)',
+                          ? l.budgetPerPortion(Formats.of(context).price((d.budgetPerPortion * 100).round()), d.weeklyPortions)
+                          : l.budgetPerMeal(Formats.of(context).price((d.budgetPerMeal * 100).round()), d.plannedMeals),
                       style: AppText.of(AppFont.s13, color: AppColors.ink2),
                     ),
                     const SizedBox(height: AppSpace.x2),
@@ -125,7 +128,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       min: BudgetScreen.min.toDouble(),
                       max: BudgetScreen.max.toDouble(),
                       divisions: (BudgetScreen.max - BudgetScreen.min) ~/ BudgetScreen.step,
-                      semanticLabel: '${d.budgetEuros} euros par semaine',
+                      semanticLabel: l.budgetSliderLabel(Formats.of(context).priceRounded(d.budgetEuros * 100)),
                       onChanged: (v) {
                         _custom.clear();
                         setState(() => _error = null);
@@ -140,8 +143,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('${BudgetScreen.min} €', style: AppText.meta),
-                          Text('${BudgetScreen.max} €', style: AppText.meta),
+                          Text(Formats.of(context).priceRounded(BudgetScreen.min * 100), style: AppText.meta),
+                          Text(Formats.of(context).priceRounded(BudgetScreen.max * 100), style: AppText.meta),
                         ],
                       ),
                     ),
@@ -152,17 +155,17 @@ class _BudgetScreenState extends State<BudgetScreen> {
           ),
         ),
         const SizedBox(height: AppSpace.x5),
-        Text('Budget personnalisé', style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
+        Text(l.budgetCustomTitle, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x1),
-        Text('Plus de ${BudgetScreen.max} € par semaine ? Saisissez votre montant.', style: AppText.caption),
+        Text(l.budgetCustomText(Formats.of(context).priceRounded(BudgetScreen.max * 100)), style: AppText.caption),
         const SizedBox(height: AppSpace.x2_5),
         IconTextField(
           icon: AppIcons.piggy,
-          hint: 'Ex. : 420',
+          hint: l.budgetCustomHint,
           controller: _custom,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          suffix: '€ / semaine',
+          suffix: l.budgetCustomSuffix,
           onChanged: _applyCustom,
         ),
         FormError(message: _error),
@@ -170,18 +173,16 @@ class _BudgetScreenState extends State<BudgetScreen> {
           const SizedBox(height: AppSpace.x4),
           InfoBanner(
             icon: AppIcons.people,
-            title: 'Budget conseillé : ${d.recommendedBudget} €',
-            text:
-                'Calculé pour ${d.peopleCount} personnes (30 € par adulte, 20 € par enfant, 25 € par bébé). '
-                'Ajustez-le librement.',
+            title: l.budgetAdvisedTitle(Formats.of(context).priceRounded(d.recommendedBudget * 100)),
+            text: l.budgetAdvisedText(d.peopleCount),
             background: AppColors.leafySoft,
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.shield,
-          title: 'Votre budget est une limite, pas une estimation',
-          text: 'Chaque menu est vérifié avant de vous être proposé : son coût estimé ne dépasse jamais ce montant.',
+          title: l.budgetLimitTitle,
+          text: l.budgetLimitText,
         ),
       ],
     );

@@ -1,9 +1,9 @@
 {
   "@@locale": "fr",
-
   "appName": "Menoo",
-  "@appName": {"description": "Nom de l'application, jamais traduit"},
-
+  "@appName": {
+    "description": "Nom de l'application, jamais traduit"
+  },
   "commonOr": "ou",
   "commonSkip": "Passer",
   "commonContinue": "Continuer",
@@ -16,21 +16,30 @@
   "commonStepOf": "ÉTAPE {step} SUR {total}",
   "@commonStepOf": {
     "description": "Compteur d'étapes de l'onboarding, en capitales",
-    "placeholders": {"step": {"type": "int"}, "total": {"type": "int"}}
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   },
   "commonEditableAnytime": "modifiable à tout moment",
   "commonQuickSteps": "{count} étapes rapides",
   "@commonQuickSteps": {
     "description": "Nombre d'étapes de l'onboarding, sans promesse de durée (SPEC §0.4)",
-    "placeholders": {"count": {"type": "int"}}
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-
   "navHome": "Accueil",
   "navMenus": "Menus",
   "navShopping": "Courses",
   "navPantry": "Réserve",
   "navTracking": "Suivi",
-
   "landingTitleLine1": "Bien manger",
   "landingTitleLine2": "tout simplement",
   "landingSubtitle": "Des menus équilibrés, adaptés à vos goûts, à votre budget et à votre mode de vie.",
@@ -39,11 +48,12 @@
   "landingFeatureShopping": "Une liste de courses claire et optimisée",
   "landingFeatureTracking": "Un suivi personnalisé pour progresser",
   "landingHandwritten": "Une vie plus saine\n    au quotidien !",
-  "@landingHandwritten": {"description": "Phrase manuscrite sur la photo ; le retour à la ligne et l'indentation font partie du dessin"},
+  "@landingHandwritten": {
+    "description": "Phrase manuscrite sur la photo ; le retour à la ligne et l'indentation font partie du dessin"
+  },
   "landingHeroAlt": "Bol de quinoa, poulet grillé et légumes",
   "landingStart": "Commencer gratuitement",
   "landingHaveAccount": "J'ai déjà un compte",
-
   "loginTitle": "Bienvenue sur Menoo",
   "loginSubtitle": "Connectez-vous pour retrouver vos menus, votre liste de courses et votre progression.",
   "loginWithGoogle": "Continuer avec Google",
@@ -54,7 +64,6 @@
   "loginCreateAccount": "Créer un compte",
   "loginHandwritten": "De bons repas\ncommencent ici !",
   "loginSoon": "La connexion arrive au jalon 6.",
-
   "signupTitle": "Créez votre compte",
   "signupSubtitle": "Dernière étape avant votre premier menu : vos choix seront enregistrés dans votre compte.",
   "signupPasswordHint": "Mot de passe (8 caractères ou plus)",
@@ -63,7 +72,6 @@
   "signupOrContinueWith": "ou continuer avec",
   "signupAlreadyMember": "Déjà inscrit ? ",
   "signupSoon": "La création du compte et la génération du menu arrivent au jalon 6.",
-
   "pathChoiceTitle": "Quel est votre mode ?",
   "pathChoiceSubtitle": "Choisissez le mode qui correspond à votre situation. Vous pourrez le modifier plus tard.",
   "pathChoiceSoloTitle": "Pour moi",
@@ -80,7 +88,6 @@
   "pathChoiceHouseholdBullet4": "Organisation simplifiée",
   "pathChoiceInfoTitle": "Un seul compte, deux modes",
   "pathChoiceInfoText": "Vous pourrez passer du mode Solo au mode Foyer à tout moment dans les réglages.",
-
   "coverSoloBadge": "Mode Individuel",
   "coverSoloTitle": "Votre programme sur-mesure pour manger sain sans compromis",
   "coverSoloSubtitle": "Des repas personnalisés selon vos objectifs, votre budget et votre rythme de vie.",
@@ -92,7 +99,6 @@
   "coverSoloFeature3Text": "Liste de courses ajustée, réserve déduite",
   "coverSoloStart": "Commencer mon profil",
   "coverSoloHeroAlt": "Bowl de saumon poêlé, quinoa, avocat et légumes",
-
   "coverHouseholdBadge": "Mode Foyer & Famille",
   "coverHouseholdTitle": "Des repas sains et savoureux qui rassemblent toute la maison",
   "coverHouseholdSubtitle": "Menoo concilie les goûts de chacun, respecte votre budget et limite le gaspillage.",
@@ -104,32 +110,347 @@
   "coverHouseholdFeature3Text": "Placards et produits frais utilisés en priorité",
   "coverHouseholdStart": "Commencer la configuration",
   "coverHouseholdHeroAlt": "Famille partageant un repas autour d'une table",
-
   "languageName": "Français",
-  "@languageName": {"description": "Nom de cette langue, écrit dans cette langue"},
-
+  "@languageName": {
+    "description": "Nom de cette langue, écrit dans cette langue"
+  },
   "unitGrams": "{value} g",
-  "@unitGrams": {"placeholders": {"value": {"type": "String"}}},
+  "@unitGrams": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitKilograms": "{value} kg",
-  "@unitKilograms": {"placeholders": {"value": {"type": "String"}}},
+  "@unitKilograms": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitCentimeters": "{value} cm",
-  "@unitCentimeters": {"placeholders": {"value": {"type": "String"}}},
+  "@unitCentimeters": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitMilliliters": "{value} ml",
-  "@unitMilliliters": {"placeholders": {"value": {"type": "String"}}},
+  "@unitMilliliters": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitLiters": "{value} L",
-  "@unitLiters": {"placeholders": {"value": {"type": "String"}}},
+  "@unitLiters": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitPounds": "{value} lb",
-  "@unitPounds": {"placeholders": {"value": {"type": "String"}}},
+  "@unitPounds": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitOunces": "{value} oz",
-  "@unitOunces": {"placeholders": {"value": {"type": "String"}}},
+  "@unitOunces": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitFeetInches": "{feet} ft {inches} in",
-  "@unitFeetInches": {"placeholders": {"feet": {"type": "int"}, "inches": {"type": "int"}}},
+  "@unitFeetInches": {
+    "placeholders": {
+      "feet": {
+        "type": "int"
+      },
+      "inches": {
+        "type": "int"
+      }
+    }
+  },
   "unitFluidOunces": "{value} fl oz",
-  "@unitFluidOunces": {"placeholders": {"value": {"type": "String"}}},
+  "@unitFluidOunces": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitMinutes": "{count} min",
-  "@unitMinutes": {"placeholders": {"count": {"type": "int"}}},
+  "@unitMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "unitKcal": "{value} kcal",
-  "@unitKcal": {"placeholders": {"value": {"type": "String"}}},
+  "@unitKcal": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "unitPieces": "pièce(s)",
-  "unitPacks": "paquet(s)"
+  "unitPacks": "paquet(s)",
+  "commonPopular": "Populaire",
+  "commonRecommended": "Recommandé",
+  "commonMenooTip": "Astuce Menoo",
+  "commonOptional": "Facultatif",
+  "goalEyebrow": "VOTRE POINT DE DÉPART",
+  "goalTitle": "Quel est votre objectif principal ?",
+  "goalSubtitle": "Nous adaptons l'apport calorique et la répartition de vos macronutriments en toute précision.",
+  "goalLossTitle": "Perte de poids",
+  "goalLossText": "Déficit calorique modéré, maintien de l'énergie et satiété durable sans frustration.",
+  "goalGainTitle": "Prise de masse",
+  "goalGainText": "Surplus calorique sain et riche en protéines de qualité pour nourrir vos muscles.",
+  "goalCutTitle": "Sèche & Définition",
+  "goalCutText": "Optimisation de la masse maigre et réduction ciblée du taux de masse grasse.",
+  "goalMaintainTitle": "Maintien & Équilibre",
+  "goalMaintainText": "Stabiliser son poids, manger varié au quotidien et booster son bien-être général.",
+  "goalInfoTitle": "Algorithme adaptatif",
+  "goalInfoText": "Menoo ajustera vos menus selon votre progression, vos habitudes et vos préférences.",
+  "activityTitle": "Quel est votre niveau d'activité ?",
+  "activitySubtitle": "Indiquez vos habitudes quotidiennes et sportives moyennes pour calibrer vos besoins nutritionnels.",
+  "activitySedentaryTitle": "Sédentaire",
+  "activitySedentaryText": "Travail de bureau, peu ou pas de sport hebdomadaire",
+  "activityModerateTitle": "Modéré",
+  "activityModerateText": "Activité quotidienne légère, 1 à 2 séances de sport par semaine",
+  "activityActiveTitle": "Actif",
+  "activityActiveText": "Travail dynamique ou 3 à 4 séances d'entraînement par semaine",
+  "activityVeryActiveTitle": "Très actif",
+  "activityVeryActiveText": "Métier physique ou 5 séances intenses et plus par semaine",
+  "activityInfoText": "Votre niveau d'activité permet d'ajuster vos macronutriments et votre apport calorique journalier.",
+  "managementTitle": "Comment souhaitez-vous gérer vos repas ?",
+  "managementSubtitleSolo": "Choisissez la façon dont Menoo compose vos menus chaque semaine.",
+  "managementSubtitleHousehold": "Choisissez la méthode qui correspond le mieux au rythme de votre famille.",
+  "managementShoppingTitle": "Courses uniquement",
+  "managementShoppingText": "Menoo prépare une liste de courses optimisée pour tous vos repas.",
+  "managementPantryTitle": "Réserves uniquement",
+  "managementPantryText": "Menoo cuisine en priorité avec ce que vous avez déjà dans vos placards et votre frigo.",
+  "managementMixedTitle": "Mixte",
+  "managementMixedText": "Menoo utilise vos réserves pour éviter le gaspillage et complète avec les courses nécessaires.",
+  "managementPantryInfoTitle": "Onglet Réserve activé",
+  "managementPantryInfoText": "À l'étape suivante, vous pourrez ajouter ce que vous avez déjà chez vous (facultatif).",
+  "managementShoppingInfoText": "Vous pourrez changer ce mode à tout moment dans vos réglages.",
+  "householdEyebrow": "COMPOSITION DU FOYER",
+  "householdTitle": "Combien de personnes composent votre foyer ?",
+  "householdSubtitle": "Menoo ajuste les portions de chaque recette et les quantités de votre liste de courses.",
+  "householdAdultText": "Portions pleines et besoins standards",
+  "householdChildText": "Portions adaptées (environ 60 à 70 %)",
+  "householdBabyText": "Purées, compotes et petites textures",
+  "householdTotalLabel": "Total : ",
+  "householdPeopleAtTable": "{count, plural, one{{count} personne à table} other{{count} personnes à table}}",
+  "@householdPeopleAtTable": {
+    "description": "Nombre de personnes à table",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "householdTipText": "Vous pourrez ajouter des invités pour un repas précis à tout moment depuis votre semaine.",
+  "scaleEyebrow": "OPTIONNEL",
+  "scaleTitle": "Connectez votre balance",
+  "scaleSubtitle": "Menoo récupère votre poids depuis Health Connect, l'application santé d'Android, compatible avec la plupart des balances connectées.",
+  "scaleConnect": "Associer via Health Connect",
+  "scaleSkip": "Passer cette étape",
+  "scaleBenefit1": "Pesées synchronisées automatiquement",
+  "scaleBenefit2": "Courbe de poids dans l’onglet Suivi",
+  "scaleBenefit3": "Portions réajustées selon votre progression",
+  "scaleInfoText": "L'autorisation vous sera demandée après la création de votre compte. Sans balance, vous pourrez saisir votre poids à la main.",
+  "supermarketEyebrow": "SUPERMARCHÉ & COURSES",
+  "supermarketTitle": "Où faites-vous vos courses ?",
+  "supermarketSubtitle": "Menoo organise votre liste par rayon et estime les prix de votre enseigne.",
+  "supermarketPostcodeLabel": "Votre code postal ou ville",
+  "supermarketPostcodeHint": "Ex. : 69003 ou Lyon",
+  "supermarketChannelSection": "Mode de récupération favori",
+  "supermarketStoreSection": "Votre enseigne habituelle",
+  "channelDrive": "Drive / Retrait",
+  "channelInStore": "En magasin",
+  "channelDelivery": "Livraison",
+  "supermarketPricesInfo": "Les prix sont estimés à partir de relevés publics (Open Prices) et de vos tickets de caisse scannés.",
+  "gridTitleSolo": "Quels repas souhaitez-vous planifier ?",
+  "gridTitleHousehold": "Quels repas souhaitez-vous planifier en famille ?",
+  "gridSubtitleSolo": "Sélectionnez les repas de la semaine que Menoo doit préparer pour vous.",
+  "gridSubtitleHousehold": "Sélectionnez les repas pris ensemble : Menoo les prépare pour tout le foyer.",
+  "gridPresetEvenings": "Soirs + week-end",
+  "gridPresetLunchDinner": "Déj + Dîner",
+  "gridPresetAll": "Tout cocher",
+  "gridPresetNone": "Tout décocher",
+  "gridDayColumn": "Jour",
+  "mealBreakfastShort": "P.-déj",
+  "mealLunch": "Déjeuner",
+  "mealDinner": "Dîner",
+  "gridSelectedCount": "{count, plural, one{{count} repas} other{{count} repas}}",
+  "@gridSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gridSelectedOutOf": " sélectionnés sur {total}",
+  "@gridSelectedOutOf": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "gridPerDay": "{value} repas / jour",
+  "@gridPerDay": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "gridHouseholdInfoTitle": "Adapté à votre foyer",
+  "gridHouseholdInfoText": "Chaque repas est prévu pour {people} personnes, soit {portions} portions par semaine. Les portions des enfants sont ajustées à leur âge.",
+  "@gridHouseholdInfoText": {
+    "placeholders": {
+      "people": {
+        "type": "int"
+      },
+      "portions": {
+        "type": "int"
+      }
+    }
+  },
+  "gridTipText": "Vous pourrez régénérer, échanger ou ajouter des repas à tout moment depuis votre semaine.",
+  "budgetEyebrow": "PLANIFICATION FUTÉE",
+  "budgetTitleSolo": "Votre budget courses hebdomadaire",
+  "budgetTitleHousehold": "Votre budget courses familial par semaine",
+  "budgetSubtitleSolo": "Menoo compose vos menus pour ne jamais dépasser ce montant.",
+  "budgetSubtitleHousehold": "Menoo compose les menus de tout le foyer pour ne jamais dépasser ce montant.",
+  "budgetBadge": "Budget respecté chaque semaine",
+  "budgetPerWeek": "/ semaine",
+  "budgetPerPortion": "Soit ~{amount} par portion ({portions} portions)",
+  "@budgetPerPortion": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "portions": {
+        "type": "int"
+      }
+    }
+  },
+  "budgetPerMeal": "Soit ~{amount} par repas planifié ({meals} repas)",
+  "@budgetPerMeal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "meals": {
+        "type": "int"
+      }
+    }
+  },
+  "budgetSliderLabel": "{amount} par semaine",
+  "@budgetSliderLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetCustomTitle": "Budget personnalisé",
+  "budgetCustomText": "Plus de {amount} par semaine ? Saisissez votre montant.",
+  "@budgetCustomText": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetCustomHint": "Ex. : 420",
+  "budgetCustomSuffix": "€ / semaine",
+  "budgetMinError": "Le budget minimum est de {amount}.",
+  "@budgetMinError": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetAdvisedTitle": "Budget conseillé : {amount}",
+  "@budgetAdvisedTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetAdvisedText": "Calculé pour {people} personnes (30 € par adulte, 20 € par enfant, 25 € par bébé). Ajustez-le librement.",
+  "@budgetAdvisedText": {
+    "placeholders": {
+      "people": {
+        "type": "int"
+      }
+    }
+  },
+  "budgetLimitTitle": "Votre budget est une limite, pas une estimation",
+  "budgetLimitText": "Chaque menu est vérifié avant de vous être proposé : son coût estimé ne dépasse jamais ce montant.",
+  "profileTitle": "Parlez-nous de vous",
+  "profileSubtitle": "Ces informations nous aident à calculer vos besoins et à personnaliser vos menus.",
+  "profileSexLabel": "Votre sexe",
+  "profileSexMale": "Homme",
+  "profileSexFemale": "Femme",
+  "profileAgeLabel": "Votre âge",
+  "profileAgeUnit": "ans",
+  "profileHeightLabel": "Votre taille",
+  "profileWeightLabel": "Votre poids actuel",
+  "profilePrivacy": "Ces informations restent confidentielles et ne servent qu'à personnaliser votre expérience.",
+  "profileMaintainTitle": "Objectif maintien & équilibre",
+  "profileMaintainText": "Pas de poids à viser : Menoo stabilise votre poids actuel et varie vos menus.",
+  "profileTargetSection": "Votre objectif de poids",
+  "profileTargetLabel": "Poids visé",
+  "profileRateLabel": "Rythme",
+  "profileRateGentle": "Progressif",
+  "profileRateSteady": "Soutenu",
+  "profileRatePerWeek": "par semaine",
+  "profileLosingNote": "Pour votre santé, Menoo ne propose jamais plus d'1 kg de perte par semaine.",
+  "profileGainingNote": "Une prise lente favorise le muscle plutôt que la masse grasse.",
+  "profileCutTitle": "Masse musculaire préservée",
+  "profileCutText": "Déficit modéré de 0,5 kg par semaine et apport en protéines renforcé (2 g par kg) pour perdre du gras, pas du muscle.",
+  "profileToday": "aujourd'hui",
+  "profileTargeted": "visés",
+  "profileProjection": "{weeks, plural, one{Environ {weeks} semaine à {rate}/semaine} other{Environ {weeks} semaines à {rate}/semaine}}",
+  "@profileProjection": {
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      },
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "profileTargetDate": "Objectif estimé vers le {date}",
+  "@profileTargetDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "profileAgeError": "Indiquez un âge entre 14 et 100 ans.",
+  "profileHeightError": "Indiquez une taille entre 120 et 230 cm.",
+  "profileWeightError": "Indiquez un poids entre 35 et 250 kg."
 }

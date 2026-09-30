@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -11,54 +12,55 @@ import '../../widgets/widgets.dart';
 class GoalScreen extends StatelessWidget {
   const GoalScreen({super.key});
 
-  static const _goals = [
+  static List<(HealthGoal, String, String, String?, String, Tint)> _goals(L l) => [
     (
       HealthGoal.pertePoids,
       AppIcons.trendDown,
-      'Perte de poids',
-      'Populaire',
-      'Déficit calorique modéré, maintien de l\'énergie et satiété durable sans frustration.',
+      l.goalLossTitle,
+      l.commonPopular,
+      l.goalLossText,
       Tint.mint,
     ),
     (
       HealthGoal.priseMasse,
       AppIcons.dumbbell,
-      'Prise de masse',
+      l.goalGainTitle,
       null,
-      'Surplus calorique sain et riche en protéines de qualité pour nourrir vos muscles.',
+      l.goalGainText,
       Tint.peach,
     ),
     (
       HealthGoal.seche,
       AppIcons.bolt,
-      'Sèche & Définition',
+      l.goalCutTitle,
       null,
-      'Optimisation de la masse maigre et réduction ciblée du taux de masse grasse.',
+      l.goalCutText,
       Tint.lavender,
     ),
     (
       HealthGoal.maintien,
       AppIcons.lotus,
-      'Maintien & Équilibre',
+      l.goalMaintainTitle,
       null,
-      'Stabiliser son poids, manger varié au quotidien et booster son bien-être général.',
+      l.goalMaintainText,
       Tint.leafy,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final data = OnboardingScope.of(context);
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.goal),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'VOTRE POINT DE DÉPART',
+      eyebrow: l.goalEyebrow,
       eyebrowIcon: AppIcons.target,
-      title: 'Quel est votre objectif principal ?',
-      subtitle: 'Nous adaptons l\'apport calorique et la répartition de vos macronutriments en toute précision.',
+      title: l.goalTitle,
+      subtitle: l.goalSubtitle,
       onContinue: () => OnboardingFlow.next(context, OnbStep.goal),
       children: [
-        for (final (i, g) in _goals.indexed) ...[
+        for (final (i, g) in _goals(l).indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x3),
           ChoiceCard(
             icon: g.$2,
@@ -72,10 +74,10 @@ class GoalScreen extends StatelessWidget {
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.sun,
-          title: 'Algorithme adaptatif',
-          text: 'Menoo ajustera vos menus selon votre progression, vos habitudes et vos préférences.',
+          title: l.goalInfoTitle,
+          text: l.goalInfoText,
           background: AppColors.neutralSoft,
         ),
       ],

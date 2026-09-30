@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -11,47 +12,48 @@ import '../../widgets/widgets.dart';
 class ManagementModeScreen extends StatelessWidget {
   const ManagementModeScreen({super.key});
 
-  static const _modes = [
+  static List<(ManagementMode, String, String, String?, String, Tint)> _modes(L l) => [
     (
       ManagementMode.courses,
       AppIcons.cart,
-      'Courses uniquement',
+      l.managementShoppingTitle,
       null,
-      'Menoo prépare une liste de courses optimisée pour tous vos repas.',
+      l.managementShoppingText,
       Tint.peach,
     ),
     (
       ManagementMode.reserves,
       AppIcons.fridge,
-      'Réserves uniquement',
+      l.managementPantryTitle,
       null,
-      'Menoo cuisine en priorité avec ce que vous avez déjà dans vos placards et votre frigo.',
+      l.managementPantryText,
       Tint.sky,
     ),
     (
       ManagementMode.mixte,
       AppIcons.balance,
-      'Mixte',
-      'Recommandé',
-      'Menoo utilise vos réserves pour éviter le gaspillage et complète avec les courses nécessaires.',
+      l.managementMixedTitle,
+      l.commonRecommended,
+      l.managementMixedText,
       Tint.mint,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     final withPantry = d.management != ManagementMode.courses;
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.management),
       totalSteps: OnboardingFlow.total(context),
-      title: 'Comment souhaitez-vous gérer vos repas ?',
+      title: l.managementTitle,
       subtitle: d.isFoyer
-          ? 'Choisissez la méthode qui correspond le mieux au rythme de votre famille.'
-          : 'Choisissez la façon dont Menoo compose vos menus chaque semaine.',
+          ? l.managementSubtitleHousehold
+          : l.managementSubtitleSolo,
       onContinue: () => OnboardingFlow.next(context, OnbStep.management),
       children: [
-        for (final (i, m) in _modes.indexed) ...[
+        for (final (i, m) in _modes(l).indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x3),
           ChoiceCard(
             icon: m.$2,
@@ -68,16 +70,16 @@ class ManagementModeScreen extends StatelessWidget {
         AnimatedSwitcher(
           duration: AppMotion.normal,
           child: withPantry
-              ? const InfoBanner(
-                  key: ValueKey('pantry'),
+              ? InfoBanner(
+                  key: const ValueKey('pantry'),
                   icon: AppIcons.fridge,
-                  title: 'Onglet Réserve activé',
-                  text: 'À l\'étape suivante, vous pourrez ajouter ce que vous avez déjà chez vous (facultatif).',
+                  title: l.managementPantryInfoTitle,
+                  text: l.managementPantryInfoText,
                 )
-              : const InfoBanner(
-                  key: ValueKey('courses'),
+              : InfoBanner(
+                  key: const ValueKey('courses'),
                   icon: AppIcons.bulb,
-                  text: 'Vous pourrez changer ce mode à tout moment dans vos réglages.',
+                  text: l.managementShoppingInfoText,
                   background: AppColors.neutralSoft,
                 ),
         ),

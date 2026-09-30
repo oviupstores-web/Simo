@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../../l10n/formats.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -61,11 +63,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final target = _num(_target.text);
     String? error;
     if (age == null || age < 14 || age > 100) {
-      error = 'Indiquez un âge entre 14 et 100 ans.';
+      error = L.of(context).profileAgeError;
     } else if (height == null || height < 120 || height > 230) {
-      error = 'Indiquez une taille entre 120 et 230 cm.';
+      error = L.of(context).profileHeightError;
     } else if (weight == null || weight < 35 || weight > 250) {
-      error = 'Indiquez un poids entre 35 et 250 kg.';
+      error = L.of(context).profileWeightError;
     }
     final targetError = error == null ? d.targetError(target: target, current: weight!, heightCm: height!) : null;
     setState(() {
@@ -85,31 +87,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.profile),
       totalSteps: OnboardingFlow.total(context),
-      title: 'Parlez-nous de vous',
-      subtitle: 'Ces informations nous aident à calculer vos besoins et à personnaliser vos menus.',
+      title: l.profileTitle,
+      subtitle: l.profileSubtitle,
       onContinue: _continue,
       decor: const [
-        Positioned(
-          right: AppSpace.x2,
+        PositionedDirectional(
+          end: AppSpace.x2,
           top: AppSpace.x2,
           child: BasilDecor(leafWidth: 40, mirror: true, peppers: false),
         ),
-        Positioned(left: AppSpace.x2, bottom: 0, child: BasilDecor(leafWidth: 54)),
+        PositionedDirectional(start: AppSpace.x2, bottom: 0, child: BasilDecor(leafWidth: 54)),
       ],
       textRightInset: AppSpace.x10,
       below: const SizedBox(height: AppSizes.leafFooterH),
       children: [
-        Text('Votre sexe', style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
+        Text(l.profileSexLabel, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x2_5),
         Row(
           children: [
             Expanded(
               child: SegmentButton(
-                label: 'Homme',
+                label: l.profileSexMale,
                 icon: AppIcons.male,
                 selected: d.sex == Sex.homme,
                 onTap: () => d.update(() => d.sex = Sex.homme),
@@ -118,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: AppSpace.x3),
             Expanded(
               child: SegmentButton(
-                label: 'Femme',
+                label: l.profileSexFemale,
                 icon: AppIcons.female,
                 selected: d.sex == Sex.femme,
                 onTap: () => d.update(() => d.sex = Sex.femme),
@@ -127,32 +130,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        UnitFieldRow(label: 'Votre âge', unit: 'ans', controller: _age),
+        UnitFieldRow(label: l.profileAgeLabel, unit: l.profileAgeUnit, controller: _age),
         const SizedBox(height: AppSpace.x4),
-        UnitFieldRow(label: 'Votre taille', unit: 'cm', controller: _height),
+        UnitFieldRow(label: l.profileHeightLabel, unit: 'cm', controller: _height),
         const SizedBox(height: AppSpace.x4),
-        UnitFieldRow(label: 'Votre poids actuel', unit: 'kg', controller: _weight),
+        UnitFieldRow(label: l.profileWeightLabel, unit: 'kg', controller: _weight),
         FormError(message: _error),
         const SizedBox(height: AppSpace.x6),
-        if (d.needsTarget) ..._targetSection(d) else _maintainNote(),
+        if (d.needsTarget) ..._targetSection(context, d) else _maintainNote(l),
         const SizedBox(height: AppSpace.x6),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.leaf,
           iconTopOffset: AppSpace.x0_5,
-          text: 'Ces informations restent confidentielles et ne servent qu\'à personnaliser votre expérience.',
+          text: l.profilePrivacy,
         ),
       ],
     );
   }
 
-  Widget _maintainNote() => const InfoBanner(
+  Widget _maintainNote(L l) => InfoBanner(
     icon: AppIcons.lotus,
-    title: 'Objectif maintien & équilibre',
-    text: 'Pas de poids à viser : Menoo stabilise votre poids actuel et varie vos menus.',
+    title: l.profileMaintainTitle,
+    text: l.profileMaintainText,
     background: AppColors.leafySoft,
   );
 
-  List<Widget> _targetSection(OnboardingData d) {
+  List<Widget> _targetSection(BuildContext context, OnboardingData d) {
+    final l = L.of(context);
     final losing = d.goal != HealthGoal.priseMasse;
     final height = int.tryParse(_height.text.trim());
     final current = _num(_weight.text);
@@ -166,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return [
       StepSectionTitle(
-        'Votre objectif de poids',
+        l.profileTargetSection,
         icon: losing ? AppIcons.trendDown : AppIcons.trend,
         tint: switch (d.goal) {
           HealthGoal.priseMasse => Tint.peach,
@@ -174,10 +178,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _ => Tint.mint,
         },
       ),
-      UnitFieldRow(label: 'Poids visé', unit: 'kg', controller: _target),
+      UnitFieldRow(label: l.profileTargetLabel, unit: 'kg', controller: _target),
       if (d.rateOptions.length > 1) ...[
         const SizedBox(height: AppSpace.x4),
-        Text('Rythme', style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
+        Text(l.profileRateLabel, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x2_5),
         Row(
           children: [
@@ -187,9 +191,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: _RateTile(
                   rate: r,
                   caption: switch (r) {
-                    0.25 => 'Progressif',
-                    0.5 => 'Recommandé',
-                    _ => 'Soutenu',
+                    0.25 => l.profileRateGentle,
+                    0.5 => l.commonRecommended,
+                    _ => l.profileRateSteady,
                   },
                   selected: d.effectiveRate == r,
                   onTap: () => d.update(() => d.weeklyRateKg = r),
@@ -201,17 +205,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: AppSpace.x2),
         Text(
           losing
-              ? 'Pour votre santé, Menoo ne propose jamais plus d\'1 kg de perte par semaine.'
-              : 'Une prise lente favorise le muscle plutôt que la masse grasse.',
+              ? l.profileLosingNote
+              : l.profileGainingNote,
           style: AppText.meta,
         ),
       ],
       if (d.goal == HealthGoal.seche) ...[
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.dumbbell,
-          title: 'Masse musculaire préservée',
-          text: 'Déficit modéré de 0,5 kg par semaine et apport en protéines renforcé (2 g par kg) pour perdre du gras, pas du muscle.',
+          title: l.profileCutTitle,
+          text: l.profileCutText,
           background: AppColors.lavenderSoft,
         ),
       ],
@@ -240,6 +244,7 @@ class _RateTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final fg = selected ? AppColors.primary : AppColors.ink;
     return Semantics(
       selected: selected,
@@ -258,10 +263,10 @@ class _RateTile extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                '${OnboardingData.formatRate(rate)} kg',
+                Formats.of(context).weight(L.of(context), rate),
                 style: AppText.of(AppFont.s16, weight: AppFont.extrabold, color: fg, lineHeight: 22),
               ),
-              Text('par semaine', style: AppText.of(AppFont.s11, color: AppColors.ink2)),
+              Text(L.of(context).profileRatePerWeek, style: AppText.of(AppFont.s11, color: AppColors.ink2)),
               const SizedBox(height: AppSpace.x1),
               Text(
                 caption,
@@ -297,6 +302,7 @@ class _Projection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     TextStyle big(Color c) => AppText.of(AppFont.s22, weight: AppFont.extrabold, color: c, lineHeight: 28);
     return Container(
       padding: const EdgeInsets.all(AppSpace.x4),
@@ -310,8 +316,8 @@ class _Projection extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${OnboardingData.formatKg(current)} kg', style: big(AppColors.ink)),
-                  Text('aujourd\'hui', style: AppText.meta),
+                  Text(Formats.of(context).weight(L.of(context), current), style: big(AppColors.ink)),
+                  Text(L.of(context).profileToday, style: AppText.meta),
                 ],
               ),
               const Padding(
@@ -321,8 +327,8 @@ class _Projection extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${OnboardingData.formatKg(target)} kg', style: big(AppColors.primaryDark)),
-                  Text('visés', style: AppText.meta),
+                  Text(Formats.of(context).weight(L.of(context), target), style: big(AppColors.primaryDark)),
+                  Text(L.of(context).profileTargeted, style: AppText.meta),
                 ],
               ),
               const Spacer(),
@@ -331,10 +337,10 @@ class _Projection extends StatelessWidget {
           ),
           const SizedBox(height: AppSpace.x2),
           Text(
-            'Environ $weeks semaine${weeks > 1 ? 's' : ''} à ${OnboardingData.formatRate(rate)} kg/semaine',
+            L.of(context).profileProjection(weeks, Formats.of(context).weight(L.of(context), rate)),
             style: AppText.of(AppFont.s14, weight: AppFont.bold, lineHeight: 20),
           ),
-          Text('Objectif estimé vers le ${OnboardingData.formatDate(date)}', style: AppText.caption),
+          Text(L.of(context).profileTargetDate(Formats.of(context).date(date)), style: AppText.caption),
         ],
       ),
     );

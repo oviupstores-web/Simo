@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
@@ -10,68 +11,69 @@ import '../../widgets/widgets.dart';
 class ActivityScreen extends StatelessWidget {
   const ActivityScreen({super.key});
 
-  static const _levels = [
+  static List<(ActivityLevel, String, String, String?, String, Tint)> _levels(L l) => [
     (
       ActivityLevel.sedentaire,
       AppIcons.chair,
-      'Sédentaire',
+      l.activitySedentaryTitle,
       null,
-      'Travail de bureau, peu ou pas de sport hebdomadaire',
+      l.activitySedentaryText,
       Tint.sky,
     ),
     (
       ActivityLevel.modere,
       AppIcons.walk,
-      'Modéré',
-      'Recommandé',
-      'Activité quotidienne légère, 1 à 2 séances de sport par semaine',
+      l.activityModerateTitle,
+      l.commonRecommended,
+      l.activityModerateText,
       Tint.mint,
     ),
     (
       ActivityLevel.actif,
       AppIcons.run,
-      'Actif',
+      l.activityActiveTitle,
       null,
-      'Travail dynamique ou 3 à 4 séances d\'entraînement par semaine',
+      l.activityActiveText,
       Tint.peach,
     ),
     (
       ActivityLevel.tresActif,
       AppIcons.flame,
-      'Très actif',
+      l.activityVeryActiveTitle,
       null,
-      'Métier physique ou 5 séances intenses et plus par semaine',
+      l.activityVeryActiveText,
       Tint.lavender,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.activity),
       totalSteps: OnboardingFlow.total(context),
-      title: 'Quel est votre niveau d\'activité ?',
-      subtitle: 'Indiquez vos habitudes quotidiennes et sportives moyennes pour calibrer vos besoins nutritionnels.',
+      title: l.activityTitle,
+      subtitle: l.activitySubtitle,
       onContinue: () => OnboardingFlow.next(context, OnbStep.activity),
       children: [
-        for (final (i, l) in _levels.indexed) ...[
+        for (final (i, lvl) in _levels(l).indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x3),
           ChoiceCard(
-            icon: l.$2,
-            title: l.$3,
-            badge: l.$4,
-            description: l.$5,
-            iconBackground: l.$6.soft,
-            iconForeground: l.$6.ink,
-            selected: d.activity == l.$1,
-            onTap: () => d.update(() => d.activity = l.$1),
+            icon: lvl.$2,
+            title: lvl.$3,
+            badge: lvl.$4,
+            description: lvl.$5,
+            iconBackground: lvl.$6.soft,
+            iconForeground: lvl.$6.ink,
+            selected: d.activity == lvl.$1,
+            onTap: () => d.update(() => d.activity = lvl.$1),
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.bulb,
-          text: 'Votre niveau d\'activité permet d\'ajuster vos macronutriments et votre apport calorique journalier.',
+          text: l.activityInfoText,
         ),
       ],
     );

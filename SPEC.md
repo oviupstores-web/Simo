@@ -281,7 +281,8 @@ Corrections des maquettes : ordre des onglets (la maquette met Instructions en p
   - **Tout le reste** (recettes, ingrédients, catégories, cuisines, équipements, textes de l'app) : traduction automatique, corrigée au fil des retours.
 - **6 langues au lancement** : français, anglais, espagnol, allemand, italien, arabe.
 - **Choix de la langue** :
-  - **À la première ouverture, la langue du téléphone est reprise automatiquement.** On ne demande rien : si le téléphone est en espagnol, l'app s'ouvre en espagnol. Une langue non gérée retombe sur l'anglais.
+  - **À la première ouverture, la langue du téléphone est reprise automatiquement.** On ne demande rien : si le téléphone est en espagnol, l'app s'ouvre en espagnol.
+  - **Langue non proposée → repli sur l'anglais, jamais sur le français.** Un téléphone en japonais, en polonais ou en portugais ouvre l'app en anglais. Le français est la langue de référence des traductions, pas la langue de secours : c'est l'anglais qui a le plus de chances d'être compris par quelqu'un dont la langue n'est pas encore gérée. La règle vaut aussi pour les contenus venant de la base (§ tables de traduction).
   - **Ensuite, elle se change dans les Réglages** (jalon 12), dans une ligne « Langue ». Le choix est enregistré et prime sur celui du téléphone.
   - **Jamais de drapeau.** Un drapeau désigne un pays, pas une langue : l'espagnol et l'arabe n'appartiennent à aucun pays en particulier. Chaque langue s'écrit **dans sa propre écriture**, pour être reconnue par qui ne lit pas les autres : Français · English · Español · Deutsch · Italiano · العربية.
   - La langue et le pays sont **deux réglages distincts** : le pays commande les unités, la devise et le format de date (§ ci-dessous), la langue commande les textes. Un Français aux États-Unis garde le français et passe aux unités impériales.

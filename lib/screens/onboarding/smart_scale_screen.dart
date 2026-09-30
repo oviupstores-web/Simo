@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
 import '../../theme/theme.dart';
@@ -11,14 +12,11 @@ import '../../widgets/widgets.dart';
 class SmartScaleScreen extends StatelessWidget {
   const SmartScaleScreen({super.key});
 
-  static const _benefits = [
-    'Pesées synchronisées automatiquement',
-    'Courbe de poids dans l\'onglet Suivi',
-    'Portions réajustées selon votre progression',
-  ];
+  static List<String> _benefits(L l) => [l.scaleBenefit1, l.scaleBenefit2, l.scaleBenefit3];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
     void choose(bool scale) {
       d.update(() => d.wantsScale = scale);
@@ -28,15 +26,15 @@ class SmartScaleScreen extends StatelessWidget {
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.scale),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'OPTIONNEL',
+      eyebrow: l.scaleEyebrow,
       eyebrowIcon: AppIcons.heartPulse,
-      title: 'Connectez votre balance',
-      subtitle: 'Menoo récupère votre poids depuis Health Connect, l\'application santé d\'Android, compatible avec la plupart des balances connectées.',
-      continueLabel: 'Associer via Health Connect',
+      title: l.scaleTitle,
+      subtitle: l.scaleSubtitle,
+      continueLabel: l.scaleConnect,
       showArrow: false,
       onContinue: () => choose(true),
       below: Center(
-        child: TextLink('Passer cette étape', weight: AppFont.bold, onTap: () => choose(false)),
+        child: TextLink(l.scaleSkip, weight: AppFont.bold, onTap: () => choose(false)),
       ),
       children: [
         AppCard(
@@ -45,7 +43,7 @@ class SmartScaleScreen extends StatelessWidget {
             children: [
               Image.asset('assets/images/balance_connectee.jpg', height: AppSizes.scaleHero, excludeFromSemantics: true),
               const SizedBox(height: AppSpace.x4),
-              for (final (i, b) in _benefits.indexed) ...[
+              for (final (i, b) in _benefits(l).indexed) ...[
                 if (i > 0) const SizedBox(height: AppSpace.x2_5),
                 Row(
                   children: [
@@ -59,9 +57,9 @@ class SmartScaleScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpace.x4),
-        const InfoBanner(
+        InfoBanner(
           icon: AppIcons.info,
-          text: 'L\'autorisation vous sera demandée après la création de votre compte. Sans balance, vous pourrez saisir votre poids à la main.',
+          text: l.scaleInfoText,
           background: AppColors.neutralSoft,
         ),
       ],

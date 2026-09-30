@@ -11,7 +11,9 @@ void main() {
   const allowed = {
     // Marque et polices
     'Menoo', 'PlusJakartaSans', 'Caveat', 'NotoSansArabic',
-    // Écrans encore en français, traduits au fur et à mesure (liste vidée à la fin du 5i).
+    // Noms propres : marques et enseignes ne se traduisent pas.
+    'Google', 'Apple', 'Health Connect', 'Open Prices',
+    'E.Leclerc', 'Carrefour', 'Intermarché', 'Auchan', 'Super U', 'Lidl', 'Monoprix', 'Biocoop',
   };
 
   /// Fichiers sans texte d'interface : données, icônes, mots-clés de détection.
@@ -29,19 +31,19 @@ void main() {
     'lib/navigation.dart',
     'lib/screens/home/',
     'lib/screens/menus/',
-    'lib/screens/onboarding/activity_screen.dart',
+    
     'lib/screens/onboarding/budget_screen.dart',
     'lib/screens/onboarding/constraints_screen.dart',
-    'lib/screens/onboarding/goal_screen.dart',
-    'lib/screens/onboarding/household_size_screen.dart',
+    
+    
     'lib/screens/onboarding/kitchen_screen.dart',
-    'lib/screens/onboarding/management_mode_screen.dart',
+    
     'lib/screens/onboarding/member_profiles_screen.dart',
     'lib/screens/onboarding/onboarding_cuisines_screen.dart',
     'lib/screens/onboarding/profile_screen.dart',
-    'lib/screens/onboarding/smart_scale_screen.dart',
+    
     'lib/screens/onboarding/summary_screen.dart',
-    'lib/screens/onboarding/supermarket_screen.dart',
+    
     'lib/screens/onboarding/weekly_grid_screen.dart',
     'lib/screens/pantry/',
     'lib/screens/shopping/',
@@ -54,14 +56,17 @@ void main() {
   /// Dossiers à ne pas scanner.
   const skippedDirs = {'lib/l10n'};
 
-  /// Un texte est « visible » s'il contient un accent français, ou au moins deux mots
-  /// de trois lettres. Cela laisse passer les identifiants (`sans_porc`, `fridge`).
+  /// Un texte est « visible » s'il ressemble à une phrase ou à un mot écrit pour être lu :
+  /// un accent, deux mots, ou un seul mot qui commence par une majuscule (« Continuer »).
+  /// Cela laisse passer les identifiants techniques (`sans_porc`, `fridge`, `EUR`).
   bool looksLikeUiText(String s) {
-    if (s.length < 4) return false;
+    if (s.trim().length < 3) return false;
     if (RegExp(r'^(assets/|package:|dart:|https?:|\.\.?/|[a-z_]+\.(dart|jpg|png|ttf|svg))').hasMatch(s)) return false;
     if (s.startsWith('<')) return false; // tracé SVG
-    if (RegExp('[àâäéèêëîïôöùûüçœæÀÉÈÊÇ]').hasMatch(s)) return true;
-    return RegExp(r'[A-Za-z]{3,}\s+[A-Za-z]{3,}').hasMatch(s);
+    if (RegExp('[àâäéèêëîïôöùûüçœæÀÉÈÊÇÎÔÙ]').hasMatch(s)) return true;
+    if (RegExp(r'[A-Za-z]{3,}\s+[A-Za-z]{2,}').hasMatch(s)) return true;
+    // Un mot seul, capitalisé, d'au moins 3 lettres : « Passer », « Menus », « Email ».
+    return RegExp(r'^[A-Z][a-z]{2,}$').hasMatch(s.trim());
   }
 
   /// Retire les commentaires de ligne, pour ne pas signaler les explications en français.

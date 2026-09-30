@@ -56,6 +56,17 @@ class _MenooAppState extends State<MenooApp> {
           locale: locale,
           supportedLocales: L.supportedLocales,
           localizationsDelegates: L.localizationsDelegates,
+          // Une langue que nous ne proposons pas (japonais, polonais…) retombe sur
+          // l'anglais, jamais sur le français : SPEC §10.
+          localeResolutionCallback: (device, supported) {
+            for (final candidate in [locale, device]) {
+              if (candidate == null) continue;
+              for (final s in supported) {
+                if (s.languageCode == candidate.languageCode) return s;
+              }
+            }
+            return const Locale('en');
+          },
           builder: (context, child) => OnboardingScope(data: _onboarding, child: child!),
           home: const LandingScreen(),
         ),
