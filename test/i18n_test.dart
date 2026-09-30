@@ -32,7 +32,6 @@ void main() {
     
     
     'lib/screens/pantry/',
-    'lib/screens/shopping/',
     'lib/widgets/list_section.dart',
     'lib/widgets/onboarding_step.dart',
   };

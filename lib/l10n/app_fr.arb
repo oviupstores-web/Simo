@@ -1079,5 +1079,51 @@
   },
   "recipeInStock": "En réserve ✓",
   "recipeToBuy": "À acheter",
-  "recipeStart": "Démarrer la recette"
+  "recipeStart": "Démarrer la recette",
+  "shopDemoBananas": "Bananes",
+  "shopDemoSpinach": "Épinards frais",
+  "shopDemoCherryTomatoes": "Tomates cerises",
+  "shopDemoLemons": "Citrons",
+  "shopDemoSalmon": "Pavés de saumon",
+  "shopDemoChicken": "Filets de poulet",
+  "shopDemoGreekYogurt": "Yaourt grec",
+  "shopDemoAlmonds": "Amandes",
+  "shopDemoOrganicQuinoa": "Quinoa bio",
+  "qty2Pieces": "2 pièces",
+  "qty4Pieces": "4 pièces",
+  "shoppingTitle": "Ma liste de courses",
+  "shoppingWeekRange": "Semaine du {start} au {end} · réserve déduite",
+  "@shoppingWeekRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingEstimatedTotal": "{count, plural, one{Total estimé · {count} article} other{Total estimé · {count} articles}}",
+  "@shoppingEstimatedTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingFruitsVeg": "Fruits & Légumes",
+  "shoppingFreshProtein": "Frais & Protéines",
+  "shoppingGrocery": "Épicerie",
+  "itemCount": "{count, plural, one{{count} article} other{{count} articles}}",
+  "@itemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingUnlockTitle": "Débloquez la liste complète",
+  "shoppingUnlockText": "8 articles de plus, le comparateur de prix entre enseignes et l'envoi au drive.",
+  "shoppingTrial": "Essayer 7 jours gratuits",
+  "shoppingThenPrice": "Puis 9,99 €/mois · sans engagement"
 }

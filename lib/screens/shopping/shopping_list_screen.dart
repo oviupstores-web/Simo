@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -18,20 +19,20 @@ class ShoppingListScreen extends StatefulWidget {
 }
 
 class _ShoppingListScreenState extends State<ShoppingListScreen> {
-  static const List<_Article> _fruits = [
-    ('f_banane.jpg', 'Bananes', '1 kg', '1,99 €'),
-    ('f_epinards.jpg', 'Épinards frais', '200 g', '1,89 €'),
-    ('i_tomates.jpg', 'Tomates cerises', '250 g', '2,29 €'),
-    ('i_citron.jpg', 'Citrons', '2 pièces', '0,98 €'),
+  static List<_Article> _fruits(L l) => [
+    ('f_banane.jpg', l.shopDemoBananas, l.unitKilograms('1'), '1,99 €'),
+    ('f_epinards.jpg', l.shopDemoSpinach, l.unitGrams('200'), '1,89 €'),
+    ('i_tomates.jpg', l.shopDemoCherryTomatoes, l.unitGrams('250'), '2,29 €'),
+    ('i_citron.jpg', l.shopDemoLemons, l.qty2Pieces, '0,98 €'),
   ];
-  static const List<_Article> _fresh = [
-    ('i_saumon.jpg', 'Pavés de saumon', '4 pièces', '16,40 €'),
-    ('p_poulet.jpg', 'Filets de poulet', '600 g', '8,90 €'),
-    ('p_yaourt.jpg', 'Yaourt grec', '1 kg', '3,20 €'),
+  static List<_Article> _fresh(L l) => [
+    ('i_saumon.jpg', l.shopDemoSalmon, l.qty4Pieces, '16,40 €'),
+    ('p_poulet.jpg', l.shopDemoChicken, l.unitGrams('600'), '8,90 €'),
+    ('p_yaourt.jpg', l.shopDemoGreekYogurt, l.unitKilograms('1'), '3,20 €'),
   ];
-  static const List<_Article> _grocery = [
-    ('f_amandes.jpg', 'Amandes', '250 g', '3,49 €'),
-    ('i_quinoa.jpg', 'Quinoa bio', '500 g', '3,40 €'),
+  static List<_Article> _grocery(L l) => [
+    ('f_amandes.jpg', l.shopDemoAlmonds, l.unitGrams('250'), '3,49 €'),
+    ('i_quinoa.jpg', l.shopDemoOrganicQuinoa, l.unitGrams('500'), '3,40 €'),
   ];
 
   final _checked = <String>{};
@@ -60,6 +61,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Scaffold(
       bottomNavigationBar: const MenooNavBar(current: MenooTab.courses),
       body: SafeArea(
@@ -76,10 +78,10 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: AppSpace.x5),
-                    Text('Ma liste de courses', style: AppText.h1Dash),
+                    Text(l.shoppingTitle, style: AppText.h1Dash),
                     const SizedBox(height: AppSpace.x1),
                     Text(
-                      'Semaine du 14 au 20 · réserve déduite',
+                      l.shoppingWeekRange('14', '20'),
                       style: AppText.of(AppFont.s14, color: AppColors.ink2),
                     ),
                     const SizedBox(height: AppSpace.x4),
@@ -93,7 +95,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Total estimé · 12 articles', style: AppText.caption),
+                                  Text(l.shoppingEstimatedTotal(12), style: AppText.caption),
                                   Text.rich(
                                     TextSpan(
                                       children: [
@@ -107,8 +109,8 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                                   ),
                                 ],
                               ),
-                              const PillBadge(
-                                'Dans le budget ✓',
+                              PillBadge(
+                                l.homeInBudget,
                                 size: AppFont.s12,
                                 padding: EdgeInsets.symmetric(horizontal: AppSpace.x2_5, vertical: AppSpace.x1),
                               ),
@@ -120,7 +122,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                       ),
                     ),
                     const SizedBox(height: AppSpace.x4),
-                    _section(AppIcons.leaf, 'Fruits & Légumes', '4 articles', _fruits),
+                    _section(AppIcons.leaf, l.shoppingFruitsVeg, l.itemCount(4), _fruits(l)),
                     const SizedBox(height: AppSpace.x3),
                     Stack(
                       clipBehavior: Clip.none,
@@ -133,13 +135,13 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                               children: [
                                 _section(
                                   AppIcons.fridge,
-                                  'Frais & Protéines',
-                                  '5 articles',
-                                  _fresh,
+                                  l.shoppingFreshProtein,
+                                  l.itemCount(5),
+                                  _fresh(l),
                                   interactive: false,
                                 ),
                                 const SizedBox(height: AppSpace.x3),
-                                _section(AppIcons.cupboard, 'Épicerie', '3 articles', _grocery, interactive: false),
+                                _section(AppIcons.cupboard, l.shoppingGrocery, l.itemCount(3), _grocery(l), interactive: false),
                               ],
                             ),
                           ),
@@ -163,6 +165,7 @@ class _UnlockCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Container(
       padding: const EdgeInsets.all(AppSpace.x5),
       decoration: BoxDecoration(
@@ -176,25 +179,25 @@ class _UnlockCard extends StatelessWidget {
           const IconTile(icon: AppIcons.lock, size: AppSizes.lockCircle, iconSize: 22, circle: true),
           const SizedBox(height: AppSpace.x3),
           Text(
-            'Débloquez la liste complète',
+            L.of(context).shoppingUnlockTitle,
             style: AppText.of(AppFont.s17, weight: AppFont.extrabold, lineHeight: 24),
           ),
           const SizedBox(height: AppSpace.x1),
           Text(
-            '8 articles de plus, le comparateur de prix entre enseignes et l\'envoi au drive.',
+            L.of(context).shoppingUnlockText,
             textAlign: TextAlign.center,
             style: AppText.of(AppFont.s13, color: AppColors.ink2, lineHeight: 19),
           ),
           const SizedBox(height: AppSpace.x4),
           PrimaryButton(
-            label: 'Essayer 7 jours gratuits',
+            label: L.of(context).shoppingTrial,
             showArrow: false,
             height: AppSizes.btnSecondaryHeight,
             textStyle: AppText.of(AppFont.s16, weight: AppFont.bold, color: AppColors.white),
             onPressed: () {}, // → paywall_premium (jalon 7)
           ),
           const SizedBox(height: AppSpace.x2),
-          Text('Puis 9,99 €/mois · sans engagement', style: AppText.of(AppFont.s12, color: AppColors.ink3)),
+          Text(L.of(context).shoppingThenPrice, style: AppText.of(AppFont.s12, color: AppColors.ink3)),
         ],
       ),
     );
