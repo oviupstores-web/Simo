@@ -39,8 +39,20 @@ class Formats {
   String priceRounded(int cents) =>
       NumberFormat.simpleCurrency(locale: _tag, name: currency, decimalDigits: 0).format(cents / 100);
 
-  String number(num value, {int decimals = 0}) =>
-      NumberFormat.decimalPatternDigits(locale: _tag, decimalDigits: decimals).format(value);
+  /// Arrondit à [decimals] chiffres, puis enlève les zéros inutiles à droite
+  /// (75 kg, jamais 75,0 kg ; 0,75 kg/semaine mais 0,5, jamais 0,50 — comme les anciens
+  /// `OnboardingData.formatKg` et `formatRate`).
+  String number(num value, {int decimals = 0}) {
+    var effectiveDecimals = decimals;
+    var rounded = num.parse(value.toStringAsFixed(decimals));
+    while (effectiveDecimals > 0) {
+      final lower = double.parse(rounded.toStringAsFixed(effectiveDecimals - 1));
+      if (lower != rounded) break;
+      effectiveDecimals--;
+      rounded = lower;
+    }
+    return NumberFormat.decimalPatternDigits(locale: _tag, decimalDigits: effectiveDecimals).format(rounded);
+  }
 
   /// « 14 septembre 2026 » en français, « September 14, 2026 » en anglais.
   String date(DateTime d) => DateFormat.yMMMMd(_tag).format(d);
@@ -57,6 +69,12 @@ class Formats {
   String weight(L l, double kg) => units == UnitSystem.metric
       ? l.unitKilograms(number(kg, decimals: 1))
       : l.unitPounds(number(kg * 2.20462, decimals: 1));
+
+  /// Rythme de poids par semaine (paliers de 0,25 kg) : plus de précision que [weight],
+  /// pour distinguer 0,25 / 0,5 / 0,75.
+  String rate(L l, double kgPerWeek) => units == UnitSystem.metric
+      ? l.unitKilograms(number(kgPerWeek, decimals: 2))
+      : l.unitPounds(number(kgPerWeek * 2.20462, decimals: 2));
 
   /// Taille : centimètres, ou pieds et pouces aux États-Unis.
   String height(L l, double cm) {

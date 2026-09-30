@@ -353,7 +353,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
             children: [
               for (final a in ActivityLevel.values)
                 ToggleChip(
-                  label: SummaryScreen.activities[a]!,
+                  label: SummaryScreen.activities(l)[a]!,
                   selected: m.activity == a,
                   onTap: () => setState(() => m.activity = a),
                 ),

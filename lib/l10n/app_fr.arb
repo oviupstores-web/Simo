@@ -680,5 +680,284 @@
         "type": "int"
       }
     }
-  }
+  },
+  "activitySedentaryShort": "Sédentaire",
+  "activityModerateShort": "Activité modérée",
+  "activityActiveShort": "Actif",
+  "activityVeryActiveShort": "Très actif",
+  "modeShoppingOnlyTitle": "Courses uniquement",
+  "modeShoppingOnlyText": "Liste de courses complète chaque semaine.",
+  "modePantryOnlyTitle": "Réserves uniquement",
+  "modePantryOnlyText": "Vos menus partent de ce que vous avez déjà.",
+  "modeMixedTitle": "Mixte",
+  "modeMixedText": "Vos réserves d'abord, complétées par une liste de courses.",
+  "levelBeginnerShort": "Débutant",
+  "levelIntermediateShort": "Intermédiaire",
+  "levelAdvancedShort": "Confirmé",
+  "mealBreakfastPlural": "petits-déjeuners",
+  "mealLunchPlural": "déjeuners",
+  "mealDinnerPlural": "dîners",
+  "mealCountOfType": "{count} {meal}",
+  "@mealCountOfType": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryEyebrow": "RÉCAPITULATIF",
+  "summaryTitleSolo": "Votre profil est prêt !",
+  "summaryTitleHousehold": "Le menu de votre foyer est prêt à être composé !",
+  "summarySubtitleSolo": "Vérifiez vos choix avant de générer votre premier menu personnalisé.",
+  "summarySubtitleHousehold": "Vérifiez vos choix avant de générer les {count} repas de la semaine.",
+  "@summarySubtitleHousehold": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryGenerateHousehold": "Générer notre menu",
+  "summaryGenerateSolo": "Générer mon menu",
+  "summaryAccountNote": "Vous créerez votre compte juste avant la génération",
+  "summaryHouseholdCompositionTitle": "Composition du foyer",
+  "summaryPersonCount": "{count, plural, one{{count} personne} other{{count} personnes}} : {composition}",
+  "@summaryPersonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "composition": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryAdultCount": "{count, plural, one{{count} adulte} other{{count} adultes}}",
+  "@summaryAdultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryChildCount": "{count, plural, one{{count} enfant} other{{count} enfants}}",
+  "@summaryChildCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryBabyCount": "{count, plural, one{{count} bébé} other{{count} bébés}}",
+  "@summaryBabyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryMemberLine": "{name}, {age}",
+  "@summaryMemberLine": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryGoalProfileTitle": "Objectif & profil",
+  "summarySexAge": "{sex}, {age} ans · {height} · {weight}",
+  "@summarySexAge": {
+    "placeholders": {
+      "sex": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      },
+      "height": {
+        "type": "String"
+      },
+      "weight": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryTargetLine": "Objectif : {target} · environ {weeks} semaines à {rate} (vers le {date})",
+  "@summaryTargetLine": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      },
+      "weeks": {
+        "type": "int"
+      },
+      "rate": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryScaleYes": "Balance via Health Connect",
+  "summaryScaleNo": "Sans balance (saisie manuelle)",
+  "summaryPaceBudgetTitle": "Rythme & budget",
+  "summaryMealsPerWeek": "{count} repas / semaine : {detail}",
+  "@summaryMealsPerWeek": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryBudgetPortion": "{amount} / semaine · ~{perPortion} par portion ({portions} portions)",
+  "@summaryBudgetPortion": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "perPortion": {
+        "type": "String"
+      },
+      "portions": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryBudgetMeal": "{amount} / semaine · ~{perMeal} par repas",
+  "@summaryBudgetMeal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "perMeal": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryManagementTitle": "Mode de gestion",
+  "summaryPantryEmptyLater": "Onglet Réserve activé · réserve à remplir plus tard",
+  "summaryPantryCount": "Onglet Réserve activé · {count, plural, one{{count} produit} other{{count} produits}} en réserve",
+  "@summaryPantryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryDietExclusionsTitle": "Régimes & exclusions",
+  "summaryDietOmnivore": "Régime : omnivore",
+  "summaryDietsList": "Régimes : {list}",
+  "@summaryDietsList": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryAllergensList": "Allergènes : {list}",
+  "@summaryAllergensList": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryExcludedList": "Exclus : {list}",
+  "@summaryExcludedList": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryCuisinesAll": "Cuisines : toutes",
+  "summaryCuisinesList": "Cuisines : {list}",
+  "@summaryCuisinesList": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryKitchenTitle": "Ma cuisine",
+  "summaryCookRotating": "Cuisine : à tour de rôle",
+  "summaryCookName": "Cuisine le plus souvent : {name}",
+  "@summaryCookName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryLevel": "Niveau : {level}",
+  "@summaryLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryTimes": "Semaine : {weekday} · week-end : {weekend}",
+  "@summaryTimes": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "weekend": {
+        "type": "String"
+      }
+    }
+  },
+  "summarySupermarketTitle": "Supermarché",
+  "summaryDailyTargetTitle": "Cible journalière calculée",
+  "summaryProteinG": "{value} g protéines",
+  "@summaryProteinG": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryCarbsG": "{value} g glucides",
+  "@summaryCarbsG": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryFatG": "{value} g lipides",
+  "@summaryFatG": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryEstimateTarget": "Estimation selon votre profil et votre activité, avec un écart calculé pour {verb} {rate} par semaine ; ajustée ensuite selon votre progression.",
+  "@summaryEstimateTarget": {
+    "placeholders": {
+      "verb": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryEstimateMaintain": "Estimation selon votre profil et votre activité pour stabiliser votre poids ; ajustée ensuite selon votre progression.",
+  "summaryGain": "prendre",
+  "summaryLose": "perdre",
+  "summaryEdit": "Éditer",
+  "summaryKcalPerDaySuffix": " kcal / jour"
 }

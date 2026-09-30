@@ -50,3 +50,4 @@ app.*.map.json
 # Localisations générées par Flutter (regénérées par `flutter pub get`)
 /lib/l10n/app_localizations*.dart
 test/i18n_all_tmp_test.dart
+test/failures/

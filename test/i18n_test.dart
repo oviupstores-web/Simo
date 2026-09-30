@@ -31,7 +31,6 @@ void main() {
     'lib/navigation.dart',
     'lib/screens/home/',
     'lib/screens/menus/',
-    'lib/screens/onboarding/summary_screen.dart',
     
     
     'lib/screens/pantry/',

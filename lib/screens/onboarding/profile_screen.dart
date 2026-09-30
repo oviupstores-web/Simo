@@ -263,7 +263,7 @@ class _RateTile extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                Formats.of(context).weight(L.of(context), rate),
+                Formats.of(context).rate(L.of(context), rate),
                 style: AppText.of(AppFont.s16, weight: AppFont.extrabold, color: fg, lineHeight: 22),
               ),
               Text(L.of(context).profileRatePerWeek, style: AppText.of(AppFont.s11, color: AppColors.ink2)),
@@ -337,7 +337,7 @@ class _Projection extends StatelessWidget {
           ),
           const SizedBox(height: AppSpace.x2),
           Text(
-            L.of(context).profileProjection(weeks, Formats.of(context).weight(L.of(context), rate)),
+            L.of(context).profileProjection(weeks, Formats.of(context).rate(L.of(context), rate)),
             style: AppText.of(AppFont.s14, weight: AppFont.bold, lineHeight: 20),
           ),
           Text(L.of(context).profileTargetDate(Formats.of(context).date(date)), style: AppText.caption),

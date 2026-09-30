@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../l10n/formats.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -24,97 +25,96 @@ class SummaryScreen extends StatelessWidget {
     HealthGoal.seche: (l.goalCutTitle, AppIcons.bolt),
     HealthGoal.maintien: (l.goalMaintainTitle, AppIcons.lotus),
   };
-  static const activities = {
-    ActivityLevel.sedentaire: 'Sédentaire',
-    ActivityLevel.modere: 'Activité modérée',
-    ActivityLevel.actif: 'Actif',
-    ActivityLevel.tresActif: 'Très actif',
+  static Map<ActivityLevel, String> activities(L l) => {
+    ActivityLevel.sedentaire: l.activitySedentaryShort,
+    ActivityLevel.modere: l.activityModerateShort,
+    ActivityLevel.actif: l.activityActiveShort,
+    ActivityLevel.tresActif: l.activityVeryActiveShort,
   };
-  static const modes = {
-    ManagementMode.courses: ('Courses uniquement', 'Liste de courses complète chaque semaine.'),
-    ManagementMode.reserves: ('Réserves uniquement', 'Vos menus partent de ce que vous avez déjà.'),
-    ManagementMode.mixte: ('Mixte', 'Vos réserves d\'abord, complétées par une liste de courses.'),
+  static Map<ManagementMode, (String, String)> modes(L l) => {
+    ManagementMode.courses: (l.modeShoppingOnlyTitle, l.modeShoppingOnlyText),
+    ManagementMode.reserves: (l.modePantryOnlyTitle, l.modePantryOnlyText),
+    ManagementMode.mixte: (l.modeMixedTitle, l.modeMixedText),
   };
-  static const levels = {
-    CookingLevel.debutant: 'Débutant',
-    CookingLevel.intermediaire: 'Intermédiaire',
-    CookingLevel.confirme: 'Confirmé',
+  static Map<CookingLevel, String> levels(L l) => {
+    CookingLevel.debutant: l.levelBeginnerShort,
+    CookingLevel.intermediaire: l.levelIntermediateShort,
+    CookingLevel.confirme: l.levelAdvancedShort,
   };
-  static const mealNames = {
-    MealType.petitDejeuner: 'petits-déjeuners',
-    MealType.dejeuner: 'déjeuners',
-    MealType.diner: 'dîners',
+  static Map<MealType, String> mealNames(L l) => {
+    MealType.petitDejeuner: l.mealBreakfastPlural,
+    MealType.dejeuner: l.mealLunchPlural,
+    MealType.diner: l.mealDinnerPlural,
   };
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final d = OnboardingScope.of(context);
-    final goal = goals(L.of(context))[d.goal]!;
+    final fmt = Formats.of(context);
+    final goal = goals(l)[d.goal]!;
     final m = d.macros;
     void edit(OnbStep step) => OnboardingFlow.open(context, step, fromSummary: true);
-    final weight = d.weightKg == d.weightKg.roundToDouble()
-        ? '${d.weightKg.round()}'
-        : '${d.weightKg}'.replaceAll('.', ',');
+    final weight = fmt.weight(l, d.weightKg);
     final mealsByType = [
       for (final t in MealType.values)
-        if (d.slots.any((s) => s.$2 == t)) '${d.slots.where((s) => s.$2 == t).length} ${mealNames[t]}',
+        if (d.slots.any((s) => s.$2 == t)) l.mealCountOfType(d.slots.where((s) => s.$2 == t).length, mealNames(l)[t]!),
     ].join(', ');
     final dietLabels = [
-      for (final diet in ConstraintsScreen.diets(L.of(context)))
+      for (final diet in ConstraintsScreen.diets(l))
         if (d.diets.contains(diet.$1)) diet.$2,
     ];
     // Foyer : allergènes partagés + ceux des profils (avec les prénoms concernés)
     final byMember = d.isFoyer ? d.memberAllergens : const <String, List<String>>{};
     final allergenLabels = [
-      for (final a in ConstraintsScreen.allergenChoices(L.of(context)))
+      for (final a in ConstraintsScreen.allergenChoices(l))
         if (a.$1.any(d.allAllergens.contains))
           a.$1.any(byMember.containsKey) && !a.$1.any(d.allergens.contains)
               ? '${a.$2} (${{for (final c in a.$1) ...?byMember[c]}.join(', ')})'
               : a.$2,
     ];
     final equipmentLabels = [
-      for (final e in KitchenScreen.equipment(L.of(context)))
+      for (final e in KitchenScreen.equipment(l))
         if (d.equipment.contains(e.$1)) e.$2,
     ];
-    final channel = SupermarketScreen.channels(L.of(context)).firstWhere((c) => c.$1 == d.channel).$2;
+    final channel = SupermarketScreen.channels(l).firstWhere((c) => c.$1 == d.channel).$2;
     final foyer = d.isFoyer;
     final cook = d.members.where((m) => m.id == d.mainCookId).firstOrNull;
-    String plural(int n, String word) => '$n $word${n > 1 ? 's' : ''}';
     final composition = [
-      if (d.count(MemberRole.adulte) > 0) plural(d.count(MemberRole.adulte), 'adulte'),
-      if (d.count(MemberRole.enfant) > 0) plural(d.count(MemberRole.enfant), 'enfant'),
-      if (d.count(MemberRole.bebe) > 0) plural(d.count(MemberRole.bebe), 'bébé'),
+      if (d.count(MemberRole.adulte) > 0) l.summaryAdultCount(d.count(MemberRole.adulte)),
+      if (d.count(MemberRole.enfant) > 0) l.summaryChildCount(d.count(MemberRole.enfant)),
+      if (d.count(MemberRole.bebe) > 0) l.summaryBabyCount(d.count(MemberRole.bebe)),
     ].join(', ');
 
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.summary),
       totalSteps: OnboardingFlow.total(context),
-      eyebrow: 'RÉCAPITULATIF',
+      eyebrow: l.summaryEyebrow,
       eyebrowIcon: AppIcons.checkCircle,
-      title: foyer ? 'Le menu de votre foyer est prêt à être composé !' : 'Votre profil est prêt !',
+      title: foyer ? l.summaryTitleHousehold : l.summaryTitleSolo,
       subtitle: foyer
-          ? 'Vérifiez vos choix avant de générer les ${d.plannedMeals} repas de la semaine.'
-          : 'Vérifiez vos choix avant de générer votre premier menu personnalisé.',
-      continueLabel: foyer ? 'Générer notre menu' : 'Générer mon menu',
+          ? l.summarySubtitleHousehold(d.plannedMeals)
+          : l.summarySubtitleSolo,
+      continueLabel: foyer ? l.summaryGenerateHousehold : l.summaryGenerateSolo,
       onContinue: () => push(context, const SignupScreen()),
       below: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const AppIcon(AppIcons.lock, size: 14, color: AppColors.ink2),
           const SizedBox(width: AppSpace.x1_5),
-          Text('Vous créerez votre compte juste avant la génération', style: AppText.meta),
+          Text(l.summaryAccountNote, style: AppText.meta),
         ],
       ),
       children: [
         if (foyer)
           _SummaryCard(
             icon: AppIcons.people,
-            title: 'Composition du foyer',
+            title: l.summaryHouseholdCompositionTitle,
             onEdit: () => edit(OnbStep.members),
             children: [
               _Line(
                 icon: AppIcons.people,
-                text: '${plural(d.peopleCount, 'personne')} : $composition',
+                text: l.summaryPersonCount(d.peopleCount, composition),
                 strong: true,
                 onTap: () => edit(OnbStep.household),
               ),
@@ -126,8 +126,8 @@ class SummaryScreen extends StatelessWidget {
                     MemberRole.bebe => AppIcons.baby,
                   },
                   text: [
-                    '${d.displayName(m)}, ${m.ageLabel}',
-                    if (m.role == MemberRole.adulte) goals(L.of(context))[m.goal]!.$1,
+                    l.summaryMemberLine(d.displayName(m), m.ageLabel(l)),
+                    if (m.role == MemberRole.adulte) goals(l)[m.goal]!.$1,
                   ].join(' · '),
                   onTap: () => edit(OnbStep.members),
                 ),
@@ -136,27 +136,25 @@ class SummaryScreen extends StatelessWidget {
         else
           _SummaryCard(
             icon: AppIcons.target,
-            title: 'Objectif & profil',
+            title: l.summaryGoalProfileTitle,
             onEdit: () => edit(OnbStep.goal),
             children: [
               _Line(icon: goal.$2, text: goal.$1, strong: true),
               _Line(
                 icon: AppIcons.user,
-                text: '${d.sex == Sex.homme ? 'Homme' : 'Femme'}, ${d.age} ans · ${d.heightCm} cm · $weight kg',
+                text: l.summarySexAge(d.sex == Sex.homme ? l.profileSexMale : l.profileSexFemale, d.age, fmt.height(l, d.heightCm.toDouble()), weight),
                 onTap: () => edit(OnbStep.profile),
               ),
               if (d.needsTarget && d.targetWeightKg != null)
                 _Line(
                   icon: AppIcons.flag,
-                  text:
-                      'Objectif : ${OnboardingData.formatKg(d.targetWeightKg!)} kg · environ ${d.weeksToTarget()} semaines '
-                      'à ${OnboardingData.formatRate(d.effectiveRate)} kg/semaine (vers le ${OnboardingData.formatDate(d.targetDate()!)})',
+                  text: l.summaryTargetLine(fmt.weight(l, d.targetWeightKg!), d.weeksToTarget() ?? 0, fmt.rate(l, d.effectiveRate), fmt.date(d.targetDate()!)),
                   onTap: () => edit(OnbStep.profile),
                 ),
-              _Line(icon: AppIcons.walk, text: activities[d.activity]!, onTap: () => edit(OnbStep.activity)),
+              _Line(icon: AppIcons.walk, text: activities(l)[d.activity]!, onTap: () => edit(OnbStep.activity)),
               _Line(
                 icon: AppIcons.scale,
-                text: d.wantsScale ? 'Balance via Health Connect' : 'Sans balance (saisie manuelle)',
+                text: d.wantsScale ? l.summaryScaleYes : l.summaryScaleNo,
                 onTap: () => edit(OnbStep.scale),
               ),
             ],
@@ -164,20 +162,20 @@ class SummaryScreen extends StatelessWidget {
         const SizedBox(height: AppSpace.x3),
         _SummaryCard(
           icon: AppIcons.calendar,
-          title: 'Rythme & budget',
+          title: l.summaryPaceBudgetTitle,
           tint: Tint.peach,
           onEdit: () => edit(OnbStep.budget),
           children: [
             _Line(
               icon: AppIcons.week,
-              text: '${d.plannedMeals} repas / semaine : $mealsByType',
+              text: l.summaryMealsPerWeek(d.plannedMeals, mealsByType),
               onTap: () => edit(OnbStep.grid),
             ),
             _Line(
               icon: AppIcons.wallet,
               text: foyer
-                  ? '${d.budgetEuros} € / semaine · ~${d.budgetPerPortion.toStringAsFixed(2).replaceAll('.', ',')} € par portion (${d.weeklyPortions} portions)'
-                  : '${d.budgetEuros} € / semaine · ~${d.budgetPerMeal.toStringAsFixed(2).replaceAll('.', ',')} € par repas',
+                  ? l.summaryBudgetPortion(fmt.priceRounded(d.budgetEuros * 100), fmt.price((d.budgetPerPortion * 100).round()), d.weeklyPortions)
+                  : l.summaryBudgetMeal(fmt.priceRounded(d.budgetEuros * 100), fmt.price((d.budgetPerMeal * 100).round())),
               strong: true,
             ),
           ],
@@ -185,41 +183,41 @@ class SummaryScreen extends StatelessWidget {
         const SizedBox(height: AppSpace.x3),
         _SummaryCard(
           icon: AppIcons.fridge,
-          title: 'Mode de gestion',
+          title: l.summaryManagementTitle,
           tint: Tint.sky,
           onEdit: () => edit(OnbStep.management),
           children: [
-            _Line(icon: AppIcons.balance, text: modes[d.management]!.$1, strong: true),
-            _Line(icon: AppIcons.info, text: modes[d.management]!.$2),
+            _Line(icon: AppIcons.balance, text: modes(l)[d.management]!.$1, strong: true),
+            _Line(icon: AppIcons.info, text: modes(l)[d.management]!.$2),
             if (d.management != ManagementMode.courses)
               _Line(
                 icon: AppIcons.checkCircle,
                 text: d.pantry.isEmpty
-                    ? 'Onglet Réserve activé · réserve à remplir plus tard'
-                    : 'Onglet Réserve activé · ${d.pantry.length} produit${d.pantry.length > 1 ? 's' : ''} en réserve',
+                    ? l.summaryPantryEmptyLater
+                    : l.summaryPantryCount(d.pantry.length),
               ),
           ],
         ),
         const SizedBox(height: AppSpace.x3),
         _SummaryCard(
           icon: AppIcons.block,
-          title: 'Régimes & exclusions',
+          title: l.summaryDietExclusionsTitle,
           tint: Tint.lavender,
           onEdit: () => edit(OnbStep.constraints),
           children: [
             _Line(
               icon: AppIcons.leaf,
-              text: dietLabels.isEmpty ? 'Régime : omnivore' : 'Régimes : ${dietLabels.join(', ')}',
+              text: dietLabels.isEmpty ? l.summaryDietOmnivore : l.summaryDietsList(dietLabels.join(', ')),
             ),
             if (allergenLabels.isNotEmpty)
-              _Line(icon: AppIcons.shield, text: 'Allergènes : ${allergenLabels.join(', ')}'),
-            if (d.excludedFoods.isNotEmpty) _Line(icon: AppIcons.block, text: 'Exclus : ${d.excludedFoods.join(', ')}'),
+              _Line(icon: AppIcons.shield, text: l.summaryAllergensList(allergenLabels.join(', '))),
+            if (d.excludedFoods.isNotEmpty) _Line(icon: AppIcons.block, text: l.summaryExcludedList(d.excludedFoods.join(', '))),
             _Line(
               icon: AppIcons.cutlery,
               text: d.cuisinePreferences.isEmpty
-                  ? 'Cuisines : toutes'
-                  : 'Cuisines : ${[for (final c in OnboardingCuisinesScreen.cuisines(L.of(context)))
-                      if (d.cuisinePreferences.contains(c.$1)) c.$2].join(', ')}',
+                  ? l.summaryCuisinesAll
+                  : l.summaryCuisinesList([for (final c in OnboardingCuisinesScreen.cuisines(l))
+                      if (d.cuisinePreferences.contains(c.$1)) c.$2].join(', ')),
               onTap: () => edit(OnbStep.cuisines),
             ),
           ],
@@ -227,20 +225,20 @@ class SummaryScreen extends StatelessWidget {
         const SizedBox(height: AppSpace.x3),
         _SummaryCard(
           icon: AppIcons.chefHat,
-          title: 'Ma cuisine',
+          title: l.summaryKitchenTitle,
           tint: Tint.leafy,
           onEdit: () => edit(OnbStep.kitchen),
           children: [
             if (foyer)
               _Line(
                 icon: AppIcons.user,
-                text: cook == null ? 'Cuisine : à tour de rôle' : 'Cuisine le plus souvent : ${d.displayName(cook)}',
+                text: cook == null ? l.summaryCookRotating : l.summaryCookName(d.displayName(cook)),
               ),
-            _Line(icon: AppIcons.skillet, text: 'Niveau : ${levels[d.cookingLevel]}', strong: true),
+            _Line(icon: AppIcons.skillet, text: l.summaryLevel(levels(l)[d.cookingLevel]!), strong: true),
             _Line(
               icon: AppIcons.clock,
               text:
-                  'Semaine : ${KitchenScreen.timeLabel(L.of(context), d.weekdayMinutes)} · week-end : ${KitchenScreen.timeLabel(L.of(context), d.weekendMinutes)}',
+                  l.summaryTimes(KitchenScreen.timeLabel(l, d.weekdayMinutes), KitchenScreen.timeLabel(l, d.weekendMinutes)),
             ),
             _Line(icon: AppIcons.oven, text: equipmentLabels.join(', ')),
           ],
@@ -248,7 +246,7 @@ class SummaryScreen extends StatelessWidget {
         const SizedBox(height: AppSpace.x3),
         _SummaryCard(
           icon: AppIcons.store,
-          title: 'Supermarché',
+          title: l.summarySupermarketTitle,
           tint: Tint.sand,
           onEdit: () => edit(OnbStep.supermarket),
           children: [
@@ -267,7 +265,7 @@ class SummaryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Cible journalière calculée',
+                  l.summaryDailyTargetTitle,
                   style: AppText.of(AppFont.s13, weight: AppFont.bold, color: AppColors.primary),
                 ),
                 const SizedBox(height: AppSpace.x1),
@@ -279,7 +277,7 @@ class SummaryScreen extends StatelessWidget {
                         style: AppText.of(AppFont.s28, weight: AppFont.extrabold, color: AppColors.primaryDark),
                       ),
                       TextSpan(
-                        text: ' kcal / jour',
+                        text: l.summaryKcalPerDaySuffix,
                         style: AppText.of(AppFont.s14, color: AppColors.ink2),
                       ),
                     ],
@@ -290,16 +288,16 @@ class SummaryScreen extends StatelessWidget {
                   spacing: AppSpace.x3,
                   runSpacing: AppSpace.x1,
                   children: [
-                    _Macro(color: AppColors.primary, text: '${m.protein} g protéines'),
-                    _Macro(color: AppColors.orange, text: '${m.carbs} g glucides'),
-                    _Macro(color: AppColors.fat, text: '${m.fat} g lipides'),
+                    _Macro(color: AppColors.primary, text: l.summaryProteinG(m.protein)),
+                    _Macro(color: AppColors.orange, text: l.summaryCarbsG(m.carbs)),
+                    _Macro(color: AppColors.fat, text: l.summaryFatG(m.fat)),
                   ],
                 ),
                 const SizedBox(height: AppSpace.x2),
                 Text(
                   d.needsTarget
-                      ? 'Estimation selon votre profil et votre activité, avec un écart calculé pour ${d.goal == HealthGoal.priseMasse ? 'prendre' : 'perdre'} ${OnboardingData.formatRate(d.effectiveRate)} kg par semaine ; ajustée ensuite selon votre progression.'
-                      : 'Estimation selon votre profil et votre activité pour stabiliser votre poids ; ajustée ensuite selon votre progression.',
+                      ? l.summaryEstimateTarget(d.goal == HealthGoal.priseMasse ? l.summaryGain : l.summaryLose, fmt.rate(l, d.effectiveRate))
+                      : l.summaryEstimateMaintain,
                   style: AppText.of(AppFont.s12, color: AppColors.ink2, lineHeight: 17),
                 ),
               ],
@@ -334,6 +332,7 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -351,7 +350,7 @@ class _SummaryCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        'Éditer',
+                        l.summaryEdit,
                         style: AppText.of(AppFont.s13, weight: AppFont.bold, color: AppColors.primary),
                       ),
                       const SizedBox(width: AppSpace.x1),
@@ -380,6 +379,7 @@ class _Line extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,

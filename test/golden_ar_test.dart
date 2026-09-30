@@ -28,7 +28,7 @@ void main() {
 
     await load('PlusJakartaSans', [for (final w in [400, 500, 600, 700, 800]) 'PlusJakartaSans-$w.ttf']);
     await load('Caveat', ['Caveat-600.ttf']);
-    await load('NotoSansArabic', [for (final w in [400, 500, 600, 700, 800]) 'NotoSansArabic-$w.ttf']);
+    await load('ReadexPro', [for (final w in [400, 500, 600, 700]) 'ReadexPro-$w.ttf']);
   });
 
   final screens = <String, Widget>{
