@@ -221,6 +221,14 @@ Liste **dépliable** (une cuisine = une ligne qui s'ouvre sur ses recettes), **p
 
 **Règle centrale** (§0.7) : l'IA reconnaît les ingrédients ; la recherche de recettes est une **correspondance dans le catalogue**. Recette générée librement : seulement si le catalogue ne donne rien, marquée « Recette générée par IA, non vérifiée », sans macros garanties et **hors budget garanti**.
 
+**Étape 5 — « aucune recette possible » n'est jamais un cul-de-sac.** Quand aucune cuisine n'est disponible, l'écran ne se contente pas de l'annoncer : il propose **au minimum ces trois sorties**, dans cet ordre.
+1. **Les 3 recettes les plus proches**, avec ce qui manque à chacune (« Il manque : lait, beurre »), triées par le plus petit nombre d'éléments manquants. Chacune est ouvrable : on voit la recette, on décide si on peut s'en passer ou sortir acheter.
+2. **Ajouter un ingrédient** : retour direct à l'étape 1, réponses conservées. Les ingrédients qui débloqueraient le plus de recettes sont **suggérés en premier** (« avec des œufs, 6 recettes de plus »).
+3. **Décocher une contrainte non bloquante** : équipement, temps, niveau, cuisine préférée. Chaque proposition dit ce qu'elle débloque (« sans le wok : 4 recettes de plus »).
+   **Jamais les régimes ni les allergènes** : ceux-là ne se décochent pas, ce sont des exclusions strictes (§0.7, §6).
+
+Le même principe vaut partout où une liste peut se vider : on montre toujours le geste le plus proche qui remet l'utilisateur en marche. En dernier recours seulement, la recette générée librement (voir la règle centrale ci-dessus).
+
 **Le scan met la réserve à jour** :
 - produits reconnus absents de la réserve → **ajoutés** (emplacement proposé) ;
 - produits de la réserve non retrouvés → proposés au **retrait, avec confirmation** (jamais retirés d'office) ;

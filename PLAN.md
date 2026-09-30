@@ -36,7 +36,7 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 10 | Onglet Réserve | ⏳ |
 | 11 | Accueil (avec cercle d'improvisation) + Suivi + Health Connect | ⏳ |
 | 12 | Réglages (langue, pays, unités, abonnement), états vides/erreurs, suppression du compte | ⏳ |
-| 12b | **Anti-fraude** (voir plus bas) | 🆕 Planifié, pas codé |
+| 12b | **Anti-fraude** — App Set ID vérifié côté serveur dans une Edge Function avant l'appel à l'IA | 🔴 **BLOQUANT AVANT PUBLICATION** (validé par Simo le 2026-09-30). Pas codé maintenant |
 | 13 | APK de test (Firebase App Distribution) | ⏳ |
 | — | Catalogue : ≈ **120 recettes** au lancement (12 à 15 × 8 cuisines) ; les 500 **après le lancement**, une fois qu'il y a des utilisateurs | 🆕 En continu |
 
@@ -75,7 +75,8 @@ Avis de Claude (2026-09-30) : risque **réel mais modéré**, et l'improvisation
 ## Phase 2 (notée, non codée)
 - **Liste de courses partagée en temps réel** entre les membres du foyer.
 
-## Jalon 12b — anti-fraude (à planifier, pas à coder maintenant)
+## 🔴 Jalon 12b — anti-fraude : BLOQUANT AVANT PUBLICATION
+Validé par Simo le 2026-09-30. À ne pas coder maintenant, mais **l'app ne peut pas être publiée sans lui** : le scan offert (§0.8 de SPEC.md) se compte côté serveur, sinon une réinstallation le remet à zéro.
 But : empêcher qu'on recrée des comptes pour consommer gratuitement les appels à l'IA.
 - **App Set ID**, vérifié côté serveur. Pas le Firebase Installations ID (il disparaît à la désinstallation), pas l'ANDROID_ID (usage restreint).
 - **Play Integrity** pour écarter les émulateurs et les apps modifiées.
