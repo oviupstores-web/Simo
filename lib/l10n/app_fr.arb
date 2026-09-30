@@ -1038,5 +1038,46 @@
         "type": "String"
       }
     }
-  }
+  },
+  "recipeDemoSalmon": "Saumon frais",
+  "recipeDemoSalmonQty": "4 pavés (600 g)",
+  "recipeDemoQuinoa": "Quinoa",
+  "recipeDemoBroccoli": "Brocoli",
+  "recipeDemoBroccoliQty": "1 tête (300 g)",
+  "recipeDemoCherryTomatoes": "Tomates cerises",
+  "recipeDemoOliveOil": "Huile d'olive",
+  "recipeDemoTbsp2": "2 c. à soupe",
+  "recipeDemoLemon": "Citron",
+  "recipeDemoPiece1": "1 pièce",
+  "recipeDemoTitle": "Saumon grillé, quinoa et légumes",
+  "recipeDemoDescription": "Un plat sain et savoureux, riche en oméga-3 et en fibres. Parfait pour un dîner léger et nourrissant.",
+  "recipeDemoHeroAlt": "Saumon grillé, quinoa et légumes",
+  "chipDinner": "Dîner",
+  "chipEasy": "Facile",
+  "chipPeopleCount": "{count} pers.",
+  "@chipPeopleCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "macroKcal": "kcal",
+  "macroProteinLabel": "protéines",
+  "macroCarbsLabel": "glucides",
+  "macroFatLabel": "lipides",
+  "recipeTabIngredients": "Ingrédients",
+  "recipeTabSteps": "Étapes",
+  "recipeTabInfo": "Infos",
+  "recipeInStockCount": "{count, plural, one{{count} ingrédient déjà en réserve} other{{count} ingrédients déjà en réserve}}",
+  "@recipeInStockCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recipeInStock": "En réserve ✓",
+  "recipeToBuy": "À acheter",
+  "recipeStart": "Démarrer la recette"
 }

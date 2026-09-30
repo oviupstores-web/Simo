@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -13,21 +14,21 @@ class RecipeSheetScreen extends StatefulWidget {
 }
 
 class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
-  static const _ingredients = [
-    ('i_saumon.jpg', 'Saumon frais', '4 pavés (600 g)', false),
-    ('i_quinoa.jpg', 'Quinoa', '200 g', true),
-    ('i_brocoli.jpg', 'Brocoli', '1 tête (300 g)', false),
-    ('i_tomates.jpg', 'Tomates cerises', '250 g', false),
-    ('i_huile.jpg', 'Huile d\'olive', '2 c. à soupe', true),
-    ('i_citron.jpg', 'Citron', '1 pièce', true),
+  static List<(String, String, String, bool)> _ingredients(L l) => [
+    ('i_saumon.jpg', l.recipeDemoSalmon, l.recipeDemoSalmonQty, false),
+    ('i_quinoa.jpg', l.recipeDemoQuinoa, l.unitGrams('200'), true),
+    ('i_brocoli.jpg', l.recipeDemoBroccoli, l.recipeDemoBroccoliQty, false),
+    ('i_tomates.jpg', l.recipeDemoCherryTomatoes, l.unitGrams('250'), false),
+    ('i_huile.jpg', l.recipeDemoOliveOil, l.recipeDemoTbsp2, true),
+    ('i_citron.jpg', l.recipeDemoLemon, l.recipeDemoPiece1, true),
   ];
 
   // Macros : icône colorée (réf. 07), valeur, libellé.
-  static const _macros = [
-    (AppIcons.flame, AppColors.orange, '450', 'kcal'),
-    (AppIcons.leaf, AppColors.leaf, '32 g', 'protéines'),
-    (AppIcons.wheat, AppColors.warn, '48 g', 'glucides'),
-    (AppIcons.drop, AppColors.fat, '18 g', 'lipides'),
+  static List<(String, Color, String, String)> _macros(L l) => [
+    (AppIcons.flame, AppColors.orange, '450', l.macroKcal),
+    (AppIcons.leaf, AppColors.leaf, l.unitGrams('32'), l.macroProteinLabel),
+    (AppIcons.wheat, AppColors.warn, l.unitGrams('48'), l.macroCarbsLabel),
+    (AppIcons.drop, AppColors.fat, l.unitGrams('18'), l.macroFatLabel),
   ];
 
   int _tab = 0;
@@ -36,6 +37,7 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     return Scaffold(
       body: Stack(
@@ -68,7 +70,7 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                     'assets/images/hero_saumon.jpg',
                     height: AppSizes.recipeHeroH,
                     fit: BoxFit.cover,
-                    semanticLabel: 'Saumon grillé, quinoa et légumes',
+                    semanticLabel: l.recipeDemoHeroAlt,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpace.gutter),
@@ -77,7 +79,7 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                       children: [
                         const SizedBox(height: AppSpace.x4),
                         Text(
-                          'Saumon grillé, quinoa et légumes',
+                          l.recipeDemoTitle,
                           style: AppText.of(
                             AppFont.s23,
                             weight: AppFont.extrabold,
@@ -86,25 +88,25 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSpace.x3),
-                        const Wrap(
+                        Wrap(
                           spacing: AppSpace.x2,
                           runSpacing: AppSpace.x2,
                           children: [
-                            InfoChip(label: 'Dîner', icon: AppIcons.moon, highlighted: true),
-                            InfoChip(label: 'Facile', icon: AppIcons.level),
-                            InfoChip(label: '25 min', icon: AppIcons.clock),
-                            InfoChip(label: '4 pers.', icon: AppIcons.people),
+                            InfoChip(label: l.chipDinner, icon: AppIcons.moon, highlighted: true),
+                            InfoChip(label: l.chipEasy, icon: AppIcons.level),
+                            InfoChip(label: l.unitMinutes(25), icon: AppIcons.clock),
+                            InfoChip(label: l.chipPeopleCount(4), icon: AppIcons.people),
                           ],
                         ),
                         const SizedBox(height: AppSpace.x3),
                         Text(
-                          'Un plat sain et savoureux, riche en oméga-3 et en fibres. Parfait pour un dîner léger et nourrissant.',
+                          l.recipeDemoDescription,
                           style: AppText.body,
                         ),
                         const SizedBox(height: AppSpace.x4),
                         Row(
                           children: [
-                            for (final (i, m) in _macros.indexed) ...[
+                            for (final (i, m) in _macros(l).indexed) ...[
                               if (i > 0) const SizedBox(width: AppSpace.x2),
                               Expanded(
                                 child: _MacroTile(icon: m.$1, color: m.$2, value: m.$3, label: m.$4),
@@ -114,7 +116,7 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                         ),
                         const SizedBox(height: AppSpace.x5),
                         _Tabs(
-                          labels: const ['Ingrédients', 'Étapes', 'Infos'],
+                          labels: [l.recipeTabIngredients, l.recipeTabSteps, l.recipeTabInfo],
                           selected: _tab,
                           onSelect: (i) => setState(() => _tab = i),
                         ),
@@ -123,7 +125,7 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '3 ingrédients déjà en réserve',
+                              l.recipeInStockCount(3),
                               style: AppText.of(AppFont.s13, color: AppColors.ink2),
                             ),
                             QuantityStepper(
@@ -134,13 +136,13 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                           ],
                         ),
                         const SizedBox(height: AppSpace.x1),
-                        for (final (i, ing) in _ingredients.indexed) ...[
+                        for (final (i, ing) in _ingredients(l).indexed) ...[
                           if (i > 0) const Divider(height: 1, thickness: 1, color: AppColors.line),
                           ItemRow(
                             image: ing.$1,
                             title: ing.$2,
                             subtitle: ing.$3,
-                            trailing: [ing.$4 ? const PillBadge('En réserve ✓') : const PillBadge.orange('À acheter')],
+                            trailing: [ing.$4 ? PillBadge(l.recipeInStock) : PillBadge.orange(l.recipeToBuy)],
                           ),
                         ],
                       ],
@@ -158,7 +160,7 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
             child: Container(
               color: AppColors.bottomBarBg,
               padding: EdgeInsets.fromLTRB(AppSpace.gutter, AppSpace.x3, AppSpace.gutter, bottomInset + AppSpace.x3_5),
-              child: const PrimaryButton(label: 'Démarrer la recette'),
+              child: PrimaryButton(label: l.recipeStart),
             ),
           ),
         ],
@@ -177,6 +179,7 @@ class _MacroTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppSpace.x2_5),
       decoration: const BoxDecoration(color: AppColors.card, borderRadius: AppRadius.tileR, boxShadow: AppShadows.card),
@@ -206,6 +209,7 @@ class _Tabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     return Container(
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.line)),

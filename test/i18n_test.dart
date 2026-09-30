@@ -29,7 +29,6 @@ void main() {
   const notYetTranslated = {
     'lib/models/pantry_location.dart',
     'lib/onboarding/onboarding_data.dart',
-    'lib/screens/menus/',
     
     
     'lib/screens/pantry/',
