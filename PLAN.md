@@ -58,8 +58,6 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 - **Sens de lecture repris partout** : positions `start`/`end` au lieu de `left`/`right`, icônes directionnelles retournées, décor de basilic inversé, bloc de marque gardé dans l'ordre (logo à gauche de « Menoo »).
 - **Captures** des 6 écrans en arabe : `design/qa/arabe_6_ecrans.jpg`, produites par `flutter test test/golden_ar_test.dart --update-goldens` (tests de rendu, pas le téléphone).
 
-**Corrigé le 2026-09-30 après le test de Simo :** les 6 écrans sont **entièrement** traduits (vérifié par `test/i18n_test.dart`) ; mise en forme de droite à gauche reprise partout (positions `start`/`end`, icônes directionnelles retournées, décor de basilic inversé, bloc de marque gardé dans l'ordre) ; captures des 6 écrans en arabe dans `design/qa/arabe_6_ecrans.jpg`, régénérables par `flutter test test/golden_ar_test.dart --update-goldens`.
-
 **Reste à faire (étape 4 sur 4) :**
 1. **Traduire les ~22 écrans restants** : environ 500 textes. Compter 2 à 3 séances. Les écrans les plus chargés : `pantry_add_manual`, `summary`, `constraints`, `kitchen`, `profile`, `member_profiles`.
 2. **Tables de traduction Supabase** pour les contenus (recettes, ingrédients, catégories, allergènes, régimes, cuisines, équipements), français en référence. Migration à montrer à Simo **avant envoi**.
