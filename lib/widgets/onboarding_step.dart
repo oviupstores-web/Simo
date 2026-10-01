@@ -124,7 +124,7 @@ class StepSectionTitle extends StatelessWidget {
       child: Row(
         children: [
           if (icon != null) ...[
-            TintBadge(icon: icon!, tint: tint, size: AppSizes.iconTileSm),
+            TintBadge(icon: icon!, tint: tint, size: AppSizes.iconTile),
             const SizedBox(width: AppSpace.x2_5),
           ],
           Expanded(

@@ -49,7 +49,7 @@ Référence visuelle : `design/maquettes/landing.png`.
 
 Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de la maquette) ; la carte Scan IA porte la mention **« 1 scan offert »**, qui rend la promesse tenable (§0.8) ; `path_choice` reste hors compteur.
 
-## 2. Onboarding Solo (12 étapes + écrans de réassurance)
+## 2. Onboarding Solo (11 étapes + écrans de réassurance)
 
 | # | Écran | Fonction | Remarque |
 |---|---|---|---|
@@ -68,11 +68,10 @@ Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de l
 | 8 | `onboarding_constraints` | Régimes, allergènes, exclus | Régimes en pictogrammes |
 | 9 | `onboarding_cuisines` | Types de cuisine appréciés | Préférence, jamais un filtre bloquant |
 | 10 | `onboarding_kitchen` | **Ma cuisine** : niveau, temps, équipements | — |
-| 11 | `onboarding_supermarket` | **Enseigne habituelle** | Sert aux prix et au tri par rayon. **Plus de choix Drive / Livraison / En magasin** |
 | ★ | `reassurance_ready` | **Plan prêt** | Hors compteur |
-| 12 | `onboarding_summary` | Récapitulatif | Bloc « Ma cuisine » + cible kcal |
+| 11 | `onboarding_summary` | Récapitulatif | Bloc « Ma cuisine » + cible kcal |
 
-## 3. Onboarding Foyer (10 étapes + écrans de réassurance)
+## 3. Onboarding Foyer (9 étapes + écrans de réassurance)
 
 | # | Écran | Fonction | Remarque |
 |---|---|---|---|
@@ -87,9 +86,8 @@ Corrections : logo et logotype Menoo de l'app (pas « MENOO » en capitales de l
 | ★ | `reassurance_waste` | **Gaspillage évité** | Hors compteur |
 | 7 | `onboarding_cuisines` | Types de cuisine | — |
 | 8 | `onboarding_kitchen_household` | Ma cuisine + qui cuisine | — |
-| 9 | `onboarding_supermarket_household` | **Enseigne habituelle** | Plus de choix Drive / Livraison / En magasin |
 | ★ | `reassurance_ready` | **Plan prêt** | Hors compteur |
-| 10 | `onboarding_summary_household` | Récapitulatif | — |
+| 9 | `onboarding_summary_household` | Récapitulatif | — |
 
 Le Foyer n'a ni étape balance ni objectif de poids commun : les écrans « trajectoire de poids » et « métabolisme » n'y apparaissent pas.
 `pantry_quickcheck` reste l'option « vérification rapide » du détour Réserve (Solo et Foyer), hors compteur.
@@ -141,7 +139,7 @@ Parcours planification : `onboarding_summary(_household)` → « Générer mon/n
   - Fiche recette : onglets Ingrédients et Ustensiles visibles, Instructions floutées après 3 lignes.
   - Photo IA : réservée aux abonnés.
   - **Pas d'essai de 7 jours** : il exigerait une carte bancaire, ce qui est exclu (§9). Le scan offert et le repas offert tiennent ce rôle.
-- **Courses** : l'enseigne ne sert qu'aux **prix** et au **tri par rayon**. Aucune commande, aucun panier drive, aucune livraison (§7, onglet 3).
+- **Courses** : prix **estimés**, sans enseigne (Menoo est internationale, §10) ; tri par **rayon générique** (fruits et légumes, viandes, etc.). Aucune commande, aucun panier drive, aucune livraison (§7, onglet 3).
 
 ## 7. App (après création du compte)
 
@@ -164,10 +162,9 @@ Parcours planification : `onboarding_summary(_household)` → « Générer mon/n
 
 ### Onglet 3 — Courses (sans drive)
 `shopping_list` (Solo) ou `shopping_list_household` (Foyer), triée par rayon, réserve déduite. Depuis la liste :
-- **Mode magasin** : tri par rayon de l'enseigne, cases à cocher, **total qui se met à jour**, **écran qui reste allumé**.
+- **Mode magasin** : tri par **rayon générique** (fruits et légumes, viandes, crémerie, épicerie…), cases à cocher, **total qui se met à jour**, **écran qui reste allumé**.
 - **Partager** (feuille de partage Android), **imprimer en A4**, **exporter en PDF**, **copier en texte**.
-- Changer d'enseigne : `shopping_list_supermarketselect` (France : liste ; ailleurs : champ libre, §10). Le comparateur `shopping_list_pricecompare` compare seulement des **prix** entre enseignes (*point ouvert n°5*).
-- **Supprimés** : `shopping_list_checkout`, `shopping_list_confirmation`, les boutons « Commander en drive », et toute mention de commande, panier drive ou livraison.
+- **Supprimés** : `shopping_list_checkout`, `shopping_list_confirmation`, les boutons « Commander en drive », `shopping_list_supermarketselect`, `shopping_list_pricecompare`, et toute mention de commande, panier drive, livraison ou enseigne (décision du 2026-09-30, Menoo est internationale : *point ouvert n°5 retiré*, §14).
 - La liste partagée en temps réel entre membres du foyer est en **phase 2** (non codée).
 
 ### Onglet 4 — Réserve
@@ -291,7 +288,7 @@ Corrections des maquettes : ordre des onglets (la maquette met Instructions en p
 - **Sens de lecture** : aucune position figée à gauche ou à droite dans le code. On écrit `start` et `end`, jamais `left` et `right` ; les icônes qui indiquent un sens (retour, flèche, chevron, courbes de tendance) se retournent, les autres non (horloge, coche, panier). Le **bloc de marque garde son ordre** : le logo reste à gauche du mot « Menoo », seule sa place dans l'écran change.
 - **Arabe** : écriture de droite à gauche (mise en page inversée, icônes directionnelles retournées) et police compatible (Plus Jakarta Sans ne contient pas l'alphabet arabe).
 - **Unités** : métriques par défaut, impériales aux États-Unis. **Devises et formats de date** selon le pays. Tout est réglable dans les réglages.
-- **Enseignes** : France = liste curatée ; ailleurs = **champ libre**. Les noms saisis alimentent une table par pays et deviennent des **suggestions** (après validation, pour éviter les saisies abusives).
+- **Plus d'enseignes** (décision du 2026-09-30) : Menoo est internationale, aucune liste de supermarchés par pays à maintenir. Les prix restent estimés et le tri par rayon reste générique (§6, §7 onglet 3).
 - **Prix en trois niveaux**, l'app affichant toujours l'origine :
   1. **Estimation** : prix de référence France, ajusté par un **indice public cité**.
   2. **Communautaire** : Open Prices (couverture réelle par pays **à vérifier** avant de s'appuyer dessus).
@@ -300,6 +297,7 @@ Corrections des maquettes : ordre des onglets (la maquette met Instructions en p
 
 ## 11. Écrans non utilisés ou supprimés
 - `shopping_list_checkout`, `shopping_list_confirmation` : **supprimés** (plus de drive).
+- `onboarding_supermarket(_household)`, `shopping_list_supermarketselect`, `shopping_list_pricecompare` : **supprimés** (décision du 2026-09-30, Menoo est internationale : plus d'enseignes de supermarché nulle part dans l'app).
 - `pantry_photoai_2` : supprimé (doublon).
 - `recipeingredientscheck(_household)` : absorbé par l'onglet Ingrédients de la fiche recette.
 - Carrousel de la landing : remplacé par la page déroulante.
@@ -329,7 +327,7 @@ Les 13 questions ouvertes ont toutes reçu une réponse de Simo. Elles sont repo
 | 2 | Essai de 7 jours | **Non.** Jamais de carte bancaire pour essayer | §6, §9 |
 | 3 | Menu et liste de courses floutés | **Conservés**, avec les trois mêmes options d'achat que la fiche recette | §6, §9 |
 | 4 | Lots de recettes | **5 = 3,49 € · 15 = 7,99 €** | §9 |
-| 5 | Comparateur de prix entre enseignes | **Conservé** : il ne sert qu'aux prix | §7, onglet 3 |
+| 5 | Comparateur de prix entre enseignes | Conservé le 30/09, puis **retiré le même jour** : Menoo est internationale, plus aucune enseigne nulle part dans l'app | §7, onglet 3 ; §11 |
 | 6 | « J'ai déjà un compte » | **Lien discret dans l'en-tête** de la Landing | §1 |
 | 7 | « Interrogez le coach » | **Écarté.** Vient des maquettes d'Eatr ; une IA présentée comme une personne pose un problème d'honnêteté. Reviendra peut-être, **annoncée clairement comme une IA** | §9 |
 | 8 | Combien de recettes | **12 à 15 par cuisine sur 8 cuisines, soit environ 120** pour commencer (96 au jalon 5c). Les 500 viendront **après le lancement**, une fois qu'il y aura des utilisateurs | §10, PLAN.md |

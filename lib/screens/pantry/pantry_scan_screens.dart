@@ -17,14 +17,47 @@ class PantryScanScreen extends StatelessWidget {
   }
 }
 
-/// pantry_photoai_1 — la reconnaissance par photo (IA via Edge Function) arrive au jalon 10.
+/// pantry_photoai — Premium (SPEC §0.8/§4) : la reconnaissance par photo est réservée aux
+/// abonnés (la fonction elle-même arrive au jalon 10) ; cet écran affiche un cadenas et renvoie
+/// vers la saisie manuelle ou le code-barres, gratuits.
 class PantryPhotoAiScreen extends StatelessWidget {
   const PantryPhotoAiScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
-    return _ComingSoon(icon: AppIcons.camera, title: l.scanPhotoTitle, text: l.scanPhotoText);
+    return OnboardingStepScaffold(
+      eyebrow: l.pantryPhotoAiBadge,
+      eyebrowIcon: AppIcons.lock,
+      title: l.pantryPhotoAiLockedTitle,
+      subtitle: l.pantryPhotoAiLockedText,
+      continueLabel: l.scanAddManually,
+      showArrow: false,
+      onContinue: () =>
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const PantryAddManualScreen())),
+      below: Center(
+        child: TextLink(
+          l.pantryPhotoAiUseBarcode,
+          weight: AppFont.bold,
+          onTap: () =>
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const PantryScanScreen())),
+        ),
+      ),
+      children: [
+        Container(
+          height: AppSizes.scanPreviewH,
+          decoration: const BoxDecoration(color: AppColors.ink, borderRadius: AppRadius.cardR),
+          alignment: Alignment.center,
+          child: Container(
+            width: AppSizes.lockCircle,
+            height: AppSizes.lockCircle,
+            decoration: const BoxDecoration(color: AppColors.warn, shape: BoxShape.circle),
+            alignment: Alignment.center,
+            child: const AppIcon(AppIcons.lock, size: 28, color: AppColors.white),
+          ),
+        ),
+      ],
+    );
   }
 }
 

@@ -63,7 +63,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     AppCard(
                       child: Row(
                         children: [
-                          const IconTile(icon: AppIcons.fridge, size: AppSizes.iconTileMd, iconSize: 22),
+                          const IconTile(icon: AppIcons.fridge, size: AppSizes.iconTileMd, iconSize: 26),
                           const SizedBox(width: AppSpace.x3),
                           Expanded(
                             child: Column(
@@ -157,6 +157,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                           child: _QuickAction(
                             icon: AppIcons.camera,
                             label: l.pantryQuickPhotoAi,
+                            locked: true,
                             onTap: () => push(context, const PantryPhotoAiScreen()),
                           ),
                         ),
@@ -243,31 +244,58 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
 }
 
 class _QuickAction extends StatelessWidget {
-  const _QuickAction({required this.icon, required this.label, required this.onTap});
+  const _QuickAction({required this.icon, required this.label, required this.onTap, this.locked = false});
 
   final String icon;
   final String label;
   final VoidCallback onTap;
 
+  /// Fonction Premium (Photo IA, SPEC §0.8) : cadenas en haut à droite du bouton.
+  final bool locked;
+
   @override
   Widget build(BuildContext context) {
     return Pressable(
       onTap: onTap,
-      child: Container(
-        height: AppSizes.quickActionHeight,
-        decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: AppRadius.fieldR,
-          border: Border.all(color: AppColors.line),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppIcon(icon, size: 17),
-            const SizedBox(width: AppSpace.x1_5),
-            Text(label, style: AppText.of(AppFont.s13, weight: AppFont.semibold)),
-          ],
-        ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: AppSizes.quickActionHeight,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpace.x1_5),
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: AppRadius.fieldR,
+              border: Border.all(color: AppColors.line),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AppIcon(icon, size: 17),
+                const SizedBox(width: AppSpace.x1_5),
+                // Rétrécit le texte plutôt que déborder : les traductions sont plus longues que le français.
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(label, maxLines: 1, style: AppText.of(AppFont.s13, weight: AppFont.semibold)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (locked)
+            PositionedDirectional(
+              top: -6,
+              end: -6,
+              child: Container(
+                width: AppSizes.miniCheck,
+                height: AppSizes.miniCheck,
+                decoration: const BoxDecoration(color: AppColors.warn, shape: BoxShape.circle),
+                alignment: Alignment.center,
+                child: const AppIcon(AppIcons.lock, size: 10, color: AppColors.white),
+              ),
+            ),
+        ],
       ),
     );
   }

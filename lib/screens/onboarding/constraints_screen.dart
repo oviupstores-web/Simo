@@ -151,7 +151,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
                   photo: 'assets/images/allergens/${a.$6}.jpg',
                   icon: a.$4,
                   tint: a.$5,
-                  size: AppSizes.iconTileSm,
+                  size: AppSizes.allergenImage,
                 ),
                 selected: d.allergens.containsAll(a.$1),
                 onTap: () => d.update(() {

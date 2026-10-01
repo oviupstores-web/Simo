@@ -8,6 +8,7 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../onboarding/cover_household_screen.dart';
 import '../onboarding/cover_solo_screen.dart';
+import 'improv_coming_soon_screen.dart';
 
 /// path_choice — maître : design/masters/master_path_choice.html (réf. 03_path_choice.png).
 /// SPEC §1 : écran hors compteur d'étapes.
@@ -84,6 +85,14 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
                           _mode == AppMode.solo ? const CoverSoloScreen() : const CoverHouseholdScreen(),
                         );
                       },
+                    ),
+                    const SizedBox(height: AppSpace.x4),
+                    Center(
+                      child: TextLink(
+                        l.landingImprovLine,
+                        weight: AppFont.bold,
+                        onTap: () => push(context, const ImprovComingSoonScreen()),
+                      ),
                     ),
                   ],
                 ),

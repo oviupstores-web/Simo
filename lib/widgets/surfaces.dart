@@ -51,7 +51,7 @@ class IconTile extends StatelessWidget {
     super.key,
     required this.icon,
     this.size = AppSizes.iconTile,
-    this.iconSize = 21,
+    this.iconSize = 24,
     this.background = AppColors.mint,
     this.foreground = AppColors.primary,
     this.circle = false,

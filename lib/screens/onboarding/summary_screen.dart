@@ -12,7 +12,6 @@ import '../entry/signup_screen.dart';
 import 'constraints_screen.dart';
 import 'onboarding_cuisines_screen.dart';
 import 'kitchen_screen.dart';
-import 'supermarket_screen.dart';
 
 /// onboarding_summary (Solo 12/12) et onboarding_summary_household (Foyer 10/10) — récapitulatif
 /// + bloc « Ma cuisine » (SPEC §2-3). « Générer mon / notre menu » → création du compte (c03_auth_signup, SPEC §5).
@@ -77,7 +76,6 @@ class SummaryScreen extends StatelessWidget {
       for (final e in KitchenScreen.equipment(l))
         if (d.equipment.contains(e.$1)) e.$2,
     ];
-    final channel = SupermarketScreen.channels(l).firstWhere((c) => c.$1 == d.channel).$2;
     final foyer = d.isFoyer;
     final cook = d.members.where((m) => m.id == d.mainCookId).firstOrNull;
     final composition = [
@@ -241,18 +239,6 @@ class SummaryScreen extends StatelessWidget {
                   l.summaryTimes(KitchenScreen.timeLabel(l, d.weekdayMinutes), KitchenScreen.timeLabel(l, d.weekendMinutes)),
             ),
             _Line(icon: AppIcons.oven, text: equipmentLabels.join(', ')),
-          ],
-        ),
-        const SizedBox(height: AppSpace.x3),
-        _SummaryCard(
-          icon: AppIcons.store,
-          title: l.summarySupermarketTitle,
-          tint: Tint.sand,
-          onEdit: () => edit(OnbStep.supermarket),
-          children: [
-            _Line(icon: AppIcons.car, text: channel, strong: true),
-            if (d.store != null) _Line(icon: AppIcons.store, text: d.store!),
-            if (d.postalCode.isNotEmpty) _Line(icon: AppIcons.mapPin, text: d.postalCode),
           ],
         ),
         // Cible calculée à partir du profil (Solo ; en Foyer, chaque profil a la sienne au jalon 6)

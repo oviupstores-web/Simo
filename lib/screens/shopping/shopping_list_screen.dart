@@ -92,23 +92,26 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(l.shoppingEstimatedTotal(12), style: AppText.caption),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(text: '52,80 €', style: AppText.bigNumber),
-                                        TextSpan(
-                                          text: ' / 65 €',
-                                          style: AppText.of(AppFont.s13, weight: AppFont.medium, color: AppColors.ink2),
-                                        ),
-                                      ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(l.shoppingEstimatedTotal(12), style: AppText.caption),
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(text: '52,80 €', style: AppText.bigNumber),
+                                          TextSpan(
+                                            text: ' / 65 €',
+                                            style: AppText.of(AppFont.s13, weight: AppFont.medium, color: AppColors.ink2),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
+                              const SizedBox(width: AppSpace.x2),
                               PillBadge(
                                 l.homeInBudget,
                                 size: AppFont.s12,

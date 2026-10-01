@@ -14,7 +14,6 @@ import '../screens/onboarding/member_profiles_screen.dart';
 import '../screens/onboarding/profile_screen.dart';
 import '../screens/onboarding/smart_scale_screen.dart';
 import '../screens/onboarding/summary_screen.dart';
-import '../screens/onboarding/supermarket_screen.dart';
 import '../screens/onboarding/weekly_grid_screen.dart';
 import '../screens/pantry/pantry_hub_onboarding_screen.dart';
 import 'onboarding_data.dart';
@@ -34,13 +33,13 @@ enum OnbStep {
   constraints,
   cuisines,
   kitchen,
-  supermarket,
   summary,
 }
 
 /// Enchaînement des parcours (et retour au récapitulatif après « Éditer »).
 abstract final class OnboardingFlow {
-  /// Solo, 12 étapes : ordre SPEC §2 + « Types de cuisine » après les contraintes (Simo, 2026-09-24).
+  /// Solo, 11 étapes : ordre SPEC §2 + « Types de cuisine » après les contraintes (Simo, 2026-09-24).
+  /// Plus d'étape Enseigne (Menoo internationale, décision du 2026-09-30).
   static const solo = [
     OnbStep.goal,
     OnbStep.profile,
@@ -52,11 +51,11 @@ abstract final class OnboardingFlow {
     OnbStep.constraints,
     OnbStep.cuisines,
     OnbStep.kitchen,
-    OnbStep.supermarket,
     OnbStep.summary,
   ];
 
-  /// Foyer, 10 étapes : ordre modifié de SPEC §3 (contraintes avant le mode de gestion).
+  /// Foyer, 9 étapes : ordre modifié de SPEC §3 (contraintes avant le mode de gestion).
+  /// Plus d'étape Enseigne (Menoo internationale, décision du 2026-09-30).
   static const foyer = [
     OnbStep.household,
     OnbStep.members,
@@ -66,7 +65,6 @@ abstract final class OnboardingFlow {
     OnbStep.management,
     OnbStep.cuisines,
     OnbStep.kitchen,
-    OnbStep.supermarket,
     OnbStep.summary,
   ];
 
@@ -89,7 +87,6 @@ abstract final class OnboardingFlow {
     OnbStep.constraints => const ConstraintsScreen(),
     OnbStep.cuisines => const OnboardingCuisinesScreen(),
     OnbStep.kitchen => const KitchenScreen(),
-    OnbStep.supermarket => const SupermarketScreen(),
     OnbStep.summary => const SummaryScreen(),
   };
 
@@ -126,7 +123,6 @@ abstract final class OnboardingFlow {
       return;
     }
     if (editing && step == OnbStep.goal) {
-      // Nouvel objectif depuis le récapitulatif : le poids visé doit rester cohérent.
       final d = OnboardingScope.read(context);
       if (!d.needsTarget) {
         d.update(() => d.targetWeightKg = null);
@@ -146,7 +142,6 @@ abstract final class OnboardingFlow {
   static void finishPantryDetour(BuildContext hubContext, bool fromSummary, OnbStep after) {
     final nav = Navigator.of(hubContext);
     if (fromSummary) {
-      // Ferme le hub et l'écran du mode de gestion : retour au récapitulatif.
       nav.pop();
       nav.pop();
     } else {

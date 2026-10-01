@@ -31,7 +31,7 @@ void main() {
     await t.pumpAndSettle();
   }
 
-  Future<void> expectStep(WidgetTester t, int n, {int total = 12}) async {
+  Future<void> expectStep(WidgetTester t, int n, {int total = 11}) async {
     expect(find.text('ÉTAPE $n SUR $total'), findsOneWidget, reason: 'étape $n');
   }
 
@@ -103,9 +103,6 @@ void main() {
     await tapText(t, 'Continuer');
 
     await expectStep(t, 11);
-    await tapText(t, 'Continuer');
-
-    await expectStep(t, 12);
     expect(find.text('Votre profil est prêt !'), findsOneWidget);
     expect(find.text('Prise de masse'), findsOneWidget);
     expect(find.textContaining('Objectif : 80 kg'), findsOneWidget);
@@ -122,7 +119,7 @@ void main() {
     await expectStep(t, 1);
     await tapText(t, 'Maintien & Équilibre');
     await tapText(t, 'Continuer');
-    await expectStep(t, 12);
+    await expectStep(t, 11);
     expect(find.text('Maintien & Équilibre'), findsOneWidget);
   });
 
@@ -170,7 +167,7 @@ void main() {
     t.view.physicalSize = const Size(1080, 2400);
     t.view.devicePixelRatio = 2.75;
     addTearDown(t.view.reset);
-    Future<void> step(int n) => expectStep(t, n, total: 10);
+    Future<void> step(int n) => expectStep(t, n, total: 9);
 
     await t.pumpWidget(const MenooApp());
     await t.pumpAndSettle();
@@ -228,11 +225,8 @@ void main() {
     await tapText(t, 'À tour de rôle');
     await tapText(t, 'Continuer');
 
+    // 9. Récapitulatif Foyer
     await step(9);
-    await tapText(t, 'Continuer');
-
-    // 10. Récapitulatif Foyer
-    await step(10);
     expect(find.text('Composition du foyer'), findsOneWidget);
     expect(find.textContaining('4 personnes : 2 adultes, 2 enfants'), findsOneWidget);
     expect(find.textContaining('Fruits à coque (Emma)'), findsOneWidget);

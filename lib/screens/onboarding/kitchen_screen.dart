@@ -135,12 +135,12 @@ class KitchenScreen extends StatelessWidget {
           hint: l.commonSelectedCountMasc(d.equipment.length),
         ),
         GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: AppSpace.x3,
-          crossAxisSpacing: AppSpace.x3,
-          childAspectRatio: AppSizes.equipmentTileAspect,
+          mainAxisSpacing: AppSpace.x2,
+          crossAxisSpacing: AppSpace.x2,
+          childAspectRatio: AppSizes.equipmentTileAspect3Col,
           children: [
             for (final e in equipment(l))
               ProductTile(

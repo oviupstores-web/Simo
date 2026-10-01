@@ -3,12 +3,20 @@
 Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 
 ## 📍 Où on en est
-- **État actuel (2026-09-30)** : jalons 0 à 5b **validés**. **SPEC.md v4 validée par Simo dans son ensemble.** Les 14 renommages d'écrans et les 13 points ouverts sont tranchés (SPEC §14-15). **Jalon 5i (International) terminé** : socle technique, police arabe Readex Pro, et **28 écrans + les widgets partagés traduits dans les 6 langues, sans aucun texte en dur restant** (`test/i18n_test.dart` passe sans exclusion). Détail complet dans la section « Jalon 5i » plus bas.
-- **Git** : projet sous version depuis le 2026-09-30. 807+ fichiers suivis, `build/`, `.dart_tool/` et les fichiers `app_localizations*.dart` générés exclus.
-- **Prochaine action** : jalon 5d (Entrée et réassurance : landing déroulante, 5 écrans de réassurance, étape Enseigne sans drive), puis 5c (recettes des 8 cuisines, avec l'essai de 5 photos avant le lot). Voir « Ordre recommandé » plus bas.
-- **À faire au fil de l'eau** : mettre `CLAUDE.md` en accord au prochain jalon qui touche la Landing/le drive (déjà partiellement à jour depuis le 2026-09-30).
-- **Visuels du 5b** : tous validés. Pour en refaire un : `node --use-system-ca tools/generate_images.mjs --only <fichier> --force`. Pas encore affichés (écrans à venir) : 6 recettes, `famille_table`.
-- **Maquette 6b** (`design/maquettes/maquette_6b_cercle_et_cuisines.html`) : v4 en attente du retour de Simo — page de comparaison côte à côte, Scan IA en deux états (repos/caméra), choix de cuisine, cercle de l'Accueil (variante A frigo retenue). Pas de blocage : le 6b vient après 5d, 5c et 6 de toute façon.
+- **État actuel (2026-10-01)** : jalons 0 à 5i **validés**. **Jalon 5d terminé** : corrections UI critiques appliquées (supermarché supprimé, 5 écrans de réassurance supprimés, landing nettoyée, cartes interactives, équipements en 3 colonnes, arrondis et tailles uniformisés sur contraintes + global). `flutter analyze` sans problème, 206 tests au vert. APK à builder et installer.
+- **Corrections du 2026-10-01 (jalon 5d)** :
+  1. **Écran supermarché supprimé** du flow (il avait déjà été retiré de la liste des étapes ; reste : clés de traduction nettoyées dans les 6 langues).
+  2. **5 écrans de réassurance supprimés** (poids, métabolisme, budget, anti-gaspi, prêt) — fichier `reassurance_screens.dart` supprimé, logique retirée de `onboarding_flow.dart`, clés de traduction supprimées. Les infos redondantes étaient déjà affichées aux étapes correspondantes.
+  3. **Stepper** inchangé (les réassurances étaient déjà hors compteur ; Solo 11 étapes, Foyer 9 étapes).
+  4. **Phrase manuscrite retirée** de la landing (« Une vie plus saine au quotidien ! »).
+  5. **Cartes de la landing interactives** avec ombrage ; Scan IA navigue vers l'écran d'improvisation ; carte Suivi passe de lavande à menthe (thème vert) ; previews améliorées (quantités dans les courses, barres de macros dans le suivi).
+  6. **Équipements en 3 colonnes** sur l'écran « Ma cuisine » (nouveau token `equipmentTileAspect3Col`).
+  7. Tests mis à jour (flow Solo/Foyer sans réassurance, goldens regénérés, overflow sweep sans les 5 écrans supprimés).
+  8. **Écran Contraintes + global** : icônes de section agrandies (34→40px), chips régime passées de pilule à arrondi 12px, photos d'allergènes agrandies (34→40px), badges de chips agrandis (24→28px). Border-radius cohérent dans toute l'app : cartes 14px, tuiles/chips 12px, pastilles 10px.
+- **Git** : projet sous version depuis le 2026-09-30.
+- **Prochaine action** : builder l'APK, l'installer sur le téléphone, puis attendre la validation de Simo. Ensuite : jalon 5c (recettes des 8 cuisines).
+- **Visuels du 5b** : tous validés. Pas encore affichés (écrans à venir) : 6 recettes, `famille_table`.
+- **Maquette 6b** : v4 en attente du retour de Simo.
 
 | # | Jalon | Statut |
 |---|---|---|
@@ -20,7 +28,7 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 5 | Onboarding Foyer (10 étapes) + détour Réserve | ✅ Validé |
 | 5b | Images par API OpenAI (125 visuels) + pictogrammes régimes + branchement | ✅ Validé |
 | 5i | **International, socle** : textes sortis du code, 6 langues, arabe de droite à gauche, unités / devises / dates | ✅ Validé (2026-09-30) — tables de traduction Supabase pour les contenus restent au 5c |
-| 5d | **Entrée et réassurance** : landing déroulante, 5 écrans de réassurance, onglet « Menus », étape Enseigne sans drive, photo IA verrouillée dans le détour Réserve | ⏳ Prochain |
+| 5d | **Corrections UI critiques** : supermarché et réassurance supprimés, landing nettoyée, cartes interactives, équipements 3 colonnes, arrondis uniformisés | 🔨 En cours (APK à installer) |
 | 5c | Recettes des 8 cuisines (96 recettes, première tranche vers 500), créées dans les tables de traduction ; photos par API après essai de 5 | ⏳ (après 5i) |
 | 6 | Compte invité converti à l'inscription + génération des menus sous budget / Ma cuisine | ⏳ |
 | 6b | **Improvisation (6 étapes) + paywall de la fiche recette**, à construire ensemble | 🆕 Proposé |

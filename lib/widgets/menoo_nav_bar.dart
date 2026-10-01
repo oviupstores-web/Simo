@@ -70,7 +70,7 @@ class _NavItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AppIcon(icon, size: 23, color: color, strokeWidth: active ? 2.1 : 1.8),
+              AppIcon(icon, size: 26, color: color, strokeWidth: active ? 2.2 : 1.9),
               const SizedBox(height: AppSpace.x0_5),
               Text(
                 label,

@@ -227,7 +227,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? const SizedBox(width: double.infinity)
             : Padding(
                 padding: const EdgeInsets.only(top: AppSpace.x4),
-                child: _Projection(current: current, target: target, weeks: weeks, rate: d.effectiveRate, date: date),
+                child: WeightProjectionCard(
+                  current: current,
+                  target: target,
+                  weeks: weeks,
+                  rate: d.effectiveRate,
+                  date: date,
+                ),
               ),
       ),
     ];
@@ -283,64 +289,3 @@ class _RateTile extends StatelessWidget {
   }
 }
 
-/// « 75 kg aujourd'hui → 70 kg visés, environ 10 semaines à 0,5 kg/semaine ».
-class _Projection extends StatelessWidget {
-  const _Projection({
-    required this.current,
-    required this.target,
-    required this.weeks,
-    required this.rate,
-    required this.date,
-  });
-
-  final double current;
-  final double target;
-  final int weeks;
-  final double rate;
-  final DateTime date;
-
-  @override
-  Widget build(BuildContext context) {
-    TextStyle big(Color c) => AppText.of(AppFont.s22, weight: AppFont.extrabold, color: c, lineHeight: 28);
-    return Container(
-      padding: const EdgeInsets.all(AppSpace.x4),
-      decoration: const BoxDecoration(color: AppColors.mint, borderRadius: AppRadius.cardR),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(Formats.of(context).weight(L.of(context), current), style: big(AppColors.ink)),
-                  Text(L.of(context).profileToday, style: AppText.meta),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(AppSpace.x3, 0, AppSpace.x3, AppSpace.x4),
-                child: AppIcon(AppIcons.arrowRight, size: 22, color: AppColors.primary),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(Formats.of(context).weight(L.of(context), target), style: big(AppColors.primaryDark)),
-                  Text(L.of(context).profileTargeted, style: AppText.meta),
-                ],
-              ),
-              const Spacer(),
-              const TintBadge(icon: AppIcons.flag, size: AppSizes.iconTile, circle: true),
-            ],
-          ),
-          const SizedBox(height: AppSpace.x2),
-          Text(
-            L.of(context).profileProjection(weeks, Formats.of(context).rate(L.of(context), rate)),
-            style: AppText.of(AppFont.s14, weight: AppFont.bold, lineHeight: 20),
-          ),
-          Text(L.of(context).profileTargetDate(Formats.of(context).date(date)), style: AppText.caption),
-        ],
-      ),
-    );
-  }
-}

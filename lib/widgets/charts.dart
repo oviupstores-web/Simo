@@ -2,8 +2,11 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
-import '../theme/app_tokens.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/formats.dart';
+import '../theme/theme.dart';
+import 'app_icon.dart';
+import 'thumbs.dart';
 
 /// Anneau de progression (calories), animé à l'affichage.
 class ProgressRing extends StatelessWidget {
@@ -85,4 +88,68 @@ class _SparkPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_SparkPainter old) => false;
+}
+
+/// « 75 kg aujourd'hui → 70 kg visés, environ 10 semaines à 0,5 kg/semaine ». Réutilisée par
+/// `onboarding_profile` (aperçu en direct) et `reassurance_weight` (SPEC §4b).
+class WeightProjectionCard extends StatelessWidget {
+  const WeightProjectionCard({
+    super.key,
+    required this.current,
+    required this.target,
+    required this.weeks,
+    required this.rate,
+    required this.date,
+  });
+
+  final double current;
+  final double target;
+  final int weeks;
+  final double rate;
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle big(Color c) => AppText.of(AppFont.s22, weight: AppFont.extrabold, color: c, lineHeight: 28);
+    return Container(
+      padding: const EdgeInsets.all(AppSpace.x4),
+      decoration: const BoxDecoration(color: AppColors.mint, borderRadius: AppRadius.cardR),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Formats.of(context).weight(L.of(context), current), style: big(AppColors.ink)),
+                  Text(L.of(context).profileToday, style: AppText.meta),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(AppSpace.x3, 0, AppSpace.x3, AppSpace.x4),
+                child: AppIcon(AppIcons.arrowRight, size: 22, color: AppColors.primary),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Formats.of(context).weight(L.of(context), target), style: big(AppColors.primaryDark)),
+                  Text(L.of(context).profileTargeted, style: AppText.meta),
+                ],
+              ),
+              const Spacer(),
+              const TintBadge(icon: AppIcons.flag, size: AppSizes.iconTile, circle: true),
+            ],
+          ),
+          const SizedBox(height: AppSpace.x2),
+          Text(
+            L.of(context).profileProjection(weeks, Formats.of(context).rate(L.of(context), rate)),
+            style: AppText.of(AppFont.s14, weight: AppFont.bold, lineHeight: 20),
+          ),
+          Text(L.of(context).profileTargetDate(Formats.of(context).date(date)), style: AppText.caption),
+        ],
+      ),
+    );
+  }
 }

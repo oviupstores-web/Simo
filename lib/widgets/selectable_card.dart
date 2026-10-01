@@ -104,7 +104,7 @@ class ChoiceCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(title, style: AppText.of(AppFont.s16, weight: AppFont.bold, lineHeight: 24)),
+                        Flexible(child: Text(title, style: AppText.of(AppFont.s16, weight: AppFont.bold, lineHeight: 24))),
                         if (badge != null) ...[
                           const SizedBox(width: AppSpace.x2),
                           PillBadge.orange(

@@ -32,7 +32,8 @@ abstract final class AppRadius {
   static const double field = 12;
 
   /// Vignettes internes (pastilles d'icône, macros, jours).
-  static const double tile = 10;
+  static const double tile = 8;
+  static const double chip = 8;
   static const double logo = 11;
   static const double checkbox = 6;
   static const double pill = 999;
@@ -41,6 +42,7 @@ abstract final class AppRadius {
   static const BorderRadius btnR = BorderRadius.all(Radius.circular(btn));
   static const BorderRadius fieldR = BorderRadius.all(Radius.circular(field));
   static const BorderRadius tileR = BorderRadius.all(Radius.circular(tile));
+  static const BorderRadius chipR = BorderRadius.all(Radius.circular(chip));
   static const BorderRadius pillR = BorderRadius.all(Radius.circular(pill));
 }
 
@@ -59,16 +61,17 @@ abstract final class AppSizes {
   static const double btnSecondaryHeight = 50;
   static const double fieldHeight = 52;
   static const double inputHeight = 48;
-  static const double chipHeight = 36;
+  static const double chipHeight = 40;
   static const double tagHeight = 32;
   static const double quickActionHeight = 44;
   static const double progressSegment = 4;
   static const double gaugeHeight = 8;
   static const double navHeight = 64;
-  static const double iconTileSm = 34;
-  static const double iconTile = 40;
-  static const double iconTileMd = 44;
-  static const double iconTileLg = 46;
+  static const double iconTileSm = 44;
+  static const double iconTile = 48;
+  static const double iconTileMd = 56;
+  static const double iconTileLg = 56;
+  static const double allergenImage = 72;
   static const double checkCircle = 24;
   static const double checkCircleLg = 28;
   static const double checkBullet = 17;
@@ -103,13 +106,14 @@ abstract final class AppSizes {
   static const double gridColumn = 64;
   static const double budgetPhotoH = 150;
   static const double photoTileH = 120;
-  static const double allergenTileRatio = 2.2;
+  static const double allergenTileRatio = 1.5;
   static const double equipmentTileRatio = 1.05;
   static const double locationTileRatio = 3.0;
-  static const double chipBadge = 24;
+  static const double chipBadge = 32;
   static const double miniCheck = 18;
   static const double productFallbackIcon = 40;
   static const double equipmentTileAspect = 0.95;
+  static const double equipmentTileAspect3Col = 0.75;
   static const double levelTileAspect = 0.62;
   static const double cuisineTileAspect = 0.82;
 
@@ -118,6 +122,9 @@ abstract final class AppSizes {
   static const double memberAvatar = 48;
   static const double scanPreviewH = 220;
   static const double scanFrame = 200;
+
+  /// Landing : aperçu d'écran dans une carte de fonction (§1).
+  static const double landingCardPreviewH = 170;
 
   /// Inclinaison des phrases manuscrites (-6°).
   static const double handTilt = -0.105;
@@ -130,4 +137,21 @@ abstract final class AppMotion {
   static const page = Duration(milliseconds: 300);
   static const progress = Duration(milliseconds: 650);
   static const curve = Curves.easeOutCubic;
+}
+
+/// Landing-only values measured from accueil_deroulant.png. Shared screens retain their tokens.
+abstract final class LandingTokens {
+  static const double referenceWidth = 833;
+  static const titleInk = Color(0xFF061718);
+  static const bodyInk = Color(0xFF19234F);
+  static const teal = Color(0xFF007765);
+  static const scanSoft = Color(0xFFF0F8F4);
+  static const menuSoft = Color(0xFFFFF3E3);
+  static const shoppingSoft = Color(0xFFEAF7F0);
+  static const trackingSoft = Color(0xFFF0EDFF);
+  static const scanBadge = Color(0xFFFF8508);
+  static const menuBadge = Color(0xFFFF5C61);
+  static const shoppingBadge = Color(0xFF36B931);
+  static const trackingBadge = Color(0xFFA65BFF);
+  static const innerBorder = Color(0xD9FFFFFF);
 }

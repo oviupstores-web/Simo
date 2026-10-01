@@ -22,7 +22,6 @@ enum ManagementMode { courses, reserves, mixte }
 
 enum CookingLevel { debutant, intermediaire, confirme }
 
-enum ShoppingChannel { drive, magasin, livraison }
 
 enum AppMode { solo, foyer }
 
@@ -235,10 +234,6 @@ class OnboardingData extends ChangeNotifier {
   int weekdayMinutes = 30;
   int weekendMinutes = 45;
   final Set<String> equipment = {'four', 'plaques', 'micro_ondes'};
-  // Étape 10 — supermarché
-  String postalCode = '';
-  ShoppingChannel channel = ShoppingChannel.drive;
-  String? store;
   // Détour Réserve
   final List<PantryDraft> pantry = [];
 

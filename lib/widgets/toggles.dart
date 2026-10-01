@@ -54,7 +54,7 @@ class ToggleChip extends StatelessWidget {
           padding: EdgeInsetsDirectional.only(start: hasBadge ? AppSpace.x1_5 : AppSpace.x3_5, end: AppSpace.x3_5),
           decoration: BoxDecoration(
             color: selected ? AppColors.mint : AppColors.card,
-            borderRadius: AppRadius.pillR,
+            borderRadius: AppRadius.chipR,
             border: Border.all(color: selected ? AppColors.primary : AppColors.line, width: selected ? 1.5 : 1),
           ),
           child: Row(
@@ -139,7 +139,7 @@ class OptionTile extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: AppSpace.x2_5, vertical: vertical ? AppSpace.x2_5 : AppSpace.x2),
           decoration: BoxDecoration(
             color: selected ? AppColors.mintTint : AppColors.card,
-            borderRadius: AppRadius.fieldR,
+            borderRadius: AppRadius.chipR,
             border: Border.all(color: selected ? AppColors.primary : AppColors.line, width: selected ? 1.5 : 1),
           ),
           child: vertical
@@ -179,7 +179,12 @@ class OptionTile extends StatelessWidget {
                           else
                             FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerStart, child: label0),
                           if (subtitle != null)
-                            Text(subtitle!, style: AppText.of(AppFont.s11, color: AppColors.ink2, lineHeight: 15)),
+                            Text(
+                              subtitle!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppText.of(AppFont.s11, color: AppColors.ink2, lineHeight: 15),
+                            ),
                         ],
                       ),
                     ),

@@ -150,7 +150,16 @@ class UnitFieldRow extends StatelessWidget {
       builder: (context, c) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
+          // Rétrécit plutôt que déborder : les traductions sont plus longues que le français.
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22),
+            ),
+          ),
+          const SizedBox(width: AppSpace.x2),
           SizedBox(
             width: c.maxWidth * 0.58,
             child: _FieldFrame(
