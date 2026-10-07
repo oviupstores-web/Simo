@@ -11,16 +11,26 @@ import '../theme/app_tokens.dart';
 /// À l'arrivée sur un écran, la progression s'anime depuis l'étape précédente :
 /// le segment courant se remplit et la fenêtre glisse d'un cran si besoin.
 class StepProgress extends StatelessWidget {
-  const StepProgress({super.key, required this.step, required this.total});
+  const StepProgress({super.key, required this.step, required this.total, this.localizeDigits = false});
 
   final int step;
   final int total;
+  final bool localizeDigits;
 
   /// Nombre de segments visibles.
   static const window = 4;
 
   @override
   Widget build(BuildContext context) {
+    var label = L.of(context).commonStepOf(step, total);
+    if (localizeDigits && Localizations.localeOf(context).languageCode == 'ar') {
+      const western = '0123456789';
+      const easternArabic = '٠١٢٣٤٥٦٧٨٩';
+      label = label.split('').map((character) {
+        final index = western.indexOf(character);
+        return index < 0 ? character : easternArabic[index];
+      }).join();
+    }
     return Row(
       children: [
         Expanded(
@@ -32,7 +42,7 @@ class StepProgress extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpace.x3),
-        Text(L.of(context).commonStepOf(step, total), style: AppText.stepLabel),
+        Text(label, style: AppText.stepLabel),
       ],
     );
   }

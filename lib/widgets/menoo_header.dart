@@ -103,6 +103,7 @@ class MenooHeader extends StatelessWidget {
     this.step,
     this.totalSteps,
     this.topPadding = AppSpace.x4,
+    this.localizeProgressDigits = false,
   });
 
   final bool brandLeft;
@@ -112,6 +113,7 @@ class MenooHeader extends StatelessWidget {
   final int? step;
   final int? totalSteps;
   final double topPadding;
+  final bool localizeProgressDigits;
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +138,7 @@ class MenooHeader extends StatelessWidget {
           row,
           if (step != null && totalSteps != null) ...[
             const SizedBox(height: AppSpace.x3),
-            StepProgress(step: step!, total: totalSteps!),
+            StepProgress(step: step!, total: totalSteps!, localizeDigits: localizeProgressDigits),
           ],
         ],
       ),

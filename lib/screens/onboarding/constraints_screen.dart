@@ -87,18 +87,23 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.constraints),
       totalSteps: OnboardingFlow.total(context),
+      localizeProgressDigits: true,
       eyebrow: d.isFoyer ? l.constraintsEyebrowHousehold : l.constraintsEyebrowSolo,
       eyebrowIcon: AppIcons.checkCircle,
       title: d.isFoyer ? l.constraintsTitleHousehold : l.constraintsTitleSolo,
-      subtitle: d.isFoyer
-          ? l.constraintsSubtitleHousehold
-          : l.constraintsSubtitleSolo,
+      subtitle: d.isFoyer ? l.constraintsSubtitleHousehold : l.constraintsSubtitleSolo,
       onContinue: () {
         _addFood();
         OnboardingFlow.next(context, OnbStep.constraints);
       },
       children: [
-        StepSectionTitle(l.constraintsDietsSection, hint: l.commonMultipleChoice, icon: AppIcons.leaf, tint: Tint.leafy),
+        StepSectionTitle(
+          l.constraintsDietsSection,
+          hint: l.commonMultipleChoice,
+          icon: AppIcons.leaf,
+          tint: Tint.leafy,
+          adaptiveHint: true,
+        ),
         Wrap(
           spacing: AppSpace.x2,
           runSpacing: AppSpace.x2,
@@ -109,6 +114,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
               tint: Tint.peach,
               selected: d.diets.isEmpty,
               onTap: () => d.update(d.diets.clear),
+              height: AppSizes.quickActionHeight,
             ),
             for (final diet in ConstraintsScreen.diets(l))
               ToggleChip(
@@ -117,11 +123,18 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
                 tint: diet.$4,
                 selected: d.diets.contains(diet.$1),
                 onTap: () => d.update(() => d.diets.toggle(diet.$1)),
+                height: AppSizes.quickActionHeight,
               ),
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle(l.constraintsAllergensSection, hint: l.constraintsAllergensHint, icon: AppIcons.shield, tint: Tint.peach),
+        StepSectionTitle(
+          l.constraintsAllergensSection,
+          hint: l.constraintsAllergensHint,
+          icon: AppIcons.shield,
+          tint: Tint.peach,
+          adaptiveHint: true,
+        ),
         if (d.isFoyer && d.memberAllergens.isNotEmpty) ...[
           InfoBanner(
             icon: AppIcons.shield,
@@ -135,30 +148,12 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           ),
           const SizedBox(height: AppSpace.x3),
         ],
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: AppSpace.x2,
-          crossAxisSpacing: AppSpace.x2,
-          childAspectRatio: AppSizes.allergenTileRatio,
-          children: [
-            for (final a in ConstraintsScreen.commonAllergens(l))
-              OptionTile(
-                label: a.$2,
-                subtitle: a.$3,
-                leading: FoodThumb(
-                  photo: 'assets/images/allergens/${a.$6}.jpg',
-                  icon: a.$4,
-                  tint: a.$5,
-                  size: AppSizes.allergenImage,
-                ),
-                selected: d.allergens.containsAll(a.$1),
-                onTap: () => d.update(() {
-                  d.allergens.containsAll(a.$1) ? d.allergens.removeAll(a.$1) : d.allergens.addAll(a.$1);
-                }),
-              ),
-          ],
+        _ResponsiveAllergenGrid(
+          allergens: ConstraintsScreen.commonAllergens(l),
+          selectedCodes: d.allergens,
+          onToggle: (codes) => d.update(() {
+            d.allergens.containsAll(codes) ? d.allergens.removeAll(codes) : d.allergens.addAll(codes);
+          }),
         ),
         const SizedBox(height: AppSpace.x3),
         GestureDetector(
@@ -209,7 +204,13 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
               : const SizedBox(width: double.infinity),
         ),
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle(l.constraintsExcludedSection, hint: l.constraintsExcludedHint, icon: AppIcons.block, tint: Tint.lavender),
+        StepSectionTitle(
+          l.constraintsExcludedSection,
+          hint: l.constraintsExcludedHint,
+          icon: AppIcons.block,
+          tint: Tint.lavender,
+          adaptiveHint: true,
+        ),
         IconTextField(
           icon: AppIcons.search,
           hint: l.constraintsExcludedPlaceholder,
@@ -231,11 +232,64 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           ),
         ],
         const SizedBox(height: AppSpace.x5),
-        InfoBanner(
-          icon: AppIcons.sparkles,
-          title: l.constraintsInfoTitle,
-          text: l.constraintsInfoText,
-        ),
+        InfoBanner(icon: AppIcons.sparkles, title: l.constraintsInfoTitle, text: l.constraintsInfoText),
+      ],
+    );
+  }
+}
+
+typedef _AllergenData = (List<String>, String, String, String, Tint, String);
+
+class _ResponsiveAllergenGrid extends StatelessWidget {
+  const _ResponsiveAllergenGrid({required this.allergens, required this.selectedCodes, required this.onToggle});
+
+  final List<_AllergenData> allergens;
+  final Set<String> selectedCodes;
+  final ValueChanged<List<String>> onToggle;
+
+  Widget _tile(_AllergenData allergen) => OptionTile(
+    label: allergen.$2,
+    subtitle: allergen.$3,
+    leading: FoodThumb(
+      photo: 'assets/images/allergens/${allergen.$6}.jpg',
+      icon: allergen.$4,
+      tint: allergen.$5,
+      size: AppSizes.allergenImage,
+    ),
+    selected: selectedCodes.containsAll(allergen.$1),
+    onTap: () => onToggle(allergen.$1),
+    allowTextWrap: true,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final singleColumn = MediaQuery.sizeOf(context).width < 360;
+    if (singleColumn) {
+      return Column(
+        children: [
+          for (var i = 0; i < allergens.length; i++) ...[
+            if (i > 0) const SizedBox(height: AppSpace.x2),
+            _tile(allergens[i]),
+          ],
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        for (var i = 0; i < allergens.length; i += 2) ...[
+          if (i > 0) const SizedBox(height: AppSpace.x2),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _tile(allergens[i])),
+                const SizedBox(width: AppSpace.x2),
+                Expanded(child: _tile(allergens[i + 1])),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

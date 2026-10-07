@@ -17,6 +17,7 @@ class ToggleChip extends StatelessWidget {
     this.tint,
     this.leading,
     this.onRemove,
+    this.height = AppSizes.chipHeight,
   });
 
   final String label;
@@ -30,6 +31,7 @@ class ToggleChip extends StatelessWidget {
 
   /// Affiche une croix de suppression (aliments exclus).
   final VoidCallback? onRemove;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class ToggleChip extends StatelessWidget {
         child: AnimatedContainer(
           duration: AppMotion.normal,
           curve: AppMotion.curve,
-          height: AppSizes.chipHeight,
+          height: height,
           padding: EdgeInsetsDirectional.only(start: hasBadge ? AppSpace.x1_5 : AppSpace.x3_5, end: AppSpace.x3_5),
           decoration: BoxDecoration(
             color: selected ? AppColors.mint : AppColors.card,
@@ -101,6 +103,7 @@ class OptionTile extends StatelessWidget {
     this.onTap,
     this.subtitle,
     this.vertical = false,
+    this.allowTextWrap = false,
   });
 
   final String label;
@@ -115,6 +118,9 @@ class OptionTile extends StatelessWidget {
 
   /// Vignette au-dessus du libellé (tuiles en grille).
   final bool vertical;
+
+  /// Laisse le libellé et le sous-titre déterminer naturellement la hauteur.
+  final bool allowTextWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -173,16 +179,19 @@ class OptionTile extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Un mot seul ne se coupe jamais : il rétrécit légèrement si besoin.
-                          if (label.contains(' '))
+                          if (allowTextWrap || label.contains(' '))
                             label0
                           else
-                            FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerStart, child: label0),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: AlignmentDirectional.centerStart,
+                              child: label0,
+                            ),
                           if (subtitle != null)
                             Text(
                               subtitle!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              maxLines: allowTextWrap ? null : 1,
+                              overflow: allowTextWrap ? TextOverflow.visible : TextOverflow.ellipsis,
                               style: AppText.of(AppFont.s11, color: AppColors.ink2, lineHeight: 15),
                             ),
                         ],
