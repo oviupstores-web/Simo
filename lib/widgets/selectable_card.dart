@@ -65,6 +65,9 @@ class ChoiceCard extends StatelessWidget {
     this.badge,
     this.iconBackground = AppColors.mint,
     this.iconForeground = AppColors.primary,
+    this.iconSize = 24,
+    this.centerIcon = false,
+    this.descriptionStyle,
   });
 
   final String icon;
@@ -75,6 +78,9 @@ class ChoiceCard extends StatelessWidget {
   final String? badge;
   final Color iconBackground;
   final Color iconForeground;
+  final double iconSize;
+  final bool centerIcon;
+  final TextStyle? descriptionStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -93,35 +99,58 @@ class ChoiceCard extends StatelessWidget {
             border: Border.all(color: selected ? AppColors.primary : AppColors.line, width: selected ? 2 : 1),
             boxShadow: AppShadows.card,
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconTile(icon: icon, size: AppSizes.iconTileLg, background: iconBackground, foreground: iconForeground),
-              const SizedBox(width: AppSpace.x3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+          child: Builder(
+            builder: (context) {
+              final content = Row(
+                crossAxisAlignment: centerIcon ? CrossAxisAlignment.stretch : CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    widthFactor: 1,
+                    heightFactor: 1,
+                    child: IconTile(
+                      icon: icon,
+                      size: AppSizes.iconTileLg,
+                      iconSize: iconSize,
+                      background: iconBackground,
+                      foreground: iconForeground,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpace.x3),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Flexible(child: Text(title, style: AppText.of(AppFont.s16, weight: AppFont.bold, lineHeight: 24))),
-                        if (badge != null) ...[
-                          const SizedBox(width: AppSpace.x2),
-                          PillBadge.orange(
-                            badge!,
-                            padding: const EdgeInsets.symmetric(horizontal: AppSpace.x2, vertical: AppSpace.x0_5),
-                          ),
-                        ],
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(title, style: AppText.of(AppFont.s16, weight: AppFont.bold, lineHeight: 24)),
+                            ),
+                            if (badge != null) ...[
+                              const SizedBox(width: AppSpace.x2),
+                              PillBadge.orange(
+                                badge!,
+                                padding: const EdgeInsets.symmetric(horizontal: AppSpace.x2, vertical: AppSpace.x0_5),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: AppSpace.x1),
+                        Text(description, style: descriptionStyle ?? AppText.caption),
                       ],
                     ),
-                    const SizedBox(height: AppSpace.x1),
-                    Text(description, style: AppText.caption),
-                  ],
-                ),
-              ),
-              const SizedBox(width: AppSpace.x3),
-              SelectionIndicator(selected: selected),
-            ],
+                  ),
+                  const SizedBox(width: AppSpace.x3),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    widthFactor: 1,
+                    heightFactor: 1,
+                    child: SelectionIndicator(selected: selected),
+                  ),
+                ],
+              );
+              return centerIcon ? IntrinsicHeight(child: content) : content;
+            },
           ),
         ),
       ),

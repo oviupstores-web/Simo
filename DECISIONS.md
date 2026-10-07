@@ -1,5 +1,47 @@
 # DECISIONS.md — Choix validés
 
+- **2026-10-02 — Icones Mode de gestion validees et installees** : SVG sac de courses, placard et mixte, taille 36 px, trait 1.0, pastilles centrees verticalement. APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r avec conservation des donnees. Demarrage verifie sur telephone, logs sans erreur. Autres elements du mode de gestion conserves ; harmonisation generale proposee non appliquee. Rendu sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+
+- **2026-10-02 — Mode de gestion : icones centrees** : option centerIcon activee uniquement sur les trois cartes ManagementModeScreen a la demande de Simo. Trait 1.0, taille 36 px, autres elements conserves. Apercu Flutter et six tests de debordement reussis. Aucune installation.
+
+- **2026-10-02 — Mode de gestion : trait affine** : sur demande de Simo, epaisseur des trois SVG reduite de 1.4 a 1.0. Formes, taille 36 px et autres elements conserves. Apercu Flutter reussi. Aucune installation.
+
+- **2026-10-02 — Mode de gestion : proposition icones premium** : trio approuve pour preparation par Simo, sac avec baguette/feuille, placard ouvert avec provisions, sac et bocal avec deux fleches courbes. SVG trait 1.4, taille 36 px, limite aux trois icones de cartes. Textes, couleurs, marges, alignements et navigation conserves ; harmonisation generale non appliquee. Apercu Flutter reussi, a valider. Aucune installation.
+
+- **2026-10-02 — Budget valide et installe** : apercu valide par Simo, APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r sans effacer les donnees. Demarrage verifie sur telephone et logs sans erreur. Marges 14 px, textes secondaires bleu sombre, badge rayon 10 px et icones portefeuille/tirelire affinees ; photo, valeurs, curseur et logique conserves. Rendu Budget sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+
+- **2026-10-02 — Budget : apercu harmonise a valider** : ajustements approuves, marges carte/champ/CTA 14 px, textes secondaires bleu sombre, badge photo rayon 10 px, icones portefeuille et tirelire detaillees au trait fin. Photo, montants, curseur, textes et fonctionnement conserves. Apercu Flutter, six tests de debordement et analyse reussis. Aucune installation ; attendre validation du visuel.
+
+- **2026-10-02 — Grille des repas validee et installee** : apercu et icone assiette/couverts valides par Simo, APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r, donnees conservees. Demarrage verifie sur telephone et logs sans erreur. Marges 14 px, textes secondaires bleu sombre et icone dediee ; cases, selections et navigation conservees. Rendu de la grille sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+
+- **2026-10-02 — Icone Dej + Diner clarifiee** : premiere modification trop discrete selon Simo ; pictogramme remplace par assiette avec fourchette et couteau. Uniquement le SVG de cette action change, taille et bouton conserves. Apercu Flutter reussi ; aucune installation.
+
+- **2026-10-02 — Grille des repas : apercu propose** : demande de visuel avant installation ; marges 14 px, introduction/en-tetes/compteur secondaire/conseil en bleu sombre et icone couverts au trait fin. Structure, cellules, selections et textes conserves. Apercu Flutter, six tests de debordement et analyse reussis. Aucune installation ; attendre validation de Simo.
+
+- **2026-10-02 — Balance validee et installee** : apercu valide puis APK release compile et installe sur demande de Simo via adb install -r sur CEUGAIC6AEVGWCNF. Donnees conservees. Demarrage sur telephone verifie, logs sans erreur. Marges 14 px et textes introduction/info bleu sombre ; autres elements conserves. Rendu Balance sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+
+- **2026-10-02 — Balance : apercu harmonise a valider** : corrections approuvees par Simo limitees aux marges horizontales carte et CTA 14 px et aux textes introduction/info en bleu sombre. Photo, benefices, boutons et navigation conserves. Apercu Flutter et six tests de debordement reussis, analyse sans erreur. Aucune installation.
+
+- **2026-10-02 — Niveau d activite valide et installe** : icones affinees validees par Simo, APK release compile puis installe via adb install -r sur CEUGAIC6AEVGWCNF, sans effacer les donnees. Demarrage verifie sur telephone et logs sans erreur. Apercu et six tests de debordement reussis ; rendu Activite sur telephone a verifier par Simo en poursuivant le parcours (application relancee sur accueil). Aucune publication.
+
+- **2026-10-02 — Icones Activite affinees sur demande** : remplacement des silhouettes schematiques par quatre pictogrammes detailles au trait 1.4 (bureau, empreintes de marche, chaussure de course, haltere). Taille 36 px, couleurs et pastilles conservees ; aucun autre ajustement. Apercu a valider, aucune installation.
+
+- **2026-10-02 — Niveau d activite : corrections validees, apercu verifie** : marges et CTA 14 px, ecart cartes 10 px, quatre icones vectorielles fines 36 px centrees, descriptions 13 px bleu sombre et textes secondaires harmonises. Cartes blanches, pastilles pastel, textes et navigation conserves. Analyse sans erreur, apercu Flutter et six tests de debordement reussis. Aucune installation ; validation du visuel puis installation sur demande.
+
+- 2026-10-02 · Simo autorise harmonisation du Profil : marges 14 px, textes secondaires bleu sombre, nouvelle icone balance pour objectif de poids ; champs blancs, selections vertes et scroll conserves. Apercu avant installation.
+
+- 2026-10-02 · Simo valide les quatre descriptions Objectif plus concises et le centrage vertical des pastilles ; montrer le rendu avant installation.
+
+- 2026-10-02 · Simo valide le visuel des quatre nouvelles icones de la page Objectif. Integration vectorielle avec apercu avant installation ; les autres ajustements de cet ecran restent a confirmer.
+
+- 2026-10-02 · Simo prefere les cartes blanches originales pour Pour moi ; les nouvelles icones agrandies et leurs pastilles pastel restent. Corriger le caractere parasite entre sur et mesure sans changer la phrase.
+
+- 2026-10-02 · Simo confirme les corrections de coherence du seul ecran Pour moi : marges 14 px, ecarts 10 px, textes 13 px bleu sombre, cartes pastel, badge moins arrondi et compte reel de 11 etapes. Apercu avant installation.
+
+- 2026-10-02 · Simo valide les trois icones Solo proposees et autorise leur remplacement uniquement. Pictogrammes vectoriels nets a toutes les tailles, sans nouvel asset bitmap.
+
+- 2026-10-02 · Simo autorise les ajustements de cohérence du choix Solo/Famille après audit : marges et espacements alignés à la landing, palette pastel et textes bleu sombre, lien équilibré. Visuel validé puis installation autorisée et effectuée ; photos, structure et logique conservées.
+
 - 2026-09-23 · Couleur principale : `#0B6B43` (DESIGN_V2.md), et non `#1E4620` (PRD.md §6, obsolète). DESIGN_V2 est prioritaire.
 - 2026-09-23 · Outils installés hors dossier projet : Flutter `C:\src\flutter`, Supabase CLI `C:\src\supabase`. Java = celui d'Android Studio.
 - 2026-09-23 · Projet Supabase : `menoo-dev` (ref `pqdreuptzhenowqucvbl`, Francfort). Les autres projets du compte (menoo-rork-sandbox, Menoo-nutrition…) ne sont pas utilisés.
@@ -138,3 +180,11 @@
 - 2026-10-01 · **Previews des cartes améliorées** : courses avec quantités et rayures sur les items cochés, suivi avec barres de macros P/G/L et chiffres kcal concrets au lieu d'un simple donut + jauge.
 - 2026-10-01 · **Équipements en 3 colonnes** sur l'écran « Ma cuisine » (était 2 colonnes). Nouveau token `AppSizes.equipmentTileAspect3Col = 0.75`.
 - 2026-10-01 · **Arrondis et tailles uniformisés** (écran Contraintes + global) : icônes des titres de section agrandies de 34 à 40 px (`iconTileSm` → `iconTile`), chips `ToggleChip` passées de pilule (999 px) à arrondi 12 px (`AppRadius.fieldR`) pour un style plus moderne, photos d'allergènes agrandies de 34 à 40 px, badges internes des chips agrandis de 24 à 28 px. Échelle des rayons cohérente dans toute l'app : cartes 14 px, champs/chips 12 px, pastilles 10 px — aucun widget en pilule sauf les éléments explicitement « pill » (badges, jauges, progress bar).
+- 2026-10-02 · Animation de démarrage autorisée en local, sans publication : tracés vectoriels Flutter, copie optimisée (436 ko) du logo 3D fourni pour garder la géométrie exacte du fondu, textes de la liste localisés, animation écourtée quand l'app est prête et respect de la réduction des animations. Slogan choisi : « Bien manger, simplement. », traduit dans les 6 langues, affiché sous le logo à la fin avec une pause de lecture de 600 ms (démarrage prêt ≈ 2,6 s). La Landing validée reste inchangée ; pas d'installation pour cette étape.
+
+- 2026-10-02 · Simo autorise l’extraction des images base64 de la landing vers les assets PNG, après sauvegarde locale vérifiée. Aucun changement du design ni de l’animation ; aucune publication.
+- 2026-10-02 · Externalisation vérifiée sur téléphone : rendu strictement identique, aucune erreur ; le délai reste comparable avant/après. Les base64 ne sont donc pas démontrés comme cause principale du blanc au lancement.
+- 2026-10-02 · Correction du lancement : le premier visuel Flutter approuvé est réutilisé pour l’écran natif Android ; la landing est préparée après la première frame et le chargement attend ses images. APK optimisé uniquement local, signé avec la clé de test existante, installé pour mesurer le démarrage sans publication. Sur deux lancements, accueil atteint vers 3,4–4,2 s contre environ 6,9 s précédemment ; rendu de l’accueil inchangé.
+- 2026-10-02 · Simo valide le visuel de la carte Courses dézoomée et autorise son installation. APK optimisé installé et vérifié sur téléphone ; original conservé, aucune autre modification ni publication.
+- 2026-10-02 · Fond transparent de la carte Courses validé et installé sur demande de Simo. Couleur uniforme vérifiée sur téléphone ; données conservées, aucune publication.
+- 2026-10-02 · Carte Suivi dézoomée et transparente, indicateurs agrandis de 12 % : visuel et installation validés par Simo. APK optimisé installé et vérifié sur téléphone, données conservées, aucune publication.

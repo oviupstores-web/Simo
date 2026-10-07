@@ -15,7 +15,7 @@ class ManagementModeScreen extends StatelessWidget {
   static List<(ManagementMode, String, String, String?, String, Tint)> _modes(L l) => [
     (
       ManagementMode.courses,
-      AppIcons.cart,
+      AppIcons.managementShopping,
       l.managementShoppingTitle,
       null,
       l.managementShoppingText,
@@ -23,7 +23,7 @@ class ManagementModeScreen extends StatelessWidget {
     ),
     (
       ManagementMode.reserves,
-      AppIcons.fridge,
+      AppIcons.managementPantry,
       l.managementPantryTitle,
       null,
       l.managementPantryText,
@@ -31,7 +31,7 @@ class ManagementModeScreen extends StatelessWidget {
     ),
     (
       ManagementMode.mixte,
-      AppIcons.balance,
+      AppIcons.managementMixed,
       l.managementMixedTitle,
       l.commonRecommended,
       l.managementMixedText,
@@ -45,21 +45,24 @@ class ManagementModeScreen extends StatelessWidget {
     final d = OnboardingScope.of(context);
     final withPantry = d.management != ManagementMode.courses;
     return OnboardingStepScaffold(
+      horizontalPadding: ManagementTokens.gutter,
+      subtitleColor: ManagementTokens.bodyInk,
       step: OnboardingFlow.number(context, OnbStep.management),
       totalSteps: OnboardingFlow.total(context),
       title: l.managementTitle,
-      subtitle: d.isFoyer
-          ? l.managementSubtitleHousehold
-          : l.managementSubtitleSolo,
+      subtitle: d.isFoyer ? l.managementSubtitleHousehold : l.managementSubtitleSolo,
       onContinue: () => OnboardingFlow.next(context, OnbStep.management),
       children: [
         for (final (i, m) in _modes(l).indexed) ...[
-          if (i > 0) const SizedBox(height: AppSpace.x3),
+          if (i > 0) const SizedBox(height: ManagementTokens.cardGap),
           ChoiceCard(
             icon: m.$2,
+            iconSize: ManagementTokens.iconSize,
+            centerIcon: true,
             title: m.$3,
             badge: m.$4,
             description: m.$5,
+            descriptionStyle: AppText.of(AppFont.s13, color: ManagementTokens.bodyInk, lineHeight: 18),
             iconBackground: m.$6.soft,
             iconForeground: m.$6.ink,
             selected: d.management == m.$1,
@@ -75,12 +78,14 @@ class ManagementModeScreen extends StatelessWidget {
                   icon: AppIcons.fridge,
                   title: l.managementPantryInfoTitle,
                   text: l.managementPantryInfoText,
+                  textColor: ManagementTokens.bodyInk,
                 )
               : InfoBanner(
                   key: const ValueKey('courses'),
                   icon: AppIcons.bulb,
                   text: l.managementShoppingInfoText,
                   background: AppColors.neutralSoft,
+                  textColor: ManagementTokens.bodyInk,
                 ),
         ),
       ],

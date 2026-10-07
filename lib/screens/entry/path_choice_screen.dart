@@ -22,6 +22,12 @@ class PathChoiceScreen extends StatefulWidget {
 class _PathChoiceScreenState extends State<PathChoiceScreen> {
   AppMode _mode = AppMode.solo;
 
+  String _improvLabel(String value) {
+    final question = RegExp(r'[?؟]').firstMatch(value);
+    if (question == null) return value;
+    return '${value.substring(0, question.end)}\n${value.substring(question.end).trimLeft()}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
@@ -34,7 +40,7 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
             children: [
               const MenooHeader(),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpace.gutter),
+                padding: const EdgeInsets.symmetric(horizontal: PathChoiceTokens.gutter),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -44,20 +50,27 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
                     Text(
                       l.pathChoiceSubtitle,
                       textAlign: TextAlign.center,
-                      style: AppText.lead,
+                      style: AppText.lead.copyWith(color: PathChoiceTokens.bodyInk),
                     ),
                     const SizedBox(height: AppSpace.x6),
                     _ModeCard(
                       image: 'mode_solo.jpg',
+                      background: PathChoiceTokens.soloSoft,
                       title: l.pathChoiceSoloTitle,
                       description: l.pathChoiceSoloDescription,
-                      bullets: [l.pathChoiceSoloBullet1, l.pathChoiceSoloBullet2, l.pathChoiceSoloBullet3, l.pathChoiceSoloBullet4],
+                      bullets: [
+                        l.pathChoiceSoloBullet1,
+                        l.pathChoiceSoloBullet2,
+                        l.pathChoiceSoloBullet3,
+                        l.pathChoiceSoloBullet4,
+                      ],
                       selected: _mode == AppMode.solo,
                       onTap: () => setState(() => _mode = AppMode.solo),
                     ),
-                    const SizedBox(height: AppSpace.x3),
+                    const SizedBox(height: PathChoiceTokens.cardGap),
                     _ModeCard(
                       image: 'mode_famille.jpg',
+                      background: PathChoiceTokens.householdSoft,
                       title: l.pathChoiceHouseholdTitle,
                       description: l.pathChoiceHouseholdDescription,
                       bullets: [
@@ -74,24 +87,25 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
                       icon: AppIcons.bulb,
                       title: l.pathChoiceInfoTitle,
                       text: l.pathChoiceInfoText,
+                      textColor: PathChoiceTokens.bodyInk,
                     ),
                     const SizedBox(height: AppSpace.x6),
                     PrimaryButton(
                       label: l.commonContinue,
                       onPressed: () {
                         OnboardingScope.read(context).startMode(_mode);
-                        push(
-                          context,
-                          _mode == AppMode.solo ? const CoverSoloScreen() : const CoverHouseholdScreen(),
-                        );
+                        push(context, _mode == AppMode.solo ? const CoverSoloScreen() : const CoverHouseholdScreen());
                       },
                     ),
                     const SizedBox(height: AppSpace.x4),
                     Center(
-                      child: TextLink(
-                        l.landingImprovLine,
-                        weight: AppFont.bold,
-                        onTap: () => push(context, const ImprovComingSoonScreen()),
+                      child: DefaultTextStyle.merge(
+                        textAlign: TextAlign.center,
+                        child: TextLink(
+                          _improvLabel(l.landingImprovLine),
+                          weight: AppFont.bold,
+                          onTap: () => push(context, const ImprovComingSoonScreen()),
+                        ),
                       ),
                     ),
                   ],
@@ -108,6 +122,7 @@ class _PathChoiceScreenState extends State<PathChoiceScreen> {
 class _ModeCard extends StatelessWidget {
   const _ModeCard({
     required this.image,
+    required this.background,
     required this.title,
     required this.description,
     required this.bullets,
@@ -116,6 +131,7 @@ class _ModeCard extends StatelessWidget {
   });
 
   final String image;
+  final Color background;
   final String title;
   final String description;
   final List<String> bullets;
@@ -124,6 +140,10 @@ class _ModeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundHsl = HSLColor.fromColor(background);
+    final borderColor = backgroundHsl
+        .withLightness((backgroundHsl.lightness - LandingTokens.cardBorderDarkening).clamp(0.0, 1.0))
+        .toColor();
     return Semantics(
       selected: selected,
       button: true,
@@ -133,15 +153,11 @@ class _ModeCard extends StatelessWidget {
           duration: AppMotion.normal,
           curve: AppMotion.curve,
           clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: selected ? AppColors.mintTint : AppColors.card,
-            borderRadius: AppRadius.cardR,
-            boxShadow: AppShadows.card,
-          ),
+          decoration: BoxDecoration(color: background, borderRadius: AppRadius.cardR, boxShadow: AppShadows.card),
           // Bordure dessinée par-dessus : la photo va jusqu'au bord de la carte, sans bande.
           foregroundDecoration: BoxDecoration(
             borderRadius: AppRadius.cardR,
-            border: Border.all(color: selected ? AppColors.primary : AppColors.line, width: selected ? 2 : 1),
+            border: Border.all(color: selected ? AppColors.primary : borderColor, width: selected ? 2 : 1),
           ),
           child: Builder(
             builder: (context) => ConstrainedBox(
@@ -181,7 +197,10 @@ class _ModeCard extends StatelessWidget {
                           children: [
                             Text(title, style: AppText.of(AppFont.s18, weight: AppFont.extrabold, lineHeight: 28)),
                             const SizedBox(height: AppSpace.x1),
-                            Text(description, style: AppText.of(AppFont.s12_5, color: AppColors.ink2, lineHeight: 17)),
+                            Text(
+                              description,
+                              style: AppText.of(AppFont.s13, color: PathChoiceTokens.bodyInk, lineHeight: 17),
+                            ),
                             const SizedBox(height: AppSpace.x2_5),
                             for (final (i, b) in bullets.indexed) ...[
                               if (i > 0) const SizedBox(height: AppSpace.x1_5),
@@ -192,7 +211,7 @@ class _ModeCard extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       b,
-                                      style: AppText.of(AppFont.s13, color: AppColors.ink2, lineHeight: 19),
+                                      style: AppText.of(AppFont.s13, color: PathChoiceTokens.bodyInk, lineHeight: 19),
                                     ),
                                   ),
                                 ],

@@ -34,6 +34,8 @@ class WeeklyGridScreen extends StatelessWidget {
     final perDay = (n / 7).toStringAsFixed(n % 7 == 0 ? 0 : 1).replaceAll('.', ',');
 
     return OnboardingStepScaffold(
+      horizontalPadding: WeeklyGridTokens.gutter,
+      subtitleColor: WeeklyGridTokens.bodyInk,
       step: OnboardingFlow.number(context, OnbStep.grid),
       totalSteps: OnboardingFlow.total(context),
       title: d.isFoyer ? l.gridTitleHousehold : l.gridTitleSolo,
@@ -59,7 +61,7 @@ class WeeklyGridScreen extends StatelessWidget {
               ),
             ToggleChip(
               label: l.gridPresetLunchDinner,
-              icon: AppIcons.week,
+              icon: AppIcons.gridCutlery,
               selected: false,
               onTap: () => preset({MealType.dejeuner, MealType.diner}),
             ),
@@ -79,14 +81,14 @@ class WeeklyGridScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(child: Text(l.gridDayColumn, style: AppText.meta)),
+                  Expanded(child: Text(l.gridDayColumn, style: AppText.meta.copyWith(color: WeeklyGridTokens.bodyInk))),
                   for (final m in _meals(l))
                     SizedBox(
                       width: AppSizes.gridColumn,
                       child: Text(
                         m.$2,
                         textAlign: TextAlign.center,
-                        style: AppText.of(AppFont.s12, weight: AppFont.bold, color: AppColors.ink2),
+                        style: AppText.of(AppFont.s12, weight: AppFont.bold, color: WeeklyGridTokens.bodyInk),
                       ),
                     ),
                 ],
@@ -129,7 +131,7 @@ class WeeklyGridScreen extends StatelessWidget {
                   ),
                   TextSpan(
                     text: l.gridSelectedOutOf(21),
-                    style: AppText.of(AppFont.s14, color: AppColors.ink2),
+                    style: AppText.of(AppFont.s14, color: WeeklyGridTokens.bodyInk),
                   ),
                 ],
               ),
@@ -151,6 +153,7 @@ class WeeklyGridScreen extends StatelessWidget {
           icon: AppIcons.bulb,
           title: l.commonMenooTip,
           text: l.gridTipText,
+          textColor: WeeklyGridTokens.bodyInk,
         ),
       ],
     );

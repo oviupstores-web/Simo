@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../l10n/formats.dart';
 import '../../models/food_images.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
@@ -10,6 +11,13 @@ import '../../widgets/widgets.dart';
 import 'pantry_add_manual_screen.dart';
 import 'pantry_quick_check_screen.dart';
 import 'pantry_scan_screens.dart';
+
+String _premiumLocationIcon(PantryLocation location) => switch (location) {
+  PantryLocation.fridge => AppIcons.pantryFridge,
+  PantryLocation.fruitBasket => AppIcons.pantryFruitBasket,
+  PantryLocation.pantry => AppIcons.pantryCupboard,
+  PantryLocation.freezer => AppIcons.pantryFreezer,
+};
 
 /// pantry_home_onboarding (nouvel écran design/new) — détour Réserve de l'onboarding (SPEC §4) :
 /// pas de compteur d'étape, pas de barre de navigation. Chaque ajout revient ici.
@@ -50,20 +58,17 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     const SizedBox(height: AppSpace.x5),
                     Align(
                       alignment: AlignmentDirectional.centerStart,
-                      child: EyebrowTag(label: l.pantryHubOptional, icon: AppIcons.fridge),
+                      child: EyebrowTag(label: l.pantryHubOptional, icon: AppIcons.pantryReserve),
                     ),
                     const SizedBox(height: AppSpace.x3),
                     Text(l.pantryHubTitle, style: AppText.h1),
                     const SizedBox(height: AppSpace.x2),
-                    Text(
-                      l.pantryHubSubtitle,
-                      style: AppText.of(AppFont.s14_5, color: AppColors.ink2, lineHeight: 21),
-                    ),
+                    Text(l.pantryHubSubtitle, style: AppText.of(AppFont.s14_5, color: AppColors.ink2, lineHeight: 21)),
                     const SizedBox(height: AppSpace.x4),
                     AppCard(
                       child: Row(
                         children: [
-                          const IconTile(icon: AppIcons.fridge, size: AppSizes.iconTileMd, iconSize: 26),
+                          const IconTile(icon: AppIcons.pantryReserve, size: AppSizes.iconTileMd, iconSize: 26),
                           const SizedBox(width: AppSpace.x3),
                           Expanded(
                             child: Column(
@@ -110,7 +115,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                       child: Row(
                         children: [
                           const IconTile(
-                            icon: AppIcons.list,
+                            icon: AppIcons.pantryQuickCheck,
                             background: AppColors.orangeSoft,
                             foreground: AppColors.warn,
                           ),
@@ -123,10 +128,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                                   l.pantryHubQuickCheckTitle,
                                   style: AppText.of(AppFont.s15, weight: AppFont.extrabold, lineHeight: 21),
                                 ),
-                                Text(
-                                  l.pantryHubQuickCheckText,
-                                  style: AppText.caption,
-                                ),
+                                Text(l.pantryHubQuickCheckText, style: AppText.caption),
                               ],
                             ),
                           ),
@@ -135,33 +137,13 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                       ),
                     ),
                     const SizedBox(height: AppSpace.x3),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _QuickAction(
-                            icon: AppIcons.plus,
-                            label: l.pantryQuickManual,
-                            onTap: () => push(context, const PantryAddManualScreen()),
-                          ),
-                        ),
-                        const SizedBox(width: AppSpace.x2),
-                        Expanded(
-                          child: _QuickAction(
-                            icon: AppIcons.barcode,
-                            label: l.pantryQuickBarcode,
-                            onTap: () => push(context, const PantryScanScreen()),
-                          ),
-                        ),
-                        const SizedBox(width: AppSpace.x2),
-                        Expanded(
-                          child: _QuickAction(
-                            icon: AppIcons.camera,
-                            label: l.pantryQuickPhotoAi,
-                            locked: true,
-                            onTap: () => push(context, const PantryPhotoAiScreen()),
-                          ),
-                        ),
-                      ],
+                    _QuickActions(
+                      manualLabel: l.pantryQuickManual,
+                      barcodeLabel: l.pantryQuickBarcode,
+                      photoLabel: l.pantryQuickPhotoAi,
+                      onManual: () => push(context, const PantryAddManualScreen()),
+                      onBarcode: () => push(context, const PantryScanScreen()),
+                      onPhoto: () => push(context, const PantryPhotoAiScreen()),
                     ),
                   ],
                 ),
@@ -187,7 +169,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                         const SizedBox(width: AppSpace.x2),
                         FilterPill(
                           label: '${loc.short(l)} · ${items.where((i) => i.location == loc).length}',
-                          icon: loc.icon,
+                          icon: _premiumLocationIcon(loc),
                           selected: _filter == loc,
                           onTap: () => setState(() => _filter = loc),
                         ),
@@ -226,11 +208,7 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     PrimaryButton(label: l.pantryHubFinish, onPressed: () => widget.onFinish(context)),
                     const SizedBox(height: AppSpace.x3),
                     Center(
-                      child: TextLink(
-                        l.pantryHubSkip,
-                        weight: AppFont.bold,
-                        onTap: () => widget.onFinish(context),
-                      ),
+                      child: TextLink(l.pantryHubSkip, weight: AppFont.bold, onTap: () => widget.onFinish(context)),
                     ),
                   ],
                 ),
@@ -243,8 +221,76 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
   }
 }
 
+class _QuickActions extends StatelessWidget {
+  const _QuickActions({
+    required this.manualLabel,
+    required this.barcodeLabel,
+    required this.photoLabel,
+    required this.onManual,
+    required this.onBarcode,
+    required this.onPhoto,
+  });
+
+  final String manualLabel;
+  final String barcodeLabel;
+  final String photoLabel;
+  final VoidCallback onManual;
+  final VoidCallback onBarcode;
+  final VoidCallback onPhoto;
+
+  @override
+  Widget build(BuildContext context) {
+    final actions = [
+      _QuickAction(icon: AppIcons.pantryManualAdd, label: manualLabel, onTap: onManual),
+      _QuickAction(icon: AppIcons.pantryBarcodeScan, label: barcodeLabel, onTap: onBarcode),
+      _QuickAction(icon: AppIcons.pantryPhotoScan, label: photoLabel, locked: true, onTap: onPhoto),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const gaps = AppSpace.x2 * 2;
+        final cellWidth = (constraints.maxWidth - gaps) / 3;
+        final direction = Directionality.of(context);
+        final style = AppText.of(AppFont.s13, weight: AppFont.semibold);
+        final fitsInOneRow = [manualLabel, barcodeLabel, photoLabel].every((label) {
+          final painter = TextPainter(
+            text: TextSpan(text: label, style: style),
+            textDirection: direction,
+            maxLines: 1,
+          )..layout();
+          return painter.width + _QuickAction.iconSize + AppSpace.x1_5 + AppSpace.x3 <= cellWidth;
+        });
+
+        if (!fitsInOneRow) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (final (index, action) in actions.indexed) ...[
+                if (index > 0) const SizedBox(height: AppSpace.x2),
+                action,
+              ],
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            Expanded(child: actions[0]),
+            const SizedBox(width: AppSpace.x2),
+            Expanded(child: actions[1]),
+            const SizedBox(width: AppSpace.x2),
+            Expanded(child: actions[2]),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _QuickAction extends StatelessWidget {
   const _QuickAction({required this.icon, required this.label, required this.onTap, this.locked = false});
+
+  static const double iconSize = 23;
 
   final String icon;
   final String label;
@@ -271,13 +317,14 @@ class _QuickAction extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AppIcon(icon, size: 17),
+                AppIcon(icon, size: iconSize),
                 const SizedBox(width: AppSpace.x1_5),
-                // Rétrécit le texte plutôt que déborder : les traductions sont plus longues que le français.
                 Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(label, maxLines: 1, style: AppText.of(AppFont.s13, weight: AppFont.semibold)),
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: AppText.of(AppFont.s13, weight: AppFont.semibold),
                   ),
                 ),
               ],
@@ -310,7 +357,7 @@ class _EmptyPantry extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpace.x5),
       child: Column(
         children: [
-          const IconTile(icon: AppIcons.fridge, size: AppSizes.lockCircle, iconSize: 22, circle: true),
+          const IconTile(icon: AppIcons.pantryReserve, size: AppSizes.lockCircle, iconSize: 22, circle: true),
           const SizedBox(height: AppSpace.x3),
           Text(L.of(context).pantryHubEmptyTitle, style: AppText.of(AppFont.s16, weight: AppFont.extrabold)),
           const SizedBox(height: AppSpace.x1),
@@ -332,8 +379,8 @@ class _LocationSection extends StatelessWidget {
   final List<PantryDraft> items;
   final ValueChanged<PantryDraft> onRemove;
 
-  static String _qty(PantryDraft i) {
-    final q = i.quantity == i.quantity.roundToDouble() ? '${i.quantity.round()}' : '${i.quantity}'.replaceAll('.', ',');
+  static String _qty(BuildContext context, PantryDraft i) {
+    final q = Formats.of(context).number(i.quantity, decimals: 2);
     final unit = i.unitLabel.contains('(s)') ? i.unitLabel.replaceAll('(s)', i.quantity > 1 ? 's' : '') : i.unitLabel;
     return unit.isEmpty ? q : '$q $unit';
   }
@@ -358,7 +405,7 @@ class _LocationSection extends StatelessWidget {
             child: Row(
               children: [
                 IconTile(
-                  icon: location.icon,
+                  icon: _premiumLocationIcon(location),
                   size: AppSizes.iconTileSm,
                   background: location.soft,
                   foreground: location.ink,
@@ -372,51 +419,118 @@ class _LocationSection extends StatelessWidget {
           const SizedBox(height: AppSpace.x1),
           for (final (idx, it) in items.indexed) ...[
             if (idx > 0) const Divider(height: 1, thickness: 1, color: AppColors.line),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpace.x2),
-              child: Row(
-                children: [
-                  FoodThumb(
-                    photo: FoodImages.forName(it.name),
-                    icon: location.icon,
-                    tint: location.tint,
-                    size: AppSizes.iconTileSm,
-                  ),
-                  const SizedBox(width: AppSpace.x3),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(it.name, style: AppText.rowTitle),
-                        Text(_qty(it), style: AppText.meta),
-                      ],
-                    ),
-                  ),
-                  if (it.daysLeft != null) ...[
-                    FreshnessStatus(urgent: it.daysLeft! <= 2),
-                    const SizedBox(width: AppSpace.x2),
-                    SizedBox(
-                      width: AppSizes.thumbW,
-                      child: Text(_left(L.of(context), it), textAlign: TextAlign.end, style: AppText.meta),
-                    ),
-                  ],
-                  Semantics(
-                    button: true,
-                    label: L.of(context).pantryRemoveItem(it.name),
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => onRemove(it),
-                      child: const Padding(
-                        padding: EdgeInsets.all(AppSpace.x2),
-                        child: AppIcon(AppIcons.close, size: 16, color: AppColors.ink3),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            _PantryItemRow(
+              item: it,
+              location: location,
+              quantity: _qty(context, it),
+              timeLeft: _left(l, it),
+              onRemove: () => onRemove(it),
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _PantryItemRow extends StatelessWidget {
+  const _PantryItemRow({
+    required this.item,
+    required this.location,
+    required this.quantity,
+    required this.timeLeft,
+    required this.onRemove,
+  });
+
+  final PantryDraft item;
+  final PantryLocation location;
+  final String quantity;
+  final String timeLeft;
+  final VoidCallback onRemove;
+
+  Widget _product() => Row(
+    children: [
+      FoodThumb(
+        photo: FoodImages.forName(item.name),
+        icon: _premiumLocationIcon(location),
+        tint: location.tint,
+        size: AppSizes.iconTileSm,
+      ),
+      const SizedBox(width: AppSpace.x3),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(item.name, style: AppText.rowTitle),
+            Text(quantity, style: AppText.meta),
+          ],
+        ),
+      ),
+    ],
+  );
+
+  Widget _removeButton(BuildContext context) => Semantics(
+    button: true,
+    label: L.of(context).pantryRemoveItem(item.name),
+    child: GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onRemove,
+      child: const Padding(
+        padding: EdgeInsets.all(AppSpace.x2),
+        child: AppIcon(AppIcons.close, size: 16, color: AppColors.ink3),
+      ),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpace.x2),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 300) {
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: _product()),
+                    _removeButton(context),
+                  ],
+                ),
+                if (item.daysLeft != null)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: AppSizes.iconTileSm + AppSpace.x3,
+                      end: AppSpace.x2,
+                      top: AppSpace.x1,
+                    ),
+                    child: Row(
+                      children: [
+                        FreshnessStatus(urgent: item.daysLeft! <= 2),
+                        const Spacer(),
+                        Text(timeLeft, textAlign: TextAlign.end, style: AppText.meta),
+                      ],
+                    ),
+                  ),
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              Expanded(child: _product()),
+              if (item.daysLeft != null) ...[
+                FreshnessStatus(urgent: item.daysLeft! <= 2),
+                const SizedBox(width: AppSpace.x2),
+                SizedBox(
+                  width: AppSizes.thumbW,
+                  child: Text(timeLeft, textAlign: TextAlign.end, style: AppText.meta),
+                ),
+              ],
+              _removeButton(context),
+            ],
+          );
+        },
       ),
     );
   }

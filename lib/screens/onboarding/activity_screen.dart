@@ -14,7 +14,7 @@ class ActivityScreen extends StatelessWidget {
   static List<(ActivityLevel, String, String, String?, String, Tint)> _levels(L l) => [
     (
       ActivityLevel.sedentaire,
-      AppIcons.chair,
+      AppIcons.activityDesk,
       l.activitySedentaryTitle,
       null,
       l.activitySedentaryText,
@@ -22,23 +22,16 @@ class ActivityScreen extends StatelessWidget {
     ),
     (
       ActivityLevel.modere,
-      AppIcons.walk,
+      AppIcons.activityWalk,
       l.activityModerateTitle,
       l.commonRecommended,
       l.activityModerateText,
       Tint.mint,
     ),
-    (
-      ActivityLevel.actif,
-      AppIcons.run,
-      l.activityActiveTitle,
-      null,
-      l.activityActiveText,
-      Tint.peach,
-    ),
+    (ActivityLevel.actif, AppIcons.activityRun, l.activityActiveTitle, null, l.activityActiveText, Tint.peach),
     (
       ActivityLevel.tresActif,
-      AppIcons.flame,
+      AppIcons.activityTraining,
       l.activityVeryActiveTitle,
       null,
       l.activityVeryActiveText,
@@ -51,6 +44,8 @@ class ActivityScreen extends StatelessWidget {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
     return OnboardingStepScaffold(
+      horizontalPadding: ActivityTokens.gutter,
+      subtitleColor: ActivityTokens.bodyInk,
       step: OnboardingFlow.number(context, OnbStep.activity),
       totalSteps: OnboardingFlow.total(context),
       title: l.activityTitle,
@@ -58,12 +53,15 @@ class ActivityScreen extends StatelessWidget {
       onContinue: () => OnboardingFlow.next(context, OnbStep.activity),
       children: [
         for (final (i, lvl) in _levels(l).indexed) ...[
-          if (i > 0) const SizedBox(height: AppSpace.x3),
+          if (i > 0) const SizedBox(height: ActivityTokens.cardGap),
           ChoiceCard(
             icon: lvl.$2,
+            iconSize: ActivityTokens.iconSize,
+            centerIcon: true,
             title: lvl.$3,
             badge: lvl.$4,
             description: lvl.$5,
+            descriptionStyle: AppText.of(AppFont.s13, color: ActivityTokens.bodyInk, lineHeight: 18),
             iconBackground: lvl.$6.soft,
             iconForeground: lvl.$6.ink,
             selected: d.activity == lvl.$1,
@@ -71,10 +69,7 @@ class ActivityScreen extends StatelessWidget {
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        InfoBanner(
-          icon: AppIcons.bulb,
-          text: l.activityInfoText,
-        ),
+        InfoBanner(icon: AppIcons.bulb, text: l.activityInfoText, textColor: ActivityTokens.bodyInk),
       ],
     );
   }

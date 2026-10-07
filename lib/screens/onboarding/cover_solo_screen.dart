@@ -12,13 +12,13 @@ class CoverSoloScreen extends StatelessWidget {
 
   static List<(String, Tint, String, String)> _features(L l) => [
     (
-      AppIcons.bars,
+      AppIcons.soloNutrition,
       Tint.mint,
       l.coverSoloFeature1Title,
       l.coverSoloFeature1Text,
     ),
-    (AppIcons.clock, Tint.peach, l.coverSoloFeature2Title, l.coverSoloFeature2Text),
-    (AppIcons.leaf, Tint.leafy, l.coverSoloFeature3Title, l.coverSoloFeature3Text),
+    (AppIcons.soloTime, Tint.peach, l.coverSoloFeature2Title, l.coverSoloFeature2Text),
+    (AppIcons.soloWaste, Tint.leafy, l.coverSoloFeature3Title, l.coverSoloFeature3Text),
   ];
 
   @override
@@ -45,12 +45,13 @@ class CoverSoloScreen extends StatelessWidget {
                       semanticLabel: l.coverSoloHeroAlt,
                     ),
                     PositionedDirectional(
-                      start: AppSpace.gutter,
+                      start: CoverSoloTokens.gutter,
                       bottom: AppSpace.x4,
                       child: PillBadge(
                         l.coverSoloBadge,
                         icon: AppIcons.user,
                         background: AppColors.overlayCard,
+                        borderRadius: CoverSoloTokens.badgeRadius,
                         size: AppFont.s13,
                         padding: EdgeInsets.symmetric(horizontal: AppSpace.x3, vertical: AppSpace.x1_5),
                       ),
@@ -59,35 +60,42 @@ class CoverSoloScreen extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpace.gutter),
+                padding: const EdgeInsets.symmetric(horizontal: CoverSoloTokens.gutter),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: AppSpace.x5),
                     Text(
-                      AppText.noBreakHyphens(l.coverSoloTitle),
+                      // Trait d'union standard, protégé des retours à la ligne.
+                      AppText.noBreakHyphens(l.coverSoloTitle).replaceAll('\u2011', '\u2060-\u2060'),
                       style: AppText.h1,
                     ),
                     const SizedBox(height: AppSpace.x2),
                     Text(
                       l.coverSoloSubtitle,
-                      style: AppText.lead,
+                      style: AppText.lead.copyWith(color: CoverSoloTokens.bodyInk),
                     ),
                     const SizedBox(height: AppSpace.x5),
                     for (final (i, f) in _features(l).indexed) ...[
-                      if (i > 0) const SizedBox(height: AppSpace.x3),
+                      if (i > 0) const SizedBox(height: CoverSoloTokens.cardGap),
                       AppCard(
                         padding: const EdgeInsets.all(AppSpace.x3_5),
                         child: Row(
                           children: [
-                            TintBadge(icon: f.$1, tint: f.$2, size: AppSizes.iconTileMd),
+                            IconTile(
+                              icon: f.$1,
+                              size: AppSizes.iconTileMd,
+                              iconSize: CoverSoloTokens.featureIconSize,
+                              background: f.$2.soft,
+                              foreground: f.$2.ink,
+                            ),
                             const SizedBox(width: AppSpace.x3),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(f.$3, style: AppText.of(AppFont.s15, weight: AppFont.bold, lineHeight: 21)),
-                                  Text(f.$4, style: AppText.caption),
+                                  Text(f.$4, style: AppText.of(AppFont.s13, color: CoverSoloTokens.bodyInk, lineHeight: 18)),
                                 ],
                               ),
                             ),
@@ -104,7 +112,7 @@ class CoverSoloScreen extends StatelessWidget {
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text('${l.commonQuickSteps(12)} · ${l.commonEditableAnytime}', style: AppText.meta),
+                        Text('${l.commonQuickSteps(OnboardingFlow.solo.length)} · ${l.commonEditableAnytime}', style: AppText.meta),
                       ],
                     ),
                   ],

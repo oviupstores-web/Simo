@@ -15,7 +15,7 @@ class GoalScreen extends StatelessWidget {
   static List<(HealthGoal, String, String, String?, String, Tint)> _goals(L l) => [
     (
       HealthGoal.pertePoids,
-      AppIcons.trendDown,
+      AppIcons.goalWeightLoss,
       l.goalLossTitle,
       l.commonPopular,
       l.goalLossText,
@@ -23,7 +23,7 @@ class GoalScreen extends StatelessWidget {
     ),
     (
       HealthGoal.priseMasse,
-      AppIcons.dumbbell,
+      AppIcons.goalMuscleGain,
       l.goalGainTitle,
       null,
       l.goalGainText,
@@ -31,7 +31,7 @@ class GoalScreen extends StatelessWidget {
     ),
     (
       HealthGoal.seche,
-      AppIcons.bolt,
+      AppIcons.goalDefinition,
       l.goalCutTitle,
       null,
       l.goalCutText,
@@ -39,7 +39,7 @@ class GoalScreen extends StatelessWidget {
     ),
     (
       HealthGoal.maintien,
-      AppIcons.lotus,
+      AppIcons.goalBalance,
       l.goalMaintainTitle,
       null,
       l.goalMaintainText,
@@ -52,6 +52,7 @@ class GoalScreen extends StatelessWidget {
     final l = L.of(context);
     final data = OnboardingScope.of(context);
     return OnboardingStepScaffold(
+      horizontalPadding: GoalTokens.gutter,
       step: OnboardingFlow.number(context, OnbStep.goal),
       totalSteps: OnboardingFlow.total(context),
       eyebrow: l.goalEyebrow,
@@ -64,6 +65,8 @@ class GoalScreen extends StatelessWidget {
           if (i > 0) const SizedBox(height: AppSpace.x3),
           ChoiceCard(
             icon: g.$2,
+            iconSize: GoalTokens.iconSize,
+            centerIcon: true,
             title: g.$3,
             badge: g.$4,
             description: g.$5,

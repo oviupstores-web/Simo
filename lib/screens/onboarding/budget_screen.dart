@@ -55,10 +55,12 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
     return OnboardingStepScaffold(
+      horizontalPadding: BudgetTokens.gutter,
+      subtitleColor: BudgetTokens.bodyInk,
       step: OnboardingFlow.number(context, OnbStep.budget),
       totalSteps: OnboardingFlow.total(context),
       eyebrow: l.budgetEyebrow,
-      eyebrowIcon: AppIcons.wallet,
+      eyebrowIcon: AppIcons.budgetWallet,
       title: d.isFoyer ? l.budgetTitleHousehold : l.budgetTitleSolo,
       subtitle: d.isFoyer
           ? l.budgetSubtitleHousehold
@@ -84,6 +86,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         l.budgetBadge,
                         icon: AppIcons.checkCircle,
                         background: AppColors.overlayCard,
+                        borderRadius: BudgetTokens.badgeRadius,
                         size: AppFont.s12,
                         padding: EdgeInsets.symmetric(horizontal: AppSpace.x2_5, vertical: AppSpace.x1),
                       ),
@@ -112,14 +115,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           ' € ',
                           style: AppText.of(AppFont.s22, weight: AppFont.extrabold, color: AppColors.primaryDark),
                         ),
-                        Text(l.budgetPerWeek, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
+                        Text(l.budgetPerWeek, style: AppText.of(AppFont.s14, color: BudgetTokens.bodyInk)),
                       ],
                     ),
                     Text(
                       d.isFoyer
                           ? l.budgetPerPortion(Formats.of(context).price((d.budgetPerPortion * 100).round()), d.weeklyPortions)
                           : l.budgetPerMeal(Formats.of(context).price((d.budgetPerMeal * 100).round()), d.plannedMeals),
-                      style: AppText.of(AppFont.s13, color: AppColors.ink2),
+                      style: AppText.of(AppFont.s13, color: BudgetTokens.bodyInk),
                     ),
                     const SizedBox(height: AppSpace.x2),
                     MenooSlider(
@@ -142,8 +145,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(Formats.of(context).priceRounded(BudgetScreen.min * 100), style: AppText.meta),
-                          Text(Formats.of(context).priceRounded(BudgetScreen.max * 100), style: AppText.meta),
+                          Text(Formats.of(context).priceRounded(BudgetScreen.min * 100), style: AppText.meta.copyWith(color: BudgetTokens.bodyInk)),
+                          Text(Formats.of(context).priceRounded(BudgetScreen.max * 100), style: AppText.meta.copyWith(color: BudgetTokens.bodyInk)),
                         ],
                       ),
                     ),
@@ -156,10 +159,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
         const SizedBox(height: AppSpace.x5),
         Text(l.budgetCustomTitle, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x1),
-        Text(l.budgetCustomText(Formats.of(context).priceRounded(BudgetScreen.max * 100)), style: AppText.caption),
+        Text(l.budgetCustomText(Formats.of(context).priceRounded(BudgetScreen.max * 100)), style: AppText.caption.copyWith(color: BudgetTokens.bodyInk)),
         const SizedBox(height: AppSpace.x2_5),
         IconTextField(
-          icon: AppIcons.piggy,
+          icon: AppIcons.budgetPiggy,
           hint: l.budgetCustomHint,
           controller: _custom,
           keyboardType: TextInputType.number,
@@ -174,6 +177,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
             icon: AppIcons.people,
             title: l.budgetAdvisedTitle(Formats.of(context).priceRounded(d.recommendedBudget * 100)),
             text: l.budgetAdvisedText(d.peopleCount),
+            textColor: BudgetTokens.bodyInk,
             background: AppColors.leafySoft,
           ),
         ],
@@ -182,6 +186,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
           icon: AppIcons.shield,
           title: l.budgetLimitTitle,
           text: l.budgetLimitText,
+          textColor: BudgetTokens.bodyInk,
         ),
       ],
     );

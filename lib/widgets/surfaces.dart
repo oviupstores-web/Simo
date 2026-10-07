@@ -91,6 +91,7 @@ class InfoBanner extends StatelessWidget {
     this.title,
     this.background = AppColors.mint,
     this.iconTopOffset = 0,
+    this.textColor = AppColors.ink2,
   });
 
   final String icon;
@@ -98,6 +99,7 @@ class InfoBanner extends StatelessWidget {
   final String text;
   final Color background;
   final double iconTopOffset;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +116,13 @@ class InfoBanner extends StatelessWidget {
           const SizedBox(width: AppSpace.x3),
           Expanded(
             child: title == null
-                ? Text(text, style: AppText.of(AppFont.s13, color: AppColors.ink2, lineHeight: 19))
+                ? Text(text, style: AppText.of(AppFont.s13, color: textColor, lineHeight: 19))
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title!, style: AppText.of(AppFont.s14, weight: AppFont.bold, lineHeight: 20)),
                       const SizedBox(height: AppSpace.x0_5),
-                      Text(text, style: AppText.caption),
+                      Text(text, style: AppText.caption.copyWith(color: textColor)),
                     ],
                   ),
           ),

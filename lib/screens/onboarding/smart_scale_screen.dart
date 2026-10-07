@@ -24,6 +24,8 @@ class SmartScaleScreen extends StatelessWidget {
     }
 
     return OnboardingStepScaffold(
+      horizontalPadding: SmartScaleTokens.gutter,
+      subtitleColor: SmartScaleTokens.bodyInk,
       step: OnboardingFlow.number(context, OnbStep.scale),
       totalSteps: OnboardingFlow.total(context),
       eyebrow: l.scaleEyebrow,
@@ -60,6 +62,7 @@ class SmartScaleScreen extends StatelessWidget {
         InfoBanner(
           icon: AppIcons.info,
           text: l.scaleInfoText,
+          textColor: SmartScaleTokens.bodyInk,
           background: AppColors.neutralSoft,
         ),
       ],

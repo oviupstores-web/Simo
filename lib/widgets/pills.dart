@@ -17,6 +17,7 @@ class PillBadge extends StatelessWidget {
     this.weight = AppFont.bold,
     this.padding = const EdgeInsets.symmetric(horizontal: AppSpace.x2, vertical: AppSpace.x1),
     this.icon,
+    this.borderRadius = AppRadius.pillR,
   });
 
   /// Badge orange « À acheter / Populaire ».
@@ -28,6 +29,7 @@ class PillBadge extends StatelessWidget {
   }) : background = AppColors.orangeSoft,
        foreground = AppColors.warn,
        weight = AppFont.bold,
+       borderRadius = AppRadius.pillR,
        icon = null;
 
   final String label;
@@ -37,6 +39,7 @@ class PillBadge extends StatelessWidget {
   final FontWeight weight;
   final EdgeInsetsGeometry padding;
   final String? icon;
+  final BorderRadiusGeometry borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,7 @@ class PillBadge extends StatelessWidget {
     );
     return Container(
       padding: padding,
-      decoration: BoxDecoration(color: background, borderRadius: AppRadius.pillR),
+      decoration: BoxDecoration(color: background, borderRadius: borderRadius),
       child: icon == null
           ? text
           : Row(

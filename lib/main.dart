@@ -6,6 +6,7 @@ import 'l10n/locale_scope.dart';
 import 'onboarding/onboarding_data.dart';
 import 'onboarding/onboarding_scope.dart';
 import 'screens/entry/landing_screen.dart';
+import 'screens/entry/startup_screen.dart';
 import 'theme/theme.dart';
 
 void main() {
@@ -68,7 +69,7 @@ class _MenooAppState extends State<MenooApp> {
             return const Locale('en');
           },
           builder: (context, child) => OnboardingScope(data: _onboarding, child: child!),
-          home: const LandingScreen(),
+          home: const MenooStartup(prepare: LandingScreen.prepareImages, child: LandingScreen()),
         ),
       ),
     );

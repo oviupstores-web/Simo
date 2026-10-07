@@ -90,6 +90,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
     return OnboardingStepScaffold(
+      horizontalPadding: ProfileTokens.gutter,
+      subtitleColor: ProfileTokens.bodyInk,
       step: OnboardingFlow.number(context, OnbStep.profile),
       totalSteps: OnboardingFlow.total(context),
       title: l.profileTitle,
@@ -143,6 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: AppIcons.leaf,
           iconTopOffset: AppSpace.x0_5,
           text: l.profilePrivacy,
+          textColor: ProfileTokens.bodyInk,
         ),
       ],
     );
@@ -152,6 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     icon: AppIcons.lotus,
     title: l.profileMaintainTitle,
     text: l.profileMaintainText,
+    textColor: ProfileTokens.bodyInk,
     background: AppColors.leafySoft,
   );
 
@@ -171,7 +175,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return [
       StepSectionTitle(
         l.profileTargetSection,
-        icon: losing ? AppIcons.trendDown : AppIcons.trend,
+        icon: losing ? AppIcons.goalWeightLoss : AppIcons.trend,
+        iconTileSize: losing ? AppSizes.iconTileMd : AppSizes.iconTile,
         tint: switch (d.goal) {
           HealthGoal.priseMasse => Tint.peach,
           HealthGoal.seche => Tint.lavender,
@@ -207,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           losing
               ? l.profileLosingNote
               : l.profileGainingNote,
-          style: AppText.meta,
+          style: AppText.meta.copyWith(color: ProfileTokens.bodyInk),
         ),
       ],
       if (d.goal == HealthGoal.seche) ...[
@@ -216,6 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: AppIcons.dumbbell,
           title: l.profileCutTitle,
           text: l.profileCutText,
+          textColor: ProfileTokens.bodyInk,
           background: AppColors.lavenderSoft,
         ),
       ],
@@ -271,14 +277,14 @@ class _RateTile extends StatelessWidget {
                 Formats.of(context).rate(L.of(context), rate),
                 style: AppText.of(AppFont.s16, weight: AppFont.extrabold, color: fg, lineHeight: 22),
               ),
-              Text(L.of(context).profileRatePerWeek, style: AppText.of(AppFont.s11, color: AppColors.ink2)),
+              Text(L.of(context).profileRatePerWeek, style: AppText.of(AppFont.s11, color: ProfileTokens.bodyInk)),
               const SizedBox(height: AppSpace.x1),
               Text(
                 caption,
                 style: AppText.of(
                   AppFont.s11,
                   weight: AppFont.bold,
-                  color: selected ? AppColors.primary : AppColors.ink3,
+                  color: selected ? AppColors.primary : ProfileTokens.bodyInk,
                 ),
               ),
             ],
