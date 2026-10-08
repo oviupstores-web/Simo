@@ -298,28 +298,6 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x4),
-        Row(
-          children: [
-            Expanded(
-              child: SegmentButton(
-                label: l.memberSexBoy,
-                icon: AppIcons.male,
-                selected: m.sex == Sex.homme,
-                onTap: () => setState(() => m.sex = Sex.homme),
-              ),
-            ),
-            const SizedBox(width: AppSpace.x3),
-            Expanded(
-              child: SegmentButton(
-                label: l.memberSexGirl,
-                icon: AppIcons.female,
-                selected: m.sex == Sex.femme,
-                onTap: () => setState(() => m.sex = Sex.femme),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpace.x4),
         UnitFieldRow(label: l.memberAgeLabel, unit: l.profileAgeUnit, controller: _age),
         if (m.role != MemberRole.bebe) ...[
           const SizedBox(height: AppSpace.x4),
@@ -330,7 +308,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
         FormError(message: _error),
         if (adult) ...[
           const SizedBox(height: AppSpace.x6),
-          StepSectionTitle(l.memberGoalSection, hint: l.commonSingleChoice, icon: AppIcons.target),
+          StepSectionTitle(l.memberGoalSection, hint: l.commonSingleChoice, icon: AppIcons.target, adaptiveHint: true),
           Wrap(
             spacing: AppSpace.x2,
             runSpacing: AppSpace.x2,
@@ -360,7 +338,13 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
           ),
         ],
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle(l.memberAllergySection, hint: l.constraintsAllergensHint, icon: AppIcons.shield, tint: Tint.peach),
+        StepSectionTitle(
+          l.memberAllergySection,
+          hint: l.constraintsAllergensHint,
+          icon: AppIcons.shield,
+          tint: Tint.peach,
+          adaptiveHint: true,
+        ),
         Wrap(
           spacing: AppSpace.x2,
           runSpacing: AppSpace.x2,

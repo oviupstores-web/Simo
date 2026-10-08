@@ -210,21 +210,29 @@ class SegmentButton extends StatelessWidget {
           borderRadius: AppRadius.fieldR,
           border: Border.all(color: selected ? AppColors.primary : AppColors.line),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppIcon(icon, size: 19, color: fg),
-            const SizedBox(width: AppSpace.x2),
-            Text(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final labelText = Text(
               label,
+              textAlign: TextAlign.center,
+              softWrap: true,
+              maxLines: 2,
               style: AppText.of(
                 AppFont.s16,
                 weight: selected ? AppFont.bold : AppFont.semibold,
                 color: fg,
                 lineHeight: 24,
               ),
-            ),
-          ],
+            );
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AppIcon(icon, size: 19, color: fg),
+                const SizedBox(width: AppSpace.x2),
+                if (constraints.maxWidth < 150) Flexible(child: labelText) else labelText,
+              ],
+            );
+          },
         ),
       ),
     );

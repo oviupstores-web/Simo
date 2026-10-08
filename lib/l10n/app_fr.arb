@@ -129,6 +129,7 @@
   "coverHouseholdStart": "Commencer la configuration",
   "coverHouseholdHeroAlt": "Famille partageant un repas autour d'une table",
   "languageName": "Français",
+  "languagePickerTitle": "Langue",
   "@languageName": {
     "description": "Nom de cette langue, écrit dans cette langue"
   },
@@ -642,8 +643,6 @@
   "memberFirstNameLabel": "Prénom",
   "memberFirstNameHint": "Ex. : Léa",
   "memberAgeGroupLabel": "Tranche d’âge",
-  "memberSexBoy": "Garçon / homme",
-  "memberSexGirl": "Fille / femme",
   "memberAgeLabel": "Âge",
   "memberHeightLabel": "Taille",
   "memberWeightLabel": "Poids",

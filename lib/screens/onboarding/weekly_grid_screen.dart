@@ -119,10 +119,9 @@ class WeeklyGridScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpace.x3),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text.rich(
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final count = Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
@@ -135,9 +134,19 @@ class WeeklyGridScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            PillBadge(l.gridPerDay(perDay), size: AppFont.s12),
-          ],
+            );
+            final perDayBadge = PillBadge(l.gridPerDay(perDay), size: AppFont.s12);
+            if (constraints.maxWidth < 360) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  count,
+                  Align(alignment: AlignmentDirectional.centerEnd, child: perDayBadge),
+                ],
+              );
+            }
+            return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [count, perDayBadge]);
+          },
         ),
         if (d.isFoyer) ...[
           const SizedBox(height: AppSpace.x3),

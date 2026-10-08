@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
 import '../widgets/widgets.dart';
+import 'app_languages.dart';
 import 'app_localizations.dart';
 
 /// Langue choisie, partagée par toute l'app. `null` = celle du téléphone.
@@ -21,9 +22,7 @@ class LocaleScope extends InheritedNotifier<ValueNotifier<Locale?>> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.card)),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.card))),
       builder: (sheetContext) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpace.x4),
@@ -33,9 +32,9 @@ class LocaleScope extends InheritedNotifier<ValueNotifier<Locale?>> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(AppSpace.gutter, 0, AppSpace.gutter, AppSpace.x3),
-                child: Text('Langue · Language', style: AppText.h2),
+                child: Text(L.of(context).languagePickerTitle, style: AppText.h2),
               ),
-              for (final locale in L.supportedLocales)
+              for (final locale in AppLanguages.launchLocales)
                 _LanguageRow(
                   locale: locale,
                   selected: controller.value?.languageCode == locale.languageCode,

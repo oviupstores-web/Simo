@@ -1,10 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:menoo/l10n/app_languages.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:menoo/l10n/app_localizations.dart';
 import 'package:menoo/l10n/formats.dart';
 
 void main() {
+  test('commercial locales preserve market region while using generic translations', () {
+    expect(AppLanguages.launchLocales.map((locale) => locale.languageCode), ['fr', 'en', 'de']);
+    expect(AppLanguages.resolve(null, const Locale('en', 'US')), const Locale('en', 'US'));
+    expect(AppLanguages.resolve(null, const Locale('en', 'GB')), const Locale('en', 'GB'));
+    expect(AppLanguages.resolve(const Locale('fr'), const Locale('en', 'CA')), const Locale('fr', 'CA'));
+    expect(AppLanguages.resolve(null, const Locale('es', 'ES')), const Locale('en', 'ES'));
+  });
+
   setUpAll(initializeDateFormatting);
 
   test('Unités : métriques partout, impériales aux États-Unis', () {

@@ -91,8 +91,8 @@ Pour reprendre dans une nouvelle session : « Reprends à partir de PLAN.md ».
 | 1 | App vide installée sur le téléphone | ✅ Validé |
 | 2 | Design system + 9 écrans maîtres | ✅ Validé (après corrections) |
 | 3 | Base Supabase (tables, RLS, démo, cas pièges) | ✅ Validé |
-| 4 | Entrée + onboarding Solo (12 étapes) + détour Réserve | ✅ Validé |
-| 5 | Onboarding Foyer (10 étapes) + détour Réserve | ✅ Validé |
+| 4 | Entrée + onboarding Solo (11 étapes) + détour Réserve 7A | ✅ Validé |
+| 5 | Onboarding Foyer (9 étapes) + détour Réserve | ✅ Validé |
 | 5b | Images par API OpenAI (125 visuels) + pictogrammes régimes + branchement | ✅ Validé |
 | 5i | **International, socle** : textes sortis du code, 6 langues, arabe de droite à gauche, unités / devises / dates | ✅ Validé (2026-09-30) — tables de traduction Supabase pour les contenus restent au 5c |
 | 5d | **Corrections UI critiques** : supermarché et réassurance supprimés, landing nettoyée, cartes interactives, équipements 3 colonnes, arrondis uniformisés | 🔨 En cours (APK à installer) |
@@ -235,7 +235,7 @@ But : empêcher qu'on recrée des comptes pour consommer gratuitement les appels
 - Script de contrôle téléphone : scratchpad qa_j4.ps1 (uiautomator + captures) ; comparaisons design/qa/jalon4/
 
 ## Jalon 5 — détail
-- [x] Parcours unique : lib/onboarding/onboarding_flow.dart (OnbStep, listes Solo 12 étapes / Foyer 10 étapes) remplace solo_flow.dart ; le détour Réserve revient à l'étape qui suit le mode de gestion (Solo : contraintes ; Foyer : cuisines).
+- [x] Parcours unique : lib/onboarding/onboarding_flow.dart (OnbStep, listes Solo 11 étapes / Foyer 9 étapes) remplace solo_flow.dart ; le détour Réserve revient à l'étape qui suit le mode de gestion (Solo : contraintes ; Foyer : cuisines).
 - [x] OnboardingData : mode (solo/foyer), membres (MemberDraft, famille Martin par défaut), qui cuisine, budget conseillé (30 € adulte, 20 € enfant, 10 € bébé, recalculé tant que le budget n'a pas été touché), portions, allergies par membre.
 - [x] Écrans : couverture Foyer (photo recadrée 16:10 de decor_famille_repas_convivial), composition (adultes/enfants/bébés), profils des membres + fiche d'édition (prénom, tranche d'âge, sexe, âge, taille, poids, objectif et activité pour les adultes, allergies), variantes Foyer de la grille, du budget, des contraintes, du mode de gestion, des cuisines, de Ma cuisine (+ « Qui cuisine le plus souvent ? ») et du récapitulatif.
 - [x] test/solo_flow_test.dart : 4/4 (Solo, garde-fous, Foyer complet avec détour, démarrage) ; flutter analyze : aucun problème ; formateur réglé à 120 colonnes (analysis_options.yaml).
@@ -278,3 +278,15 @@ Détection de catégorie à l'ajout manuel en réserve, à faire une fois les �
 - Cible : le nom tapé est cherché dans la table `ingredients` de Supabase ; la catégorie vient de la base. La table porte déjà `aisle_code` (rayon), `default_location` (emplacement) et `shelf_life_days` (durée de conservation) : l'emplacement et la date de péremption proposés peuvent venir directement de l'ingrédient trouvé.
 - La liste de mots-clés reste en secours pour les produits hors catalogue.
 - Point à trancher : correspondance entre les 6 rayons (`aisles`) et les 7 catégories de l'écran (`FoodCategory`).
+
+## Convention du détour Réserve — 2026-10-08
+- Dans le parcours Individuel, « Remplissage de la Réserve » est l'écran conditionnel **7A** : il ne compte pas dans les 11 étapes principales.
+- Après 7/11 « Mode de gestion » : « Courses uniquement » mène directement à 8/11 « Contraintes » ; « Réserves uniquement » et « Mixte » passent par 7A, puis rejoignent 8/11.
+- L'écran 7A ne porte actuellement aucun compteur d'étape ni barre de progression ; ne pas ajouter de numéro au compteur principal.
+
+## Stratégie de lancement des langues — 2026-10-08
+- Version initiale commercialisée : English, Français, Deutsch.
+- Marchés visés : USA, UK, Canada, Ireland, Australia, Germany, Austria, Switzerland, France et Belgium.
+- Spanish, Italian et Arabic restent dans le repository pour une phase ultérieure ; l’application ne les propose pas au lancement.
+- Les traductions restent génériques (`en`, `fr`, `de`) ; conserver le pays de l’appareil pour les formats régionaux.
+- Regional pricing / currencies to be implemented before commercial launch if required: USD, GBP, CAD, AUD, EUR, CHF.

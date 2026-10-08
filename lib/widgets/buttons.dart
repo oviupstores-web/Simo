@@ -48,12 +48,23 @@ class PrimaryButton extends StatelessWidget {
               boxShadow: AppShadows.btn,
             ),
             alignment: Alignment.center,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(label, style: textStyle ?? AppText.button),
-                if (end != null) ...[SizedBox(width: trailing != null ? AppSpace.x3 : AppSpace.x2), end],
-              ],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final labelText = Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  maxLines: 2,
+                  style: textStyle ?? AppText.button,
+                );
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (constraints.maxWidth < 320) Flexible(child: labelText) else labelText,
+                    if (end != null) ...[SizedBox(width: trailing != null ? AppSpace.x3 : AppSpace.x2), end],
+                  ],
+                );
+              },
             ),
           ),
         ),

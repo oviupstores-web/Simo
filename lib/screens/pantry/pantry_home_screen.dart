@@ -32,7 +32,9 @@ class _PantryHomeScreenState extends State<PantryHomeScreen> {
       ('i_quinoa.jpg', l.recipeDemoQuinoa, l.pantryDemoQuinoaOpen, false, '2027'),
       ('i_huile.jpg', l.recipeDemoOliveOil, '75 cl', false, '2027'),
     ],
-    PantryLocation.freezer: [('i_brocoli.jpg', l.pantryDemoFrozenBroccoli, l.unitKilograms('1'), false, l.pantryDemo3Months)],
+    PantryLocation.freezer: [
+      ('i_brocoli.jpg', l.pantryDemoFrozenBroccoli, l.unitKilograms('1'), false, l.pantryDemo3Months),
+    ],
   };
 
   /// null = « Tous ».
@@ -227,11 +229,11 @@ class _QuickAction extends StatelessWidget {
               children: [
                 AppIcon(icon, size: 17),
                 const SizedBox(width: AppSpace.x1_5),
-                // Rétrécit le texte plutôt que déborder : les traductions sont plus longues que le français.
                 Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(label, maxLines: 1, style: AppText.of(AppFont.s13, weight: AppFont.semibold)),
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: AppText.of(AppFont.s13, weight: AppFont.semibold),
                   ),
                 ),
               ],

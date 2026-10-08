@@ -14,12 +14,12 @@ class ConstraintsScreen extends StatefulWidget {
   const ConstraintsScreen({super.key});
 
   static List<(String, String, String, Tint)> diets(L l) => [
-    ('vegetarien', l.dietVegetarian, AppIcons.leaf, Tint.leafy),
-    ('vegan', l.dietVegan, AppIcons.sprout, Tint.mint),
-    ('pescetarien', l.dietPescatarian, AppIcons.fish, Tint.sky),
-    ('sans_porc', l.dietNoPork, AppIcons.noPork, Tint.lavender),
-    ('sans_lactose', l.dietNoLactose, AppIcons.noMilk, Tint.sky),
-    ('sans_gluten', l.dietNoGluten, AppIcons.noGluten, Tint.peach),
+    ('vegetarien', l.dietVegetarian, 'assets/images/constraint_diets/vegetarian.png', Tint.leafy),
+    ('vegan', l.dietVegan, 'assets/images/constraint_diets/vegan.png', Tint.mint),
+    ('pescetarien', l.dietPescatarian, 'assets/images/constraint_diets/pescatarian.png', Tint.sky),
+    ('sans_porc', l.dietNoPork, 'assets/images/constraint_diets/no_pork.png', Tint.lavender),
+    ('sans_lactose', l.dietNoLactose, 'assets/images/constraint_diets/no_lactose.png', Tint.sky),
+    ('sans_gluten', l.dietNoGluten, 'assets/images/constraint_diets/no_gluten.png', Tint.peach),
   ];
 
   /// Allergènes courants (un choix peut couvrir plusieurs codes). Dernier champ : photo (assets/images/allergens/).
@@ -110,8 +110,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           children: [
             ToggleChip(
               label: l.dietOmnivore,
-              icon: AppIcons.cutlery,
-              tint: Tint.peach,
+              leading: const _DietIllustration(asset: 'assets/images/constraint_diets/omnivore.png', tint: Tint.peach),
               selected: d.diets.isEmpty,
               onTap: () => d.update(d.diets.clear),
               height: AppSizes.quickActionHeight,
@@ -119,8 +118,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
             for (final diet in ConstraintsScreen.diets(l))
               ToggleChip(
                 label: diet.$2,
-                icon: diet.$3,
-                tint: diet.$4,
+                leading: _DietIllustration(asset: diet.$3, tint: diet.$4),
                 selected: d.diets.contains(diet.$1),
                 onTap: () => d.update(() => d.diets.toggle(diet.$1)),
                 height: AppSizes.quickActionHeight,
@@ -236,6 +234,22 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
       ],
     );
   }
+}
+
+class _DietIllustration extends StatelessWidget {
+  const _DietIllustration({required this.asset, required this.tint});
+
+  final String asset;
+  final Tint tint;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: AppSizes.chipBadge,
+    height: AppSizes.chipBadge,
+    decoration: BoxDecoration(color: tint.soft, shape: BoxShape.circle),
+    padding: const EdgeInsets.all(AppSpace.x0_5),
+    child: ExcludeSemantics(child: Image.asset(asset, fit: BoxFit.contain)),
+  );
 }
 
 typedef _AllergenData = (List<String>, String, String, String, Tint, String);

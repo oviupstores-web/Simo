@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'l10n/app_localizations.dart';
+import 'l10n/app_languages.dart';
 import 'l10n/locale_scope.dart';
 import 'onboarding/onboarding_data.dart';
 import 'onboarding/onboarding_scope.dart';
@@ -55,19 +56,11 @@ class _MenooAppState extends State<MenooApp> {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light,
           locale: locale,
-          supportedLocales: L.supportedLocales,
+          supportedLocales: AppLanguages.launchLocales,
           localizationsDelegates: L.localizationsDelegates,
           // Une langue que nous ne proposons pas (japonais, polonais…) retombe sur
           // l'anglais, jamais sur le français : SPEC §10.
-          localeResolutionCallback: (device, supported) {
-            for (final candidate in [locale, device]) {
-              if (candidate == null) continue;
-              for (final s in supported) {
-                if (s.languageCode == candidate.languageCode) return s;
-              }
-            }
-            return const Locale('en');
-          },
+          localeResolutionCallback: (device, _) => AppLanguages.resolve(locale, device),
           builder: (context, child) => OnboardingScope(data: _onboarding, child: child!),
           home: const MenooStartup(prepare: LandingScreen.prepareImages, child: LandingScreen()),
         ),

@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:menoo/l10n/app_localizations.dart';
+import 'package:menoo/l10n/app_languages.dart';
 import 'package:menoo/main.dart';
 import 'package:menoo/screens/entry/landing_screen.dart';
 import 'package:menoo/screens/entry/path_choice_screen.dart';
@@ -27,7 +28,7 @@ void main() {
   Widget host(Widget child, {Locale locale = const Locale('fr'), bool reduce = false}) => MaterialApp(
     theme: AppTheme.light,
     locale: locale,
-    supportedLocales: L.supportedLocales,
+    supportedLocales: AppLanguages.launchLocales,
     localizationsDelegates: L.localizationsDelegates,
     home: MediaQuery(
       data: MediaQueryData(disableAnimations: reduce),
@@ -152,11 +153,11 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
-  testWidgets('All six locales render each phase on a small screen', (t) async {
+  testWidgets('All launch locales render each phase on a small screen', (t) async {
     t.view.physicalSize = const Size(320, 640);
     t.view.devicePixelRatio = 1;
     addTearDown(t.view.reset);
-    for (final locale in L.supportedLocales) {
+    for (final locale in AppLanguages.launchLocales) {
       for (final phase in [0.0, .2, .34, .46, .55, .7, .86, 1.0]) {
         await t.pumpWidget(host(MenooStartupVisual(progress: phase), locale: locale));
         await t.pump();
@@ -190,7 +191,7 @@ void main() {
     t.view.physicalSize = const Size(320, 640);
     t.view.devicePixelRatio = 1;
     addTearDown(t.view.reset);
-    for (final locale in L.supportedLocales) {
+    for (final locale in AppLanguages.launchLocales) {
       Widget visual(double progress) => host(
         MediaQuery(
           data: const MediaQueryData(textScaler: TextScaler.linear(2)),

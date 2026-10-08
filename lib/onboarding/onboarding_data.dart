@@ -59,7 +59,6 @@ class MemberDraft {
     required this.id,
     required this.role,
     this.firstName = '',
-    this.sex = Sex.homme,
     required this.age,
     this.heightCm,
     this.weightKg,
@@ -72,7 +71,6 @@ class MemberDraft {
   final int id;
   MemberRole role;
   String firstName;
-  Sex sex;
   int age;
   int? heightCm;
   double? weightKg;
@@ -101,7 +99,6 @@ class MemberDraft {
     id: id,
     role: role,
     firstName: firstName,
-    sex: sex,
     age: age,
     heightCm: heightCm,
     weightKg: weightKg,
@@ -169,7 +166,6 @@ class OnboardingData extends ChangeNotifier {
       id: 2,
       role: MemberRole.adulte,
       firstName: 'Sarah',
-      sex: Sex.femme,
       age: 35,
       heightCm: 168,
       weightKg: 62,
@@ -187,7 +183,6 @@ class OnboardingData extends ChangeNotifier {
       id: 4,
       role: MemberRole.enfant,
       firstName: 'Emma',
-      sex: Sex.femme,
       age: 6,
       heightCm: 116,
       weightKg: 21,

@@ -95,13 +95,23 @@ class SummaryScreen extends StatelessWidget {
           : l.summarySubtitleSolo,
       continueLabel: foyer ? l.summaryGenerateHousehold : l.summaryGenerateSolo,
       onContinue: () => push(context, const SignupScreen()),
-      below: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const AppIcon(AppIcons.lock, size: 14, color: AppColors.ink2),
-          const SizedBox(width: AppSpace.x1_5),
-          Text(l.summaryAccountNote, style: AppText.meta),
-        ],
+      below: LayoutBuilder(
+        builder: (context, constraints) {
+          const icon = AppIcon(AppIcons.lock, size: 14, color: AppColors.ink2);
+          const gap = SizedBox(width: AppSpace.x1_5);
+          final note = Text(l.summaryAccountNote, style: AppText.meta, textAlign: TextAlign.center);
+          if (constraints.maxWidth < 360) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                gap,
+                Flexible(child: note),
+              ],
+            );
+          }
+          return Row(mainAxisAlignment: MainAxisAlignment.center, children: [icon, gap, note]);
+        },
       ),
       children: [
         if (foyer)

@@ -69,6 +69,7 @@ flutter:
     - assets/images/categories/
     - assets/images/locations/
     - assets/images/allergens/
+    - assets/images/constraint_diets/
     - assets/images/recipes/
 
   fonts:

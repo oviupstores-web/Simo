@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:menoo/l10n/app_localizations.dart';
 import 'package:menoo/main.dart';
+import 'package:menoo/screens/entry/landing_screen.dart';
+import 'package:menoo/screens/entry/startup_screen.dart';
 
 /// Parcours complet : landing → choix du mode → couverture → 11 étapes Solo,
 /// avec le détour Réserve (mode Mixte) et un ajout manuel, jusqu'au récapitulatif.
@@ -31,6 +34,21 @@ void main() {
     await t.pumpAndSettle();
   }
 
+  Future<void> tapLandingStart(WidgetTester t) async {
+    // Wait for the cold image cache, then advance the startup overlay until it
+    // releases pointer events to the landing page.
+    for (var i = 0; i < 12 && find.byType(LandingScreen).evaluate().isEmpty; i++) {
+      await t.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 500)));
+      await t.pump(const Duration(milliseconds: 500));
+    }
+    for (var i = 0; i < 8 && find.byType(MenooStartupVisual).evaluate().isNotEmpty; i++) {
+      await t.pump(const Duration(seconds: 1));
+    }
+    await t.pumpAndSettle();
+    final context = t.element(find.byType(MenooStartup));
+    await tapText(t, L.of(context).landingStart);
+  }
+
   Future<void> expectStep(WidgetTester t, int n, {int total = 11}) async {
     expect(find.text('ÉTAPE $n SUR $total'), findsOneWidget, reason: 'étape $n');
   }
@@ -46,7 +64,7 @@ void main() {
     await t.pumpWidget(const MenooApp());
     await t.pumpAndSettle();
 
-    await tapText(t, 'Commencer gratuitement');
+    await tapLandingStart(t);
     expect(find.text('Quel est votre mode ?'), findsOneWidget);
     await tapText(t, 'Continuer');
     await tapText(t, 'Commencer mon profil');
@@ -132,7 +150,7 @@ void main() {
     addTearDown(t.view.reset);
     await t.pumpWidget(const MenooApp());
     await t.pumpAndSettle();
-    await tapText(t, 'Commencer gratuitement');
+    await tapLandingStart(t);
     await tapText(t, 'Continuer');
     await tapText(t, 'Commencer mon profil');
     // Perte de poids (par défaut) → étape 2
@@ -171,7 +189,7 @@ void main() {
 
     await t.pumpWidget(const MenooApp());
     await t.pumpAndSettle();
-    await tapText(t, 'Commencer gratuitement');
+    await tapLandingStart(t);
     await tapText(t, 'Pour la famille');
     await tapText(t, 'Continuer');
     expect(find.textContaining('10 étapes rapides'), findsOneWidget);

@@ -377,13 +377,13 @@ class _DietSnippet extends StatelessWidget {
         children: [
           _SnippetHeader(icon: AppIcons.scale, title: L.of(context).homeDietTitle, subtitle: L.of(context).homeWeighedThisMorning),
           const SizedBox(height: AppSpace.x3),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final details = Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text.rich(_valueWithUnit('74,3', 'kg')),
                       const SizedBox(width: AppSpace.x1 + AppSpace.x1),
@@ -398,9 +398,20 @@ class _DietSnippet extends StatelessWidget {
                   const SizedBox(height: AppSpace.x0_5),
                   Text(L.of(context).homeWeightTarget('72 kg', '0,5 kg'), style: AppText.meta),
                 ],
-              ),
-              const WeightSparkline(),
-            ],
+              );
+              if (constraints.maxWidth < 280) {
+                return Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  runSpacing: AppSpace.x2,
+                  children: [details, const WeightSparkline()],
+                );
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [details, const WeightSparkline()],
+              );
+            },
           ),
         ],
       ),

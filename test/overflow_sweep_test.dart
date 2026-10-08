@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:menoo/l10n/app_localizations.dart';
+import 'package:menoo/l10n/app_languages.dart';
 import 'package:menoo/onboarding/onboarding_data.dart';
 import 'package:menoo/onboarding/onboarding_scope.dart';
 import 'package:menoo/screens/entry/improv_coming_soon_screen.dart';
@@ -37,7 +38,7 @@ import 'package:menoo/screens/pantry/pantry_scan_screens.dart';
 import 'package:menoo/screens/shopping/shopping_list_screen.dart';
 import 'package:menoo/theme/theme.dart';
 
-/// Balaye tous les écrans dans les 6 langues et signale tout débordement de mise en page
+/// Balaye tous les écrans dans les 3 langues du lancement et signale tout débordement de mise en page
 /// (« A RenderFlex overflowed »). Les textes plus longs qu'en français (allemand, espagnol…)
 /// sont la cause la plus fréquente : c'est ce test qui doit les attraper, pas l'œil.
 void main() {
@@ -51,9 +52,13 @@ void main() {
       await loader.load();
     }
 
-    await load('PlusJakartaSans', [for (final w in [400, 500, 600, 700, 800]) 'PlusJakartaSans-$w.ttf']);
+    await load('PlusJakartaSans', [
+      for (final w in [400, 500, 600, 700, 800]) 'PlusJakartaSans-$w.ttf',
+    ]);
     await load('Caveat', ['Caveat-600.ttf']);
-    await load('ReadexPro', [for (final w in [400, 500, 600, 700]) 'ReadexPro-$w.ttf']);
+    await load('ReadexPro', [
+      for (final w in [400, 500, 600, 700]) 'ReadexPro-$w.ttf',
+    ]);
   });
 
   /// Chaque écran qui a besoin de OnboardingScope le reçoit d'un jeu de données par défaut
@@ -103,57 +108,60 @@ void main() {
     'pantry_scan_photo': () => const PantryPhotoAiScreen(),
   };
 
-  const locales = [Locale('fr'), Locale('en'), Locale('es'), Locale('de'), Locale('it'), Locale('ar')];
+  const widths = [390.0];
+  final locales = AppLanguages.launchLocales;
 
   final failures = <String>[];
 
   for (final locale in locales) {
-    for (final entry in screens().entries) {
-      testWidgets('${locale.languageCode} · ${entry.key} : pas de débordement', (tester) async {
-        tester.view.physicalSize = const Size(1080, 2400);
-        tester.view.devicePixelRatio = 2.75;
-        addTearDown(tester.view.reset);
+    for (final width in widths) {
+      for (final entry in screens().entries) {
+        testWidgets('${locale.languageCode} · ${entry.key} à ${width.toInt()} px : pas de débordement', (tester) async {
+          tester.view.physicalSize = Size(width * 2.75, 2400);
+          tester.view.devicePixelRatio = 2.75;
+          addTearDown(tester.view.reset);
 
-        final overflow = <String>[];
-        final originalOnError = FlutterError.onError;
-        FlutterError.onError = (details) {
-          final text = details.exception.toString();
-          if (text.contains('overflowed')) {
-            overflow.add(text.split('\n').first);
-          } else {
-            originalOnError?.call(details);
+          final overflow = <String>[];
+          final originalOnError = FlutterError.onError;
+          FlutterError.onError = (details) {
+            final text = details.exception.toString();
+            if (text.contains('overflowed')) {
+              overflow.add(text.split('\n').first);
+            } else {
+              originalOnError?.call(details);
+            }
+          };
+
+          final data = OnboardingData();
+          // Foyer nécessaire pour les écrans qui en dépendent (household_size, member_*, weekly_grid…) ;
+          // ça ne change rien pour les écrans Solo, qui ignorent isFoyer.
+          data.startMode(AppMode.foyer);
+          // reassurance_weight a besoin d'un poids visé cohérent (sinon weeksToTarget()/targetDate() sont nuls).
+          data.targetWeightKg = 70;
+          addTearDown(data.dispose);
+
+          try {
+            await tester.pumpWidget(
+              MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.light,
+                locale: locale,
+                supportedLocales: AppLanguages.launchLocales,
+                localizationsDelegates: L.localizationsDelegates,
+                home: OnboardingScope(data: data, child: entry.value()),
+              ),
+            );
+            await tester.pump(const Duration(milliseconds: 300));
+          } finally {
+            FlutterError.onError = originalOnError;
           }
-        };
 
-        final data = OnboardingData();
-        // Foyer nécessaire pour les écrans qui en dépendent (household_size, member_*, weekly_grid…) ;
-        // ça ne change rien pour les écrans Solo, qui ignorent isFoyer.
-        data.startMode(AppMode.foyer);
-        // reassurance_weight a besoin d'un poids visé cohérent (sinon weeksToTarget()/targetDate() sont nuls).
-        data.targetWeightKg = 70;
-        addTearDown(data.dispose);
-
-        try {
-          await tester.pumpWidget(
-            MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.light,
-              locale: locale,
-              supportedLocales: L.supportedLocales,
-              localizationsDelegates: L.localizationsDelegates,
-              home: OnboardingScope(data: data, child: entry.value()),
-            ),
-          );
-          await tester.pump(const Duration(milliseconds: 300));
-        } finally {
-          FlutterError.onError = originalOnError;
-        }
-
-        if (overflow.isNotEmpty) {
-          failures.add('${locale.languageCode} · ${entry.key} : ${overflow.join(' | ')}');
-        }
-        expect(overflow, isEmpty, reason: overflow.join('\n'));
-      });
+          if (overflow.isNotEmpty) {
+            failures.add('${locale.languageCode} · ${entry.key} : ${overflow.join(' | ')}');
+          }
+          expect(overflow, isEmpty, reason: overflow.join('\n'));
+        });
+      }
     }
   }
 

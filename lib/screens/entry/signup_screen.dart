@@ -111,18 +111,29 @@ class _SignupScreenState extends State<SignupScreen> {
                       ],
                     ),
                     const SizedBox(height: AppSpace.x5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(l.signupAlreadyMember, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
-                        TextLink(
-                          l.loginSubmit,
-                          weight: AppFont.bold,
-                          onTap: () =>
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen())),
-                        ),
-                      ],
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final items = [
+                          Text(l.signupAlreadyMember, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
+                          TextLink(
+                            l.loginSubmit,
+                            weight: AppFont.bold,
+                            onTap: () =>
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen())),
+                          ),
+                        ];
+                        if (constraints.maxWidth < 360) {
+                          return Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: AppSpace.x1_5,
+                            runSpacing: AppSpace.x1,
+                            children: items,
+                          );
+                        }
+                        return Row(mainAxisAlignment: MainAxisAlignment.center, children: items);
+                      },
                     ),
                     const SizedBox(height: AppSpace.x5),
                     Row(

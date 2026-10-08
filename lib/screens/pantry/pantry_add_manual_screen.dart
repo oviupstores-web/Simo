@@ -192,8 +192,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
     _quantity = (_quantity + dir * delta).clamp(big ? 10 : 1, 100000).toDouble();
   });
 
-  String get _quantityLabel =>
-      _quantity == _quantity.roundToDouble() ? '${_quantity.round()}' : '$_quantity'.replaceAll('.', ',');
+  String get _quantityLabel => Formats.of(context).number(_quantity, decimals: 2);
 
   String _dateLabel(L l, DateTime d) {
     final days = DateUtils.dateOnly(d).difference(_today).inDays;
@@ -211,7 +210,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
       initialDate: _expires ?? _today.add(const Duration(days: 7)),
       firstDate: _today,
       lastDate: _today.add(const Duration(days: 365 * 3)),
-      locale: const Locale('fr', 'FR'),
+      locale: Localizations.localeOf(context),
     );
     if (picked != null) {
       setState(() {
@@ -250,6 +249,55 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final unit = _unit ?? l.unitPieces2;
+    Widget optionGrid(List<Widget> tiles) => LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 360) {
+          return Wrap(
+            spacing: AppSpace.x2,
+            runSpacing: AppSpace.x2,
+            children: [
+              for (final tile in tiles) SizedBox(width: (constraints.maxWidth - AppSpace.x2) / 2, child: tile),
+            ],
+          );
+        }
+        return GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: AppSpace.x2,
+          crossAxisSpacing: AppSpace.x2,
+          childAspectRatio: AppSizes.locationTileRatio,
+          children: tiles,
+        );
+      },
+    );
+    final categoryTiles = [
+      for (final c in FoodCategory.values)
+        OptionTile(
+          label: c.label(l),
+          leading: FoodThumb(
+            photo: 'assets/images/categories/${c.photo}.jpg',
+            icon: c.icon,
+            tint: c.location.tint,
+            size: AppSizes.iconTileSm,
+          ),
+          selected: _category == c,
+          onTap: () => _setCategory(c, manual: true),
+        ),
+    ];
+    final locationTiles = [
+      for (final loc in PantryLocation.values)
+        OptionTile(
+          label: loc.label(l),
+          leading: FoodThumb(photo: loc.photo, icon: loc.icon, tint: loc.tint, size: AppSizes.iconTileSm),
+          selected: _location == loc,
+          onTap: () => setState(() {
+            _location = loc;
+            _locationManual = true;
+            if (_error != null && _name.text.trim().isNotEmpty) _error = null;
+          }),
+        ),
+    ];
     return OnboardingStepScaffold(
       eyebrow: l.pantryAddEyebrow,
       eyebrowIcon: AppIcons.fridge,
@@ -325,51 +373,10 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
         ),
         const SizedBox(height: AppSpace.x6),
         StepSectionTitle(l.pantryAddCategorySection, hint: _category != null && !_categoryManual ? l.pantryAddCategoryAuto : null),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: AppSpace.x2,
-          crossAxisSpacing: AppSpace.x2,
-          childAspectRatio: AppSizes.locationTileRatio,
-          children: [
-            for (final c in FoodCategory.values)
-              OptionTile(
-                label: c.label(l),
-                leading: FoodThumb(
-                  photo: 'assets/images/categories/${c.photo}.jpg',
-                  icon: c.icon,
-                  tint: c.location.tint,
-                  size: AppSizes.iconTileSm,
-                ),
-                selected: _category == c,
-                onTap: () => _setCategory(c, manual: true),
-              ),
-          ],
-        ),
+        optionGrid(categoryTiles),
         const SizedBox(height: AppSpace.x6),
         StepSectionTitle(l.pantryAddLocationSection, hint: l.pantryAddLocationRequired),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: AppSpace.x2,
-          crossAxisSpacing: AppSpace.x2,
-          childAspectRatio: AppSizes.locationTileRatio,
-          children: [
-            for (final loc in PantryLocation.values)
-              OptionTile(
-                label: loc.label(l),
-                leading: FoodThumb(photo: loc.photo, icon: loc.icon, tint: loc.tint, size: AppSizes.iconTileSm),
-                selected: _location == loc,
-                onTap: () => setState(() {
-                  _location = loc;
-                  _locationManual = true;
-                  if (_error != null && _name.text.trim().isNotEmpty) _error = null;
-                }),
-              ),
-          ],
-        ),
+        optionGrid(locationTiles),
         const SizedBox(height: AppSpace.x6),
         StepSectionTitle(l.pantryAddExpirySection, hint: _expires != null && !_expiresManual ? l.pantryAddExpiryEstimated : null),
         AppCard(

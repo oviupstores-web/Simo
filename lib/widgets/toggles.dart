@@ -179,14 +179,7 @@ class OptionTile extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (allowTextWrap || label.contains(' '))
-                            label0
-                          else
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: AlignmentDirectional.centerStart,
-                              child: label0,
-                            ),
+                          label0,
                           if (subtitle != null)
                             Text(
                               subtitle!,

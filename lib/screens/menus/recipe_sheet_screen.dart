@@ -124,10 +124,13 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              l.recipeInStockCount(3),
-                              style: AppText.of(AppFont.s13, color: AppColors.ink2),
+                            Expanded(
+                              child: Text(
+                                l.recipeInStockCount(3),
+                                style: AppText.of(AppFont.s13, color: AppColors.ink2),
+                              ),
                             ),
+                            const SizedBox(width: AppSpace.x2),
                             QuantityStepper(
                               value: '$_servings',
                               onMinus: () => setState(() => _servings = (_servings - 1).clamp(1, 12)),
