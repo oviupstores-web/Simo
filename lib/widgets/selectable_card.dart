@@ -66,6 +66,7 @@ class ChoiceCard extends StatelessWidget {
     this.iconBackground = AppColors.mint,
     this.iconForeground = AppColors.primary,
     this.iconSize = 24,
+    this.illustrationAsset,
     this.centerIcon = false,
     this.descriptionStyle,
   });
@@ -79,6 +80,8 @@ class ChoiceCard extends StatelessWidget {
   final Color iconBackground;
   final Color iconForeground;
   final double iconSize;
+  /// Optional exclusive replacement for the stroke icon, scoped by the caller.
+  final String? illustrationAsset;
   final bool centerIcon;
   final TextStyle? descriptionStyle;
 
@@ -110,6 +113,8 @@ class ChoiceCard extends StatelessWidget {
                     heightFactor: 1,
                     child: IconTile(
                       icon: icon,
+                      illustrationAsset: illustrationAsset,
+                      illustrationSize: 40,
                       size: AppSizes.iconTileLg,
                       iconSize: iconSize,
                       background: iconBackground,

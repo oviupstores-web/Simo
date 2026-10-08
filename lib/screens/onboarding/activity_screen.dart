@@ -56,6 +56,12 @@ class ActivityScreen extends StatelessWidget {
           if (i > 0) const SizedBox(height: ActivityTokens.cardGap),
           ChoiceCard(
             icon: lvl.$2,
+            illustrationAsset: switch (lvl.$1) {
+              ActivityLevel.sedentaire => 'assets/images/compare_activity_desk.png',
+              ActivityLevel.modere => 'assets/images/compare_activity_walk.png',
+              ActivityLevel.actif => 'assets/images/compare_activity_run.png',
+              ActivityLevel.tresActif => 'assets/images/compare_activity_training.png',
+            },
             iconSize: ActivityTokens.iconSize,
             centerIcon: true,
             title: lvl.$3,

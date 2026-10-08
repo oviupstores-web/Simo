@@ -244,10 +244,9 @@ class _DietIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: AppSizes.chipBadge,
-    height: AppSizes.chipBadge,
+    width: 40,
+    height: 40,
     decoration: BoxDecoration(color: tint.soft, shape: BoxShape.circle),
-    padding: const EdgeInsets.all(AppSpace.x0_5),
     child: ExcludeSemantics(child: Image.asset(asset, fit: BoxFit.contain)),
   );
 }

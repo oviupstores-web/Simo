@@ -50,6 +50,8 @@ class IconTile extends StatelessWidget {
   const IconTile({
     super.key,
     required this.icon,
+    this.illustrationAsset,
+    this.illustrationSize = 36,
     this.size = AppSizes.iconTile,
     this.iconSize = 24,
     this.background = AppColors.mint,
@@ -59,6 +61,9 @@ class IconTile extends StatelessWidget {
   });
 
   final String icon;
+  /// Optional exclusive replacement for the stroke icon.
+  final String? illustrationAsset;
+  final double illustrationSize;
   final double size;
   final double iconSize;
   final Color background;
@@ -77,7 +82,16 @@ class IconTile extends StatelessWidget {
         borderRadius: circle ? null : BorderRadius.circular(radius),
       ),
       alignment: Alignment.center,
-      child: AppIcon(icon, size: iconSize, color: foreground),
+      child: illustrationAsset == null
+          ? AppIcon(icon, size: iconSize, color: foreground)
+          : ExcludeSemantics(
+              child: Image.asset(
+                illustrationAsset!,
+                width: illustrationSize,
+                height: illustrationSize,
+                fit: BoxFit.contain,
+              ),
+            ),
     );
   }
 }

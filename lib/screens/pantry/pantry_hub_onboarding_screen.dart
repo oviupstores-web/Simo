@@ -19,6 +19,13 @@ String _premiumLocationIcon(PantryLocation location) => switch (location) {
   PantryLocation.freezer => AppIcons.pantryFreezer,
 };
 
+String _locationIllustrationAsset(PantryLocation location) => switch (location) {
+  PantryLocation.fridge => 'assets/images/compare_pantry_fridge.png',
+  PantryLocation.fruitBasket => 'assets/images/compare_pantry_basket.png',
+  PantryLocation.pantry => 'assets/images/compare_pantry_cupboard.png',
+  PantryLocation.freezer => 'assets/images/compare_pantry_freezer.png',
+};
+
 /// pantry_home_onboarding (nouvel écran design/new) — détour Réserve de l'onboarding (SPEC §4) :
 /// pas de compteur d'étape, pas de barre de navigation. Chaque ajout revient ici.
 /// Produits regroupés par emplacement (SPEC §7, maître opérationnel).
@@ -406,6 +413,8 @@ class _LocationSection extends StatelessWidget {
               children: [
                 IconTile(
                   icon: _premiumLocationIcon(location),
+                  illustrationAsset: _locationIllustrationAsset(location),
+                  illustrationSize: 36,
                   size: AppSizes.iconTileSm,
                   background: location.soft,
                   foreground: location.ink,
