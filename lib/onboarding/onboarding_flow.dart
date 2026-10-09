@@ -96,8 +96,12 @@ abstract final class OnboardingFlow {
   );
 
   /// Ouvre une étape (depuis le récapitulatif : le « Continuer » y ramènera).
-  static Future<void> open(BuildContext context, OnbStep step, {bool fromSummary = false}) =>
-      Navigator.of(context).push(_route(screenFor(step), fromSummary: fromSummary));
+  static Future<void> open(BuildContext context, OnbStep step, {bool fromSummary = false}) {
+    final d = OnboardingScope.read(context);
+    if (d.isFoyer && !foyer.contains(step)) step = OnbStep.household;
+    if (!d.isFoyer && step != OnbStep.profile && !d.isEligibleForIndividual) step = OnbStep.profile;
+    return Navigator.of(context).push(_route(screenFor(step), fromSummary: fromSummary));
+  }
 
   /// Première étape du parcours choisi.
   static Future<void> start(BuildContext context) => open(context, steps(context).first);
@@ -109,6 +113,15 @@ abstract final class OnboardingFlow {
   /// « Réserves uniquement » ou « Mixte », puis retour à l'étape qui suit le mode de gestion
   /// (Solo : contraintes ; Foyer : types de cuisine).
   static void next(BuildContext context, OnbStep step) {
+    final d = OnboardingScope.read(context);
+    if (d.isFoyer && !foyer.contains(step)) {
+      open(context, OnbStep.household);
+      return;
+    }
+    if (!d.isFoyer && !d.isEligibleForIndividual) {
+      open(context, OnbStep.profile);
+      return;
+    }
     final editing = isEditing(context);
     final nav = Navigator.of(context);
     final order = steps(context);
@@ -126,7 +139,14 @@ abstract final class OnboardingFlow {
       final d = OnboardingScope.read(context);
       if (!d.needsTarget) {
         d.update(() => d.targetWeightKg = null);
-      } else if (d.targetError(L.of(context), Formats.of(context), target: d.targetWeightKg, current: d.weightKg, heightCm: d.heightCm) != null) {
+      } else if (d.targetError(
+            L.of(context),
+            Formats.of(context),
+            target: d.targetWeightKg,
+            current: d.weightKg,
+            heightCm: d.heightCm,
+          ) !=
+          null) {
         nav.pushReplacement(_route(screenFor(OnbStep.profile), fromSummary: true));
         return;
       }

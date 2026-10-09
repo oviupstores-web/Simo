@@ -134,8 +134,10 @@ void main() {
 
           final data = OnboardingData();
           // Foyer nécessaire pour les écrans qui en dépendent (household_size, member_*, weekly_grid…) ;
-          // ça ne change rien pour les écrans Solo, qui ignorent isFoyer.
-          data.startMode(AppMode.foyer);
+          // les écrans physiques Solo doivent recevoir un mode Solo valide.
+          if (!['goal', 'profile', 'activity', 'smart_scale', 'cover_solo'].contains(entry.key)) {
+            data.startMode(AppMode.foyer);
+          }
           // reassurance_weight a besoin d'un poids visé cohérent (sinon weeksToTarget()/targetDate() sont nuls).
           data.targetWeightKg = 70;
           addTearDown(data.dispose);

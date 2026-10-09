@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import 'app_localizations.dart';
+import '../models/numeric_safety.dart';
 
 /// Système d'unités. SPEC §10 : métrique par défaut, impérial aux États-Unis.
 enum UnitSystem { metric, imperial }
@@ -32,8 +33,7 @@ class Formats {
   String get _tag => locale.toLanguageTag();
 
   /// Prix depuis des centimes (la base stocke des centimes, décision du 2026-09-23).
-  String price(int cents) =>
-      NumberFormat.simpleCurrency(locale: _tag, name: currency).format(cents / 100);
+  String price(int cents) => NumberFormat.simpleCurrency(locale: _tag, name: currency).format(cents / 100);
 
   /// Prix sans les centimes, pour les gros montants (« 65 € »).
   String priceRounded(int cents) =>
@@ -43,6 +43,7 @@ class Formats {
   /// (75 kg, jamais 75,0 kg ; 0,75 kg/semaine mais 0,5, jamais 0,50 — comme les anciens
   /// `OnboardingData.formatKg` et `formatRate`).
   String number(num value, {int decimals = 0}) {
+    if (!value.isFinite || value.abs() > NumericSafety.maxExactInteger || decimals < 0 || decimals > 20) return '—';
     var effectiveDecimals = decimals;
     var rounded = num.parse(value.toStringAsFixed(decimals));
     while (effectiveDecimals > 0) {
@@ -66,18 +67,27 @@ class Formats {
   String weekdayName(int weekday) => DateFormat.EEEE(_tag).format(DateTime(2024, 1, weekday));
 
   /// Poids : kilogrammes, ou livres aux États-Unis.
-  String weight(L l, double kg) => units == UnitSystem.metric
-      ? l.unitKilograms(number(kg, decimals: 1))
-      : l.unitPounds(number(kg * 2.20462, decimals: 1));
+  String weight(L l, double kg) {
+    final value = units == UnitSystem.metric ? kg : kg * 2.20462;
+    if (!value.isFinite || value < 0 || value > NumericSafety.maxExactInteger) return l.numericValueUnavailable;
+    return units == UnitSystem.metric
+        ? l.unitKilograms(number(value, decimals: 1))
+        : l.unitPounds(number(value, decimals: 1));
+  }
 
   /// Rythme de poids par semaine (paliers de 0,25 kg) : plus de précision que [weight],
   /// pour distinguer 0,25 / 0,5 / 0,75.
-  String rate(L l, double kgPerWeek) => units == UnitSystem.metric
-      ? l.unitKilograms(number(kgPerWeek, decimals: 2))
-      : l.unitPounds(number(kgPerWeek * 2.20462, decimals: 2));
+  String rate(L l, double kgPerWeek) {
+    final value = units == UnitSystem.metric ? kgPerWeek : kgPerWeek * 2.20462;
+    if (!value.isFinite || value < 0 || value > NumericSafety.maxExactInteger) return l.numericValueUnavailable;
+    return units == UnitSystem.metric
+        ? l.unitKilograms(number(value, decimals: 2))
+        : l.unitPounds(number(value, decimals: 2));
+  }
 
   /// Taille : centimètres, ou pieds et pouces aux États-Unis.
   String height(L l, double cm) {
+    if (!cm.isFinite || cm <= 0 || cm > NumericSafety.maxExactInteger) return l.numericValueUnavailable;
     if (units == UnitSystem.metric) return l.unitCentimeters(number(cm));
     final totalInches = cm / 2.54;
     final feet = totalInches ~/ 12;
@@ -85,12 +95,10 @@ class Formats {
   }
 
   /// Masse d'un ingrédient : grammes, ou onces aux États-Unis.
-  String mass(L l, double grams) => units == UnitSystem.metric
-      ? l.unitGrams(number(grams))
-      : l.unitOunces(number(grams / 28.3495, decimals: 1));
+  String mass(L l, double grams) =>
+      units == UnitSystem.metric ? l.unitGrams(number(grams)) : l.unitOunces(number(grams / 28.3495, decimals: 1));
 
   /// Volume : millilitres, ou onces liquides aux États-Unis.
-  String volume(L l, double ml) => units == UnitSystem.metric
-      ? l.unitMilliliters(number(ml))
-      : l.unitFluidOunces(number(ml / 29.5735, decimals: 1));
+  String volume(L l, double ml) =>
+      units == UnitSystem.metric ? l.unitMilliliters(number(ml)) : l.unitFluidOunces(number(ml / 29.5735, decimals: 1));
 }

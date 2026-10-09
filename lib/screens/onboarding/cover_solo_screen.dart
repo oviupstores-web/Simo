@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_flow.dart';
+import '../../onboarding/onboarding_scope.dart';
+import 'cover_household_screen.dart';
+import 'profile_screen.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -11,12 +14,7 @@ class CoverSoloScreen extends StatelessWidget {
   const CoverSoloScreen({super.key});
 
   static List<(String, Tint, String, String)> _features(L l) => [
-    (
-      AppIcons.soloNutrition,
-      Tint.mint,
-      l.coverSoloFeature1Title,
-      l.coverSoloFeature1Text,
-    ),
+    (AppIcons.soloNutrition, Tint.mint, l.coverSoloFeature1Title, l.coverSoloFeature1Text),
     (AppIcons.soloTime, Tint.peach, l.coverSoloFeature2Title, l.coverSoloFeature2Text),
     (AppIcons.soloWaste, Tint.leafy, l.coverSoloFeature3Title, l.coverSoloFeature3Text),
   ];
@@ -24,6 +22,9 @@ class CoverSoloScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
+    final d = OnboardingScope.of(context);
+    if (d.isFoyer) return const CoverHouseholdScreen();
+    if (!d.isEligibleForIndividual) return const ProfileScreen();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -71,10 +72,7 @@ class CoverSoloScreen extends StatelessWidget {
                       style: AppText.h1,
                     ),
                     const SizedBox(height: AppSpace.x2),
-                    Text(
-                      l.coverSoloSubtitle,
-                      style: AppText.lead.copyWith(color: CoverSoloTokens.bodyInk),
-                    ),
+                    Text(l.coverSoloSubtitle, style: AppText.lead.copyWith(color: CoverSoloTokens.bodyInk)),
                     const SizedBox(height: AppSpace.x5),
                     for (final (i, f) in _features(l).indexed) ...[
                       if (i > 0) const SizedBox(height: CoverSoloTokens.cardGap),
@@ -95,7 +93,10 @@ class CoverSoloScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(f.$3, style: AppText.of(AppFont.s15, weight: AppFont.bold, lineHeight: 21)),
-                                  Text(f.$4, style: AppText.of(AppFont.s13, color: CoverSoloTokens.bodyInk, lineHeight: 18)),
+                                  Text(
+                                    f.$4,
+                                    style: AppText.of(AppFont.s13, color: CoverSoloTokens.bodyInk, lineHeight: 18),
+                                  ),
                                 ],
                               ),
                             ),
@@ -112,7 +113,10 @@ class CoverSoloScreen extends StatelessWidget {
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text('${l.commonQuickSteps(OnboardingFlow.solo.length)} · ${l.commonEditableAnytime}', style: AppText.meta),
+                        Text(
+                          '${l.commonQuickSteps(OnboardingFlow.solo.length)} · ${l.commonEditableAnytime}',
+                          style: AppText.meta,
+                        ),
                       ],
                     ),
                   ],

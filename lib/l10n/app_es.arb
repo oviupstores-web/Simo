@@ -242,7 +242,7 @@
   "profileTargeted": "objetivo",
   "profileProjection": "{weeks, plural, one{Unas {weeks} semana a {rate} por semana} other{Unas {weeks} semanas a {rate} por semana}}",
   "profileTargetDate": "Objetivo estimado hacia el {date}",
-  "profileAgeError": "Indica una edad entre 14 y 100 años.",
+  "profileAgeError": "Indica una edad entre 18 y 100 años.",
   "profileHeightError": "Indica una altura entre 120 y 230 cm.",
   "profileWeightError": "Indica un peso entre 35 y 250 kg.",
   "commonMultipleChoice": "Elección múltiple",
@@ -646,5 +646,14 @@
   "targetErrorMissing": "Indica el peso que quieres alcanzar.",
   "targetErrorLosing": "Para perder peso, el objetivo debe ser inferior a tu peso actual ({current}).",
   "targetErrorGaining": "Para ganar masa, el objetivo debe ser superior a tu peso actual ({current}).",
-  "targetErrorTooLow": "Ese peso daría un IMC de {bmi}. Por debajo de 18,5 se considera bajo peso, lo que conlleva riesgos para la salud. Para {height}, apunta al menos a {min}."
+  "targetErrorTooLow": "Ese peso daría un IMC de {bmi}. Por debajo de 18,5 se considera bajo peso, lo que conlleva riesgos para la salud. Para {height}, apunta al menos a {min}.",
+  "householdLastAdultError": "El hogar debe conservar al menos un adulto.",
+  "householdRoleLimitError": "Límite actual: {count} en la categoría «{role}». Los datos existentes se conservan.",
+  "householdRoleMinimumError": "El número de miembros de la categoría «{role}» no puede ser inferior a {count}. Los datos existentes se conservan.",
+  "numericValueUnavailable": "Valor numérico no válido.",
+  "numericRateError": "Elige un ritmo válido entre las opciones disponibles.",
+  "numericProjectionUnavailable": "Proyección no disponible para estos valores.",
+  "numericCaloriesUnavailable": "Cálculo de calorías no disponible.",
+  "numericMacrosUnavailable": "Distribución de macros no disponible.",
+  "targetErrorMaximum": "El peso objetivo no puede superar {max}."
 }

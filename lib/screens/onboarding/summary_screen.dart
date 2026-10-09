@@ -6,6 +6,7 @@ import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
+import 'profile_screen.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../entry/signup_screen.dart';
@@ -50,9 +51,15 @@ class SummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
+    if (!d.isFoyer && !d.isEligibleForIndividual) return const ProfileScreen();
     final fmt = Formats.of(context);
     final goal = goals(l)[d.goal]!;
     final m = d.macros;
+    final calories = d.dailyKcal;
+    final rate = d.effectiveRate;
+    final weeks = d.weeksToTarget();
+    final date = d.targetDate();
+    final profileError = OnboardingData.profileInputError(l, age: d.age, heightCm: d.heightCm, weightKg: d.weightKg);
     void edit(OnbStep step) => OnboardingFlow.open(context, step, fromSummary: true);
     final weight = fmt.weight(l, d.weightKg);
     final mealsByType = [
@@ -64,7 +71,7 @@ class SummaryScreen extends StatelessWidget {
         if (d.diets.contains(diet.$1)) diet.$2,
     ];
     // Foyer : allergènes partagés + ceux des profils (avec les prénoms concernés)
-    final byMember = d.isFoyer ? d.memberAllergens : const <String, List<String>>{};
+    final byMember = d.isFoyer ? d.memberAllergenNames(l) : const <String, List<String>>{};
     final allergenLabels = [
       for (final a in ConstraintsScreen.allergenChoices(l))
         if (a.$1.any(d.allAllergens.contains))
@@ -90,11 +97,25 @@ class SummaryScreen extends StatelessWidget {
       eyebrow: l.summaryEyebrow,
       eyebrowIcon: AppIcons.checkCircle,
       title: foyer ? l.summaryTitleHousehold : l.summaryTitleSolo,
-      subtitle: foyer
-          ? l.summarySubtitleHousehold(d.plannedMeals)
-          : l.summarySubtitleSolo,
+      subtitle: foyer ? l.summarySubtitleHousehold(d.plannedMeals) : l.summarySubtitleSolo,
       continueLabel: foyer ? l.summaryGenerateHousehold : l.summaryGenerateSolo,
-      onContinue: () => push(context, const SignupScreen()),
+      onContinue: () {
+        final error = foyer
+            ? d.members
+                  .map(OnboardingData.memberInputViolation)
+                  .whereType<HouseholdLimitViolation>()
+                  .firstOrNull
+                  ?.message(l)
+            : profileError ??
+                  (d.needsTarget
+                      ? d.targetError(l, fmt, target: d.targetWeightKg, current: d.weightKg, heightCm: d.heightCm)
+                      : null);
+        if (error != null || (!foyer && calories == null)) {
+          showMenooMessage(context, error ?? l.numericCaloriesUnavailable);
+          return;
+        }
+        push(context, const SignupScreen());
+      },
       below: LayoutBuilder(
         builder: (context, constraints) {
           const icon = AppIcon(AppIcons.lock, size: 14, color: AppColors.ink2);
@@ -133,10 +154,7 @@ class SummaryScreen extends StatelessWidget {
                     MemberRole.enfant => AppIcons.child,
                     MemberRole.bebe => AppIcons.baby,
                   },
-                  text: [
-                    l.summaryMemberLine(d.displayName(m), m.ageLabel(l)),
-                    if (m.role == MemberRole.adulte) goals(l)[m.goal]!.$1,
-                  ].join(' · '),
+                  text: [l.summaryMemberLine(d.displayName(m, l), m.ageLabel(l))].join(' · '),
                   onTap: () => edit(OnbStep.members),
                 ),
             ],
@@ -150,13 +168,20 @@ class SummaryScreen extends StatelessWidget {
               _Line(icon: goal.$2, text: goal.$1, strong: true),
               _Line(
                 icon: AppIcons.user,
-                text: l.summarySexAge(d.sex == Sex.homme ? l.profileSexMale : l.profileSexFemale, d.age, fmt.height(l, d.heightCm.toDouble()), weight),
+                text: l.summarySexAge(
+                  d.sex == Sex.homme ? l.profileSexMale : l.profileSexFemale,
+                  d.age,
+                  fmt.height(l, d.heightCm.toDouble()),
+                  weight,
+                ),
                 onTap: () => edit(OnbStep.profile),
               ),
-              if (d.needsTarget && d.targetWeightKg != null)
+              if (d.needsTarget)
                 _Line(
                   icon: AppIcons.flag,
-                  text: l.summaryTargetLine(fmt.weight(l, d.targetWeightKg!), d.weeksToTarget() ?? 0, fmt.rate(l, d.effectiveRate), fmt.date(d.targetDate()!)),
+                  text: weeks == null || date == null || rate == null || d.targetWeightKg == null
+                      ? l.numericProjectionUnavailable
+                      : l.summaryTargetLine(fmt.weight(l, d.targetWeightKg!), weeks, fmt.rate(l, rate), fmt.date(date)),
                   onTap: () => edit(OnbStep.profile),
                 ),
               _Line(icon: AppIcons.walk, text: activities(l)[d.activity]!, onTap: () => edit(OnbStep.activity)),
@@ -182,8 +207,15 @@ class SummaryScreen extends StatelessWidget {
             _Line(
               icon: AppIcons.wallet,
               text: foyer
-                  ? l.summaryBudgetPortion(fmt.priceRounded(d.budgetEuros * 100), fmt.price((d.budgetPerPortion * 100).round()), d.weeklyPortions)
-                  : l.summaryBudgetMeal(fmt.priceRounded(d.budgetEuros * 100), fmt.price((d.budgetPerMeal * 100).round())),
+                  ? l.summaryBudgetPortion(
+                      fmt.priceRounded(d.budgetEuros * 100),
+                      fmt.price((d.budgetPerPortion * 100).round()),
+                      d.weeklyPortions,
+                    )
+                  : l.summaryBudgetMeal(
+                      fmt.priceRounded(d.budgetEuros * 100),
+                      fmt.price((d.budgetPerMeal * 100).round()),
+                    ),
               strong: true,
             ),
           ],
@@ -200,9 +232,7 @@ class SummaryScreen extends StatelessWidget {
             if (d.management != ManagementMode.courses)
               _Line(
                 icon: AppIcons.checkCircle,
-                text: d.pantry.isEmpty
-                    ? l.summaryPantryEmptyLater
-                    : l.summaryPantryCount(d.pantry.length),
+                text: d.pantry.isEmpty ? l.summaryPantryEmptyLater : l.summaryPantryCount(d.pantry.length),
               ),
           ],
         ),
@@ -219,13 +249,18 @@ class SummaryScreen extends StatelessWidget {
             ),
             if (allergenLabels.isNotEmpty)
               _Line(icon: AppIcons.shield, text: l.summaryAllergensList(allergenLabels.join(', '))),
-            if (d.excludedFoods.isNotEmpty) _Line(icon: AppIcons.block, text: l.summaryExcludedList(d.excludedFoods.join(', '))),
+            if (d.excludedFoods.isNotEmpty)
+              _Line(icon: AppIcons.block, text: l.summaryExcludedList(d.excludedFoods.join(', '))),
             _Line(
               icon: AppIcons.cutlery,
               text: d.cuisinePreferences.isEmpty
                   ? l.summaryCuisinesAll
-                  : l.summaryCuisinesList([for (final c in OnboardingCuisinesScreen.cuisines(l))
-                      if (d.cuisinePreferences.contains(c.$1)) c.$2].join(', ')),
+                  : l.summaryCuisinesList(
+                      [
+                        for (final c in OnboardingCuisinesScreen.cuisines(l))
+                          if (d.cuisinePreferences.contains(c.$1)) c.$2,
+                      ].join(', '),
+                    ),
               onTap: () => edit(OnbStep.cuisines),
             ),
           ],
@@ -240,13 +275,15 @@ class SummaryScreen extends StatelessWidget {
             if (foyer)
               _Line(
                 icon: AppIcons.user,
-                text: cook == null ? l.summaryCookRotating : l.summaryCookName(d.displayName(cook)),
+                text: cook == null ? l.summaryCookRotating : l.summaryCookName(d.displayName(cook, l)),
               ),
             _Line(icon: AppIcons.skillet, text: l.summaryLevel(levels(l)[d.cookingLevel]!), strong: true),
             _Line(
               icon: AppIcons.clock,
-              text:
-                  l.summaryTimes(KitchenScreen.timeLabel(l, d.weekdayMinutes), KitchenScreen.timeLabel(l, d.weekendMinutes)),
+              text: l.summaryTimes(
+                KitchenScreen.timeLabel(l, d.weekdayMinutes),
+                KitchenScreen.timeLabel(l, d.weekendMinutes),
+              ),
             ),
             _Line(icon: AppIcons.oven, text: equipmentLabels.join(', ')),
           ],
@@ -265,34 +302,45 @@ class SummaryScreen extends StatelessWidget {
                   style: AppText.of(AppFont.s13, weight: AppFont.bold, color: AppColors.primary),
                 ),
                 const SizedBox(height: AppSpace.x1),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: _thousands(d.dailyKcal),
-                        style: AppText.of(AppFont.s28, weight: AppFont.extrabold, color: AppColors.primaryDark),
-                      ),
-                      TextSpan(
-                        text: l.summaryKcalPerDaySuffix,
-                        style: AppText.of(AppFont.s14, color: AppColors.ink2),
-                      ),
-                    ],
-                  ),
-                ),
+                if (calories != null)
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: _thousands(calories),
+                          style: AppText.of(AppFont.s28, weight: AppFont.extrabold, color: AppColors.primaryDark),
+                        ),
+                        TextSpan(
+                          text: l.summaryKcalPerDaySuffix,
+                          style: AppText.of(AppFont.s14, color: AppColors.ink2),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Text(l.numericCaloriesUnavailable, style: AppText.caption),
                 const SizedBox(height: AppSpace.x2),
-                Wrap(
-                  spacing: AppSpace.x3,
-                  runSpacing: AppSpace.x1,
-                  children: [
-                    _Macro(color: AppColors.primary, text: l.summaryProteinG(m.protein)),
-                    _Macro(color: AppColors.orange, text: l.summaryCarbsG(m.carbs)),
-                    _Macro(color: AppColors.fat, text: l.summaryFatG(m.fat)),
-                  ],
-                ),
+                if (m != null)
+                  Wrap(
+                    spacing: AppSpace.x3,
+                    runSpacing: AppSpace.x1,
+                    children: [
+                      _Macro(color: AppColors.primary, text: l.summaryProteinG(m.protein)),
+                      _Macro(color: AppColors.orange, text: l.summaryCarbsG(m.carbs)),
+                      _Macro(color: AppColors.fat, text: l.summaryFatG(m.fat)),
+                    ],
+                  )
+                else
+                  Text(l.numericMacrosUnavailable, style: AppText.caption),
                 const SizedBox(height: AppSpace.x2),
                 Text(
                   d.needsTarget
-                      ? l.summaryEstimateTarget(d.goal == HealthGoal.priseMasse ? l.summaryGain : l.summaryLose, fmt.rate(l, d.effectiveRate))
+                      ? rate == null
+                            ? l.numericProjectionUnavailable
+                            : l.summaryEstimateTarget(
+                                d.goal == HealthGoal.priseMasse ? l.summaryGain : l.summaryLose,
+                                fmt.rate(l, rate),
+                              )
                       : l.summaryEstimateMaintain,
                   style: AppText.of(AppFont.s12, color: AppColors.ink2, lineHeight: 17),
                 ),

@@ -458,7 +458,7 @@
       }
     }
   },
-  "profileAgeError": "Indiquez un âge entre 14 et 100 ans.",
+  "profileAgeError": "Indiquez un âge entre 18 et 100 ans.",
   "profileHeightError": "Indiquez une taille entre 120 et 230 cm.",
   "profileWeightError": "Indiquez un poids entre 35 et 250 kg.",
   "commonMultipleChoice": "Choix multiple",
@@ -1382,6 +1382,32 @@
       "min": {
         "type": "String"
       }
+    }
+  },
+  "householdLastAdultError": "Le foyer doit conserver au moins un adulte.",
+  "householdRoleLimitError": "Limite actuelle : {count} pour la catégorie « {role} ». Les données existantes sont conservées.",
+  "@householdRoleLimitError": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "role": {"type": "String"}
+    }
+  },
+  "householdRoleMinimumError": "Le nombre de membres dans la catégorie « {role} » ne peut pas être inférieur à {count}. Les données existantes sont conservées.",
+  "@householdRoleMinimumError": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "role": {"type": "String"}
+    }
+  },
+  "numericValueUnavailable": "Valeur numérique invalide.",
+  "numericRateError": "Choisissez un rythme valide parmi les options proposées.",
+  "numericProjectionUnavailable": "Projection indisponible pour ces valeurs.",
+  "numericCaloriesUnavailable": "Calcul calorique indisponible.",
+  "numericMacrosUnavailable": "Répartition des macros indisponible.",
+  "targetErrorMaximum": "Le poids cible ne peut pas dépasser {max}.",
+  "@targetErrorMaximum": {
+    "placeholders": {
+      "max": {"type": "String"}
     }
   }
 }

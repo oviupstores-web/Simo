@@ -4,6 +4,8 @@ import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
+import 'household_size_screen.dart';
+import 'profile_screen.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -13,44 +15,18 @@ class GoalScreen extends StatelessWidget {
   const GoalScreen({super.key});
 
   static List<(HealthGoal, String, String, String?, String, Tint)> _goals(L l) => [
-    (
-      HealthGoal.pertePoids,
-      AppIcons.goalWeightLoss,
-      l.goalLossTitle,
-      l.commonPopular,
-      l.goalLossText,
-      Tint.mint,
-    ),
-    (
-      HealthGoal.priseMasse,
-      AppIcons.goalMuscleGain,
-      l.goalGainTitle,
-      null,
-      l.goalGainText,
-      Tint.peach,
-    ),
-    (
-      HealthGoal.seche,
-      AppIcons.goalDefinition,
-      l.goalCutTitle,
-      null,
-      l.goalCutText,
-      Tint.lavender,
-    ),
-    (
-      HealthGoal.maintien,
-      AppIcons.goalBalance,
-      l.goalMaintainTitle,
-      null,
-      l.goalMaintainText,
-      Tint.leafy,
-    ),
+    (HealthGoal.pertePoids, AppIcons.goalWeightLoss, l.goalLossTitle, l.commonPopular, l.goalLossText, Tint.mint),
+    (HealthGoal.priseMasse, AppIcons.goalMuscleGain, l.goalGainTitle, null, l.goalGainText, Tint.peach),
+    (HealthGoal.seche, AppIcons.goalDefinition, l.goalCutTitle, null, l.goalCutText, Tint.lavender),
+    (HealthGoal.maintien, AppIcons.goalBalance, l.goalMaintainTitle, null, l.goalMaintainText, Tint.leafy),
   ];
 
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
     final data = OnboardingScope.of(context);
+    if (data.isFoyer) return const HouseholdSizeScreen();
+    if (!data.isEligibleForIndividual) return const ProfileScreen();
     return OnboardingStepScaffold(
       horizontalPadding: GoalTokens.gutter,
       step: OnboardingFlow.number(context, OnbStep.goal),
@@ -83,12 +59,7 @@ class GoalScreen extends StatelessWidget {
           ),
         ],
         const SizedBox(height: AppSpace.x4),
-        InfoBanner(
-          icon: AppIcons.sun,
-          title: l.goalInfoTitle,
-          text: l.goalInfoText,
-          background: AppColors.neutralSoft,
-        ),
+        InfoBanner(icon: AppIcons.sun, title: l.goalInfoTitle, text: l.goalInfoText, background: AppColors.neutralSoft),
       ],
     );
   }

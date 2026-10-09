@@ -5,6 +5,7 @@ import '../../l10n/formats.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
+import 'household_size_screen.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -39,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _height.text = '${d.heightCm}';
     _weight.text = OnboardingData.formatKg(d.weightKg);
     if (d.targetWeightKg != null) _target.text = OnboardingData.formatKg(d.targetWeightKg!);
-    for (final c in [_height, _weight, _target]) {
+    for (final c in [_age, _height, _weight, _target]) {
       c.addListener(() => setState(() {}));
     }
   }
@@ -61,15 +62,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final height = int.tryParse(_height.text.trim());
     final weight = _num(_weight.text);
     final target = _num(_target.text);
-    String? error;
-    if (age == null || age < 14 || age > 100) {
-      error = L.of(context).profileAgeError;
-    } else if (height == null || height < 120 || height > 230) {
-      error = L.of(context).profileHeightError;
-    } else if (weight == null || weight < 35 || weight > 250) {
-      error = L.of(context).profileWeightError;
-    }
-    final targetError = error == null ? d.targetError(L.of(context), Formats.of(context), target: target, current: weight!, heightCm: height!) : null;
+    String? error = OnboardingData.profileInputError(L.of(context), age: age, heightCm: height, weightKg: weight);
+    if (error == null && d.effectiveRate == null) error = L.of(context).numericRateError;
+    final targetError = error == null
+        ? d.targetError(
+            L.of(context),
+            Formats.of(context),
+            target: target,
+            current: weight!,
+            heightCm: height!,
+            profileAge: age,
+          )
+        : null;
     setState(() {
       _error = error;
       _showTargetError = targetError != null;
@@ -80,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       d.heightCm = height!;
       d.weightKg = weight!;
       d.targetWeightKg = d.needsTarget ? target : null;
-      d.weeklyRateKg = d.effectiveRate;
+      if (d.needsTarget) d.weeklyRateKg = d.effectiveRate!;
     });
     OnboardingFlow.next(context, OnbStep.profile);
   }
@@ -89,6 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
+    if (d.isFoyer) return const HouseholdSizeScreen();
     return OnboardingStepScaffold(
       horizontalPadding: ProfileTokens.gutter,
       subtitleColor: ProfileTokens.bodyInk,
@@ -161,16 +166,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<Widget> _targetSection(BuildContext context, OnboardingData d) {
     final l = L.of(context);
+    final age = int.tryParse(_age.text.trim());
     final losing = d.goal != HealthGoal.priseMasse;
     final height = int.tryParse(_height.text.trim());
     final current = _num(_weight.text);
     final target = _num(_target.text);
-    final liveError = (height == null || current == null)
-        ? null
-        : d.targetError(l, Formats.of(context), target: target, current: current, heightCm: height);
+    final inputsValid =
+        OnboardingData.inRange(height, OnboardingData.minHeightCm, OnboardingData.maxHeightCm) &&
+        OnboardingData.inRange(current, OnboardingData.minWeightKg, OnboardingData.maxWeightKg) &&
+        OnboardingData.inRange(int.tryParse(_age.text.trim()), OnboardingData.minAge, OnboardingData.maxAge);
+    final liveError = !inputsValid
+        ? OnboardingData.profileInputError(l, age: int.tryParse(_age.text.trim()), heightCm: height, weightKg: current)
+        : d.targetError(l, Formats.of(context), target: target, current: current!, heightCm: height!, profileAge: age);
     final showError = liveError != null && (_showTargetError || (target != null && _target.text.length >= 2));
-    final weeks = liveError == null ? d.weeksToTarget(target: target, current: current) : null;
-    final date = liveError == null ? d.targetDate(target: target, current: current) : null;
+    final weeks = inputsValid && liveError == null
+        ? d.weeksToTarget(
+            target: target,
+            current: current,
+            heightCm: height,
+            profileAge: int.tryParse(_age.text.trim()),
+          )
+        : null;
+    final date = inputsValid && liveError == null
+        ? d.targetDate(target: target, current: current, heightCm: height, profileAge: int.tryParse(_age.text.trim()))
+        : null;
+    final rate = d.effectiveRate;
 
     return [
       StepSectionTitle(
@@ -184,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
       UnitFieldRow(label: l.profileTargetLabel, unit: 'kg', controller: _target),
-      if (d.rateOptions.length > 1) ...[
+      if (d.rateOptions.length > 1 || d.effectiveRate == null) ...[
         const SizedBox(height: AppSpace.x4),
         Text(l.profileRateLabel, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x2_5),
@@ -209,9 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         const SizedBox(height: AppSpace.x2),
         Text(
-          losing
-              ? l.profileLosingNote
-              : l.profileGainingNote,
+          losing ? l.profileLosingNote : l.profileGainingNote,
           style: AppText.meta.copyWith(color: ProfileTokens.bodyInk),
         ),
       ],
@@ -226,20 +244,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ],
       FormError(message: showError ? liveError : null),
+      if (inputsValid && liveError == null && (weeks == null || date == null))
+        FormError(message: l.numericProjectionUnavailable),
       AnimatedSize(
         duration: AppMotion.normal,
         curve: AppMotion.curve,
-        child: (weeks == null || date == null || current == null || target == null)
+        child: (weeks == null || date == null || current == null || target == null || rate == null)
             ? const SizedBox(width: double.infinity)
             : Padding(
                 padding: const EdgeInsets.only(top: AppSpace.x4),
-                child: WeightProjectionCard(
-                  current: current,
-                  target: target,
-                  weeks: weeks,
-                  rate: d.effectiveRate,
-                  date: date,
-                ),
+                child: WeightProjectionCard(current: current, target: target, weeks: weeks, rate: rate, date: date),
               ),
       ),
     ];
@@ -294,4 +308,3 @@ class _RateTile extends StatelessWidget {
     );
   }
 }
-

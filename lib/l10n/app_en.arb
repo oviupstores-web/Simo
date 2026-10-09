@@ -242,7 +242,7 @@
   "profileTargeted": "target",
   "profileProjection": "{weeks, plural, one{About {weeks} week at {rate} a week} other{About {weeks} weeks at {rate} a week}}",
   "profileTargetDate": "Estimated to be reached around {date}",
-  "profileAgeError": "Enter an age between 14 and 100.",
+  "profileAgeError": "Enter an age between 18 and 100.",
   "profileHeightError": "Enter a height between 120 and 230 cm.",
   "profileWeightError": "Enter a weight between 35 and 250 kg.",
   "commonMultipleChoice": "Choose several",
@@ -646,5 +646,14 @@
   "targetErrorMissing": "Enter the weight you are aiming for.",
   "targetErrorLosing": "To lose weight, your target must be lower than your current weight ({current}).",
   "targetErrorGaining": "To gain muscle, your target must be higher than your current weight ({current}).",
-  "targetErrorTooLow": "That weight would give a BMI of {bmi}. Below 18.5, this is considered underweight, which carries health risks. For {height}, aim for at least {min}."
+  "targetErrorTooLow": "That weight would give a BMI of {bmi}. Below 18.5, this is considered underweight, which carries health risks. For {height}, aim for at least {min}.",
+  "householdLastAdultError": "The household must keep at least one adult.",
+  "householdRoleLimitError": "Current limit: {count} in the “{role}” category. Existing data has been kept.",
+  "householdRoleMinimumError": "The number of members in the “{role}” category cannot be below {count}. Existing data has been kept.",
+  "numericValueUnavailable": "Invalid numeric value.",
+  "numericRateError": "Choose a valid rate from the available options.",
+  "numericProjectionUnavailable": "Projection unavailable for these values.",
+  "numericCaloriesUnavailable": "Calorie calculation unavailable.",
+  "numericMacrosUnavailable": "Macro distribution unavailable.",
+  "targetErrorMaximum": "Target weight cannot exceed {max}."
 }

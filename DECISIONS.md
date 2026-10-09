@@ -1,5 +1,29 @@
 # DECISIONS.md — Choix validés
 
+## Révision scientifique de phase 2 — instructions de Simo, 2026-10-09
+
+- 250 kg n'est pas une limite médicale universelle. Les bornes actuelles restent provisoires et aucun nouveau seuil de poids/IMC n'est ajouté. Un IMC élevé ne suffit pas à rejeter un profil ni à inférer sa masse grasse.
+- Les protections techniques R01 restent autorisées. Toute modification des limites métier, formules, règles nutritionnelles et politiques de santé nécessite un accord distinct.
+- Audit demandé des adultes, sportifs, 14–17 ans et profils familiaux, avec sources primaires identifiables. Les recommandations du rapport scientifique restent des propositions, pas des décisions validées.
+- Aucun changement de design, Supabase, commit, push ou installation. Les phases 3 à 7 restent en attente.
+
+## Phase 2 R01 — corrections autorisées par Simo, 2026-10-09
+
+- Refuser NaN, Infinity et les dépassements dans les champs et le modèle, sans remplacer silencieusement les réponses. Bornes Solo inchangées : 14–100 ans, 120–230 cm, 35–250 kg. Règles familiales par rôle et corrections de phase 1 conservées.
+- Cible maximale **provisoire de 250 kg** validée ; obligation hors Maintien, direction et IMC minimal conservés. Message traduit pour le dépassement. Pas de plafond métier arbitraire de durée.
+- Formules BMR et règles de répartition conservées. Une répartition négative ou non calculable devient indisponible ; les calories valides restent affichées indépendamment. Aucun résultat inventé ni nouvelle formule.
+- Projections et conversions protégées contre les valeurs non finies et les dépassements. Les réponses anciennes invalides restent présentes et sont signalées ; elles ne sont ni supprimées ni ramenées automatiquement à une borne.
+- B09 explicitement réservé à la phase 4 ; aucune modification de sa conversion finie. Références visuelles non remplacées. Aucune modification Supabase, du design validé ou des illustrations ; aucune installation Android, commit ou push.
+- Résultat technique : 115 régressions R01 passent ; suite complète 346 réussites, 13 échecs visuels préexistants, 1 test B09 différé. Analyse sans problème. Résultat à présenter à Simo ; phase 3 interdite avant son autorisation.
+
+## Phase 1 des corrections après audit — accord de Simo, 2026-10-09
+
+- B02 : seul un adulte peut être cuisinier principal. Si ce membre devient enfant ou bébé, retour à « À tour de rôle ». Attribution conservée lorsqu'il reste adulte ; changement reflété dans Ma cuisine et le récapitulatif.
+- B01 : sans prénom, afficher le rôle traduit et son numéro ; préserver les prénoms, identifiants, allergies et exclusions. Les codes d'allergènes ne sont pas refactorisés : seule la traduction des noms affichés est corrigée.
+- B03 : conserver PROVISOIREMENT 8 adultes, 8 enfants et 4 bébés. Ces limites ne sont pas des décisions produit définitives. Validation centralisée dans le modèle, refus des dépassements et protection du dernier adulte ; message compréhensible en FR/EN/DE ; aucune modification silencieuse des réponses existantes.
+- Méthode validée : tests en échec avant correction, changements minimaux, contrôles des parcours, analyse Flutter et responsive 320/390 px. Pas de changement de design, Supabase, illustrations, installation Android, commit ou push. Les phases 2 à 7 attendent leurs validations successives.
+- Résultat technique de phase 1 : 213 tests pertinents réussis, aucun échec ; analyse sans problème. Validation du résultat par Simo encore attendue.
+
 - **2026-10-02 — Icones Mode de gestion validees et installees** : SVG sac de courses, placard et mixte, taille 36 px, trait 1.0, pastilles centrees verticalement. APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r avec conservation des donnees. Demarrage verifie sur telephone, logs sans erreur. Autres elements du mode de gestion conserves ; harmonisation generale proposee non appliquee. Rendu sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
 
 - **2026-10-02 — Mode de gestion : icones centrees** : option centerIcon activee uniquement sur les trois cartes ManagementModeScreen a la demande de Simo. Trait 1.0, taille 36 px, autres elements conserves. Apercu Flutter et six tests de debordement reussis. Aucune installation.
@@ -191,3 +215,11 @@
 - 2026-10-08 · **Stratégie de lancement linguistique** : seules les traductions English, Français et Deutsch sont proposées dans la version initiale. Les ARB et l’infrastructure Spanish, Italian et Arabic sont conservés pour une phase ultérieure, avec RTL arabe intact. Les chaînes de traduction restent génériques (`en`, `fr`, `de`) et le pays de l’appareil reste disponible pour les formats régionaux.
 - 2026-10-08 · Marchés de lancement : USA, UK, Canada, Ireland, Australia, Germany, Austria, Switzerland, France et Belgium. Regional pricing / currencies to be implemented before commercial launch if required: USD, GBP, CAD, AUD, EUR, CHF.
 - 2026-10-08 · **Convention du parcours Individuel : 7A — Remplissage de la Réserve.** Cet écran conditionnel ne compte pas parmi les 11 étapes principales. Depuis 7/11 « Mode de gestion », « Courses uniquement » va directement à 8/11 « Contraintes » ; « Réserves uniquement » et « Mixte » passent par 7A puis rejoignent 8/11. L’écran Réserve n’affiche actuellement aucun numéro d’étape ; aucun changement de navigation ni ajout de compteur demandé.
+
+
+## 2026-10-09 — Rectification des règles produit après audit scientifique
+
+- Parcours Individuel réservé à 18 ans et plus. Borne Solo 18–100 ans dans les champs, le modèle et les calculs ; poids/taille et formules inchangés. Refus des accès directs avec ancien âge mineur, sans substitution ni suppression de réponses. L’utilisateur corrige explicitement son profil.
+- Parcours Famille : organisation des repas, budget, allergies et aliments non aimés. Aucun objectif de perte de poids, prise de masse ou sèche, déficit/surplus individualisé, macros par membre ou projection de poids. Les anciens champs techniques goal/activity restent conservés mais inactifs ; aucun nouveau moteur familial.
+- Catégories familiales conservées indépendamment de Solo : adulte 14–100, enfant 4–13, bébé 0–3. Le libellé « adulte » dès 14 ans est signalé ; aucune reclassification arbitraire. Profils, allergies, exclusions et corrections B01/B02/B03 conservés.
+- Restriction d’âge = choix produit, pas une preuve de validité médicale des équations pour chaque adulte admis. Autres recommandations de l’audit B restent à valider. Aucun changement des formules, Supabase, design, illustrations, commit, push ou installation Android. Phases 3 à 7 non commencées.

@@ -63,8 +63,8 @@ class KitchenScreen extends StatelessWidget {
             children: [
               for (final m in d.members.where((m) => m.role == MemberRole.adulte))
                 ToggleChip(
-                  label: d.displayName(m),
-                  leading: MemberAvatar(name: d.displayName(m), tint: Tint.mint, size: AppSizes.chipBadge),
+                  label: d.displayName(m, l),
+                  leading: MemberAvatar(name: d.displayName(m, l), tint: Tint.mint, size: AppSizes.chipBadge),
                   selected: d.mainCookId == m.id,
                   onTap: () => d.update(() => d.mainCookId = m.id),
                 ),

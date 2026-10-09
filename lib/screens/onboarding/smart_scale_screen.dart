@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
+import 'household_size_screen.dart';
+import 'profile_screen.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -18,6 +20,8 @@ class SmartScaleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
+    if (d.isFoyer) return const HouseholdSizeScreen();
+    if (!d.isEligibleForIndividual) return const ProfileScreen();
     void choose(bool scale) {
       d.update(() => d.wantsScale = scale);
       OnboardingFlow.next(context, OnbStep.scale);
@@ -43,7 +47,11 @@ class SmartScaleScreen extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpace.x5),
           child: Column(
             children: [
-              Image.asset('assets/images/balance_connectee.jpg', height: AppSizes.scaleHero, excludeFromSemantics: true),
+              Image.asset(
+                'assets/images/balance_connectee.jpg',
+                height: AppSizes.scaleHero,
+                excludeFromSemantics: true,
+              ),
               const SizedBox(height: AppSpace.x4),
               for (final (i, b) in _benefits(l).indexed) ...[
                 if (i > 0) const SizedBox(height: AppSpace.x2_5),

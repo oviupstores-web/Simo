@@ -8,7 +8,6 @@ import '../../onboarding/onboarding_scope.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'constraints_screen.dart';
-import 'summary_screen.dart';
 
 /// onboarding_memberprofiles (Foyer, étape 2/10) — un profil par membre.
 /// SPEC §3 : les prénoms de démo (Thomas, Sarah, Lucas, Emma) remplacent « Chloé » et « Émilie ».
@@ -39,13 +38,27 @@ class MemberProfilesScreen extends StatelessWidget {
           if (i > 0) const SizedBox(height: AppSpace.x3),
           _MemberCard(
             member: m,
-            name: d.displayName(m),
+            name: d.displayName(m, l),
             onTap: () => push(context, MemberEditScreen(member: m.copy())),
           ),
         ],
         const SizedBox(height: AppSpace.x3),
         Pressable(
-          onTap: () => push(context, MemberEditScreen(member: d.newMember(MemberRole.adulte), isNew: true)),
+          onTap: () {
+            final role = MemberRole.values.where((r) => d.count(r) < OnboardingData.maxPerRole[r]!).firstOrNull;
+            if (role == null) {
+              showMenooMessage(
+                context,
+                HouseholdLimitViolation(
+                  MemberRole.adulte,
+                  minimum: false,
+                  limit: OnboardingData.maxPerRole[MemberRole.adulte]!,
+                ).message(l),
+              );
+              return;
+            }
+            push(context, MemberEditScreen(member: d.newMember(role), isNew: true));
+          },
           child: Container(
             padding: const EdgeInsets.all(AppSpace.x3_5),
             decoration: BoxDecoration(
@@ -66,11 +79,7 @@ class MemberProfilesScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpace.x4),
-        InfoBanner(
-          icon: AppIcons.shield,
-          title: l.membersAllergyInfoTitle,
-          text: l.membersAllergyInfoText,
-        ),
+        InfoBanner(icon: AppIcons.shield, title: l.membersAllergyInfoTitle, text: l.membersAllergyInfoText),
       ],
     );
   }
@@ -108,13 +117,6 @@ class _MemberCard extends StatelessWidget {
                     spacing: AppSpace.x1_5,
                     runSpacing: AppSpace.x1,
                     children: [
-                      if (m.role == MemberRole.adulte)
-                        PillBadge(
-                          SummaryScreen.goals(l)[m.goal]!.$1,
-                          icon: SummaryScreen.goals(l)[m.goal]!.$2,
-                          background: AppColors.neutralSoft,
-                          foreground: AppColors.ink2,
-                        ),
                       if (allergies.isEmpty)
                         PillBadge(l.membersNoAllergy, icon: AppIcons.checkCircle)
                       else
@@ -166,7 +168,7 @@ class MemberAvatar extends StatelessWidget {
 }
 
 /// Fiche d'un membre (hors compteur d'étapes) : prénom, rôle, âge, mensurations,
-/// objectif et activité (adultes), allergies.
+/// contraintes alimentaires et allergies, sans objectif physique.
 class MemberEditScreen extends StatefulWidget {
   const MemberEditScreen({super.key, required this.member, this.isNew = false});
 
@@ -202,8 +204,14 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
 
   void _setRole(MemberRole r) {
     if (r == m.role) return;
+    final error = OnboardingScope.read(context).validateMember(m.copy()..role = r);
+    if (error != null) {
+      setState(() => _error = error.message(L.of(context)));
+      return;
+    }
     final blank = MemberDraft.blank(m.id, r);
     setState(() {
+      _error = null;
       m.role = r;
       m.age = blank.age;
       m.heightCm = blank.heightCm;
@@ -232,7 +240,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
           : L.of(context).memberAgeRangeError(r.label(L.of(context)).toLowerCase(), r.minAge, r.maxAge);
     } else if (r != MemberRole.bebe && (height == null || height < hMin || height > hMax)) {
       error = L.of(context).memberHeightError(hMin, hMax);
-    } else if (r != MemberRole.bebe && (weight == null || weight < wMin || weight > wMax)) {
+    } else if (r != MemberRole.bebe && !OnboardingData.inRange(weight, wMin, wMax)) {
       error = L.of(context).memberWeightError(wMin, wMax);
     }
     setState(() => _error = error);
@@ -242,7 +250,11 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
       ..age = age!
       ..heightCm = r == MemberRole.bebe ? null : height
       ..weightKg = r == MemberRole.bebe ? null : weight;
-    d.saveMember(m);
+    final limitError = d.saveMember(m);
+    if (limitError != null) {
+      setState(() => _error = limitError.message(L.of(context)));
+      return;
+    }
     Navigator.of(context).pop();
   }
 
@@ -251,7 +263,6 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
     final existing = d.members.any((x) => x.id == m.id);
-    final adult = m.role == MemberRole.adulte;
     return OnboardingStepScaffold(
       eyebrow: widget.isNew ? l.memberEyebrowNew : l.memberEyebrowEdit,
       eyebrowIcon: _roleIcons[m.role],
@@ -266,7 +277,11 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
                 l.memberRemove,
                 weight: AppFont.bold,
                 onTap: () {
-                  d.removeMember(m);
+                  final error = d.removeMember(m);
+                  if (error != null) {
+                    setState(() => _error = error.message(l));
+                    return;
+                  }
                   Navigator.of(context).pop();
                 },
               ),
@@ -275,7 +290,12 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
       children: [
         Text(l.memberFirstNameLabel, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x2_5),
-        IconTextField(icon: AppIcons.user, hint: l.memberFirstNameHint, controller: _name, onChanged: (_) => setState(() {})),
+        IconTextField(
+          icon: AppIcons.user,
+          hint: l.memberFirstNameHint,
+          controller: _name,
+          onChanged: (_) => setState(() {}),
+        ),
         const SizedBox(height: AppSpace.x5),
         Text(l.memberAgeGroupLabel, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x2_5),
@@ -290,8 +310,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
                   icon: _roleIcons[r],
                   tint: MemberProfilesScreen.tintFor(r),
                   selected: m.role == r,
-                  // Toujours au moins un adulte dans le foyer
-                  onTap: r != MemberRole.adulte && adult && existing && !d.canRemove(m) ? null : () => _setRole(r),
+                  onTap: () => _setRole(r),
                 ),
               ),
             ],
@@ -306,37 +325,6 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
           UnitFieldRow(label: l.memberWeightLabel, unit: 'kg', controller: _weight),
         ],
         FormError(message: _error),
-        if (adult) ...[
-          const SizedBox(height: AppSpace.x6),
-          StepSectionTitle(l.memberGoalSection, hint: l.commonSingleChoice, icon: AppIcons.target, adaptiveHint: true),
-          Wrap(
-            spacing: AppSpace.x2,
-            runSpacing: AppSpace.x2,
-            children: [
-              for (final g in HealthGoal.values)
-                ToggleChip(
-                  label: SummaryScreen.goals(l)[g]!.$1,
-                  icon: SummaryScreen.goals(l)[g]!.$2,
-                  selected: m.goal == g,
-                  onTap: () => setState(() => m.goal = g),
-                ),
-            ],
-          ),
-          const SizedBox(height: AppSpace.x5),
-          StepSectionTitle(l.memberActivitySection, icon: AppIcons.walk, tint: Tint.sky),
-          Wrap(
-            spacing: AppSpace.x2,
-            runSpacing: AppSpace.x2,
-            children: [
-              for (final a in ActivityLevel.values)
-                ToggleChip(
-                  label: SummaryScreen.activities(l)[a]!,
-                  selected: m.activity == a,
-                  onTap: () => setState(() => m.activity = a),
-                ),
-            ],
-          ),
-        ],
         const SizedBox(height: AppSpace.x6),
         StepSectionTitle(
           l.memberAllergySection,

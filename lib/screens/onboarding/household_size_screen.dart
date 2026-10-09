@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_flow.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -22,6 +23,11 @@ class HouseholdSizeScreen extends StatelessWidget {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
     final n = d.members.length;
+    void changeCount(MemberRole role, int count) {
+      final error = d.setCount(role, count);
+      if (error != null) showMenooMessage(context, error.message(l));
+    }
+
     return OnboardingStepScaffold(
       step: OnboardingFlow.number(context, OnbStep.household),
       totalSteps: OnboardingFlow.total(context),
@@ -51,8 +57,8 @@ class HouseholdSizeScreen extends StatelessWidget {
                 const SizedBox(width: AppSpace.x2),
                 QuantityStepper(
                   value: '${d.count(r.$1)}',
-                  onMinus: () => d.setCount(r.$1, d.count(r.$1) - 1),
-                  onPlus: () => d.setCount(r.$1, d.count(r.$1) + 1),
+                  onMinus: () => changeCount(r.$1, d.count(r.$1) - 1),
+                  onPlus: () => changeCount(r.$1, d.count(r.$1) + 1),
                 ),
               ],
             ),

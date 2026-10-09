@@ -1,5 +1,70 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## Corrections après audit — 2026-10-09
+
+Mission validée par Simo : sept phases successives, validation entre chaque phase.
+Aucune installation Android, intervention Supabase, suppression, commit ou push sans accord.
+
+| Phase | Périmètre | Statut |
+|---|---|---|
+| 1 | B01/B02/B03 : noms, cuisinier principal et limites familiales | Validée techniquement par Simo ; corrections conservées |
+| 2 | R01 : entrées numériques, calculs et dates | R01 conservé ; Solo 18+ et Famille sans transformation appliqués ; autres propositions scientifiques en attente |
+| 3 | B04/B05/B06/B07 et R02 : Réserve et calendrier | À faire ; non commencée |
+| 4 | B08/B09/B10 : formats régionaux ; CAD/AUD à documenter | À faire ; non commencée |
+| 5 | B11 : compteur Famille, Solo et 7A | À faire ; non commencée |
+| 6 | Q01 : références visuelles et divergences documentaires | À faire ; aucune référence remplacée |
+| 7 | D01–D04 et R03 : doublons, nettoyage et textes longs | À faire ; aucune suppression |
+
+### Rectification produit après audit scientifique — 2026-10-09
+
+- Décisions validées par Simo : Individuel 18+ (jusqu’à 100 ans, borne existante) ; Famille = repas/budget/contraintes, sans transformation physique.
+- Champs et modèle Solo refusent les moins de 18 ans ; calculs, récapitulatif et navigation protégés pour les accès directs et anciens profils. Aucun remplacement silencieux. Un âge corrigé explicitement à 18 ans permet de reprendre le parcours.
+- Objectifs physiques et choix d’activité retirés des fiches familiales et de leurs résumés ; calculs Solo indisponibles en mode Famille. Données héritées conservées et inactives, profils enfants/bébés et contraintes préservés.
+- Catégories du foyer inchangées : « adulte » dès 14 ans, indépendant de Solo. Incohérence de vocabulaire signalée, sans reclassification arbitraire.
+- Régressions 17/18, accès directs et conservation des réponses en FR/EN/DE à 320/390 px. Tests de bornes Solo anciennement 14 ans adaptés à 18 ; fixtures responsive utilisent le bon mode pour les écrans physiques.
+- Vérification finale : **386 réussites, 0 échec, 1 B09 différé** ; `flutter analyze --no-pub` sans problème ; `git diff --check` sans erreur. Résultats et fichiers : `reports/RECTIFICATION_REGLES_PRODUIT.md`. Audit B actualisé ; formules inchangées, autres politiques en attente. Aucun changement Supabase, illustrations, installation, commit ou push. **Arrêt après cette correction ; phases 3 à 7 non commencées.**
+
+### Phase 1 — preuves et validation technique
+
+- Avant correction : `family_profiles_regression_test.dart`, 12 tests, 10 échecs attendus et 2 réussites. B01 : nom affiché comme référence de fonction ; B02 : identifiant du cuisinier conservé après passage en enfant/bébé ; B03 : dépassements, dernier adulte et compteur excessif non protégés.
+- Corrections : validation de composition centralisée dans le modèle ; refus sans mutation ni notification ; retour à « À tour de rôle » pour le cuisinier devenant enfant/bébé ; noms traduits dans les profils, Ma cuisine, récapitulatif et rappels d'allergies ; messages de refus traduits.
+- Les limites 8 adultes / 8 enfants / 4 bébés restent PROVISOIRES. Les prénoms, identifiants, codes d'allergènes, exclusions et budget personnalisé sont conservés. Aucun changement des parcours ou illustrations.
+- Tests ajoutés : `family_profiles_regression_test.dart` (22 cas) et `family_profiles_ui_test.dart` (36 cas : FR/EN/DE × 320/390 px, édition réelle, retour, messages de limites et affichages).
+- Vérification finale : 213 tests réussis, 0 échec, pour ces deux fichiers plus `solo_flow_test.dart`, `overflow_320_regression_test.dart`, `overflow_sweep_test.dart`, `pantry_hub_i18n_test.dart`, `language_picker_test.dart`, `i18n_test.dart`. `flutter analyze --no-pub` : aucun problème.
+- Les 13 échecs visuels de l'audit ne sont pas traités ni relancés ici : ils restent au périmètre de la phase 6. Pas d'APK produit ou installé. Prochaine action : attendre la validation de Simo ; ne pas commencer la phase 2 sans accord.
+
+### Phase 2 — diagnostic uniquement, 2026-10-09
+
+- Simo a autorisé le diagnostic et les tests de reproduction de R01, mais demande un accord distinct avant correction. Aucun fichier de `lib/` modifié pendant ce diagnostic (empreintes SHA-256 comparées).
+- Tests ajoutés : `test/numeric_model_diagnostic_test.dart` (28 cas) et `test/numeric_fields_diagnostic_test.dart` (63 cas FR/EN/DE). Les attentes de sécurité restent volontairement en échec jusqu'à correction autorisée.
+- Résultat final de la commande ciblée incluant les contrôles de phase 1, navigation Solo/Foyer et formats : 157 cas, 125 réussites et 32 échecs reproduisant les anomalies. Les 66 contrôles existants passent ; diagnostic seul : 59 réussites / 32 échecs. Analyse Flutter : aucun problème. `git diff --check` : aucune erreur. La suite complète n'est pas relancée à ce stade.
+- Reproductions : cible NaN/Infinity/1e309 collée = exception dans l'aperçu ; poids NaN accepté en maintien et dans une fiche familiale ; validation du modèle acceptant certains poids/taille invalides ; calories NaN/Infinity en exception, poids injecté 1e307 produisant -10 kcal ; cible 10000 kg acceptée et projection de 19850 semaines ; cible 1e12 donnant une durée débordée et une date de l'année -262550 ; glucides -15 g pour femme, 100 ans, 120 cm, 250 kg, sèche et activité sédentaire (valeurs dans les limites des champs).
+- Conversions usuelles inchangées. B09 (182 cm donnant 5 ft 12 in) reproduit, reste au périmètre initial de phase 4. La conversion d'une taille infinie doit être protégée techniquement en phase 2.
+- Proposition soumise à Simo : validation finie et bornes existantes centralisées ; protection des calculs et de l'aperçu avant conversions ; vérification de la capacité réelle des durées/dates ; pas de modification BMR ni de correction silencieuse des réponses. Plafond éventuel de poids cible à 250 kg et traitement d'un calcul de macros incohérent restent des choix à approuver. Aucun horizon arbitraire en années proposé.
+- Phases 3 à 7 conservées, non commencées. Aucun accès au téléphone, changement Supabase, commit ou push. Prochaine action : rapport de diagnostic et attente de l'autorisation de Simo.
+
+### Phase 2 — correction R01 autorisée et vérifiée, 2026-10-09
+
+- Accord de Simo : rejet NaN/Infinity/dépassements ; bornes Solo existantes conservées et règles familiales par rôle préservées ; cible maximale PROVISOIRE de 250 kg ; aucun plafond arbitraire de durée ; formules BMR et macros conservées ; calories valides toujours visibles même si la répartition des macros est indisponible. B09 reste en phase 4.
+- Protection des champs et du modèle avant calcul/enregistrement. Résultats numériques non calculables renvoyés comme indisponibles, sans correction ni suppression des réponses stockées. Durées/dates vérifiées avant multiplication avec les capacités réelles de Duration et DateTime. Conversions non finies protégées ; formule pieds/pouces finie inchangée.
+- Rythme incompatible : pas de repli silencieux vers 0,5 ; choix explicite dans les options existantes. En Sèche, la sélection unique est accessible lorsqu'un ancien rythme est incompatible. Les écrans valides gardent leur présentation.
+- Tests du diagnostic adaptés aux refus approuvés (null = indisponible, jamais 0 inventé) ; B09 marqué explicitement hors périmètre. Test B02 de phase 1 : fixture enfant/bébé rendue cohérente avec l'âge et les mensurations du rôle, assertions sur le cuisinier conservées.
+- Régressions R01 : 115 cas réussis, 0 échec, dont vérification de 512 combinaisons de profils aux bornes et affichage calories/macros indépendants à 320/390 px en FR/EN/DE. Contrôle ciblé avec phase 1, parcours Solo/Foyer et formats : 181 réussites, 0 échec, 1 test B09 différé explicitement.
+- Suite complète finale : **346 réussites, 13 échecs de comparaisons visuelles déjà présents à l'audit, 1 test B09 différé**, code de sortie 1 dû uniquement aux références visuelles. Les mêmes écrans échouent : Landing, choix du mode, couvertures Solo/Foyer, inscription en FR/AR, et Réserve principale FR/DE/AR. Aucune référence remplacée ; leur analyse reste en phase 6.
+- `flutter analyze --no-pub` : aucun problème, code 0. `git diff --check` : aucune erreur. Aucun APK installé, changement Supabase, commit ou push ; branche master et commit f37797b inchangés.
+- Risques résiduels : B09 connu, références visuelles à examiner, cible maximale encore provisoire. Les anciennes valeurs invalides sont conservées et doivent être corrigées explicitement par l'utilisateur ; les futurs consommateurs de calculs doivent gérer l'indisponibilité.
+- Prochaine action : présenter le résultat à Simo et attendre sa validation. **Ne pas commencer la phase 3 sans son autorisation.** Phases 3 à 7 maintenues dans le plan.
+
+### Phase 2 — révision de sécurité scientifique, 2026-10-09
+
+- Simo demande de conserver provisoirement les bornes actuelles sans les considérer comme seuils médicaux ; aucun rejet sur le seul IMC élevé. Aucun changement de formule, limite métier ou politique de santé sans autorisation distincte.
+- Livrables séparés : `reports/PHASE2_A_R01_TECHNIQUE.md` et `reports/PHASE2_B_AUDIT_SCIENTIFIQUE.md`. Références primaires : NICE NG246, CDC, NIDDK, Mifflin 1990, revue Sports Medicine 2023 demandée, CIO REDs 2023, ISSN, National Academies et Hall 2011.
+- Aucun nouveau défaut purement technique R01 confirmé. Corrections conservées, commentaires clarifiant leur portée, nouveau test de caractérisation (29 cas). Profils forts/musclés fictifs acceptés ; tests ne constituant pas une validation clinique.
+- Vérification finale pertinente : **343 réussites, 0 échec, 1 test B09 différé** ; analyse sans problème ; diff check sans erreur. Les 115 tests R01 et 58 tests phase 1 passent. La suite complète précédente reste à 346 réussites / 13 échecs visuels préexistants / 1 B09 différé ; elle n'est pas relancée pour cette révision documentaire et de caractérisation.
+- Risques santé documentés et NON corrigés sans accord : application des calculs adultes aux 14–17 ans ; projection linéaire malgré adaptations et plancher énergétique ; risques de disponibilité énergétique chez sportifs ; généralisation des macros ; absence de moteur pédiatrique par membre ; informations familiales insuffisantes pour celui-ci ; annonce d'un ajustement ultérieur non codé.
+- Constat reproductible : femme 40 ans, 160 cm, 60 kg, sédentaire, 0,75 kg/semaine, cible 50 kg : 1 240 kcal et 14 semaines malgré un déficit initial réduit par le plancher. Aucune correction de cette hypothèse métier sans décision.
+- Aucun seuil supplémentaire, avertissement médical automatique, changement d'écran, Supabase, commit, push ou installation Android. Phases 3 à 7 non commencées. Attendre l'autorisation sur les propositions du livrable B.
+
 - **2026-10-02 — Arret pour aujourd hui, sauvegarde de fin de session** : demande de Simo, aucune nouvelle modification fonctionnelle. Derniere version compilee et installee : Mode de gestion, trois icones 36 px au trait 1.0 centrees verticalement ; demarrage et logs controles sans erreur. Ecrans Activite, Balance, Grille et Budget egalement corriges et installes pendant cette session. Demain : reprendre depuis le Mode de gestion puis auditer l ecran suivant affiche sur le telephone (detour Reserve si Mixte ou Reserves uniquement). Ne pas modifier les choix personnels pour avancer. Respecter audit reel, corrections ciblees, apercu, validation puis installation sur demande. Attention : les marges 14 px, ecarts 10 px et textes bleus proposes pour Mode de gestion n ont pas ete appliques ; seuls ses icones et leur centrage ont ete valides. Sauvegarde complete hors projet dans le dossier backups de la session Codex, label fin-session.
 
 - **2026-10-02 — Icones Mode de gestion validees et installees** : SVG sac de courses, placard et mixte, taille 36 px, trait 1.0, pastilles centrees verticalement. APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r avec conservation des donnees. Demarrage verifie sur telephone, logs sans erreur. Autres elements du mode de gestion conserves ; harmonisation generale proposee non appliquee. Rendu sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.

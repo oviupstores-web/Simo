@@ -242,7 +242,7 @@
   "profileTargeted": "المستهدف",
   "profileProjection": "{weeks, plural, zero{أقل من أسبوع بمعدّل {rate} أسبوعيًا} one{نحو أسبوع بمعدّل {rate} أسبوعيًا} two{نحو أسبوعين بمعدّل {rate} أسبوعيًا} few{نحو {weeks} أسابيع بمعدّل {rate} أسبوعيًا} many{نحو {weeks} أسبوعًا بمعدّل {rate} أسبوعيًا} other{نحو {weeks} أسبوع بمعدّل {rate} أسبوعيًا}}",
   "profileTargetDate": "يُتوقّع بلوغ الهدف نحو {date}",
-  "profileAgeError": "أدخل عمرًا بين 14 و100 سنة.",
+  "profileAgeError": "أدخل عمرًا بين 18 و100 سنة.",
   "profileHeightError": "أدخل طولًا بين 120 و230 سم.",
   "profileWeightError": "أدخل وزنًا بين 35 و250 كغ.",
   "commonMultipleChoice": "اختيار متعدّد",
@@ -646,5 +646,14 @@
   "targetErrorMissing": "أدخل الوزن الذي تستهدفه.",
   "targetErrorLosing": "لإنقاص الوزن، يجب أن يكون الهدف أقل من وزنك الحالي ({current}).",
   "targetErrorGaining": "لزيادة الكتلة، يجب أن يكون الهدف أعلى من وزنك الحالي ({current}).",
-  "targetErrorTooLow": "يعادل هذا الوزن مؤشر كتلة جسم {bmi}. وتحت 18.5 يُعدّ نقصًا في الوزن قد يُشكّل خطرًا صحيًا. لطول {height}، استهدف {min} على الأقل."
+  "targetErrorTooLow": "يعادل هذا الوزن مؤشر كتلة جسم {bmi}. وتحت 18.5 يُعدّ نقصًا في الوزن قد يُشكّل خطرًا صحيًا. لطول {height}، استهدف {min} على الأقل.",
+  "householdLastAdultError": "يجب أن يبقى شخص بالغ واحد على الأقل في الأسرة.",
+  "householdRoleLimitError": "الحد الحالي: {count} في فئة «{role}». تم الاحتفاظ بالبيانات الموجودة.",
+  "householdRoleMinimumError": "لا يمكن أن يقل عدد الأعضاء في فئة «{role}» عن {count}. تم الاحتفاظ بالبيانات الموجودة.",
+  "numericValueUnavailable": "قيمة رقمية غير صالحة.",
+  "numericRateError": "اختر معدلًا صالحًا من الخيارات المتاحة.",
+  "numericProjectionUnavailable": "التوقع غير متاح لهذه القيم.",
+  "numericCaloriesUnavailable": "حساب السعرات غير متاح.",
+  "numericMacrosUnavailable": "توزيع المغذيات الكبرى غير متاح.",
+  "targetErrorMaximum": "لا يمكن أن يتجاوز الوزن المستهدف {max}."
 }

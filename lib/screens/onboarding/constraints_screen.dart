@@ -133,14 +133,14 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           tint: Tint.peach,
           adaptiveHint: true,
         ),
-        if (d.isFoyer && d.memberAllergens.isNotEmpty) ...[
+        if (d.isFoyer && d.memberAllergenNames(l).isNotEmpty) ...[
           InfoBanner(
             icon: AppIcons.shield,
             title: l.constraintsMemberAllergensTitle,
             text: [
               for (final a in ConstraintsScreen.allergenChoices(l))
-                if (a.$1.any(d.memberAllergens.containsKey))
-                  '${a.$2} (${{for (final c in a.$1) ...?d.memberAllergens[c]}.join(', ')})',
+                if (a.$1.any(d.memberAllergenNames(l).containsKey))
+                  '${a.$2} (${{for (final c in a.$1) ...?d.memberAllergenNames(l)[c]}.join(', ')})',
             ].join(' · '),
             background: Tint.peach.soft,
           ),

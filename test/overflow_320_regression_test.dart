@@ -74,7 +74,10 @@ void main() {
             }
           };
 
-          final data = OnboardingData()..startMode(AppMode.foyer);
+          final data = OnboardingData();
+          if (!['goal', 'profile', 'activity', 'smart_scale', 'cover_solo'].contains(entry.key)) {
+            data.startMode(AppMode.foyer);
+          }
           data.targetWeightKg = 70;
           addTearDown(data.dispose);
           try {

@@ -4,6 +4,8 @@ import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../onboarding/onboarding_flow.dart';
+import 'household_size_screen.dart';
+import 'profile_screen.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -43,6 +45,8 @@ class ActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L.of(context);
     final d = OnboardingScope.of(context);
+    if (d.isFoyer) return const HouseholdSizeScreen();
+    if (!d.isEligibleForIndividual) return const ProfileScreen();
     return OnboardingStepScaffold(
       horizontalPadding: ActivityTokens.gutter,
       subtitleColor: ActivityTokens.bodyInk,

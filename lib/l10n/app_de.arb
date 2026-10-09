@@ -242,7 +242,7 @@
   "profileTargeted": "Ziel",
   "profileProjection": "{weeks, plural, one{Etwa {weeks} Woche mit {rate} pro Woche} other{Etwa {weeks} Wochen mit {rate} pro Woche}}",
   "profileTargetDate": "Voraussichtlich erreicht um den {date}",
-  "profileAgeError": "Geben Sie ein Alter zwischen 14 und 100 Jahren an.",
+  "profileAgeError": "Geben Sie ein Alter zwischen 18 und 100 Jahren an.",
   "profileHeightError": "Geben Sie eine Größe zwischen 120 und 230 cm an.",
   "profileWeightError": "Geben Sie ein Gewicht zwischen 35 und 250 kg an.",
   "commonMultipleChoice": "Mehrfachauswahl",
@@ -646,5 +646,14 @@
   "targetErrorMissing": "Geben Sie Ihr Zielgewicht an.",
   "targetErrorLosing": "Um abzunehmen, muss das Ziel unter Ihrem aktuellen Gewicht liegen ({current}).",
   "targetErrorGaining": "Für Muskelaufbau muss das Ziel über Ihrem aktuellen Gewicht liegen ({current}).",
-  "targetErrorTooLow": "Dieses Gewicht ergäbe einen BMI von {bmi}. Unter 18,5 gilt das als Untergewicht mit Gesundheitsrisiken. Streben Sie für {height} mindestens {min} an."
+  "targetErrorTooLow": "Dieses Gewicht ergäbe einen BMI von {bmi}. Unter 18,5 gilt das als Untergewicht mit Gesundheitsrisiken. Streben Sie für {height} mindestens {min} an.",
+  "householdLastAdultError": "Im Haushalt muss mindestens eine erwachsene Person bleiben.",
+  "householdRoleLimitError": "Aktuelle Grenze: {count} in der Kategorie „{role}“. Vorhandene Daten bleiben erhalten.",
+  "householdRoleMinimumError": "Die Anzahl in der Kategorie „{role}“ darf nicht unter {count} liegen. Vorhandene Daten bleiben erhalten.",
+  "numericValueUnavailable": "Ungültiger Zahlenwert.",
+  "numericRateError": "Wählen Sie ein gültiges Tempo aus den angebotenen Optionen.",
+  "numericProjectionUnavailable": "Prognose für diese Werte nicht verfügbar.",
+  "numericCaloriesUnavailable": "Kalorienberechnung nicht verfügbar.",
+  "numericMacrosUnavailable": "Makroverteilung nicht verfügbar.",
+  "targetErrorMaximum": "Das Zielgewicht darf {max} nicht überschreiten."
 }
