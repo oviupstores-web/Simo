@@ -192,7 +192,7 @@ void main() {
     await tapLandingStart(t);
     await tapText(t, 'Pour la famille');
     await tapText(t, 'Continuer');
-    expect(find.textContaining('10 étapes rapides'), findsOneWidget);
+    expect(find.textContaining('9 étapes rapides'), findsOneWidget);
     await tapText(t, 'Commencer la configuration');
 
     // 1. Composition : famille Martin (2 adultes, 2 enfants) par défaut

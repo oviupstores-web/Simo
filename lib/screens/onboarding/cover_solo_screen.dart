@@ -82,7 +82,13 @@ class CoverSoloScreen extends StatelessWidget {
                           children: [
                             IconTile(
                               icon: f.$1,
-                              size: AppSizes.iconTileMd,
+                              illustrationAsset: const {
+                                AppIcons.soloNutrition: 'assets/images/new_icons/solo_nutrition.png',
+                                AppIcons.soloTime: 'assets/images/new_icons/solo_time.png',
+                                AppIcons.soloWaste: 'assets/images/new_icons/solo_waste.png',
+                              }[f.$1],
+                              illustrationSize: 60,
+                              size: 64,
                               iconSize: CoverSoloTokens.featureIconSize,
                               background: f.$2.soft,
                               foreground: f.$2.ink,

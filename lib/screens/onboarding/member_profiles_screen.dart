@@ -123,6 +123,7 @@ class _MemberCard extends StatelessWidget {
                         for (final a in allergies)
                           PillBadge(
                             l.membersAllergyChip(a),
+                            allowTextWrap: true,
                             icon: AppIcons.shield,
                             background: Tint.peach.soft,
                             foreground: Tint.peach.ink,
@@ -340,6 +341,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
             for (final a in ConstraintsScreen.allergenChoices(l))
               ToggleChip(
                 label: a.$2,
+                allowTextWrap: true,
                 icon: a.$3,
                 tint: a.$4,
                 selected: m.allergens.containsAll(a.$1),

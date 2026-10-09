@@ -2,134 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../l10n/formats.dart';
-import '../../models/food_images.dart';
+import '../../models/food_catalog.dart';
+import '../../models/pantry_values.dart';
+export '../../models/food_catalog.dart' show FoodCategory;
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-
-/// Catégorie de produit : emplacement et durée de conservation proposés par défaut.
-enum FoodCategory {
-  fruits(AppIcons.basket, PantryLocation.fruitBasket, 7, 'fruits'),
-  legumes(AppIcons.leaf, PantryLocation.fridge, 5, 'legumes'),
-  laitiers(AppIcons.egg, PantryLocation.fridge, 10, 'laitiers_oeufs'),
-  viandes(AppIcons.fish, PantryLocation.fridge, 3, 'viandes_poissons'),
-  epicerie(AppIcons.cupboard, PantryLocation.pantry, 180, 'epicerie_salee'),
-  sucre(AppIcons.sparkles, PantryLocation.pantry, 180, 'epicerie_sucree'),
-  surgeles(AppIcons.snowflake, PantryLocation.freezer, 90, 'surgeles');
-
-  const FoodCategory(this.icon, this.location, this.shelfDays, this.photo);
-
-  final String icon;
-  final PantryLocation location;
-  final int shelfDays;
-
-  /// Vignette photo (assets/images/categories/).
-  final String photo;
-
-  String label(L l) => switch (this) {
-    FoodCategory.fruits => l.categoryFruits,
-    FoodCategory.legumes => l.categoryVegetables,
-    FoodCategory.laitiers => l.categoryDairy,
-    FoodCategory.viandes => l.categoryMeatFish,
-    FoodCategory.epicerie => l.categorySavoryGrocery,
-    FoodCategory.sucre => l.categorySweetGrocery,
-    FoodCategory.surgeles => l.categoryFrozen,
-  };
-
-  /// Mots-clés sans accents (le nom saisi est ramené à la même forme par [FoodImages.fold]).
-  static const _keywords = {
-    FoodCategory.surgeles: ['surgel', 'glace'],
-    FoodCategory.fruits: [
-      'avocat',
-      'banane',
-      'pomme',
-      'poire',
-      'citron',
-      'fraise',
-      'orange',
-      'kiwi',
-      'raisin',
-      'mangue',
-      'clementine',
-      'myrtille',
-      'framboise',
-    ],
-    FoodCategory.legumes: [
-      'salade',
-      'epinard',
-      'carotte',
-      'courgette',
-      'tomate',
-      'brocoli',
-      'poivron',
-      'oignon',
-      'poireau',
-      'champignon',
-      'concombre',
-      'chou',
-    ],
-    // Avant les laitiers : « boeuf » contient « oeuf ».
-    FoodCategory.viandes: [
-      'poulet',
-      'boeuf',
-      'saumon',
-      'poisson',
-      'jambon',
-      'steak',
-      'dinde',
-      'porc',
-      'cabillaud',
-      'thon',
-      'crevette',
-      'viande',
-    ],
-    FoodCategory.laitiers: [
-      'yaourt',
-      'lait',
-      'fromage',
-      'beurre',
-      'creme',
-      'oeuf',
-      'feta',
-      'chevre',
-      'parmesan',
-      'emmental',
-    ],
-    FoodCategory.sucre: ['chocolat', 'biscuit', 'sucre', 'miel', 'confiture', 'cereale', 'gateau'],
-    FoodCategory.epicerie: [
-      'pate',
-      'riz',
-      'quinoa',
-      'lentille',
-      'conserve',
-      'huile',
-      'farine',
-      'semoule',
-      'haricot',
-      'pois chiche',
-      'sauce',
-      'vinaigre',
-      'ketchup',
-      'mayonnaise',
-      'moutarde',
-      'sel',
-      'poivre',
-      'epice',
-      'herbe',
-      'bouillon',
-    ],
-  };
-
-  /// Détection d'après le nom saisi (null si aucune correspondance).
-  static FoodCategory? detect(String name) {
-    final n = FoodImages.fold(name);
-    for (final e in _keywords.entries) {
-      if (e.value.any(n.contains)) return e.key;
-    }
-    return null;
-  }
-}
 
 /// pantry_addmanual — ajout manuel à la réserve. SPEC §7 : l'emplacement est obligatoire,
 /// pré-rempli selon la catégorie (yaourt → Réfrigérateur, pâtes → Placard, surgelé → Congélateur,
@@ -142,20 +21,16 @@ class PantryAddManualScreen extends StatefulWidget {
 }
 
 class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
-  static List<String> _units(L l) => [l.unitPieces2, 'g', 'kg', 'ml', 'L', l.unitPacks2];
-  static List<(String, String)> _suggestions(L l) => [
-    (l.pantrySuggestAvocado, l.unitPieces2),
-    (l.pantrySuggestFreshSalmon, 'g'),
-    (l.pantrySuggestEggs, l.unitPieces2),
-    (l.pantrySuggestPasta, 'g'),
-    (l.pantrySuggestPlainYogurt, l.unitPieces2),
-    (l.pantrySuggestMilk, 'L'),
-  ];
+  static PantryUnit _suggestedUnit(FoodIdentity food) => switch (food.id) {
+    'saumon' || 'pate' => PantryUnit.gram,
+    'lait' => PantryUnit.liter,
+    _ => PantryUnit.piece,
+  };
 
   final _name = TextEditingController();
   double _quantity = 1;
-  /// null tant que non choisi : la valeur par défaut dépend de la langue, donc calculée au premier build.
-  String? _unit;
+  PantryUnit _unit = PantryUnit.piece;
+  bool _quantityEdited = false;
   FoodCategory? _category;
   bool _categoryManual = false;
   PantryLocation? _location;
@@ -171,23 +46,30 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
   }
 
   DateTime get _today => DateUtils.dateOnly(DateTime.now());
+  DateTime _afterDays(int days) => DateTime(_today.year, _today.month, _today.day + days);
 
   void _setCategory(FoodCategory? c, {bool manual = false}) {
     setState(() {
       _category = c;
       if (manual) _categoryManual = true;
-      if (c != null && !_locationManual) _location = c.location;
-      if (c != null && !_expiresManual) _expires = _today.add(Duration(days: c.shelfDays));
+      final food = FoodCatalog.match(_name.text);
+      final matchingFood = food?.category == c ? food : null;
+      if (!_locationManual) _location = matchingFood?.suggestedLocation ?? c?.location;
+      if (!_expiresManual) {
+        final days = matchingFood != null ? matchingFood.suggestedDays : c?.shelfDays;
+        _expires = days == null ? null : _afterDays(days);
+      }
     });
   }
 
   void _onName(String value) {
-    if (!_categoryManual) _setCategory(FoodCategory.detect(value));
+    _setCategory(_categoryManual ? _category : FoodCategory.detect(value));
     if (_error != null && value.trim().isNotEmpty) setState(() => _error = null);
   }
 
   void _step(int dir) => setState(() {
-    final big = _unit == 'g' || _unit == 'ml';
+    _quantityEdited = true;
+    final big = _unit == PantryUnit.gram || _unit == PantryUnit.milliliter;
     final delta = big ? (_quantity >= 100 || (dir > 0 && _quantity >= 50) ? 50.0 : 10.0) : 1.0;
     _quantity = (_quantity + dir * delta).clamp(big ? 10 : 1, 100000).toDouble();
   });
@@ -195,7 +77,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
   String get _quantityLabel => Formats.of(context).number(_quantity, decimals: 2);
 
   String _dateLabel(L l, DateTime d) {
-    final days = DateUtils.dateOnly(d).difference(_today).inDays;
+    final days = PantryDraft.calendarDaysBetween(_today, d);
     final when = days == 0
         ? l.pantryAddToday
         : days == 1
@@ -207,17 +89,16 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _expires ?? _today.add(const Duration(days: 7)),
+      initialDate: _expires ?? _afterDays(7),
       firstDate: _today,
-      lastDate: _today.add(const Duration(days: 365 * 3)),
+      lastDate: _afterDays(365 * 3),
       locale: Localizations.localeOf(context),
     );
-    if (picked != null) {
-      setState(() {
-        _expires = picked;
-        _expiresManual = true;
-      });
-    }
+    if (!mounted || picked == null) return;
+    setState(() {
+      _expires = picked;
+      _expiresManual = true;
+    });
   }
 
   void _add() {
@@ -234,9 +115,15 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
     d.update(
       () => d.pantry.add(
         PantryDraft(
-          name: name[0].toUpperCase() + name.substring(1),
+          name: name,
+          foodId: FoodCatalog.match(name)?.id,
           quantity: _quantity,
-          unitLabel: _unit ?? L.of(context).unitPieces2,
+          unit: _unit,
+          expiryOrigin: _expires == null
+              ? ExpiryOrigin.unknown
+              : _expiresManual
+              ? ExpiryOrigin.userProvided
+              : ExpiryOrigin.estimated,
           location: _location!,
           expiresOn: _expires,
         ),
@@ -248,7 +135,7 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
   @override
   Widget build(BuildContext context) {
     final l = L.of(context);
-    final unit = _unit ?? l.unitPieces2;
+    final unit = _unit;
     Widget optionGrid(List<Widget> tiles) => LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < 360) {
@@ -308,36 +195,33 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
       onContinue: _add,
       children: [
         StepSectionTitle(l.pantryAddNameSection),
-        IconTextField(
-          icon: AppIcons.search,
-          hint: l.pantryAddNameHint,
-          controller: _name,
-          onChanged: _onName,
-        ),
+        IconTextField(icon: AppIcons.search, hint: l.pantryAddNameHint, controller: _name, onChanged: _onName),
         const SizedBox(height: AppSpace.x2_5),
         Wrap(
           spacing: AppSpace.x2,
           runSpacing: AppSpace.x2,
           children: [
-            for (final s in _suggestions(l))
+            for (final s in FoodCatalog.suggestions(l))
               ToggleChip(
-                label: s.$1,
+                label: s.$2,
                 leading: FoodThumb(
-                  photo: FoodImages.forName(s.$1),
-                  icon: FoodCategory.detect(s.$1)?.icon ?? AppIcons.leaf,
-                  tint: FoodCategory.detect(s.$1)?.location.tint ?? Tint.mint,
+                  photo: s.$1.photo,
+                  icon: s.$1.category.icon,
+                  tint: s.$1.suggestedLocation.tint,
                   size: AppSizes.chipBadge,
                   circle: true,
                 ),
                 selected: false,
                 onTap: () {
-                  _name.text = s.$1;
+                  _name.text = s.$2;
                   setState(() {
-                    _unit = s.$2;
-                    _quantity = s.$2 == 'g' ? 200 : 1;
+                    _unit = _suggestedUnit(s.$1);
+                    if (!_quantityEdited) _quantity = _unit == PantryUnit.gram ? 200 : 1;
+                    // Une valeur préremplie puis acceptée reste conservée aux choix suivants.
+                    _quantityEdited = true;
                     _categoryManual = false;
                   });
-                  _onName(s.$1);
+                  _onName(s.$2);
                 },
               ),
           ],
@@ -353,15 +237,14 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (final (i, u) in _units(l).indexed) ...[
+                    for (final (i, u) in PantryUnit.values.indexed) ...[
                       if (i > 0) const SizedBox(width: AppSpace.x1_5),
                       ToggleChip(
-                        label: u,
+                        label: u.label(l),
                         selected: unit == u,
                         onTap: () => setState(() {
                           _unit = u;
-                          if ((u == 'g' || u == 'ml') && _quantity < 10) _quantity = 100;
-                          if (!(u == 'g' || u == 'ml') && _quantity >= 10) _quantity = 1;
+                          _quantityEdited = true;
                         }),
                       ),
                     ],
@@ -372,13 +255,19 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           ],
         ),
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle(l.pantryAddCategorySection, hint: _category != null && !_categoryManual ? l.pantryAddCategoryAuto : null),
+        StepSectionTitle(
+          l.pantryAddCategorySection,
+          hint: _category != null && !_categoryManual ? l.pantryAddCategoryAuto : null,
+        ),
         optionGrid(categoryTiles),
         const SizedBox(height: AppSpace.x6),
         StepSectionTitle(l.pantryAddLocationSection, hint: l.pantryAddLocationRequired),
         optionGrid(locationTiles),
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle(l.pantryAddExpirySection, hint: _expires != null && !_expiresManual ? l.pantryAddExpiryEstimated : null),
+        StepSectionTitle(
+          l.pantryAddExpirySection,
+          hint: _expires != null && !_expiresManual ? l.pantryAddExpiryEstimated : null,
+        ),
         AppCard(
           onTap: _pickDate,
           padding: const EdgeInsets.all(AppSpace.x3_5),
@@ -401,12 +290,17 @@ class _PantryAddManualScreenState extends State<PantryAddManualScreen> {
           spacing: AppSpace.x2,
           runSpacing: AppSpace.x2,
           children: [
-            for (final s in [(3, l.pantryAdd3Days), (7, l.pantryAdd1Week), (14, l.pantryAdd2Weeks), (30, l.pantryAdd1Month)])
+            for (final s in [
+              (3, l.pantryAdd3Days),
+              (7, l.pantryAdd1Week),
+              (14, l.pantryAdd2Weeks),
+              (30, l.pantryAdd1Month),
+            ])
               ToggleChip(
                 label: s.$2,
-                selected: _expires != null && DateUtils.dateOnly(_expires!).difference(_today).inDays == s.$1,
+                selected: _expires != null && PantryDraft.calendarDaysBetween(_today, _expires!) == s.$1,
                 onTap: () => setState(() {
-                  _expires = _today.add(Duration(days: s.$1));
+                  _expires = _afterDays(s.$1);
                   _expiresManual = true;
                 }),
               ),

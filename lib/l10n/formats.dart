@@ -26,18 +26,44 @@ class Formats {
   static UnitSystem _defaultUnits(Locale locale) =>
       locale.countryCode == 'US' ? UnitSystem.imperial : UnitSystem.metric;
 
-  static const _currencies = {'US': 'USD', 'GB': 'GBP', 'CH': 'CHF', 'MA': 'MAD', 'TN': 'TND', 'DZ': 'DZD'};
+  static const _currencies = {
+    'US': 'USD',
+    'GB': 'GBP',
+    'CH': 'CHF',
+    'CA': 'CAD',
+    'AU': 'AUD',
+    'FR': 'EUR',
+    'DE': 'EUR',
+    'BE': 'EUR',
+    'MA': 'MAD',
+    'TN': 'TND',
+    'DZ': 'DZD',
+  };
 
   static String _defaultCurrency(Locale locale) => _currencies[locale.countryCode] ?? 'EUR';
 
   String get _tag => locale.toLanguageTag();
 
+  /// Les dollars restent identifiables lorsque la région ne correspond pas à leur devise.
+  String get currencySymbol {
+    const home = {'USD': 'US', 'CAD': 'CA', 'AUD': 'AU'};
+    if (home.containsKey(currency) && home[currency] != locale.countryCode) return currency;
+    return NumberFormat.simpleCurrency(locale: _tag, name: currency).currencySymbol;
+  }
+
+  String wholeNumber(int amount) => amount.abs() > NumericSafety.maxExactInteger ? amount.toString() : number(amount);
+
+  String priceWhole(int amount) => amount.abs() > NumericSafety.maxExactInteger
+      ? '$amount $currency'
+      : NumberFormat.currency(locale: _tag, name: currency, symbol: currencySymbol, decimalDigits: 0).format(amount);
+
   /// Prix depuis des centimes (la base stocke des centimes, décision du 2026-09-23).
-  String price(int cents) => NumberFormat.simpleCurrency(locale: _tag, name: currency).format(cents / 100);
+  String price(int cents) =>
+      NumberFormat.currency(locale: _tag, name: currency, symbol: currencySymbol).format(cents / 100);
 
   /// Prix sans les centimes, pour les gros montants (« 65 € »).
   String priceRounded(int cents) =>
-      NumberFormat.simpleCurrency(locale: _tag, name: currency, decimalDigits: 0).format(cents / 100);
+      NumberFormat.currency(locale: _tag, name: currency, symbol: currencySymbol, decimalDigits: 0).format(cents / 100);
 
   /// Arrondit à [decimals] chiffres, puis enlève les zéros inutiles à droite
   /// (75 kg, jamais 75,0 kg ; 0,75 kg/semaine mais 0,5, jamais 0,50 — comme les anciens
@@ -90,8 +116,9 @@ class Formats {
     if (!cm.isFinite || cm <= 0 || cm > NumericSafety.maxExactInteger) return l.numericValueUnavailable;
     if (units == UnitSystem.metric) return l.unitCentimeters(number(cm));
     final totalInches = cm / 2.54;
-    final feet = totalInches ~/ 12;
-    return l.unitFeetInches(feet, (totalInches - feet * 12).round());
+    final roundedInches = NumericSafety.round(totalInches);
+    if (roundedInches == null) return l.numericValueUnavailable;
+    return l.unitFeetInches(roundedInches ~/ 12, roundedInches % 12);
   }
 
   /// Masse d'un ingrédient : grammes, ou onces aux États-Unis.

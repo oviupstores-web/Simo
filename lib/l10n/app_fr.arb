@@ -388,7 +388,7 @@
     }
   },
   "budgetCustomHint": "Ex. : 420",
-  "budgetCustomSuffix": "€ / semaine",
+  "budgetCustomSuffix": "{currency} / semaine",
   "budgetMinError": "Le budget minimum est de {amount}.",
   "@budgetMinError": {
     "placeholders": {
@@ -405,14 +405,8 @@
       }
     }
   },
-  "budgetAdvisedText": "Calculé pour {people} personnes (30 € par adulte, 20 € par enfant, 25 € par bébé). Ajustez-le librement.",
-  "@budgetAdvisedText": {
-    "placeholders": {
-      "people": {
-        "type": "int"
-      }
-    }
-  },
+  "budgetAdvisedText": "Paramètres provisoires pour {people} personnes ({adult} par adulte, {child} par enfant, {baby} par bébé). Non vérifiés localement ; ajustables.",
+  "@budgetAdvisedText": {"placeholders": {"people": {"type": "int"}, "adult": {"type": "String"}, "child": {"type": "String"}, "baby": {"type": "String"}}},
   "budgetLimitTitle": "Votre budget est une limite, pas une estimation",
   "budgetLimitText": "Chaque menu est vérifié avant de vous être proposé : son coût estimé ne dépasse jamais ce montant.",
   "profileTitle": "Parlez-nous de vous",
@@ -533,12 +527,12 @@
   "constraintsEyebrowHousehold": "CUISINE UNIFIÉE",
   "constraintsTitleSolo": "Régimes & contraintes alimentaires",
   "constraintsTitleHousehold": "Régimes & contraintes partagées",
-  "constraintsSubtitleSolo": "Indiquez vos régimes, allergies et aliments exclus : aucun menu ne les contiendra.",
-  "constraintsSubtitleHousehold": "Définissez les règles communes à toute la tablée : aucun repas du foyer ne les enfreindra.",
-  "constraintsDietsSection": "Régimes alimentaires",
-  "constraintsAllergensSection": "Allergènes",
-  "constraintsAllergensHint": "Exclusion stricte",
-  "constraintsMemberAllergensTitle": "Déjà exclus grâce aux profils",
+  "constraintsSubtitleSolo": "Précisez votre régime, vos restrictions, vos problèmes alimentaires et vos goûts.",
+  "constraintsSubtitleHousehold": "Précisez les contraintes communes du foyer. Les allergies individuelles des profils restent conservées.",
+  "constraintsDietsSection": "Régime alimentaire",
+  "constraintsAllergensSection": "Allergies et problèmes alimentaires",
+  "constraintsAllergensHint": "Choix multiples",
+  "constraintsMemberAllergensTitle": "Contraintes déclarées dans les profils",
   "constraintsOtherAllergens": "Autres allergènes",
   "constraintsOtherAllergensCount": "Autres allergènes ({count})",
   "@constraintsOtherAllergensCount": {
@@ -548,11 +542,11 @@
       }
     }
   },
-  "constraintsExcludedSection": "Aliments exclus",
-  "constraintsExcludedHint": "Sur-mesure",
+  "constraintsExcludedSection": "Aliments non aimés",
+  "constraintsExcludedHint": "Saisie libre",
   "constraintsExcludedPlaceholder": "Ex. : coriandre, anchois, poivron…",
-  "constraintsInfoTitle": "Zéro compromis sur votre bien-être",
-  "constraintsInfoText": "Vous pourrez affiner vos goûts et ajouter d'autres exclusions à tout moment dans vos réglages.",
+  "constraintsInfoTitle": "Vos choix sont conservés",
+  "constraintsInfoText": "Cette liste reste contraignante, y compris les anciennes exclusions dont la nature n’a pas été clarifiée. Un besoin médical doit aussi être déclaré dans la section appropriée.",
   "dietOmnivore": "Omnivore",
   "@dietOmnivore": {
     "description": "SANTÉ — relecture humaine obligatoire avant publication (SPEC §10)"
@@ -563,11 +557,11 @@
   "dietNoPork": "Sans porc",
   "dietNoLactose": "Sans lactose",
   "dietNoGluten": "Sans gluten",
-  "allergenGluten": "Gluten",
+  "allergenGluten": "Céréales contenant du gluten",
   "@allergenGluten": {
     "description": "SANTÉ — relecture humaine obligatoire avant publication (SPEC §10)"
   },
-  "allergenGlutenText": "Blé, seigle, orge",
+  "allergenGlutenText": "Blé, seigle, orge, avoine, épeautre, kamut. Le code historique ne précise pas la nature du problème.",
   "allergenPeanuts": "Arachides",
   "allergenPeanutsText": "Cacahuètes & dérivés",
   "allergenSeafood": "Fruits de mer",
@@ -878,7 +872,7 @@
       }
     }
   },
-  "summaryExcludedList": "Exclus : {list}",
+  "summaryExcludedList": "Aliments non aimés / exclusions conservées : {list}",
   "@summaryExcludedList": {
     "placeholders": {
       "list": {
@@ -1409,5 +1403,28 @@
     "placeholders": {
       "max": {"type": "String"}
     }
-  }
+  },
+  "quickCheckAmbiguousStock": "Plusieurs entrées existent pour « {category} » à cet emplacement. Elles sont conservées ; aucun changement effectué.",
+  "@quickCheckAmbiguousStock": {"placeholders": {"category": {"type": "String"}}},
+  "budgetWholeError": "Saisissez un montant entier, sans séparateur décimal. Le dernier montant valide est conservé.",
+  "budgetInheritedUnknown": "Devise inconnue : le montant {amount} est conservé. Confirmez sa devise d’origine avant de continuer.",
+  "budgetConfirmCurrency": "Confirmer la devise d’origine",
+  "budgetCurrencyTitle": "Devise d’origine du budget",
+  "budgetCurrencyExplanation": "Choisissez uniquement la devise de ce montant enregistré. Aucune conversion ne sera effectuée.",
+  "budgetCurrencyConfirm": "Confirmer",
+  "budgetCurrencyCancel": "Annuler",
+  "budgetCurrencyUnknownShort": "Devise inconnue",
+  "@budgetCustomSuffix": {"placeholders": {"currency": {"type": "String"}}},
+  "@budgetInheritedUnknown": {"placeholders": {"amount": {"type": "String"}}},
+  "constraintsPrincipalHint": "Un seul choix",
+  "constraintsRestrictionsSection": "Restrictions alimentaires",
+  "constraintsRestrictionsDescription": "Combinables avec votre régime. Sans lactose ne signifie pas sans protéines de lait.",
+  "constraintsDietConflict": "Plusieurs régimes principaux ont été enregistrés. Choisissez explicitement un seul régime ; vos restrictions seront conservées.",
+  "constraintsAllergensDescription": "Ces choix enregistrent vos contraintes. Ils ne constituent ni un diagnostic ni une garantie de compatibilité médicale ou cœliaque.",
+  "allergenCrustaceans": "Crustacés",
+  "allergenCrustaceansText": "Crevettes, crabes, homards",
+  "allergenMolluscs": "Mollusques",
+  "allergenMolluscsText": "Moules, huîtres, calamars",
+  "constraintsUnknownCodes": "Codes historiques conservés, à vérifier : {codes}",
+  "@constraintsUnknownCodes": {"placeholders": {"codes": {"type": "String"}}}
 }

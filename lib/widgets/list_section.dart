@@ -101,9 +101,10 @@ class ItemRow extends StatelessWidget {
 
 /// Statut d'un produit en réserve (« Frais » / « À consommer »).
 class FreshnessStatus extends StatelessWidget {
-  const FreshnessStatus({super.key, required this.urgent});
+  const FreshnessStatus({super.key, required this.urgent, this.label});
 
   final bool urgent;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +116,7 @@ class FreshnessStatus extends StatelessWidget {
         Dot(color),
         const SizedBox(width: AppSpace.x1_5),
         Text(
-          urgent ? l.freshnessToUse : l.freshnessFresh,
+          label ?? (urgent ? l.freshnessToUse : l.freshnessFresh),
           style: AppText.of(AppFont.s12, weight: AppFont.semibold, color: color, lineHeight: 16),
         ),
       ],

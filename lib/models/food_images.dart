@@ -1,3 +1,5 @@
+import 'food_catalog.dart';
+
 /// Photos d'aliments (vignettes carrées tirées de design/stitch_images/, dans assets/images/food/).
 /// Un aliment sans photo garde son icône sur pastille (jamais de liste nue).
 abstract final class FoodImages {
@@ -59,12 +61,14 @@ abstract final class FoodImages {
   /// Chemin de la vignette pour un nom d'aliment, ou null si aucune photo ne correspond.
   /// La photo du catalogue la plus précise d'abord, sinon les vignettes par mots-clés.
   static String? forName(String name) {
+    final known = FoodCatalog.match(name);
     final words = _words(name);
     String? best;
     for (final i in ingredients) {
       if (words.contains(_words(i)) && i.length > (best?.length ?? 0)) best = i;
     }
     if (best != null) return 'assets/images/ingredients/$best.jpg';
+    if (known?.photo != null) return known!.photo;
     final n = fold(name);
     for (final (keys, file) in _rules) {
       if (keys.any(n.contains)) return 'assets/images/food/$file.jpg';

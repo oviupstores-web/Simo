@@ -18,6 +18,7 @@ class PillBadge extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: AppSpace.x2, vertical: AppSpace.x1),
     this.icon,
     this.borderRadius = AppRadius.pillR,
+    this.allowTextWrap = false,
   });
 
   /// Badge orange « À acheter / Populaire ».
@@ -30,9 +31,11 @@ class PillBadge extends StatelessWidget {
        foreground = AppColors.warn,
        weight = AppFont.bold,
        borderRadius = AppRadius.pillR,
-       icon = null;
+       icon = null,
+       allowTextWrap = false;
 
   final String label;
+  final bool allowTextWrap;
   final Color background;
   final Color foreground;
   final double size;
@@ -57,7 +60,7 @@ class PillBadge extends StatelessWidget {
               children: [
                 AppIcon(icon!, size: size + 2, color: foreground, strokeWidth: 2.4),
                 const SizedBox(width: AppSpace.x1),
-                text,
+                if (allowTextWrap) Flexible(child: text) else text,
               ],
             ),
     );

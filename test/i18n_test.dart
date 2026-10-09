@@ -27,6 +27,7 @@ void main() {
     'lib/theme/app_icons.dart', // tracés SVG
     'lib/widgets/app_icon.dart', // assemblage d'attributs SVG
     'lib/models/food_images.dart', // mots-clés de correspondance
+    'lib/models/food_catalog.dart', // aliases de reconnaissance, jamais affichés comme texte UI
   };
 
   /// Dossiers à ne pas scanner.

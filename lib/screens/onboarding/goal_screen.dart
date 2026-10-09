@@ -41,11 +41,13 @@ class GoalScreen extends StatelessWidget {
           if (i > 0) const SizedBox(height: AppSpace.x3),
           ChoiceCard(
             icon: g.$2,
+            illustrationSize: 60,
+            iconTileSize: 64,
             illustrationAsset: switch (g.$1) {
-              HealthGoal.pertePoids => 'assets/images/compare_goal_loss.png',
-              HealthGoal.priseMasse => 'assets/images/compare_goal_gain.png',
-              HealthGoal.seche => 'assets/images/compare_goal_definition.png',
-              HealthGoal.maintien => 'assets/images/compare_goal_balance.png',
+              HealthGoal.pertePoids => 'assets/images/new_icons/goal_loss.png',
+              HealthGoal.priseMasse => 'assets/images/new_icons/goal_gain.png',
+              HealthGoal.seche => 'assets/images/new_icons/goal_definition.png',
+              HealthGoal.maintien => 'assets/images/new_icons/goal_balance.png',
             },
             iconSize: GoalTokens.iconSize,
             centerIcon: true,

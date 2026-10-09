@@ -127,7 +127,7 @@ void main() {
 
   test('B09 déjà identifié : 182 cm doivent donner 6 pieds et 0 pouce', () {
     expect(Formats(const Locale('en', 'US')).height(l, 182), l.unitFeetInches(6, 0));
-  }, skip: 'B09 hors R01 : correction réservée à la phase 4 par Simo.');
+  });
 
   test('R01 conversion impériale : taille infinie ne doit pas crasher', () {
     expect(() => Formats(const Locale('en', 'US')).height(l, double.infinity), returnsNormally);

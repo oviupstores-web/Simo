@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../l10n/formats.dart';import 'package:flutter/services.dart';
+import '../../l10n/formats.dart';
+import '../../models/numeric_safety.dart';
 
 import '../../onboarding/onboarding_scope.dart';
+import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_flow.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-/// onboarding_budget (Solo 6/12) et onboarding_budget_household (Foyer 4/10).
-/// SPEC §6 : curseur 20 € → 350 € (pas de 5 €) + « Budget personnalisé » au-delà ;
-/// valeur de départ Solo ≈ 65 € ; plus de cartes prédéfinies ni de « 22 € économisés ».
+/// Budget Solo/Foyer : montants hebdomadaires entiers dans la devise du brouillon.
+/// Paramètres provisoires du prototype : curseur 20–350 par pas de 5,
+/// valeur Solo initiale 65 ; saisie personnalisée au-delà du curseur.
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
 
-  static const min = 20;
+  static const min = OnboardingData.minBudget;
   static const max = 350;
   static const step = 5;
 
@@ -32,15 +34,77 @@ class _BudgetScreenState extends State<BudgetScreen> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    OnboardingScope.read(context).initializeBudgetCurrency(Formats.of(context).currency);
+  }
+
+  Formats get _formats =>
+      Formats(Localizations.localeOf(context), currency: OnboardingScope.read(context).budgetCurrencyCode);
+  String _money(int amount) => OnboardingScope.read(context).budgetCurrencyUnknown
+      ? '${_formats.wholeNumber(amount)} —'
+      : _formats.priceWhole(amount);
+
+  String _portion(double amount) {
+    final cents = NumericSafety.round(amount * 100);
+    if (cents == null) return L.of(context).numericValueUnavailable;
+    return OnboardingScope.read(context).budgetCurrencyUnknown
+        ? '${_formats.number(amount, decimals: 2)} —'
+        : _formats.price(cents);
+  }
+
+  Future<void> _confirmCurrency() async {
+    final d = OnboardingScope.read(context);
+    final l = L.of(context);
+    String? selected;
+    final code = await showDialog<String>(
+      context: context,
+      builder: (dialog) => StatefulBuilder(
+        builder: (dialog, rebuild) => AlertDialog(
+          title: Text(l.budgetCurrencyTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l.budgetCurrencyExplanation),
+              DropdownButton<String>(
+                isExpanded: true,
+                value: selected,
+                items: [
+                  for (final code in OnboardingData.budgetCurrencies) DropdownMenuItem(value: code, child: Text(code)),
+                ],
+                onChanged: (value) => rebuild(() => selected = value),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(dialog).pop(), child: Text(l.budgetCurrencyCancel)),
+            TextButton(
+              onPressed: selected == null ? null : () => Navigator.of(dialog).pop(selected),
+              child: Text(l.budgetCurrencyConfirm),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted || code == null) return;
+    d.confirmBudgetCurrency(code);
+  }
+
   void _applyCustom(String text) {
-    final value = int.tryParse(text.trim());
+    final normalized = text.trim();
+    final value = RegExp(r'^\d+$').hasMatch(normalized) ? int.tryParse(normalized) : null;
     final d = OnboardingScope.read(context);
     if (text.trim().isEmpty) {
       setState(() => _error = null);
       return;
     }
-    if (value == null || value < BudgetScreen.min) {
-      setState(() => _error = L.of(context).budgetMinError(Formats.of(context).priceRounded(BudgetScreen.min * 100)));
+    if (value == null) {
+      setState(() => _error = L.of(context).budgetWholeError);
+      return;
+    }
+    if (value < BudgetScreen.min) {
+      setState(() => _error = L.of(context).budgetMinError(_money(BudgetScreen.min)));
       return;
     }
     setState(() => _error = null);
@@ -62,11 +126,16 @@ class _BudgetScreenState extends State<BudgetScreen> {
       eyebrow: l.budgetEyebrow,
       eyebrowIcon: AppIcons.budgetWallet,
       title: d.isFoyer ? l.budgetTitleHousehold : l.budgetTitleSolo,
-      subtitle: d.isFoyer
-          ? l.budgetSubtitleHousehold
-          : l.budgetSubtitleSolo,
-      onContinue: _error != null ? null : () => OnboardingFlow.next(context, OnbStep.budget),
+      subtitle: d.isFoyer ? l.budgetSubtitleHousehold : l.budgetSubtitleSolo,
+      onContinue: _error != null || d.budgetCurrencyUnknown || !d.hasValidBudgetAmount
+          ? null
+          : () => OnboardingFlow.next(context, OnbStep.budget),
       children: [
+        if (d.budgetCurrencyUnknown) ...[
+          FormError(message: l.budgetInheritedUnknown(_formats.wholeNumber(d.budgetEuros))),
+          TextLink(l.budgetConfirmCurrency, onTap: _confirmCurrency),
+          const SizedBox(height: AppSpace.x4),
+        ],
         AppCard(
           padding: EdgeInsets.zero,
           clip: true,
@@ -103,16 +172,21 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        AnimatedSwitcher(
-                          duration: AppMotion.fast,
-                          child: Text(
-                            '${d.budgetEuros}',
-                            key: ValueKey(d.budgetEuros),
-                            style: AppText.of(AppFont.s44, weight: AppFont.extrabold, color: AppColors.primaryDark),
+                        Flexible(
+                          child: AnimatedSwitcher(
+                            duration: AppMotion.fast,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                _formats.wholeNumber(d.budgetEuros),
+                                key: ValueKey(d.budgetEuros),
+                                style: AppText.of(AppFont.s44, weight: AppFont.extrabold, color: AppColors.primaryDark),
+                              ),
+                            ),
                           ),
                         ),
                         Text(
-                          ' € ',
+                          ' ${d.budgetCurrencyUnknown ? '—' : _formats.currencySymbol} ',
                           style: AppText.of(AppFont.s22, weight: AppFont.extrabold, color: AppColors.primaryDark),
                         ),
                         Text(l.budgetPerWeek, style: AppText.of(AppFont.s14, color: BudgetTokens.bodyInk)),
@@ -120,8 +194,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     ),
                     Text(
                       d.isFoyer
-                          ? l.budgetPerPortion(Formats.of(context).price((d.budgetPerPortion * 100).round()), d.weeklyPortions)
-                          : l.budgetPerMeal(Formats.of(context).price((d.budgetPerMeal * 100).round()), d.plannedMeals),
+                          ? l.budgetPerPortion(_portion(d.budgetPerPortion), d.weeklyPortions)
+                          : l.budgetPerMeal(_portion(d.budgetPerMeal), d.plannedMeals),
                       style: AppText.of(AppFont.s13, color: BudgetTokens.bodyInk),
                     ),
                     const SizedBox(height: AppSpace.x2),
@@ -130,7 +204,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       min: BudgetScreen.min.toDouble(),
                       max: BudgetScreen.max.toDouble(),
                       divisions: (BudgetScreen.max - BudgetScreen.min) ~/ BudgetScreen.step,
-                      semanticLabel: l.budgetSliderLabel(Formats.of(context).priceRounded(d.budgetEuros * 100)),
+                      semanticLabel: l.budgetSliderLabel(_money(d.budgetEuros)),
                       onChanged: (v) {
                         _custom.clear();
                         setState(() => _error = null);
@@ -145,8 +219,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(Formats.of(context).priceRounded(BudgetScreen.min * 100), style: AppText.meta.copyWith(color: BudgetTokens.bodyInk)),
-                          Text(Formats.of(context).priceRounded(BudgetScreen.max * 100), style: AppText.meta.copyWith(color: BudgetTokens.bodyInk)),
+                          Text(_money(BudgetScreen.min), style: AppText.meta.copyWith(color: BudgetTokens.bodyInk)),
+                          Text(_money(BudgetScreen.max), style: AppText.meta.copyWith(color: BudgetTokens.bodyInk)),
                         ],
                       ),
                     ),
@@ -159,24 +233,26 @@ class _BudgetScreenState extends State<BudgetScreen> {
         const SizedBox(height: AppSpace.x5),
         Text(l.budgetCustomTitle, style: AppText.of(AppFont.s15, weight: AppFont.semibold, lineHeight: 22)),
         const SizedBox(height: AppSpace.x1),
-        Text(l.budgetCustomText(Formats.of(context).priceRounded(BudgetScreen.max * 100)), style: AppText.caption.copyWith(color: BudgetTokens.bodyInk)),
+        Text(
+          l.budgetCustomText(_money(BudgetScreen.max)),
+          style: AppText.caption.copyWith(color: BudgetTokens.bodyInk),
+        ),
         const SizedBox(height: AppSpace.x2_5),
         IconTextField(
           icon: AppIcons.budgetPiggy,
           hint: l.budgetCustomHint,
           controller: _custom,
           keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          suffix: l.budgetCustomSuffix,
+          suffix: l.budgetCustomSuffix(d.budgetCurrencyUnknown ? '—' : _formats.currencySymbol),
           onChanged: _applyCustom,
         ),
-        FormError(message: _error),
+        FormError(message: _error ?? (!d.hasValidBudgetAmount ? l.budgetMinError(_money(BudgetScreen.min)) : null)),
         if (d.isFoyer) ...[
           const SizedBox(height: AppSpace.x4),
           InfoBanner(
             icon: AppIcons.people,
-            title: l.budgetAdvisedTitle(Formats.of(context).priceRounded(d.recommendedBudget * 100)),
-            text: l.budgetAdvisedText(d.peopleCount),
+            title: l.budgetAdvisedTitle(_money(d.recommendedBudget)),
+            text: l.budgetAdvisedText(d.peopleCount, _money(30), _money(20), _money(25)),
             textColor: BudgetTokens.bodyInk,
             background: AppColors.leafySoft,
           ),

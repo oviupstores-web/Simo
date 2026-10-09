@@ -7,29 +7,35 @@ import '../../onboarding/onboarding_flow.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-/// onboarding_constraints (Solo 8/12) et _household (Foyer 5/10) — régimes, allergènes, aliments exclus.
-/// Foyer : règles communes à toute la tablée ; les allergies des profils sont rappelées et déjà exclues.
-/// Codes alignés sur la base (diets, allergens) ; « halal » fusionné avec « sans porc ».
+/// Contraintes Solo/Foyer : régime unique, restrictions, problèmes alimentaires et goûts.
+/// Les allergies individuelles et les codes historiques restent distincts et conservés.
 class ConstraintsScreen extends StatefulWidget {
   const ConstraintsScreen({super.key});
 
-  static List<(String, String, String, Tint)> diets(L l) => [
-    ('vegetarien', l.dietVegetarian, 'assets/images/constraint_diets/vegetarian.png', Tint.leafy),
-    ('vegan', l.dietVegan, 'assets/images/constraint_diets/vegan.png', Tint.mint),
-    ('pescetarien', l.dietPescatarian, 'assets/images/constraint_diets/pescatarian.png', Tint.sky),
-    ('sans_porc', l.dietNoPork, 'assets/images/constraint_diets/no_pork.png', Tint.lavender),
-    ('sans_lactose', l.dietNoLactose, 'assets/images/constraint_diets/no_lactose.png', Tint.sky),
-    ('sans_gluten', l.dietNoGluten, 'assets/images/constraint_diets/no_gluten.png', Tint.peach),
+  static List<(String, String, String, Tint)> principalDiets(L l) => [
+    ('vegetarien', l.dietVegetarian, 'assets/images/new_icons/diet_vegetarian.png', Tint.leafy),
+    ('vegan', l.dietVegan, 'assets/images/new_icons/diet_vegan.png', Tint.mint),
+    ('pescetarien', l.dietPescatarian, 'assets/images/new_icons/diet_pescatarian.png', Tint.sky),
   ];
 
-  /// Allergènes courants (un choix peut couvrir plusieurs codes). Dernier champ : photo (assets/images/allergens/).
+  static List<(String, String, String, Tint)> restrictions(L l) => [
+    ('sans_porc', l.dietNoPork, 'assets/images/new_icons/diet_no_pork.png', Tint.lavender),
+    ('sans_lactose', l.dietNoLactose, 'assets/images/new_icons/diet_no_lactose.png', Tint.sky),
+    ('sans_gluten', l.dietNoGluten, 'assets/images/new_icons/diet_no_gluten.png', Tint.peach),
+  ];
+
+  /// Adaptateur historique pour le récapitulatif : mêmes six codes.
+  static List<(String, String, String, Tint)> diets(L l) => [...principalDiets(l), ...restrictions(l)];
+
+  /// Un choix par code ; les deux catégories marines réutilisent la photo existante.
   static List<(List<String>, String, String, String, Tint, String)> commonAllergens(L l) => [
-    (['gluten'], l.allergenGluten, l.allergenGlutenText, AppIcons.wheat, Tint.peach, 'gluten'),
     (['arachides'], l.allergenPeanuts, l.allergenPeanutsText, AppIcons.nut, Tint.sand, 'arachides'),
-    (['crustaces', 'mollusques'], l.allergenSeafood, l.allergenSeafoodText, AppIcons.shrimp, Tint.sky, 'fruits_de_mer'),
+    (['fruits_a_coque'], l.allergenTreeNuts, l.allergenTreeNutsText, AppIcons.nut, Tint.leafy, 'fruits_a_coque'),
     (['oeufs'], l.allergenEggs, l.allergenEggsText, AppIcons.egg, Tint.peach, 'oeufs'),
     (['soja'], l.allergenSoy, l.allergenSoyText, AppIcons.sprout, Tint.leafy, 'soja'),
-    (['fruits_a_coque'], l.allergenTreeNuts, l.allergenTreeNutsText, AppIcons.nut, Tint.leafy, 'fruits_a_coque'),
+    (['crustaces'], l.allergenCrustaceans, l.allergenCrustaceansText, AppIcons.shrimp, Tint.sky, 'fruits_de_mer'),
+    (['mollusques'], l.allergenMolluscs, l.allergenMolluscsText, AppIcons.shrimp, Tint.sky, 'fruits_de_mer'),
+    (['gluten'], l.allergenGluten, l.allergenGlutenText, AppIcons.wheat, Tint.peach, 'gluten'),
   ];
 
   /// Le code est aussi le nom de la photo.
@@ -49,10 +55,11 @@ class ConstraintsScreen extends StatefulWidget {
     for (final a in otherAllergens(l)) ([a.$1], a.$2, a.$3, a.$4),
   ];
 
-  /// Libellés des allergènes d'un ensemble de codes (« Fruits de mer » couvre 2 codes).
+  /// Chaque code reste visible, y compris les codes hérités inconnus.
   static List<String> allergenLabels(L l, Set<String> codes) => [
     for (final a in allergenChoices(l))
       if (a.$1.any(codes.contains)) a.$2,
+    ...codes.difference(allergenChoices(l).expand((a) => a.$1).toSet()),
   ];
 
   @override
@@ -92,14 +99,16 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
       eyebrowIcon: AppIcons.checkCircle,
       title: d.isFoyer ? l.constraintsTitleHousehold : l.constraintsTitleSolo,
       subtitle: d.isFoyer ? l.constraintsSubtitleHousehold : l.constraintsSubtitleSolo,
-      onContinue: () {
-        _addFood();
-        OnboardingFlow.next(context, OnbStep.constraints);
-      },
+      onContinue: d.hasDietConflict
+          ? null
+          : () {
+              _addFood();
+              OnboardingFlow.next(context, OnbStep.constraints);
+            },
       children: [
         StepSectionTitle(
           l.constraintsDietsSection,
-          hint: l.commonMultipleChoice,
+          hint: l.constraintsPrincipalHint,
           icon: AppIcons.leaf,
           tint: Tint.leafy,
           adaptiveHint: true,
@@ -110,18 +119,51 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           children: [
             ToggleChip(
               label: l.dietOmnivore,
-              leading: const _DietIllustration(asset: 'assets/images/constraint_diets/omnivore.png', tint: Tint.peach),
-              selected: d.diets.isEmpty,
-              onTap: () => d.update(d.diets.clear),
-              height: AppSizes.quickActionHeight,
+              leading: const _DietIllustration(asset: 'assets/images/new_icons/diet_omnivore.png', tint: Tint.peach),
+              selected: d.principalDiets.isEmpty,
+              onTap: () => d.selectPrincipalDiet(null),
+              height: 56,
             ),
-            for (final diet in ConstraintsScreen.diets(l))
+            for (final diet in ConstraintsScreen.principalDiets(l))
+              ToggleChip(
+                label: diet.$2,
+                leading: _DietIllustration(asset: diet.$3, tint: diet.$4),
+                selected: d.diets.contains(diet.$1),
+                onTap: () => d.selectPrincipalDiet(diet.$1),
+                height: 56,
+              ),
+          ],
+        ),
+        if (d.hasDietConflict) ...[const SizedBox(height: AppSpace.x3), FormError(message: l.constraintsDietConflict)],
+        if (d.diets.difference(ConstraintsScreen.diets(l).map((a) => a.$1).toSet()).isNotEmpty) ...[
+          const SizedBox(height: AppSpace.x3),
+          FormError(
+            message: l.constraintsUnknownCodes(
+              d.diets.difference(ConstraintsScreen.diets(l).map((a) => a.$1).toSet()).join(', '),
+            ),
+          ),
+        ],
+        const SizedBox(height: AppSpace.x6),
+        StepSectionTitle(
+          l.constraintsRestrictionsSection,
+          hint: l.commonMultipleChoice,
+          icon: AppIcons.leaf,
+          tint: Tint.leafy,
+          adaptiveHint: true,
+        ),
+        Text(l.constraintsRestrictionsDescription, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
+        const SizedBox(height: AppSpace.x2_5),
+        Wrap(
+          spacing: AppSpace.x2,
+          runSpacing: AppSpace.x2,
+          children: [
+            for (final diet in ConstraintsScreen.restrictions(l))
               ToggleChip(
                 label: diet.$2,
                 leading: _DietIllustration(asset: diet.$3, tint: diet.$4),
                 selected: d.diets.contains(diet.$1),
                 onTap: () => d.update(() => d.diets.toggle(diet.$1)),
-                height: AppSizes.quickActionHeight,
+                height: 56,
               ),
           ],
         ),
@@ -133,6 +175,16 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
           tint: Tint.peach,
           adaptiveHint: true,
         ),
+        Text(l.constraintsAllergensDescription, style: AppText.of(AppFont.s14, color: AppColors.ink2)),
+        const SizedBox(height: AppSpace.x3),
+        if (d.allAllergens.difference(ConstraintsScreen.allergenChoices(l).expand((a) => a.$1).toSet()).isNotEmpty) ...[
+          FormError(
+            message: l.constraintsUnknownCodes(
+              d.allAllergens.difference(ConstraintsScreen.allergenChoices(l).expand((a) => a.$1).toSet()).join(', '),
+            ),
+          ),
+          const SizedBox(height: AppSpace.x3),
+        ],
         if (d.isFoyer && d.memberAllergenNames(l).isNotEmpty) ...[
           InfoBanner(
             icon: AppIcons.shield,
@@ -244,10 +296,11 @@ class _DietIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     decoration: BoxDecoration(color: tint.soft, shape: BoxShape.circle),
-    child: ExcludeSemantics(child: Image.asset(asset, fit: BoxFit.contain)),
+    alignment: Alignment.center,
+    child: ExcludeSemantics(child: Image.asset(asset, width: 44, height: 44, fit: BoxFit.contain)),
   );
 }
 
@@ -298,7 +351,7 @@ class _ResponsiveAllergenGrid extends StatelessWidget {
               children: [
                 Expanded(child: _tile(allergens[i])),
                 const SizedBox(width: AppSpace.x2),
-                Expanded(child: _tile(allergens[i + 1])),
+                Expanded(child: i + 1 < allergens.length ? _tile(allergens[i + 1]) : const SizedBox.shrink()),
               ],
             ),
           ),

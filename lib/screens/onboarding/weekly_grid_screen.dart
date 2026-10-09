@@ -31,7 +31,7 @@ class WeeklyGridScreen extends StatelessWidget {
         });
     });
     final n = d.plannedMeals;
-    final perDay = (n / 7).toStringAsFixed(n % 7 == 0 ? 0 : 1).replaceAll('.', ',');
+    final perDay = Formats.of(context).number(n / 7, decimals: 1);
 
     return OnboardingStepScaffold(
       horizontalPadding: WeeklyGridTokens.gutter,
@@ -39,9 +39,7 @@ class WeeklyGridScreen extends StatelessWidget {
       step: OnboardingFlow.number(context, OnbStep.grid),
       totalSteps: OnboardingFlow.total(context),
       title: d.isFoyer ? l.gridTitleHousehold : l.gridTitleSolo,
-      subtitle: d.isFoyer
-          ? l.gridSubtitleHousehold
-          : l.gridSubtitleSolo,
+      subtitle: d.isFoyer ? l.gridSubtitleHousehold : l.gridSubtitleSolo,
       onContinue: n == 0 ? null : () => OnboardingFlow.next(context, OnbStep.grid),
       children: [
         Wrap(
@@ -81,7 +79,9 @@ class WeeklyGridScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(child: Text(l.gridDayColumn, style: AppText.meta.copyWith(color: WeeklyGridTokens.bodyInk))),
+                  Expanded(
+                    child: Text(l.gridDayColumn, style: AppText.meta.copyWith(color: WeeklyGridTokens.bodyInk)),
+                  ),
                   for (final m in _meals(l))
                     SizedBox(
                       width: AppSizes.gridColumn,

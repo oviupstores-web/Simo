@@ -7,6 +7,7 @@ import 'package:flutter/material.dart' show ChangeNotifier, DateUtils, Locale, V
 
 import '../models/pantry_location.dart';
 import '../models/numeric_safety.dart';
+import '../models/pantry_values.dart';
 
 export '../models/pantry_location.dart';
 
@@ -142,26 +143,60 @@ typedef MealSlot = (int day, MealType meal);
 class PantryDraft {
   PantryDraft({
     required this.name,
-    required this.quantity,
-    required this.unitLabel,
+    this.quantity,
+    String? unitLabel,
+    PantryUnit? unit,
     required this.location,
     this.expiresOn,
     this.source = 'manuel',
-  });
+    this.foodId,
+    this.declaredCategory,
+    this.declaredStock,
+    this.expiryOrigin = ExpiryOrigin.unknown,
+  }) : unitLabel = unitLabel ?? unit?.id ?? '',
+       unit = unit ?? PantryUnit.fromLegacy(unitLabel ?? '');
 
   final String name;
-  final double quantity;
+  final double? quantity;
 
   /// Unité telle que saisie (« pièce(s) », « g », « kg »…), convertie en g/ml/pièce à l'enregistrement.
   final String unitLabel;
+  final PantryUnit? unit;
+  final String? foodId;
+  final QuickCategory? declaredCategory;
+  final QuickStock? declaredStock;
+  final ExpiryOrigin expiryOrigin;
+  QuickCategory? get quickCategory =>
+      source == 'verification_rapide' ? declaredCategory ?? QuickCategory.fromLegacy(name) : null;
+  QuickStock? get quickStock =>
+      source == 'verification_rapide' ? declaredStock ?? QuickStock.fromLegacy(unitLabel) : null;
+  String displayName(L l) => quickCategory?.label(l) ?? name;
+  String displayUnit(L l) => unit?.display(l, quantity) ?? unitLabel;
+  PantryDraft withQuickStock(QuickCategory category, QuickStock stock) => PantryDraft(
+    name: name,
+    quantity: quantity,
+    unitLabel: unitLabel,
+    unit: unit,
+    location: location,
+    expiresOn: expiresOn,
+    source: source,
+    foodId: foodId,
+    declaredCategory: category,
+    declaredStock: stock,
+    expiryOrigin: expiryOrigin,
+  );
   final PantryLocation location;
   final DateTime? expiresOn;
   final String source;
 
+  /// Écart entre dates civiles : aucun jour perdu lors d'un changement d'heure.
+  static int calendarDaysBetween(DateTime from, DateTime to) =>
+      DateTime.utc(to.year, to.month, to.day).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
+
   int? get daysLeft {
     if (expiresOn == null) return null;
     final today = DateUtils.dateOnly(DateTime.now());
-    return DateUtils.dateOnly(expiresOn!).difference(today).inDays;
+    return calendarDaysBetween(today, expiresOn!);
   }
 }
 
@@ -227,13 +262,64 @@ class OnboardingData extends ChangeNotifier {
   bool wantsScale = false;
   // Étape 5 — grille des repas (par défaut : déjeuners et dîners)
   final Set<MealSlot> slots = {...soloDefaultSlots};
-  // Étape 6 — budget hebdomadaire en euros (SPEC §6 : Solo ≈ 65 €)
-  int budgetEuros = 65;
+  // Paramètres nominaux provisoires du prototype, sans conversion de change.
+  static const minBudget = 20;
+  int _budgetAmount = 65;
+  String? _budgetCurrencyCode;
+  bool _budgetInherited = false;
+  int get budgetEuros => _budgetAmount; // API historique, valeur entière inchangée.
+  set budgetEuros(int value) {
+    _budgetAmount = value;
+    if (_budgetCurrencyCode == null) _budgetInherited = true;
+  }
+
+  bool get hasValidBudgetAmount => _budgetAmount >= minBudget;
+  String? get budgetCurrencyCode => _budgetCurrencyCode;
+  bool get budgetCurrencyUnknown => _budgetInherited && _budgetCurrencyCode == null;
+  static const budgetCurrencies = ['EUR', 'GBP', 'USD', 'CAD', 'AUD', 'CHF', 'MAD', 'TND', 'DZD'];
+  void initializeBudgetCurrency(String code) {
+    if (_budgetInherited || _budgetCurrencyCode != null) return;
+    if (!budgetCurrencies.contains(code)) throw ArgumentError.value(code, 'currency');
+    _budgetCurrencyCode = code;
+  }
+
+  /// Restauration explicite : aucune déduction à partir de la région actuelle.
+  void restoreBudget({required int amount, String? currency}) {
+    if (currency != null && !budgetCurrencies.contains(currency)) throw ArgumentError.value(currency, 'currency');
+    update(() {
+      _budgetAmount = amount;
+      _budgetCurrencyCode = currency;
+      _budgetInherited = true;
+      budgetEdited = true;
+    });
+  }
+
+  void confirmBudgetCurrency(String code) {
+    if (!budgetCurrencies.contains(code)) throw ArgumentError.value(code, 'currency');
+    if (_budgetCurrencyCode != null && _budgetCurrencyCode != code) throw StateError('budget_currency_locked');
+    update(() => _budgetCurrencyCode = code);
+  }
+
   // Étape 7 — mode de gestion
   ManagementMode management = ManagementMode.mixte;
   // Étape 8 — contraintes
+  // Codes historiques conservés : régime principal et restrictions restent compatibles.
+  static const principalDietCodes = {'vegetarien', 'vegan', 'pescetarien'};
   final Set<String> diets = {};
+  Set<String> get principalDiets => diets.intersection(principalDietCodes);
+  bool get hasDietConflict => principalDiets.length > 1;
+
+  /// Résolution uniquement sur action explicite ; restrictions et codes inconnus intacts.
+  void selectPrincipalDiet(String? code) {
+    if (code != null && !principalDietCodes.contains(code)) throw ArgumentError.value(code, 'diet');
+    update(() {
+      diets.removeAll(principalDietCodes);
+      if (code != null) diets.add(code);
+    });
+  }
+
   final Set<String> allergens = {};
+  // Liste historiquement contraignante : aucune conversion automatique en préférence facultative.
   final List<String> excludedFoods = [];
   // Étape 9 — types de cuisine appréciés (vide = toutes)
   final Set<String> cuisinePreferences = {};
@@ -259,11 +345,11 @@ class OnboardingData extends ChangeNotifier {
     if (mode == m) return;
     update(() {
       mode = m;
-      budgetEdited = false;
+      if (!_budgetInherited) budgetEdited = false;
       slots
         ..clear()
         ..addAll(m == AppMode.foyer ? foyerDefaultSlots : soloDefaultSlots);
-      budgetEuros = m == AppMode.foyer ? recommendedBudget : 65;
+      if (!_budgetInherited) _budgetAmount = m == AppMode.foyer ? recommendedBudget : 65;
     });
   }
 
@@ -380,7 +466,7 @@ class OnboardingData extends ChangeNotifier {
   }
 
   void _refreshBudget() {
-    if (isFoyer && !budgetEdited) budgetEuros = recommendedBudget;
+    if (isFoyer && !budgetEdited && !_budgetInherited) _budgetAmount = recommendedBudget;
   }
 
   /// Portions servies sur la semaine (une par personne et par repas planifié).
@@ -601,6 +687,34 @@ class OnboardingData extends ChangeNotifier {
       : v.toStringAsFixed(1).replaceAll('.', ',');
 
   static String formatRate(double r) => r.toString().replaceAll('.', ',');
+
+  /// Une identité rapide n'est jamais l'identité d'un produit manuel ou d'un lot.
+  List<PantryDraft> quickMatches(QuickCategory category, PantryLocation location) => pantry
+      .where((p) => p.source == 'verification_rapide' && p.quickCategory == category && p.location == location)
+      .toList();
+
+  /// false = plusieurs lignes historiques : aucune sélection arbitraire ni mutation.
+  bool declareQuickStock(QuickCategory category, PantryLocation location, QuickStock stock, L l) {
+    final matches = quickMatches(category, location);
+    if (matches.length > 1) return false;
+    if (matches.isEmpty) {
+      update(
+        () => pantry.add(
+          PantryDraft(
+            name: category.label(l),
+            location: location,
+            source: 'verification_rapide',
+            declaredCategory: category,
+            declaredStock: stock,
+          ),
+        ),
+      );
+    } else if (matches.single.quickStock != stock) {
+      final index = pantry.indexOf(matches.single);
+      update(() => pantry[index] = matches.single.withQuickStock(category, stock));
+    }
+    return true;
+  }
 
   // --- Calculs -------------------------------------------------------
 

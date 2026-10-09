@@ -18,9 +18,11 @@ class ToggleChip extends StatelessWidget {
     this.leading,
     this.onRemove,
     this.height = AppSizes.chipHeight,
+    this.allowTextWrap = false,
   });
 
   final String label;
+  final bool allowTextWrap;
   final bool selected;
   final VoidCallback? onTap;
   final String? icon;
@@ -52,7 +54,8 @@ class ToggleChip extends StatelessWidget {
         child: AnimatedContainer(
           duration: AppMotion.normal,
           curve: AppMotion.curve,
-          height: height,
+          height: allowTextWrap ? null : height,
+          constraints: allowTextWrap ? BoxConstraints(minHeight: height) : null,
           padding: EdgeInsetsDirectional.only(start: hasBadge ? AppSpace.x1_5 : AppSpace.x3_5, end: AppSpace.x3_5),
           decoration: BoxDecoration(
             color: selected ? AppColors.mint : AppColors.card,
@@ -67,10 +70,18 @@ class ToggleChip extends StatelessWidget {
                 AppIcon(AppIcons.check, size: 15, color: fg, strokeWidth: 2.6),
                 const SizedBox(width: AppSpace.x1_5),
               ],
-              Text(
-                label,
-                style: AppText.of(AppFont.s13, weight: AppFont.semibold, color: fg, lineHeight: 18),
-              ),
+              if (allowTextWrap)
+                Flexible(
+                  child: Text(
+                    label,
+                    style: AppText.of(AppFont.s13, weight: AppFont.semibold, color: fg, lineHeight: 18),
+                  ),
+                )
+              else
+                Text(
+                  label,
+                  style: AppText.of(AppFont.s13, weight: AppFont.semibold, color: fg, lineHeight: 18),
+                ),
               if (selected && onRemove == null && lead != null) ...[
                 const SizedBox(width: AppSpace.x1_5),
                 AppIcon(AppIcons.check, size: 14, color: fg, strokeWidth: 2.6),

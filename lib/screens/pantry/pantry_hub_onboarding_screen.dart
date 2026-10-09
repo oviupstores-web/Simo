@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/formats.dart';
 import '../../models/food_images.dart';
+import '../../models/pantry_values.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -75,7 +76,13 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     AppCard(
                       child: Row(
                         children: [
-                          const IconTile(icon: AppIcons.pantryReserve, size: AppSizes.iconTileMd, iconSize: 26),
+                          const IconTile(
+                            icon: AppIcons.pantryReserve,
+                            illustrationAsset: 'assets/images/new_icons/pantry_reserve.png',
+                            illustrationSize: 52,
+                            size: AppSizes.iconTileMd,
+                            iconSize: 26,
+                          ),
                           const SizedBox(width: AppSpace.x3),
                           Expanded(
                             child: Column(
@@ -123,6 +130,9 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                         children: [
                           const IconTile(
                             icon: AppIcons.pantryQuickCheck,
+                            illustrationAsset: 'assets/images/new_icons/pantry_quick_check.png',
+                            illustrationSize: 52,
+                            size: 56,
                             background: AppColors.orangeSoft,
                             foreground: AppColors.warn,
                           ),
@@ -387,8 +397,10 @@ class _LocationSection extends StatelessWidget {
   final ValueChanged<PantryDraft> onRemove;
 
   static String _qty(BuildContext context, PantryDraft i) {
-    final q = Formats.of(context).number(i.quantity, decimals: 2);
-    final unit = i.unitLabel.contains('(s)') ? i.unitLabel.replaceAll('(s)', i.quantity > 1 ? 's' : '') : i.unitLabel;
+    final l = L.of(context);
+    if (i.quickStock != null) return i.quickStock!.label(l);
+    final q = i.quantity == null ? '' : Formats.of(context).number(i.quantity!, decimals: 2);
+    final unit = i.displayUnit(l);
     return unit.isEmpty ? q : '$q $unit';
   }
 
@@ -457,7 +469,7 @@ class _PantryItemRow extends StatelessWidget {
   final String timeLeft;
   final VoidCallback onRemove;
 
-  Widget _product() => Row(
+  Widget _product(BuildContext context) => Row(
     children: [
       FoodThumb(
         photo: FoodImages.forName(item.name),
@@ -470,7 +482,7 @@ class _PantryItemRow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.name, style: AppText.rowTitle),
+            Text(item.displayName(L.of(context)), style: AppText.rowTitle),
             Text(quantity, style: AppText.meta),
           ],
         ),
@@ -480,7 +492,7 @@ class _PantryItemRow extends StatelessWidget {
 
   Widget _removeButton(BuildContext context) => Semantics(
     button: true,
-    label: L.of(context).pantryRemoveItem(item.name),
+    label: L.of(context).pantryRemoveItem(item.displayName(L.of(context))),
     child: GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onRemove,
@@ -502,7 +514,7 @@ class _PantryItemRow extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(child: _product()),
+                    Expanded(child: _product(context)),
                     _removeButton(context),
                   ],
                 ),
@@ -515,7 +527,12 @@ class _PantryItemRow extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        FreshnessStatus(urgent: item.daysLeft! <= 2),
+                        FreshnessStatus(
+                          urgent: item.daysLeft! <= 2,
+                          label: item.expiryOrigin == ExpiryOrigin.estimated
+                              ? L.of(context).pantryAddExpiryEstimated
+                              : null,
+                        ),
                         const Spacer(),
                         Text(timeLeft, textAlign: TextAlign.end, style: AppText.meta),
                       ],
@@ -527,9 +544,12 @@ class _PantryItemRow extends StatelessWidget {
 
           return Row(
             children: [
-              Expanded(child: _product()),
+              Expanded(child: _product(context)),
               if (item.daysLeft != null) ...[
-                FreshnessStatus(urgent: item.daysLeft! <= 2),
+                FreshnessStatus(
+                  urgent: item.daysLeft! <= 2,
+                  label: item.expiryOrigin == ExpiryOrigin.estimated ? L.of(context).pantryAddExpiryEstimated : null,
+                ),
                 const SizedBox(width: AppSpace.x2),
                 SizedBox(
                   width: AppSizes.thumbW,

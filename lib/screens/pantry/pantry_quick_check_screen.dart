@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../onboarding/onboarding_data.dart';
+import '../../models/pantry_values.dart';
 import '../../onboarding/onboarding_scope.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -14,15 +15,7 @@ class PantryQuickCheckScreen extends StatefulWidget {
   const PantryQuickCheckScreen({super.key});
 
   static List<(String, String, PantryLocation, String)> categories(L l) => [
-    (l.quickCheckPastaRice, AppIcons.wheat, PantryLocation.pantry, 'categories/epicerie_salee'),
-    (l.quickCheckOilCondiments, AppIcons.drop, PantryLocation.pantry, 'ingredients/huile_olive'),
-    (l.quickCheckEggsDairy, AppIcons.egg, PantryLocation.fridge, 'categories/laitiers_oeufs'),
-    (l.quickCheckCansAndSauce, AppIcons.cupboard, PantryLocation.pantry, 'categories/conserves_sauces'),
-    (l.quickCheckFreshVeg, AppIcons.leaf, PantryLocation.fridge, 'categories/legumes'),
-    (l.quickCheckFruit, AppIcons.basket, PantryLocation.fruitBasket, 'categories/fruits'),
-    (l.quickCheckFlourSugar, AppIcons.bag, PantryLocation.pantry, 'categories/farine_sucre'),
-    (l.quickCheckSpicesHerbs, AppIcons.sparkles, PantryLocation.pantry, 'categories/epices_herbes'),
-    (l.quickCheckFrozenMeatFish, AppIcons.snowflake, PantryLocation.freezer, 'categories/viandes_poissons_surgeles'),
+    for (final c in QuickCategory.values) (c.label(l), c.icon, c.location, c.photo),
   ];
 
   @override
@@ -30,36 +23,33 @@ class PantryQuickCheckScreen extends StatefulWidget {
 }
 
 class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
-  final _state = <int, _Stock>{};
-
+  final _state = <QuickCategory, _Stock>{};
+  String? _error;
   int get _count => _state.values.where((s) => s != _Stock.none).length;
-
-  void _cycle(int i) => setState(() {
-    _state[i] = switch (_state[i] ?? _Stock.none) {
+  void _cycle(QuickCategory category) => setState(() {
+    _error = null;
+    _state[category] = switch (_state[category] ?? _Stock.none) {
       _Stock.none => _Stock.present,
       _Stock.present => _Stock.some,
       _Stock.some => _Stock.none,
     };
   });
-
   void _save() {
     final l = L.of(context);
     final d = OnboardingScope.read(context);
-    d.update(() {
-      for (final e in _state.entries) {
-        if (e.value == _Stock.none) continue;
-        final c = PantryQuickCheckScreen.categories(l)[e.key];
-        d.pantry.add(
-          PantryDraft(
-            name: c.$1,
-            quantity: 1,
-            unitLabel: e.value == _Stock.some ? l.quickCheckSomeStored : l.quickCheckInStock,
-            location: c.$3,
-            source: 'verification_rapide',
-          ),
-        );
+    final active = _state.entries.where((e) => e.value != _Stock.none).toList();
+    // Vérification complète avant toute mutation : un cas ambigu n'enregistre rien.
+    for (final e in active) {
+      final location = e.key.location;
+      if (d.quickMatches(e.key, location).length > 1) {
+        setState(() => _error = l.quickCheckAmbiguousStock(e.key.label(l)));
+        return;
       }
-    });
+    }
+    for (final e in active) {
+      final location = e.key.location;
+      d.declareQuickStock(e.key, location, e.value == _Stock.some ? QuickStock.some : QuickStock.present, l);
+    }
     Navigator.of(context).pop();
   }
 
@@ -85,22 +75,20 @@ class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
           ),
         ),
         const SizedBox(height: AppSpace.x4),
-        for (final (i, c) in PantryQuickCheckScreen.categories(l).indexed) ...[
+        for (final (i, c) in QuickCategory.values.indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x2),
           _CategoryRow(
-            label: c.$1,
-            icon: c.$2,
-            location: c.$3,
-            photo: c.$4,
-            stock: _state[i] ?? _Stock.none,
-            onTap: () => _cycle(i),
+            label: c.label(l),
+            icon: c.icon,
+            location: c.location,
+            photo: c.photo,
+            stock: _state[c] ?? _Stock.none,
+            onTap: () => _cycle(c),
           ),
         ],
+        FormError(message: _error),
         const SizedBox(height: AppSpace.x4),
-        InfoBanner(
-          icon: AppIcons.bulb,
-          text: l.quickCheckInfoText,
-        ),
+        InfoBanner(icon: AppIcons.bulb, text: l.quickCheckInfoText),
       ],
     );
   }
@@ -150,12 +138,7 @@ class _CategoryRow extends StatelessWidget {
           ),
           child: Row(
             children: [
-              FoodThumb(
-                photo: 'assets/images/$photo.jpg',
-                icon: icon,
-                tint: location.tint,
-                size: AppSizes.iconTileMd,
-              ),
+              FoodThumb(photo: 'assets/images/$photo.jpg', icon: icon, tint: location.tint, size: AppSizes.iconTileMd),
               const SizedBox(width: AppSpace.x3),
               Expanded(
                 child: Text(label, style: AppText.of(AppFont.s14, weight: AppFont.semibold, lineHeight: 20)),

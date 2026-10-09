@@ -57,6 +57,13 @@ class ManagementModeScreen extends StatelessWidget {
           if (i > 0) const SizedBox(height: ManagementTokens.cardGap),
           ChoiceCard(
             icon: m.$2,
+            illustrationAsset: switch (m.$1) {
+              ManagementMode.courses => 'assets/images/new_icons/management_shopping.png',
+              ManagementMode.reserves => 'assets/images/new_icons/management_pantry.png',
+              ManagementMode.mixte => 'assets/images/new_icons/management_mixed.png',
+            },
+            illustrationSize: 60,
+            iconTileSize: 64,
             iconSize: ManagementTokens.iconSize,
             centerIcon: true,
             title: m.$3,

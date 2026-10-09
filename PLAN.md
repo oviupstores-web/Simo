@@ -1,5 +1,36 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## Fin de session — 9 octobre 2026 — état de reprise prioritaire
+
+Cet état remplace les bilans intermédiaires historiques ci-dessous pour la reprise.
+
+- Phases 1, 2, 3, 4, 4 bis et 5 : terminées dans leurs périmètres validés.
+- Phase 6A : diagnostic visuel et documentaire terminé ; rapport conservé. Phase 6B : non commencée. Phase 7 : non commencée.
+- Les 23 nouvelles icônes 3D sont intégrées ; copies PNG RGBA transparentes, originaux intacts. Pastilles agrandies : Objectif/Activité/Gestion/couverture Solo et Zéro gaspillage Famille à 64 px avec images de 60 px ; régimes/restrictions à 48/44 px ; Vérification rapide à 56/52 px. « Ma réserve » reste à 56/52 px conformément à la demande de Simo.
+- Dimensions provisoirement validées par Simo. **Validation personnelle du rendu sur Xiaomi : retour utilisateur encore attendu**, ne pas la déclarer terminée.
+- **Installation Android effectuée et prouvée le 9 octobre 2026** sur le seul appareil ADB Xiaomi autorise, Xiaomi 2201117PG. Compilation debug des modifications locales réussie ; les 23 assets RGBA de l'APK sont identiques aux copies locales. `adb install -r` : `Success`, sans désinstallation ni effacement des données. Identifiant `com.menoo.app` et configuration de signature debug inchangés.
+- Dernier lancement vérifié : `am start -W` → `Status: ok`, activité `com.menoo.app/.MainActivity`, processus 16704 toujours actif et application au premier plan. Aucun crash ni erreur Flutter bloquante observé dans ce contrôle de démarrage ; messages Android/Xiaomi non bloquants présents. Aucune capture automatique du téléphone.
+- Dernier bilan de tests : **935 réussites et 17 échecs identifiés**, soit 13 Golden historiques et 4 débordements de couverture ES/IT à 320 px. Aucun nouvel échec lié à l'agrandissement ; 114 tests ciblés réussis. `flutter analyze --no-pub` sans problème ; `git diff --check` réussi. Tests non relancés pour cette sauvegarde.
+- Rapports actuels : `reports/AGRANDISSEMENT_PASTILLES_3D.md`, `reports/CORRECTION_ICONES_3D.md`, `reports/PHASE6A_DIAGNOSTIC_VISUEL_DOCUMENTAIRE.md`.
+- Git : branche `master`, dernier commit `4f569a0`. Corrections locales, tests, documentation, assets et originaux encore non commités. Les six images provisoires non suivies de `assets/images/landing/` restent locales ; elles sont incluses dans la sauvegarde complète, sans ajout à Git.
+- Sauvegarde de fin de session : copie complète distincte hors du projet, incluant `.git`, les fichiers ignorés, tous les assets et modifications locales ; emplacement et contrôle SHA-256 consignés dans le rapport de sauvegarde externe et la réponse de fin de session. Aucun commit ni push.
+
+### Prochaine intervention
+
+1. Recueillir le retour visuel de Simo sur la version déjà installée : Objectif, Activité, Gestion, couvertures Solo/Famille, contraintes alimentaires et Réserve. Ne pas réinstaller automatiquement ; si une nouvelle installation devient nécessaire, obtenir une nouvelle autorisation.
+2. Reprendre la phase 6B uniquement après validation et autorisation explicites.
+3. Réserver la phase 7 pour la suite, sans l'anticiper.
+
+Session arrêtée à la demande de Simo. Aucune modification de code applicatif, image, Supabase, installation Android ou nouvelle phase pendant la sauvegarde.
+
+## Intégration des 23 icônes — 2026-10-09
+
+- Affectations finales autorisées : quatre objectifs Solo, quatre activités Solo, trois modes de gestion Solo/Famille, trois avantages Solo, Zéro gaspillage Famille, sept régimes/restrictions, deux cartes du hub Réserve. Ma réserve et Réserves uniquement distincts. Aucun allergène, autre pictogramme familial ou navigation basse remplacé.
+- 23 originaux conservés ; copies PNG RGB 256 px dans assets/images/new_icons/. 41 059 971 → 2 131 899 octets (−94,81 %). Fonds opaques conservés faute de détourage garanti ; cadres clairs visibles à valider.
+- Tailles existantes conservées : 40 px Objectif/Activité/régimes, 36 Gestion/avantages Solo, 28 Zéro gaspillage Famille, 26/24 hub. ChoiceCard reçoit un paramètre de taille optionnel, défaut 40 inchangé ; Gestion utilise 36.
+- 90 rendus avant réussis ; 113 contrôles ciblés après réussis. Dix comparatifs et planche des tailles dans reports/INTEGRATION_23_ICONES.md. Suite complète : **934 réussites / 17 échecs préexistants / 0 ignoré** ; analyse et diff check sans problème. Références Golden non modifiées.
+- Phases 1–5 conservées. Aucune correction 6B/7, nouveau dessin, suppression d’ancienne icône, changement métier, commit/push, Supabase ou installation. Arrêt et validation visuelle attendue.
+
 ## Corrections après audit — 2026-10-09
 
 Mission validée par Simo : sept phases successives, validation entre chaque phase.
@@ -9,11 +40,59 @@ Aucune installation Android, intervention Supabase, suppression, commit ou push 
 |---|---|---|
 | 1 | B01/B02/B03 : noms, cuisinier principal et limites familiales | Validée techniquement par Simo ; corrections conservées |
 | 2 | R01 : entrées numériques, calculs et dates | R01 conservé ; Solo 18+ et Famille sans transformation appliqués ; autres propositions scientifiques en attente |
-| 3 | B04/B05/B06/B07 et R02 : Réserve et calendrier | À faire ; non commencée |
-| 4 | B08/B09/B10 : formats régionaux ; CAD/AUD à documenter | À faire ; non commencée |
-| 5 | B11 : compteur Famille, Solo et 7A | À faire ; non commencée |
+| 3 | B04/B05/B06/B07 et R02 : Réserve et calendrier | Résultats validés par Simo dans le périmètre testé ; corrections conservées |
+| 4 | B08/B09/B10 : formats régionaux | Terminée selon Simo ; corrections conservées |
+| 4 bis | Restructuration de l’étape 8 « Contraintes alimentaires » | Corrections autorisées appliquées ; 65 tests ciblés réussis ; validation du résultat attendue |
+| 5 | B11 : compteur Famille, Solo et 7A | B11 corrigé ; compteurs/navigation FR/EN/DE vérifiés ; validation du résultat attendue |
 | 6 | Q01 : références visuelles et divergences documentaires | À faire ; aucune référence remplacée |
 | 7 | D01–D04 et R03 : doublons, nettoyage et textes longs | À faire ; aucune suppression |
+
+### Phase 5 — compteur Famille corrigé et vérifié, 2026-10-09
+
+- Source réelle inchangée : OnboardingFlow.solo 11 étapes, foyer 9. Couverture Famille : nombre fixe 10 remplacé par foyer.length ; aucune étape ni navigation modifiée. Assert de parcours obsolète 10 remplacé par 9 dans solo_flow_test.dart.
+- 42 nouveaux contrôles : avant 28 réussites / 14 échecs (10 de compteur et 4 débordements ES/IT préexistants) ; après 38 réussites / 4 échecs ES/IT à 320 px. Les 33 contrôles FR/EN/DE, ordres et parcours existants passent. Retours, trois modes de gestion, Réserve hors compteur et retour au récapitulatif vérifiés ; réponses conservées.
+- Suite complète finale : **821 réussites / 17 échecs / 0 ignoré**. Échecs : 13 golden historiques + 4 débordements de couvertures ES/IT 320 px révélés par les nouveaux tests ; aucun nouveau défaut dans le périmètre de lancement. FR/EN/DE 320/390 et six langues à 390 passent. Aucun golden modifié ; les débordements hors périmètre restent à traiter après autorisation.
+- Analyse Flutter et diff check sans problème. 127 fichiers source/localisations/tests/migrations/PNG Landing identiques au snapshot ; phases 1–4 bis préservées. Rapport : `reports/PHASE5_CORRECTIONS_ET_TESTS.md`.
+- Aucun changement Supabase, nutrition, Solo 18+, contraintes, devises, Réserve, design/illustrations, commit/push ou build/installation Android. **Arrêt après phase 5 ; phases 6–7 non commencées.**
+
+### Phase 4 bis — restructuration autorisée de l’étape 8, 2026-10-09
+
+- Quatre sections dans le même écran : régime principal unique, restrictions indépendantes, allergies/problèmes alimentaires, aliments non aimés. Composants et illustrations existants conservés.
+- Omnivore retire uniquement les codes principaux ; les restrictions et codes inconnus restent intacts. Anciennes combinaisons multiples conservées jusqu’au choix explicite ; poursuite bloquée, y compris depuis un accès direct au récapitulatif.
+- Crustacés et mollusques séparés, 14 codes uniques au total. Code gluten conservé, libellé céréales contenant du gluten, sans assimilation au blé ou à la maladie cœliaque. Sept autres allergènes restent dans le déroulant. Grille impaire protégée.
+- Allergies des adultes/enfants/bébés conservées indépendamment des choix communs ; inconnus signalés et préservés. Saisie libre inchangée ; anciennes exclusions toujours contraignantes, aucune conversion en préférence facultative.
+- Six langues conservées ; nouvelles formulations médicales et allergènes à relire humainement avant publication. Promesse de compatibilité médicale/cœliaque retirée des textes concernés ; aucun moteur ni Supabase modifié.
+- Avant : 42 tests de reproduction, 42 échecs attendus. Après : 42 réussites + 23 contrôles supplémentaires = **65 réussites / 0 échec**. Contrôles FR/EN/DE à 320/390 px, six langues, récapitulatif et rôles familiaux inclus. Suite complète finale : **783 réussites / 13 échecs visuels historiques / 0 ignoré**, soit **772 réussites / 0 échec** dans le sous-ensemble pertinent. Analyse finale et diff check sans erreur. Trois débordements familiaux révélés par la première suite ont été corrigés sans modifier les assertions existantes. Rapport : `reports/PHASE4BIS_CORRECTIONS_ET_TESTS.md`.
+- 168 fichiers préexistants du snapshot lib/test/Landing sont identiques, dont formats régionaux, Budget, Réserve et tests des phases précédentes. Seuls les fichiers de ce périmètre et localisations générées ont changé.
+- Arrêt après phase 4 bis ; validation du résultat attendue. **Phases 5–7 non commencées.** Aucun changement nutrition/Solo 18+/règles Famille, illustration, Supabase, commit/push ou installation.
+
+### Phase 4 — corrections autorisées et vérifiées, 2026-10-09
+
+- Référence conservée : master / 4f569a0. Corrections locales de phase 3 et six images provisoires Landing préservées ; aucun commit/push ni installation.
+- B08 : budget entier associé à un code ISO explicite ; FR/DE/BE EUR, GB GBP, US USD, CA CAD, AU AUD, CH CHF. Tous les montants du Budget et du récapitulatif suivent ce code. Langue et pays séparés ; aucune conversion de change.
+- Anciens budgets : montant exact conservé, devise inconnue explicitement identifiée, confirmation sans présélection sur le Budget existant. Aucune déduction depuis la région ; retour à cette étape depuis le récapitulatif si nécessaire. Budget ancien sous 20 conservé, à corriger explicitement avant de poursuivre.
+- Saisie entière stricte : 65,50 et 65.50 refusés avec message traduit, dernier montant valide conservé. Paramètres nominaux 65, curseur 20–350/pas 5 et coefficients familiaux inchangés ; indications provisoires non vérifiées localement. Prix de démo/abonnement inchangés.
+- B09 : arrondi des pouces totaux puis division/modulo ; 182 cm = 6 ft 0 in. Centimètres de référence et protections R01 conservés ; test auparavant différé réactivé.
+- B10 : moyenne de grille via Formats.number et locale complète ; aucune quantité interne changée.
+- Avant : 131 diagnostics = 87 réussites / 44 échecs. Après : **131 réussites / 0 échec**, plus **38 nouveaux contrôles / 0 échec**. Suite complète : **718 réussites / 13 échecs visuels historiques / 0 test différé** ; sous-ensemble pertinent hors fichiers golden/démarrage : **707 réussites / 0 échec**. FR/EN/DE à 320/390 px et régressions phases 1–3 passent ; analyse sans problème et diff check sans erreur.
+- Rapport : `reports/PHASE4_CORRECTIONS_ET_TESTS.md`. Validation du résultat attendue. **Phase 4 bis et phases 5–7 non commencées.** Supabase, nutrition, Solo 18+, règles Famille, design et illustrations préservés.
+
+### Phase 3 — corrections autorisées et vérifiées, 2026-10-09
+
+- B04/B05 : identités alimentaires stables et aliases précis ; suggestions et photos existantes cohérentes dans les six langues ; noms libres conservés, choix manuel pour inconnus/ambiguïtés. Pommes de terre crues : légumes/placard/aucune date automatique.
+- B06 : clé source + catégorie rapide stable + emplacement ; validation identique sans ajout ; statut modifié actualisé. Produits manuels, lieux distincts et doublons historiques préservés ; ambiguïté traduite avant toute mutation. Non ne supprime rien.
+- B07 : unités stables, traduction à l’affichage ; unités et quantités héritées des six langues conservées. Statuts qualitatifs séparés ; aucun poids/volume mesuré inventé. Quantités choisies/préremplies non remplacées par langue, unité ou suggestion suivante.
+- Provenance des dates estimées/choisies/inconnues ; aucune date manuelle écrasée. R02 protégé par mounted après calendrier. Un décalage civil de date au changement d’heure, révélé par les nouveaux tests, est corrigé dans la Réserve seulement ; aucune durée ni formule nutritionnelle changée.
+- Reproductions avant : 31 réussites / 49 échecs sur 80 tests. Après : 80 réussites ; 69 régressions supplémentaires passent. Contrôle pertinent : **537 réussites, 0 échec, 1 B09 différé** ; analyse sans problème et diff check sans erreur. Suite complète finale : **548 réussites, 13 échecs visuels historiques, 1 B09 différé**, code 1 dû uniquement aux références visuelles.
+- Rapport détaillé : `reports/PHASE3_CORRECTIONS_ET_TESTS.md`. Les 13 références visuelles historiques sont laissées intactes, B09 reste en phase 4. Aucun commit/push, Supabase, installation Android, design, illustration ou suppression. **Arrêt après phase 3 ; attendre la validation de Simo. Phases 4 à 7 non commencées.**
+
+### Phase 3 — diagnostic et plan, 2026-10-09
+
+- Référence vérifiée : master, commit GitHub 4f569a0 ; seuls les six assets Landing provisoires sont non suivis au début. Aucun fichier applicatif modifié.
+- Test ajouté : `test/phase3_pantry_diagnostic_test.dart`, 80 cas, 31 réussites / 49 échecs attendus reproduisant B04/B05/B06/B07 et R02. Classification par sous-chaînes, suggestions/images françaises, répétitions du stock rapide, unités traduites persistées et setState après fermeture confirmés.
+- Commande avec régressions existantes : **275 réussites / 49 échecs phase 3 / 1 B09 différé**. Les 244 contrôles existants passent. Les 18 rendus Réserve FR/EN/DE à 320/390 passent ; analyse Flutter sans problème. Tests de reproduction laissés en échec jusqu’à correction autorisée.
+- Plan précis : `reports/PHASE3_DIAGNOSTIC_ET_PLAN.md`. Déduplication proposée uniquement pour source + catégorie rapide stable + emplacement, sans fusion manuelle ni suppression historique. Politique « statut modifié » à valider ; pommes de terre : Placard proposé sans durée automatique inventée.
+- Attendre l’accord de Simo sur ces règles avant toute correction. Aucun changement nutritionnel, Famille, design, illustrations ou Supabase ; aucun commit/push, installation ou suppression. Phases 4 à 7 non commencées.
 
 ### Rectification produit après audit scientifique — 2026-10-09
 
@@ -67,7 +146,7 @@ Aucune installation Android, intervention Supabase, suppression, commit ou push 
 
 - **2026-10-02 — Arret pour aujourd hui, sauvegarde de fin de session** : demande de Simo, aucune nouvelle modification fonctionnelle. Derniere version compilee et installee : Mode de gestion, trois icones 36 px au trait 1.0 centrees verticalement ; demarrage et logs controles sans erreur. Ecrans Activite, Balance, Grille et Budget egalement corriges et installes pendant cette session. Demain : reprendre depuis le Mode de gestion puis auditer l ecran suivant affiche sur le telephone (detour Reserve si Mixte ou Reserves uniquement). Ne pas modifier les choix personnels pour avancer. Respecter audit reel, corrections ciblees, apercu, validation puis installation sur demande. Attention : les marges 14 px, ecarts 10 px et textes bleus proposes pour Mode de gestion n ont pas ete appliques ; seuls ses icones et leur centrage ont ete valides. Sauvegarde complete hors projet dans le dossier backups de la session Codex, label fin-session.
 
-- **2026-10-02 — Icones Mode de gestion validees et installees** : SVG sac de courses, placard et mixte, taille 36 px, trait 1.0, pastilles centrees verticalement. APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r avec conservation des donnees. Demarrage verifie sur telephone, logs sans erreur. Autres elements du mode de gestion conserves ; harmonisation generale proposee non appliquee. Rendu sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+- **2026-10-02 — Icones Mode de gestion validees et installees** : SVG sac de courses, placard et mixte, taille 36 px, trait 1.0, pastilles centrees verticalement. APK release compile puis installe sur Xiaomi autorise via adb install -r avec conservation des donnees. Demarrage verifie sur telephone, logs sans erreur. Autres elements du mode de gestion conserves ; harmonisation generale proposee non appliquee. Rendu sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
 
 - **2026-10-02 — Mode de gestion : icones centrees** : option centerIcon activee uniquement sur les trois cartes ManagementModeScreen a la demande de Simo. Trait 1.0, taille 36 px, autres elements conserves. Apercu Flutter et six tests de debordement reussis. Aucune installation.
 
@@ -75,21 +154,21 @@ Aucune installation Android, intervention Supabase, suppression, commit ou push 
 
 - **2026-10-02 — Mode de gestion : proposition icones premium** : trio approuve pour preparation par Simo, sac avec baguette/feuille, placard ouvert avec provisions, sac et bocal avec deux fleches courbes. SVG trait 1.4, taille 36 px, limite aux trois icones de cartes. Textes, couleurs, marges, alignements et navigation conserves ; harmonisation generale non appliquee. Apercu Flutter reussi, a valider. Aucune installation.
 
-- **2026-10-02 — Budget valide et installe** : apercu valide par Simo, APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r sans effacer les donnees. Demarrage verifie sur telephone et logs sans erreur. Marges 14 px, textes secondaires bleu sombre, badge rayon 10 px et icones portefeuille/tirelire affinees ; photo, valeurs, curseur et logique conserves. Rendu Budget sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+- **2026-10-02 — Budget valide et installe** : apercu valide par Simo, APK release compile puis installe sur Xiaomi autorise via adb install -r sans effacer les donnees. Demarrage verifie sur telephone et logs sans erreur. Marges 14 px, textes secondaires bleu sombre, badge rayon 10 px et icones portefeuille/tirelire affinees ; photo, valeurs, curseur et logique conserves. Rendu Budget sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
 
 - **2026-10-02 — Budget : apercu harmonise a valider** : ajustements approuves, marges carte/champ/CTA 14 px, textes secondaires bleu sombre, badge photo rayon 10 px, icones portefeuille et tirelire detaillees au trait fin. Photo, montants, curseur, textes et fonctionnement conserves. Apercu Flutter, six tests de debordement et analyse reussis. Aucune installation ; attendre validation du visuel.
 
-- **2026-10-02 — Grille des repas validee et installee** : apercu et icone assiette/couverts valides par Simo, APK release compile puis installe sur CEUGAIC6AEVGWCNF via adb install -r, donnees conservees. Demarrage verifie sur telephone et logs sans erreur. Marges 14 px, textes secondaires bleu sombre et icone dediee ; cases, selections et navigation conservees. Rendu de la grille sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+- **2026-10-02 — Grille des repas validee et installee** : apercu et icone assiette/couverts valides par Simo, APK release compile puis installe sur Xiaomi autorise via adb install -r, donnees conservees. Demarrage verifie sur telephone et logs sans erreur. Marges 14 px, textes secondaires bleu sombre et icone dediee ; cases, selections et navigation conservees. Rendu de la grille sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
 
 - **2026-10-02 — Icone Dej + Diner clarifiee** : premiere modification trop discrete selon Simo ; pictogramme remplace par assiette avec fourchette et couteau. Uniquement le SVG de cette action change, taille et bouton conserves. Apercu Flutter reussi ; aucune installation.
 
 - **2026-10-02 — Grille des repas : apercu propose** : demande de visuel avant installation ; marges 14 px, introduction/en-tetes/compteur secondaire/conseil en bleu sombre et icone couverts au trait fin. Structure, cellules, selections et textes conserves. Apercu Flutter, six tests de debordement et analyse reussis. Aucune installation ; attendre validation de Simo.
 
-- **2026-10-02 — Balance validee et installee** : apercu valide puis APK release compile et installe sur demande de Simo via adb install -r sur CEUGAIC6AEVGWCNF. Donnees conservees. Demarrage sur telephone verifie, logs sans erreur. Marges 14 px et textes introduction/info bleu sombre ; autres elements conserves. Rendu Balance sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
+- **2026-10-02 — Balance validee et installee** : apercu valide puis APK release compile et installe sur demande de Simo via adb install -r sur Xiaomi autorise. Donnees conservees. Demarrage sur telephone verifie, logs sans erreur. Marges 14 px et textes introduction/info bleu sombre ; autres elements conserves. Rendu Balance sur telephone a verifier par Simo en poursuivant le parcours. Aucune publication.
 
 - **2026-10-02 — Balance : apercu harmonise a valider** : corrections approuvees par Simo limitees aux marges horizontales carte et CTA 14 px et aux textes introduction/info en bleu sombre. Photo, benefices, boutons et navigation conserves. Apercu Flutter et six tests de debordement reussis, analyse sans erreur. Aucune installation.
 
-- **2026-10-02 — Niveau d activite valide et installe** : icones affinees validees par Simo, APK release compile puis installe via adb install -r sur CEUGAIC6AEVGWCNF, sans effacer les donnees. Demarrage verifie sur telephone et logs sans erreur. Apercu et six tests de debordement reussis ; rendu Activite sur telephone a verifier par Simo en poursuivant le parcours (application relancee sur accueil). Aucune publication.
+- **2026-10-02 — Niveau d activite valide et installe** : icones affinees validees par Simo, APK release compile puis installe via adb install -r sur Xiaomi autorise, sans effacer les donnees. Demarrage verifie sur telephone et logs sans erreur. Apercu et six tests de debordement reussis ; rendu Activite sur telephone a verifier par Simo en poursuivant le parcours (application relancee sur accueil). Aucune publication.
 
 - **2026-10-02 — Icones Activite affinees sur demande** : remplacement des silhouettes schematiques par quatre pictogrammes detailles au trait 1.4 (bureau, empreintes de marche, chaussure de course, haltere). Taille 36 px, couleurs et pastilles conservees ; aucun autre ajustement. Apercu a valider, aucune installation.
 
@@ -246,7 +325,7 @@ But : empêcher qu'on recrée des comptes pour consommer gratuitement les appels
 - [x] PATH utilisateur : flutter, platform-tools (adb), cmdline-tools, JBR, `C:\src\supabase`
 - [x] `flutter doctor` : Flutter ✅, Android toolchain ✅
 - [x] Supabase CLI 2.117.0 dans `C:\src\supabase`
-- [x] Téléphone détecté : Xiaomi 2201117PG (série CEUGAIC6AEVGWCNF)
+- [x] Téléphone détecté : Xiaomi 2201117PG (série Xiaomi autorise)
 - [x] `supabase login` (Simo) + `supabase init` + lien vers `menoo-dev` (ref `pqdreuptzhenowqucvbl`, eu-central-1 Francfort, org Menoo-dev)
 
 ## Jalon 1 — détail
@@ -355,3 +434,13 @@ Détection de catégorie à l'ajout manuel en réserve, à faire une fois les �
 - Spanish, Italian et Arabic restent dans le repository pour une phase ultérieure ; l’application ne les propose pas au lancement.
 - Les traductions restent génériques (`en`, `fr`, `de`) ; conserver le pays de l’appareil pour les formats régionaux.
 - Regional pricing / currencies to be implemented before commercial launch if required: USD, GBP, CAD, AUD, EUR, CHF.
+
+
+### 2026-10-09 - Correction visuelle des 23 icones
+
+Copies RGBA transparentes, cadrage et tailles internes corriges localement ; originaux et pastilles preserves. Rapport : reports/CORRECTION_ICONES_3D.md. Tests : 113 cibles reussis ; suite complete 934 reussites / 17 echecs historiques ; analyse sans probleme. Validation visuelle utilisateur attendue ; phases 6B et 7 en attente. Aucun commit, push ou installation Android.
+
+
+### 2026-10-09 - Agrandissement local des pastilles 3D
+
+Pastilles concernees : 64 px (images 60), alimentaires 48 px (images 44), verification rapide 56 px (image 52). Ma reserve reste a 56/52 px ; proposition 64/60 en attente. Rapport : reports/AGRANDISSEMENT_PASTILLES_3D.md. Tests : 114 cibles reussis ; suite complete 935 reussites et 17 echecs historiques ; analyse sans probleme. Aucun asset modifie ni installation Android. Validation visuelle attendue ; phases 6B et 7 en attente.

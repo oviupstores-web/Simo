@@ -12,12 +12,7 @@ class CoverHouseholdScreen extends StatelessWidget {
   const CoverHouseholdScreen({super.key});
 
   static List<(String, Tint, String, String)> _features(L l) => [
-    (
-      AppIcons.cutlery,
-      Tint.mint,
-      l.coverHouseholdFeature1Title,
-      l.coverHouseholdFeature1Text,
-    ),
+    (AppIcons.cutlery, Tint.mint, l.coverHouseholdFeature1Title, l.coverHouseholdFeature1Text),
     (AppIcons.wallet, Tint.peach, l.coverHouseholdFeature2Title, l.coverHouseholdFeature2Text),
     (AppIcons.leaf, Tint.leafy, l.coverHouseholdFeature3Title, l.coverHouseholdFeature3Text),
   ];
@@ -66,10 +61,7 @@ class CoverHouseholdScreen extends StatelessWidget {
                     const SizedBox(height: AppSpace.x5),
                     Text(l.coverHouseholdTitle, style: AppText.h1),
                     const SizedBox(height: AppSpace.x2),
-                    Text(
-                      l.coverHouseholdSubtitle,
-                      style: AppText.lead,
-                    ),
+                    Text(l.coverHouseholdSubtitle, style: AppText.lead),
                     const SizedBox(height: AppSpace.x5),
                     for (final (i, f) in _features(l).indexed) ...[
                       if (i > 0) const SizedBox(height: AppSpace.x3),
@@ -77,7 +69,17 @@ class CoverHouseholdScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(AppSpace.x3_5),
                         child: Row(
                           children: [
-                            TintBadge(icon: f.$1, tint: f.$2, size: AppSizes.iconTileMd),
+                            if (f.$1 == AppIcons.leaf)
+                              IconTile(
+                                icon: f.$1,
+                                illustrationAsset: 'assets/images/new_icons/solo_waste.png',
+                                illustrationSize: 60,
+                                size: 64,
+                                background: f.$2.soft,
+                                foreground: f.$2.ink,
+                              )
+                            else
+                              TintBadge(icon: f.$1, tint: f.$2, size: AppSizes.iconTileMd),
                             const SizedBox(width: AppSpace.x3),
                             Expanded(
                               child: Column(
@@ -101,7 +103,10 @@ class CoverHouseholdScreen extends StatelessWidget {
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text('${l.commonQuickSteps(10)} · ${l.commonEditableAnytime}', style: AppText.meta),
+                        Text(
+                          '${l.commonQuickSteps(OnboardingFlow.foyer.length)} · ${l.commonEditableAnytime}',
+                          style: AppText.meta,
+                        ),
                       ],
                     ),
                   ],

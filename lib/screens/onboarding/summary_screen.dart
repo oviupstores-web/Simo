@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../l10n/formats.dart';
+import '../../models/numeric_safety.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
@@ -53,6 +54,16 @@ class SummaryScreen extends StatelessWidget {
     final d = OnboardingScope.of(context);
     if (!d.isFoyer && !d.isEligibleForIndividual) return const ProfileScreen();
     final fmt = Formats.of(context);
+    d.initializeBudgetCurrency(fmt.currency);
+    final moneyFormat = Formats(Localizations.localeOf(context), currency: d.budgetCurrencyCode);
+    String money(int amount) =>
+        d.budgetCurrencyUnknown ? '${fmt.wholeNumber(amount)} —' : moneyFormat.priceWhole(amount);
+    String perMeal(double amount) {
+      final cents = NumericSafety.round(amount * 100);
+      if (cents == null) return l.numericValueUnavailable;
+      return d.budgetCurrencyUnknown ? '${fmt.number(amount, decimals: 2)} —' : moneyFormat.price(cents);
+    }
+
     final goal = goals(l)[d.goal]!;
     final m = d.macros;
     final calories = d.dailyKcal;
@@ -67,8 +78,10 @@ class SummaryScreen extends StatelessWidget {
         if (d.slots.any((s) => s.$2 == t)) l.mealCountOfType(d.slots.where((s) => s.$2 == t).length, mealNames(l)[t]!),
     ].join(', ');
     final dietLabels = [
+      if (d.principalDiets.isEmpty && d.diets.isNotEmpty) l.dietOmnivore,
       for (final diet in ConstraintsScreen.diets(l))
         if (d.diets.contains(diet.$1)) diet.$2,
+      ...d.diets.difference(ConstraintsScreen.diets(l).map((a) => a.$1).toSet()),
     ];
     // Foyer : allergènes partagés + ceux des profils (avec les prénoms concernés)
     final byMember = d.isFoyer ? d.memberAllergenNames(l) : const <String, List<String>>{};
@@ -78,6 +91,7 @@ class SummaryScreen extends StatelessWidget {
           a.$1.any(byMember.containsKey) && !a.$1.any(d.allergens.contains)
               ? '${a.$2} (${{for (final c in a.$1) ...?byMember[c]}.join(', ')})'
               : a.$2,
+      ...d.allAllergens.difference(ConstraintsScreen.allergenChoices(l).expand((a) => a.$1).toSet()),
     ];
     final equipmentLabels = [
       for (final e in KitchenScreen.equipment(l))
@@ -100,6 +114,11 @@ class SummaryScreen extends StatelessWidget {
       subtitle: foyer ? l.summarySubtitleHousehold(d.plannedMeals) : l.summarySubtitleSolo,
       continueLabel: foyer ? l.summaryGenerateHousehold : l.summaryGenerateSolo,
       onContinue: () {
+        if (d.hasDietConflict) {
+          showMenooMessage(context, l.constraintsDietConflict);
+          edit(OnbStep.constraints);
+          return;
+        }
         final error = foyer
             ? d.members
                   .map(OnboardingData.memberInputViolation)
@@ -112,6 +131,16 @@ class SummaryScreen extends StatelessWidget {
                       : null);
         if (error != null || (!foyer && calories == null)) {
           showMenooMessage(context, error ?? l.numericCaloriesUnavailable);
+          return;
+        }
+        if (!d.hasValidBudgetAmount) {
+          showMenooMessage(context, l.budgetMinError(money(OnboardingData.minBudget)));
+          edit(OnbStep.budget);
+          return;
+        }
+        if (d.budgetCurrencyUnknown) {
+          showMenooMessage(context, l.budgetInheritedUnknown(fmt.wholeNumber(d.budgetEuros)));
+          edit(OnbStep.budget);
           return;
         }
         push(context, const SignupScreen());
@@ -207,15 +236,8 @@ class SummaryScreen extends StatelessWidget {
             _Line(
               icon: AppIcons.wallet,
               text: foyer
-                  ? l.summaryBudgetPortion(
-                      fmt.priceRounded(d.budgetEuros * 100),
-                      fmt.price((d.budgetPerPortion * 100).round()),
-                      d.weeklyPortions,
-                    )
-                  : l.summaryBudgetMeal(
-                      fmt.priceRounded(d.budgetEuros * 100),
-                      fmt.price((d.budgetPerMeal * 100).round()),
-                    ),
+                  ? l.summaryBudgetPortion(money(d.budgetEuros), perMeal(d.budgetPerPortion), d.weeklyPortions)
+                  : l.summaryBudgetMeal(money(d.budgetEuros), perMeal(d.budgetPerMeal)),
               strong: true,
             ),
           ],
