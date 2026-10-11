@@ -19,10 +19,12 @@ class ToggleChip extends StatelessWidget {
     this.onRemove,
     this.height = AppSizes.chipHeight,
     this.allowTextWrap = false,
+    this.padding,
   });
 
   final String label;
   final bool allowTextWrap;
+  final EdgeInsetsGeometry? padding;
   final bool selected;
   final VoidCallback? onTap;
   final String? icon;
@@ -56,7 +58,9 @@ class ToggleChip extends StatelessWidget {
           curve: AppMotion.curve,
           height: allowTextWrap ? null : height,
           constraints: allowTextWrap ? BoxConstraints(minHeight: height) : null,
-          padding: EdgeInsetsDirectional.only(start: hasBadge ? AppSpace.x1_5 : AppSpace.x3_5, end: AppSpace.x3_5),
+          padding:
+              padding ??
+              EdgeInsetsDirectional.only(start: hasBadge ? AppSpace.x1_5 : AppSpace.x3_5, end: AppSpace.x3_5),
           decoration: BoxDecoration(
             color: selected ? AppColors.mint : AppColors.card,
             borderRadius: AppRadius.chipR,

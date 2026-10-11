@@ -10,11 +10,12 @@ abstract final class StartupTokens {
   static const carrot = Color(0xFFFF842E);
   static const background = AppColors.bg;
   static const logoAsset = 'assets/images/startup_logo.png';
+  static const animationAsset = 'assets/images/startup_c.gif';
+  static const animationFinalAsset = 'assets/images/startup_c_final.png';
   static const artboard = Size(432, 936);
-  static const sequence = Duration(milliseconds: 4500);
-  static const readySequence = Duration(milliseconds: 1800);
+  static const sequence = Duration(milliseconds: 5540);
   static const exit = Duration(milliseconds: 180);
-  static const sloganHold = Duration(milliseconds: 600);
+  static const sloganHold = Duration.zero;
   static const sloganSize = 18.0;
   static const sloganGap = 32.0;
   static const sloganWidth = 360.0;

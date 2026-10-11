@@ -74,13 +74,14 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     Text(l.pantryHubSubtitle, style: AppText.of(AppFont.s14_5, color: AppColors.ink2, lineHeight: 21)),
                     const SizedBox(height: AppSpace.x4),
                     AppCard(
+                      padding: const EdgeInsets.fromLTRB(AppSpace.x2, AppSpace.x2, AppSpace.x4, AppSpace.x2),
                       child: Row(
                         children: [
                           const IconTile(
                             icon: AppIcons.pantryReserve,
                             illustrationAsset: 'assets/images/new_icons/pantry_reserve.png',
-                            illustrationSize: 52,
-                            size: AppSizes.iconTileMd,
+                            illustrationSize: 66,
+                            size: 70,
                             iconSize: 26,
                           ),
                           const SizedBox(width: AppSpace.x3),
@@ -125,14 +126,14 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     const SizedBox(height: AppSpace.x3),
                     AppCard(
                       onTap: () => push(context, const PantryQuickCheckScreen()),
-                      padding: const EdgeInsets.all(AppSpace.x3_5),
+                      padding: const EdgeInsets.fromLTRB(AppSpace.x2, AppSpace.x2, AppSpace.x3_5, AppSpace.x2),
                       child: Row(
                         children: [
                           const IconTile(
                             icon: AppIcons.pantryQuickCheck,
                             illustrationAsset: 'assets/images/new_icons/pantry_quick_check.png',
-                            illustrationSize: 52,
-                            size: 56,
+                            illustrationSize: 66,
+                            size: 70,
                             background: AppColors.orangeSoft,
                             foreground: AppColors.warn,
                           ),

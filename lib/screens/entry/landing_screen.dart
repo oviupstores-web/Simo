@@ -4,7 +4,6 @@ import '../../l10n/app_localizations.dart';
 import '../../navigation.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import 'improv_coming_soon_screen.dart';
 import 'path_choice_screen.dart';
 
 /// Live, translated landing UI. The independent illustrations below are extracted
@@ -156,7 +155,7 @@ class LandingScreen extends StatelessWidget {
                           badge: LandingTokens.scanBadge,
                           artFraction: .53,
                           referenceHeight: 276,
-                          onTap: () => push(context, const ImprovComingSoonScreen()),
+                          onTap: null,
                         ),
                         const SizedBox(height: 10),
                         _FunctionCard(
@@ -220,7 +219,7 @@ class LandingScreen extends StatelessWidget {
                           badge: LandingTokens.trackingBadge,
                           artFraction: .52,
                           referenceHeight: 223,
-                          onTap: start,
+                          onTap: null,
                         ),
                         SizedBox(height: 14 * s),
                         PrimaryButton(label: l.landingStart, onPressed: start),
@@ -306,6 +305,7 @@ class _FunctionCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Container(
+            key: ValueKey('landing_card_$art'),
             constraints: BoxConstraints(minHeight: referenceHeight * s),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(22 * s),
@@ -330,6 +330,7 @@ class _FunctionCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
+                          key: ValueKey('landing_pill_$art'),
                           padding: EdgeInsets.symmetric(horizontal: 12 * s, vertical: 7 * s),
                           decoration: BoxDecoration(
                             color: badge,

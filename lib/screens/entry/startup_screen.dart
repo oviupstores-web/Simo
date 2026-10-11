@@ -51,8 +51,7 @@ class _MenooStartupState extends State<MenooStartup> with SingleTickerProviderSt
       return;
     }
     _started = true;
-    if (!_reducedMotion) _controller.forward();
-    // Decode the existing logo only once; no GIF, video, new asset or package.
+    // The complete reference GIF owns the visuals and their original timing.
     final decoded = Completer<void>();
     _stream = const AssetImage(StartupTokens.logoAsset).resolve(createLocalImageConfiguration(context));
     _listener = ImageStreamListener(
@@ -87,19 +86,9 @@ class _MenooStartupState extends State<MenooStartup> with SingleTickerProviderSt
       _ready = true;
       if (_reducedMotion || (_controller.isCompleted && _sloganSeen)) {
         _exit();
-      } else if (_controller.isCompleted) {
-        // The final caption is already appearing; its short hold owns the exit.
-      } else {
-        // Finish the whole storyboard quickly once ready, without imposing the
-        // 11 seconds of the mockup, or repeating a loading loop.
-        final remaining = Duration(
-          milliseconds: math.min(
-            StartupTokens.readySequence.inMilliseconds,
-            (StartupTokens.sequence.inMilliseconds * (1 - _controller.value)).round(),
-          ),
-        );
-        _controller.animateTo(1, duration: remaining, curve: Curves.linear);
       }
+      // Readiness never speeds up the approved Menoo → M → logo transitions.
+      // Completion and the final caption hold own the exit.
     });
   }
 
@@ -154,7 +143,16 @@ class _MenooStartupState extends State<MenooStartup> with SingleTickerProviderSt
                           statusBarColor: AppColors.transparent,
                           systemNavigationBarColor: AppColors.transparent,
                         ),
-                child: MenooStartupVisual(progress: _reducedMotion ? 1 : _controller.value, logo: _logo),
+                child: MenooStartupVisual(
+                  progress: _reducedMotion ? 1 : _controller.value,
+                  logo: _logo,
+                  playReference: true,
+                  onFirstFrame: () {
+                    if (mounted && !_reducedMotion && !_controller.isAnimating && !_controller.isCompleted) {
+                      _controller.forward();
+                    }
+                  },
+                ),
               ),
             ),
           ),
@@ -165,12 +163,30 @@ class _MenooStartupState extends State<MenooStartup> with SingleTickerProviderSt
 
 /// Public static storyboard view, also used for local Flutter render checks.
 class MenooStartupVisual extends StatelessWidget {
-  const MenooStartupVisual({super.key, required this.progress, this.logo});
+  const MenooStartupVisual({super.key, required this.progress, this.logo, this.playReference = false, this.onFirstFrame});
   final double progress;
   final ui.Image? logo;
+  final bool playReference;
+  final VoidCallback? onFirstFrame;
 
   @override
   Widget build(BuildContext context) {
+    if (playReference) {
+      return ColoredBox(
+        color: progress < .58 ? StartupTokens.green : StartupTokens.background,
+        child: Image.asset(
+          progress >= 1 ? StartupTokens.animationFinalAsset : StartupTokens.animationAsset,
+          fit: BoxFit.contain,
+          gaplessPlayback: true,
+          frameBuilder: (context, child, frame, synchronous) {
+            if (frame == 0 && progress < 1) {
+              WidgetsBinding.instance.addPostFrameCallback((_) => onFirstFrame?.call());
+            }
+            return child;
+          },
+        ),
+      );
+    }
     final l = L.of(context);
     return LayoutBuilder(
       builder: (context, constraints) {

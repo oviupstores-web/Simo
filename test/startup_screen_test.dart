@@ -37,7 +37,12 @@ void main() {
   );
 
   Future<void> images(WidgetTester t) async {
-    await t.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 80)));
+    if (find.byType(MaterialApp).evaluate().isNotEmpty) {
+      await t.runAsync(() => precacheImage(
+        const AssetImage(StartupTokens.logoAsset), t.element(find.byType(MaterialApp)),
+      ));
+    }
+    await t.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
     await t.pump();
     await t.pump();
     await t.pump();
@@ -89,7 +94,7 @@ void main() {
       ),
     );
     await images(t);
-    await t.pump(const Duration(seconds: 5));
+    await t.pump(StartupTokens.sequence + const Duration(milliseconds: 10));
     expect(find.byType(MenooStartupVisual), findsOneWidget);
     await t.tapAt(const Offset(200, 200));
     expect(taps, 0);
@@ -105,10 +110,17 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
-  testWidgets('Ready app does not wait for the full storyboard', (t) async {
+  testWidgets('Ready app preserves the full Menoo to logo storyboard', (t) async {
     await t.pumpWidget(host(const MenooStartup(child: ColoredBox(color: AppColors.white))));
     await images(t);
-    await t.pump(StartupTokens.readySequence + const Duration(milliseconds: 50));
+    expect(t.widget<MenooStartupVisual>(find.byType(MenooStartupVisual)).playReference, isTrue);
+    expect(find.byWidgetPredicate((widget) => widget is Image &&
+      widget.image is AssetImage &&
+      (widget.image as AssetImage).assetName == StartupTokens.animationAsset), findsOneWidget);
+    await t.pump(const Duration(milliseconds: 1800));
+    expect(find.byType(MenooStartupVisual), findsOneWidget);
+    expect(t.widget<MenooStartupVisual>(find.byType(MenooStartupVisual)).progress, lessThan(1));
+    await t.pump(StartupTokens.sequence);
     await t.pump(StartupTokens.sloganHold + const Duration(milliseconds: 10));
     await t.pump(StartupTokens.exit + const Duration(milliseconds: 10));
     expect(find.byType(MenooStartupVisual), findsNothing);

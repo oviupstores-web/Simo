@@ -71,6 +71,7 @@ class ChoiceCard extends StatelessWidget {
     this.iconTileSize = AppSizes.iconTileLg,
     this.centerIcon = false,
     this.descriptionStyle,
+    this.padding,
   });
 
   final String icon;
@@ -90,6 +91,9 @@ class ChoiceCard extends StatelessWidget {
   final bool centerIcon;
   final TextStyle? descriptionStyle;
 
+  /// Ajustement local facultatif ; le padding des autres cartes reste inchangé.
+  final EdgeInsetsGeometry? padding;
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -100,7 +104,7 @@ class ChoiceCard extends StatelessWidget {
         child: AnimatedContainer(
           duration: AppMotion.normal,
           curve: AppMotion.curve,
-          padding: EdgeInsets.all(selected ? AppSpace.x4 - 1 : AppSpace.x4),
+          padding: padding ?? EdgeInsets.all(selected ? AppSpace.x4 - 1 : AppSpace.x4),
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: AppRadius.cardR,

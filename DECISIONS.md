@@ -288,3 +288,47 @@ Copies RGBA transparentes, cadrage et tailles internes corriges localement ; ori
 ### 2026-10-09 - Agrandissement local des pastilles 3D
 
 Pastilles concernees : 64 px (images 60), alimentaires 48 px (images 44), verification rapide 56 px (image 52). Ma reserve reste a 56/52 px ; proposition 64/60 en attente. Rapport : reports/AGRANDISSEMENT_PASTILLES_3D.md. Tests : 114 cibles reussis ; suite complete 935 reussites et 17 echecs historiques ; analyse sans probleme. Aucun asset modifie ni installation Android. Validation visuelle attendue ; phases 6B et 7 en attente.
+
+
+### 2026-10-10 - Padding local des cartes Objectif
+
+Plan autorise par Simo : gauche/haut/bas 8 px, compensation a 7 px quand selectionne ; droite 16/15 px conservee. Pastille 64 px, image 60 px, ecart texte 12 px et centrage conserves. Parametre facultatif de ChoiceCard utilise uniquement dans GoalScreen ; autres cartes inchangees. Tests concernes : 143 reussites, analyse sans probleme, diff check reussi. Rapport : reports/OBJECTIF_PADDING_CARTES.md. Validation visuelle attendue, aucune installation Android, aucun commit/push ; phases 6B/7 non commencees.
+
+
+### 2026-10-10 - Agrandissement Objectif avec padding reduit
+
+Essai 72/68 px : titre allemand Abnehmen coupe a 320 px. Repli autorise 70/66 px retenu, titre entier et tests reussis. Padding 8/7 px, droite 16/15 px, ecart texte 12 px et centrage conserves. Les autres ecrans et PNG sont inchanges. Tests concernes : 143 reussites ; analyse et diff check reussis. Rapport : reports/OBJECTIF_AGRANDISSEMENT_PASTILLES.md. Validation visuelle attendue, aucune installation Android ni commit/push ; phases 6B/7 non commencees.
+
+
+### 2026-10-10 - Harmonisation locale des cartes avec icones 3D
+
+Activite, Gestion, couvertures concernees et Reserve : pastilles 70 / images 66 px, padding gauche/haut/bas 8 px (7 avec compensation de bordure). Regimes/restrictions : 50/46 px, hauteur des puces 56 conservee et grille preservee. Objectif, PNG et autres pictogrammes inchanges. Rapport : reports/HARMONISATION_CARTES_ICONES_3D.md. 200 tests cibles reussis ; suite complete 1161 reussites et 17 echecs historiques ; analyse sans probleme. Validation visuelle attendue. Aucune installation Android ni commit/push ; phases 6B/7 non commencees.
+
+
+### 2026-10-10 - Landing : mains animees locales
+
+Quatre pastilles avec dessin Flutter blanc et animation 600 ms / pause 4200 ms ; Suivi sans main. Menus et Courses conservent la route PathChoiceScreen. Instant Recipe AI et CaliScan restent visuels sans destination fonctionnelle connectee. RTL : main en miroir pour eviter la coupure. 17 tests CTA et 430 regressions reussis ; analyse sans probleme. Rapport : reports/LANDING_CTA_MAIN_ANIMEE.md. Validation visuelle attendue, aucune installation Android ni commit/push ; phases 6B/7 non commencees.
+
+
+### 2026-10-10 - Correction de la main CTA sur reference fournie
+
+Silhouette de la reference retracee, taille proche de 23 px, inclinaison 25 degres ; trois cercles concentriques ancres au contact. 17 tests reussis : FR/EN/ES/IT/DE a 320/390 ; dimensions des cartes/pastilles identiques et PNG/navigation preserves. Gros plans et pages entieres dans reports/LANDING_CTA_MAIN_ANIMEE.md. Validation visuelle attendue ; aucune installation ni commit/push, phases 6B/7 non commencees.
+
+
+### 2026-10-10 - CTA : suppression finale des traits de clic
+
+Les quatre mains partagent trois cercles concentriques, sans traits de clic. Captures de comparaison a 60 % pour 320/390 px ; decalages reels conserves. 17 tests reussis ; cartes, images, textes et navigation inchanges. Validation visuelle attendue ; aucune installation, commit ou push.
+
+
+### 2026-10-10 - Landing : mains agrandies et pression visible
+
+Main environ 30 px, tap de 3 px, cercles jusqu a 15 px de diametre ; pauses et decalages preserves. Espacement local sous les quatre pastilles de 14 px, hauteurs augmentees d environ 11 px. Photos en contain sans recadrage ; Suivi purement informatif. 10 tests FR320/390 reussis, analyse et diff check reussis. Captures et GIF dans reports/LANDING_CTA_MAIN_ANIMEE.md. Validation attendue ; aucune installation, commit/push ni phase 6B/7.
+
+### 2026-10-11 - Splash C
+Simo autorise la correction du splash et choisit les transitions Menoo -> M -> logo du GIF C. Conserver la sequence complete sans acceleration liee au chargement de la Landing. Validation du rendu final en attente.
+
+2026-10-11 : Simo refuse la simple correction de vitesse et demande C en entier. Utilisation directe du GIF original francais, y compris ses textes integres, au lieu du dessin Flutter pour le splash normal. Mode animations reduites : image finale fixe. Validation sur telephone attendue.
+
+2026-10-11 : Simo valide l'animation splash_c_clean_preview_v3.gif et demande son installation. GIF valide copie a l'identique dans assets/images/startup_c.gif ; image finale correspondante dans startup_c_final.png. La fourchette de l'arrivee reprend la silhouette du logo final.
+
+2026-10-11 : validation finale de Simo (OK) sur telephone pour le splash C nettoye v3, avec la silhouette de la fourchette du logo final conservee pendant l'animation.

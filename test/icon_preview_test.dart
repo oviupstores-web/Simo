@@ -106,25 +106,22 @@ void main() {
             expected.map((n) => 'assets/images/new_icons/$n.png').toSet(),
           );
           for (final im in newImages) {
-            final size = entry.key.startsWith('constraints')
-                ? 44.0
-                : entry.key.startsWith('pantry')
-                ? 52.0
-                : 60.0;
+            final size = entry.key.startsWith('constraints') ? 46.0 : 66.0;
             expect(t.getSize(find.byWidgetPredicate((w) => identical(w, im))), Size(size, size));
             expect(im.fit, BoxFit.contain);
             final imageFinder = find.byWidgetPredicate((w) => identical(w, im));
             if (entry.key.startsWith('constraints')) {
               final circle = find.ancestor(
                 of: imageFinder,
-                matching: find.byWidgetPredicate((w) => w is Container &&
-                    w.constraints?.maxWidth == 48 && w.constraints?.maxHeight == 48),
+                matching: find.byWidgetPredicate(
+                  (w) => w is Container && w.constraints?.maxWidth == 50 && w.constraints?.maxHeight == 50,
+                ),
               );
               expect(circle, findsOneWidget);
-              expect(t.getSize(circle), const Size(48, 48));
+              expect(t.getSize(circle), const Size(50, 50));
             } else {
               final tile = find.ancestor(of: imageFinder, matching: find.byType(IconTile));
-              final tileSize = entry.key.startsWith('pantry') ? 56.0 : 64.0;
+              const tileSize = 70.0;
               expect(t.getSize(tile), Size(tileSize, tileSize));
             }
           }
@@ -138,7 +135,8 @@ void main() {
             await t.runAsync(() async {
               final im = await b.toImage(pixelRatio: 2);
               final bytes = await im.toByteData(format: ui.ImageByteFormat.png);
-              File('${dir.path}/${entry.key}${width == 320 ? '_320' : ''}.png').writeAsBytesSync(bytes!.buffer.asUint8List());
+              File('${dir.path}/${entry.key}${width == 320 ? '_320' : ''}.png')
+                  .writeAsBytesSync(bytes!.buffer.asUint8List());
               im.dispose();
             });
           }
@@ -147,9 +145,14 @@ void main() {
     }
   }
   testWidgets('ancienne ChoiceCard : pastille par défaut inchangée à 56 px', (t) async {
-    await t.pumpWidget(MaterialApp(theme: AppTheme.light, home: const Scaffold(
-      body: ChoiceCard(icon: AppIcons.leaf, title: 'Titre', description: 'Description', selected: false),
-    )));
+    await t.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: const Scaffold(
+          body: ChoiceCard(icon: AppIcons.leaf, title: 'Titre', description: 'Description', selected: false),
+        ),
+      ),
+    );
     expect(t.getSize(find.byType(IconTile)), const Size(56, 56));
     expect(t.takeException(), isNull);
   });

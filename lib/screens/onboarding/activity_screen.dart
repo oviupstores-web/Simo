@@ -59,9 +59,15 @@ class ActivityScreen extends StatelessWidget {
         for (final (i, lvl) in _levels(l).indexed) ...[
           if (i > 0) const SizedBox(height: ActivityTokens.cardGap),
           ChoiceCard(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpace.x2,
+              AppSpace.x2,
+              AppSpace.x4,
+              AppSpace.x2,
+            ).subtract(EdgeInsets.all(d.activity == lvl.$1 ? 1 : 0)),
             icon: lvl.$2,
-            illustrationSize: 60,
-            iconTileSize: 64,
+            illustrationSize: 66,
+            iconTileSize: 70,
             illustrationAsset: switch (lvl.$1) {
               ActivityLevel.sedentaire => 'assets/images/new_icons/activity_desk.png',
               ActivityLevel.modere => 'assets/images/new_icons/activity_walk.png',

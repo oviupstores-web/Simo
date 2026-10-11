@@ -77,7 +77,7 @@ class CoverSoloScreen extends StatelessWidget {
                     for (final (i, f) in _features(l).indexed) ...[
                       if (i > 0) const SizedBox(height: CoverSoloTokens.cardGap),
                       AppCard(
-                        padding: const EdgeInsets.all(AppSpace.x3_5),
+                        padding: const EdgeInsets.fromLTRB(AppSpace.x2, AppSpace.x2, AppSpace.x3_5, AppSpace.x2),
                         child: Row(
                           children: [
                             IconTile(
@@ -87,8 +87,8 @@ class CoverSoloScreen extends StatelessWidget {
                                 AppIcons.soloTime: 'assets/images/new_icons/solo_time.png',
                                 AppIcons.soloWaste: 'assets/images/new_icons/solo_waste.png',
                               }[f.$1],
-                              illustrationSize: 60,
-                              size: 64,
+                              illustrationSize: 66,
+                              size: 70,
                               iconSize: CoverSoloTokens.featureIconSize,
                               background: f.$2.soft,
                               foreground: f.$2.ink,

@@ -56,14 +56,20 @@ class ManagementModeScreen extends StatelessWidget {
         for (final (i, m) in _modes(l).indexed) ...[
           if (i > 0) const SizedBox(height: ManagementTokens.cardGap),
           ChoiceCard(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpace.x2,
+              AppSpace.x2,
+              AppSpace.x4,
+              AppSpace.x2,
+            ).subtract(EdgeInsets.all(d.management == m.$1 ? 1 : 0)),
             icon: m.$2,
             illustrationAsset: switch (m.$1) {
               ManagementMode.courses => 'assets/images/new_icons/management_shopping.png',
               ManagementMode.reserves => 'assets/images/new_icons/management_pantry.png',
               ManagementMode.mixte => 'assets/images/new_icons/management_mixed.png',
             },
-            illustrationSize: 60,
-            iconTileSize: 64,
+            illustrationSize: 66,
+            iconTileSize: 70,
             iconSize: ManagementTokens.iconSize,
             centerIcon: true,
             title: m.$3,

@@ -66,15 +66,17 @@ class CoverHouseholdScreen extends StatelessWidget {
                     for (final (i, f) in _features(l).indexed) ...[
                       if (i > 0) const SizedBox(height: AppSpace.x3),
                       AppCard(
-                        padding: const EdgeInsets.all(AppSpace.x3_5),
+                        padding: f.$1 == AppIcons.leaf
+                            ? const EdgeInsets.fromLTRB(AppSpace.x2, AppSpace.x2, AppSpace.x3_5, AppSpace.x2)
+                            : const EdgeInsets.all(AppSpace.x3_5),
                         child: Row(
                           children: [
                             if (f.$1 == AppIcons.leaf)
                               IconTile(
                                 icon: f.$1,
                                 illustrationAsset: 'assets/images/new_icons/solo_waste.png',
-                                illustrationSize: 60,
-                                size: 64,
+                                illustrationSize: 66,
+                                size: 70,
                                 background: f.$2.soft,
                                 foreground: f.$2.ink,
                               )

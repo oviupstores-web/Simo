@@ -123,6 +123,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
               selected: d.principalDiets.isEmpty,
               onTap: () => d.selectPrincipalDiet(null),
               height: 56,
+              padding: const EdgeInsetsDirectional.only(start: AppSpace.x1, end: AppSpace.x3_5),
             ),
             for (final diet in ConstraintsScreen.principalDiets(l))
               ToggleChip(
@@ -131,6 +132,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
                 selected: d.diets.contains(diet.$1),
                 onTap: () => d.selectPrincipalDiet(diet.$1),
                 height: 56,
+                padding: const EdgeInsetsDirectional.only(start: AppSpace.x1, end: AppSpace.x3_5),
               ),
           ],
         ),
@@ -164,6 +166,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
                 selected: d.diets.contains(diet.$1),
                 onTap: () => d.update(() => d.diets.toggle(diet.$1)),
                 height: 56,
+                padding: const EdgeInsetsDirectional.only(start: AppSpace.x1, end: AppSpace.x3_5),
               ),
           ],
         ),
@@ -296,11 +299,11 @@ class _DietIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: 48,
-    height: 48,
+    width: 50,
+    height: 50,
     decoration: BoxDecoration(color: tint.soft, shape: BoxShape.circle),
     alignment: Alignment.center,
-    child: ExcludeSemantics(child: Image.asset(asset, width: 44, height: 44, fit: BoxFit.contain)),
+    child: ExcludeSemantics(child: Image.asset(asset, width: 46, height: 46, fit: BoxFit.contain)),
   );
 }
 
