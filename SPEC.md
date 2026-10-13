@@ -1,5 +1,12 @@
 # SPEC.md — Menoo · Planning v4 (source de vérité)
 
+## Note de portée — Landing provisoire du 13 octobre 2026
+
+Pour la **Landing seulement**, les consignes explicites de Simo des 12–13 octobre remplacent les anciens détails graphiques : cinq cartes verticales, quatre CTA, Suivi sans CTA, marges 20 px, intervalles 16 px, arrondis 12 px, ressources fournies et tailles actuelles. Référence détaillée : [REFERENCE](reports/step1_landing_review/REFERENCE.md).
+
+Les paragraphes historiques ci-dessous décrivant quatre cartes sans bouton ne sont plus la référence graphique provisoire. Les règles métier (budget, allergies, scan offert, compte et parcours) restent valables. Le lien de connexion et Commencer fixe restent des écarts à arbitrer : ils ne sont ni supprimés de la cible produit ni ajoutés au code pendant cette étape. Aucune approbation globale de la v4 ou du reste de la roadmap n'est déduite de cette note.
+
+
 > **Statut : v4 proposée le 2026-09-30, en attente de la validation de Simo.** Rien de cette version n'est codé.
 > Elle intègre les 8 changements de structure du 2026-09-30 et les décisions déjà validées dans `DECISIONS.md`.
 
@@ -385,3 +392,8 @@ But : empêcher qu'on recrée des comptes ou qu'on réinstalle l'app pour consom
 - **Vérification dans une Edge Function avant chaque appel à l'IA** : quota par appareil et par compte. Le compteur du scan offert vit **en base**, jamais dans l'app — sinon une réinstallation le remettrait à zéro.
 - **Déclaration obligatoire** dans la politique de confidentialité et dans le formulaire Sécurité des données de Google Play.
 - Tant que ce jalon n'est pas fait, le scan offert est compté localement : c'est **suffisant pour tester, pas pour publier**. L'app ne peut pas être publiée sans le jalon 12b.
+
+
+## Décision active du 13 octobre 2026 — langues
+
+La demande explicite de Simo fixe désormais exactement cinq langues proposées : français, anglais, espagnol, italien, allemand. Elle remplace les mentions historiques de six langues au lancement ; l’arabe conservé dans les ressources n’est pas activé. Le choix de langue doit être mémorisé localement après fermeture. shared_preferences a été autorisé pour cette seule préférence. Les règles métier et la région monétaire restent inchangées.

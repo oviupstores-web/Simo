@@ -20,7 +20,7 @@ void main() {
   });
   for (final lang in ['fr', 'en', 'de', 'es', 'it', 'ar']) {
     for (final width in [320.0, 390.0]) {
-      testWidgets('CaliScan historique $lang $width : cadrage, bordure et hauteur naturelle', (t) async {
+      testWidgets('CaliScan courant $lang $width : cadrage, bordure et hauteur naturelle', (t) async {
         t.view.physicalSize = Size(width, 2200);
         t.view.devicePixelRatio = 1;
         addTearDown(t.view.reset);
@@ -36,20 +36,21 @@ void main() {
         await t.runAsync(() => LandingScreen.prepareImages(t.element(find.byType(LandingScreen))));
         await t.pumpAndSettle();
         final cardFinder = find.byKey(const ValueKey('landing_card_meal_scan'));
-        final card = t.widget<Container>(cardFinder);
-        expect(card.constraints!.minHeight, closeTo(276 * width / LandingTokens.referenceWidth, .01));
-        final decoration = card.decoration! as BoxDecoration;
-        expect((decoration.border! as Border).top.color, LandingTokens.mealScanBorder);
-        final photo = find.byWidgetPredicate(
-          (w) =>
-              w is Image && w.image is AssetImage && (w.image as AssetImage).assetName == LandingTokens.mealScanAsset,
-        );
+        final surface = t.widget<Container>(find.ancestor(of: cardFinder, matching: find.byType(Container)).first);
+        final decoration = surface.decoration! as BoxDecoration;
+        expect((decoration.borderRadius! as BorderRadius).topLeft.x, 12);
+        expect(surface.clipBehavior, Clip.antiAlias, reason: 'CaliScan content stays inside rounded corners');
+        final photo = find.descendant(of: cardFinder, matching: find.byType(Image));
         expect(photo, findsOneWidget);
-        expect(t.widget<Image>(photo).fit, BoxFit.cover);
-        expect(t.element(photo).findAncestorWidgetOfExactType<ShaderMask>(), isNotNull);
-        final borderThickness = 3 * width / LandingTokens.referenceWidth;
-        expect(t.getSize(photo).height, closeTo(t.getSize(cardFinder).height - 2 * borderThickness, .01));
-        if (lang == 'fr') expect(t.getSize(cardFinder).height, lessThan(240));
+        expect((t.widget<Image>(photo).image as AssetImage).assetName, 'assets/images/landing/meal_scan_20261013_1258.png');
+        expect(t.widget<Image>(photo).fit, BoxFit.contain);
+        expect(t.element(photo).findAncestorWidgetOfExactType<ShaderMask>(), isNull);
+        final r = t.getRect(cardFinder);
+        final imageRect = t.getRect(photo);
+        expect(imageRect.left, greaterThanOrEqualTo(r.left - .01));
+        expect(imageRect.right, lessThanOrEqualTo(r.right + .01));
+        final cta = t.getRect(find.byKey(const ValueKey('landing_cta_meal_scan')));
+        expect(imageRect.top - cta.bottom, closeTo(12, .01));
         final l = L.of(t.element(find.byType(LandingScreen)));
         expect(find.text(l.landingCardMealScanTitle), findsOneWidget);
         expect(find.text(l.landingCardMealScanText), findsOneWidget);

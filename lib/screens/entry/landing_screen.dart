@@ -17,20 +17,18 @@ class LandingScreen extends StatelessWidget {
     await Future.wait([
       for (final name in [
         'hero',
+        'banana',
         'branch',
         'sprig',
         'scan',
+        'meal_scan',
         'menus',
         'shopping',
         'tracking',
-        'feature0',
-        'feature1',
-        'feature2',
-        'feature3',
+        'benefits',
       ])
         precacheImage(AssetImage(_Illustration.assetPath(name)), context),
       precacheImage(const AssetImage('assets/images/logo_96.png'), context),
-      precacheImage(const AssetImage(LandingTokens.mealScanAsset), context),
     ]);
   }
 
@@ -40,7 +38,7 @@ class LandingScreen extends StatelessWidget {
     final rtl = Directionality.of(context) == TextDirection.rtl;
     void start() => push(context, const PathChoiceScreen());
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: LandingTokens.screenBackground,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -67,7 +65,7 @@ class LandingScreen extends StatelessWidget {
               wrap(l.landingFeatureShopping, [4]),
               wrap(l.landingFeatureTracking, [3]),
             ];
-            final bodyStyle = AppText.of(AppFont.s13, color: LandingTokens.bodyInk, lineHeight: 22);
+            final bodyStyle = AppText.of(LandingPhase1Tokens.featureSize, color: LandingTokens.bodyInk, lineHeight: LandingPhase1Tokens.featureLineHeight);
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,60 +73,61 @@ class LandingScreen extends StatelessWidget {
                   Stack(
                     children: [
                       PositionedDirectional(
-                        top: 0,
-                        end: 22 * s,
-                        child: _Illustration('branch', width: 145 * s, mirror: rtl),
-                      ),
-                      PositionedDirectional(
                         top: 90 * s,
-                        start: 387 * s,
+                        start: 500 * s,
                         child: _Illustration('sprig', width: 61 * s, mirror: rtl),
                       ),
                       PositionedDirectional(
-                        top: 100 * s,
+                        top: LandingPhase1Tokens.heroTop,
                         end: 0,
-                        child: ShaderMask(
-                          // Fade only the lower surround before the artwork's rectangular cutout.
-                          blendMode: BlendMode.dstIn,
-                          shaderCallback: (bounds) => const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.white, Colors.white, Colors.transparent, Colors.transparent],
-                            stops: [0, .83, .917, 1],
-                          ).createShader(bounds),
-                          child: _Illustration('hero', width: 448 * s, mirror: rtl, label: l.landingHeroAlt),
+                        child: _Illustration('hero',
+                          width: Localizations.localeOf(context).languageCode == 'de'
+                              ? (constraints.maxWidth >= 390 ? LandingPhase1Tokens.heroWidthGermanWide : LandingPhase1Tokens.heroWidthGermanNarrow)
+                              : (constraints.maxWidth >= 390 ? LandingPhase1Tokens.heroWidthWide : LandingPhase1Tokens.heroWidthNarrow),
+                          mirror: rtl, label: l.landingHeroAlt),
+                      ),
+                      PositionedDirectional(
+                        bottom: LandingPhase1Tokens.bananaCardGap,
+                        end: LandingPhase1Tokens.bananaEnd,
+                        child: SizedBox(
+                          key: const ValueKey('landing_banana'),
+                          width: LandingPhase1Tokens.bananaWidth,
+                          child: const _Illustration('banana'),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(14, 18 * s, 14, 22 * s),
+                        padding: EdgeInsetsDirectional.fromSTEB(constraints.maxWidth >= 390 ? LandingPhase1Tokens.wideHeaderInset : LandingPhase1Tokens.narrowHeaderInset, 6, 14, 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const MenooBrand(),
-                            SizedBox(height: 22 * s),
+                            const SizedBox(width: LandingPhase1Tokens.brandWidth, height: LandingPhase1Tokens.brandHeight, child: FittedBox(alignment: AlignmentDirectional.centerStart, child: MenooBrand())),
+                            const SizedBox(height: LandingPhase1Tokens.headerTitleGap),
                             SizedBox(
                               width: 495 * s,
                               child: Text(
                                 '${l.landingTitleLine1}\n$titleLine2',
                                 style: AppText.of(
-                                  AppFont.s26,
+                                  constraints.maxWidth >= 390 ? LandingPhase1Tokens.headerTitleWide : LandingPhase1Tokens.headerTitleNarrow,
                                   weight: AppFont.extrabold,
                                   color: LandingTokens.titleInk,
-                                  lineHeight: 40,
+                                  lineHeight: LandingPhase1Tokens.headerTitleLineHeight,
                                   tightTracking: true,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 14 * s),
+                            const SizedBox(height: LandingVerticalTokens.headerFeaturesGap),
                             for (final (i, feature) in features.indexed)
                               Padding(
-                                padding: EdgeInsets.only(bottom: i == 3 ? 0 : 10 * s),
+                                padding: EdgeInsetsDirectional.only(
+                                  start: LandingVerticalTokens.featureLeftInset,
+                                  bottom: i == 3 ? 0 : LandingVerticalTokens.featureGap,
+                                ),
                                 child: SizedBox(
-                                  width: 430 * s,
+                                  width: constraints.maxWidth >= 390 ? LandingPhase1Tokens.featureWidthWide : LandingPhase1Tokens.featureWidthNarrow,
                                   child: Row(
                                     children: [
-                                      _Illustration('feature$i', width: 65 * s),
-                                      SizedBox(width: 29 * s),
+                                      _LandingBenefitIcon(index: i, size: 65 * s * LandingVerticalTokens.benefitIconScale),
+                                      const SizedBox(width: LandingVerticalTokens.featureIconGap),
                                       Expanded(child: Text(feature, style: bodyStyle)),
                                     ],
                                   ),
@@ -140,7 +139,7 @@ class LandingScreen extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: LandingVerticalTokens.screenInset),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -151,22 +150,22 @@ class LandingScreen extends StatelessWidget {
                           label: l.landingCardScanLabel,
                           title: l.landingCardScanTitle,
                           text: l.landingCardScanText,
-                          background: LandingTokens.scanSoft,
+                          background: LandingPhase1Tokens.scanSoft,
                           badge: LandingTokens.scanBadge,
                           artFraction: .53,
                           referenceHeight: 276,
                           onTap: null,
+                          ctaLabel: l.landingCtaScan,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: LandingTokens.cardGap),
                         _FunctionCard(
                           scale: s,
                           art: 'meal_scan',
-                          illustration: const _MealScanIllustration(),
                           icon: AppIcons.camera,
                           label: l.landingCardMealScanLabel,
                           title: l.landingCardMealScanTitle,
                           text: l.landingCardMealScanText,
-                          background: LandingTokens.mealScanSoft,
+                          background: LandingPhase1Tokens.mealScanSoft,
                           border: LandingTokens.mealScanBorder,
                           badge: LandingTokens.mealScanBadge,
                           badgeFontSize: AppFont.s13,
@@ -177,8 +176,9 @@ class LandingScreen extends StatelessWidget {
                           artFraction: .53,
                           referenceHeight: 276,
                           onTap: null,
+                          ctaLabel: l.landingCtaMealScan,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: LandingTokens.cardGap),
                         _FunctionCard(
                           scale: s,
                           art: 'menus',
@@ -186,13 +186,14 @@ class LandingScreen extends StatelessWidget {
                           label: l.landingCardMenusLabel,
                           title: l.landingCardMenusTitle,
                           text: l.landingCardMenusText,
-                          background: LandingTokens.menuSoft,
+                          background: LandingPhase1Tokens.menuSoft,
                           badge: LandingTokens.menuBadge,
                           artFraction: .54,
                           referenceHeight: 249,
                           onTap: start,
+                          ctaLabel: l.landingCtaMenus,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: LandingTokens.cardGap),
                         _FunctionCard(
                           scale: s,
                           art: 'shopping',
@@ -200,14 +201,15 @@ class LandingScreen extends StatelessWidget {
                           label: l.landingCardShoppingLabel,
                           title: l.landingCardShoppingTitle,
                           text: l.landingCardShoppingText,
-                          background: LandingTokens.shoppingSoft,
+                          background: LandingPhase1Tokens.shoppingSoft,
                           border: LandingTokens.shoppingBorder,
                           badge: LandingTokens.shoppingBadge,
                           artFraction: .50,
                           referenceHeight: 250,
                           onTap: start,
+                          ctaLabel: l.landingCtaShopping,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: LandingTokens.cardGap),
                         _FunctionCard(
                           scale: s,
                           art: 'tracking',
@@ -215,14 +217,14 @@ class LandingScreen extends StatelessWidget {
                           label: l.landingCardTrackingLabel,
                           title: l.landingCardTrackingTitle,
                           text: l.landingCardTrackingText,
-                          background: LandingTokens.trackingSoft,
+                          background: LandingPhase1Tokens.trackingSoft,
                           badge: LandingTokens.trackingBadge,
                           artFraction: .52,
                           referenceHeight: 223,
                           onTap: null,
                         ),
-                        SizedBox(height: 14 * s),
-                        PrimaryButton(label: l.landingStart, onPressed: start),
+                        const SizedBox(height: LandingTokens.cardGap),
+                        PrimaryButton(label: l.landingStart, onPressed: start, height: LandingPhase1Tokens.startHeight, textStyle: AppText.of(LandingPhase1Tokens.startFontSize, color: AppColors.white, weight: AppFont.bold, lineHeight: LandingPhase1Tokens.startLineHeight)),
                         SizedBox(height: 8 * s),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -264,130 +266,291 @@ class _FunctionCard extends StatelessWidget {
     required this.artFraction,
     required this.referenceHeight,
     required this.onTap,
-    this.illustration,
     this.border,
     this.badgeFontSize = AppFont.s13,
     this.titleFontSize = AppFont.s16,
     this.titleLineHeight = 26,
     this.titleInk = LandingTokens.titleInk,
     this.bodyInk = LandingTokens.bodyInk,
+    this.ctaLabel,
   });
   final double scale, artFraction, referenceHeight;
   final String art, icon, label, title, text;
   final Color background, badge, titleInk, bodyInk;
   final Color? border;
   final VoidCallback? onTap;
-  final Widget? illustration;
   final double badgeFontSize, titleFontSize, titleLineHeight;
-
-  String _title(BuildContext context) {
-    if (Localizations.localeOf(context).languageCode != 'fr' || (art != 'scan' && art != 'menus')) return title;
-    final words = title.split(' ');
-    return '${words.take(2).join(' ')}\n${words.skip(2).join(' ')}';
-  }
+  final String? ctaLabel;
 
   @override
   Widget build(BuildContext context) {
-    final s = scale;
-    final backgroundHsl = HSLColor.fromColor(background);
-    final borderColor =
-        border ??
-        backgroundHsl
-            .withLightness((backgroundHsl.lightness - LandingTokens.cardBorderDarkening).clamp(0.0, 1.0))
-            .toColor();
+    final borderColor = LandingVerticalTokens.cardBorders[art]!;
     return Semantics(
       button: onTap != null,
       label: label,
-      child: Material(
-        color: background,
-        borderRadius: BorderRadius.circular(22 * s),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            key: ValueKey('landing_card_$art'),
-            constraints: BoxConstraints(minHeight: referenceHeight * s),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(22 * s),
-              border: Border.all(color: borderColor, width: 3 * s),
-            ),
-            child: Stack(
-              children: [
-                PositionedDirectional(
-                  top: 0,
-                  bottom: 0,
-                  end: 0,
-                  width: (706 * artFraction) * s,
-                  child:
-                      illustration ??
-                      _Illustration(art, fit: BoxFit.cover, mirror: Directionality.of(context) == TextDirection.rtl),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20 * s, 10 * s, 0, 20 * s),
-                  child: SizedBox(
-                    width: 360 * s,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          key: ValueKey('landing_pill_$art'),
-                          padding: EdgeInsets.symmetric(horizontal: 12 * s, vertical: 7 * s),
-                          decoration: BoxDecoration(
-                            color: badge,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: AppColors.white.withValues(alpha: .45), width: s),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AppIcon(icon, size: 22 * s, color: AppColors.white),
-                              SizedBox(width: 10 * s),
-                              Flexible(
-                                child: Text(
-                                  label,
-                                  style: AppText.of(badgeFontSize, color: AppColors.white, weight: AppFont.medium),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 6 * s),
-                        Text(
-                          _title(context),
-                          style: AppText.of(
-                            titleFontSize,
-                            weight: AppFont.extrabold,
-                            color: titleInk,
-                            lineHeight: titleLineHeight,
-                            tightTracking: true,
-                          ),
-                        ),
-                        SizedBox(height: 6 * s),
-                        SizedBox(
-                          width: 360 * s,
-                          child: Text(text, style: AppText.of(AppFont.s13, color: bodyInk, lineHeight: 21)),
-                        ),
-                      ],
-                    ),
+      child: Container(
+        clipBehavior: art == 'meal_scan' ? Clip.antiAlias : Clip.none,
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(LandingPhase1Tokens.cardRadius),
+        ),
+        foregroundDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(LandingPhase1Tokens.cardRadius),
+          border: Border.all(color: borderColor),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            child: LayoutBuilder(
+              key: ValueKey('landing_card_$art'),
+              builder: (context, bounds) {
+                final innerWidth = bounds.maxWidth - 2 * LandingPhase1Tokens.cardPadding;
+                final artworkWidth = art == 'meal_scan'
+                    ? (innerWidth * LandingVerticalTokens.caliArtFraction).clamp(
+                        0.0,
+                        (bounds.maxWidth - 2 * LandingVerticalTokens.artBorderInset) /
+                            LandingVerticalTokens.caliVisibleWidthFraction,
+                      ).toDouble()
+                    : art == 'scan'
+                        ? innerWidth * LandingVerticalTokens.instantArtFraction
+                        : (innerWidth * LandingVerticalTokens.remainingArtFraction).clamp(
+                            0.0,
+                            (bounds.maxWidth - 2 * LandingVerticalTokens.artBorderInset) /
+                                (2 * LandingVerticalTokens.remainingArtCenter[art]!),
+                          ).toDouble();
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    LandingPhase1Tokens.cardPadding,
+                    LandingPhase1Tokens.cardPadding,
+                    LandingPhase1Tokens.cardPadding,
+                    0,
                   ),
-                ),
-                Positioned.fill(
-                  child: IgnorePointer(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20 * s),
-                        border: Border.all(color: borderColor, width: s),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        key: ValueKey('landing_pill_$art'),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: LandingPhase1Tokens.badgeHorizontal,
+                          vertical: LandingPhase1Tokens.badgeVertical,
+                        ),
+                        decoration: BoxDecoration(
+                          color: badge,
+                          borderRadius: BorderRadius.circular(LandingPhase1Tokens.badgeRadius),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AppIcon(icon, size: LandingPhase1Tokens.badgeIcon, color: AppColors.white),
+                            const SizedBox(width: LandingPhase1Tokens.badgeGap),
+                            Flexible(child: Text(label, style: AppText.of(
+                              LandingPhase1Tokens.badgeSize, color: AppColors.white,
+                              weight: AppFont.semibold, lineHeight: LandingPhase1Tokens.badgeLineHeight,
+                            ))),
+                          ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: LandingVerticalTokens.badgeTitleGap),
+                      SizedBox(
+                        width: innerWidth,
+                        child: Text(title, style: AppText.of(
+                          LandingPhase1Tokens.titleSize, weight: AppFont.extrabold,
+                          color: titleInk, lineHeight: LandingVerticalTokens.titleLineHeight,
+                          tightTracking: true,
+                        )),
+                      ),
+                      const SizedBox(height: LandingVerticalTokens.titleBodyGap),
+                      SizedBox(
+                        width: innerWidth,
+                        child: Text(text, style: AppText.of(
+                          LandingPhase1Tokens.bodySize, color: bodyInk,
+                          lineHeight: LandingVerticalTokens.bodyLineHeight,
+                        )),
+                      ),
+                      if (ctaLabel != null) ...[
+                        const SizedBox(height: LandingPhase1Tokens.ctaDescriptionGap),
+                        Center(child: SizedBox(
+                          width: innerWidth * LandingVerticalTokens.ctaWidthFraction,
+                          child: _LandingOutlineCta(
+                            key: ValueKey('landing_cta_$art'), wrap: true,
+                            label: ctaLabel!, icon: icon, color: badge, onTap: onTap,
+                          ),
+                        )),
+                      ],
+                      SizedBox(height: art == 'tracking' ? LandingVerticalTokens.trackingArtGap : LandingVerticalTokens.verticalArtGap),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ClipRect(
+                          clipBehavior: art == 'tracking' ? Clip.hardEdge : Clip.none,
+                          child: SizedBox(
+                          key: ValueKey('landing_art_slot_$art'),
+                          width: artworkWidth,
+                          height: artworkWidth *
+                              (LandingVerticalTokens.artVisibleBottomRatio[art]! -
+                                  (art == 'tracking' ? LandingVerticalTokens.trackingTransparentTopRatio : 0)),
+                          child: OverflowBox(
+                            alignment: Alignment.topCenter,
+                            minWidth: artworkWidth,
+                            maxWidth: artworkWidth,
+                            minHeight: artworkWidth *
+                                LandingVerticalTokens.artAspectHeight[art]!,
+                            maxHeight: artworkWidth *
+                                LandingVerticalTokens.artAspectHeight[art]!,
+                            child: Transform.translate(
+                              offset: Offset(
+                                artworkWidth * (art == 'scan'
+                                    ? LandingVerticalTokens.instantCenterOffset
+                                    : art == 'meal_scan' ? LandingVerticalTokens.caliCenterOffset
+                                    : .5 - LandingVerticalTokens.remainingArtCenter[art]!) *
+                                    (Directionality.of(context) == TextDirection.rtl ? -1 : 1),
+                                art == 'tracking' ? -artworkWidth * LandingVerticalTokens.trackingTransparentTopRatio : 0,
+                              ),
+                              child: _Illustration(
+                                art, width: artworkWidth,
+                                fit: BoxFit.contain,
+                                mirror: Directionality.of(context) == TextDirection.rtl,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),
       ),
     );
   }
+}
+
+class _LandingOutlineCta extends StatelessWidget {
+  const _LandingOutlineCta({super.key, required this.label, required this.icon, required this.color, this.onTap, this.wrap = false});
+  final bool wrap;
+  final String label, icon;
+  final Color color;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    enabled: onTap != null,
+    child: Material(
+      color: AppColors.white.withValues(alpha: LandingCtaTokens.fillOpacity),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(LandingCtaTokens.radius),
+        side: BorderSide(color: color, width: LandingCtaTokens.borderWidth),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: LandingCtaTokens.height),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: LandingCtaTokens.horizontalPadding),
+            child: wrap ? SizedBox(
+              width: double.infinity,
+              child: Center(
+                heightFactor: 1,
+                child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: LandingCtaTokens.gap,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                AppIcon(icon, size: LandingCtaTokens.iconSize, color: color),
+                for (final word in label.split(' ').take(label.split(' ').length - 1))
+                  Text(word, style: AppText.of(
+                    LandingCtaTokens.fontSize,
+                    weight: AppFont.bold,
+                    color: color,
+                    lineHeight: LandingCtaTokens.lineHeight,
+                  )),
+                Row(mainAxisSize: MainAxisSize.min, children: [
+                  Text(label.split(' ').last, style: AppText.of(
+                    LandingCtaTokens.fontSize, weight: AppFont.bold,
+                    color: color, lineHeight: LandingCtaTokens.lineHeight,
+                  )),
+                  const SizedBox(width: LandingCtaTokens.gap),
+                  AppIcon(AppIcons.arrowRight, size: LandingCtaTokens.iconSize, color: color),
+                ]),
+              ],
+            ),
+            ),
+            ) : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppIcon(icon, size: LandingCtaTokens.iconSize, color: color),
+                const SizedBox(width: LandingCtaTokens.gap),
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: wrap ? null : 1,
+                    softWrap: wrap,
+                    style: AppText.of(
+                      LandingCtaTokens.fontSize,
+                      weight: AppFont.bold,
+                      color: color,
+                      lineHeight: LandingCtaTokens.lineHeight,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: LandingCtaTokens.gap),
+                Transform.flip(
+                  flipX: Directionality.of(context) == TextDirection.rtl,
+                  child: AppIcon(AppIcons.arrowRight, size: LandingCtaTokens.iconSize, color: color),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/// Displays one icon from the supplied sheet without changing the source pixels.
+class _LandingBenefitIcon extends StatelessWidget {
+  const _LandingBenefitIcon({required this.index, required this.size});
+  final int index;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    key: ValueKey('landing_benefit_icon_$index'),
+    width: size,
+    height: size,
+    child: FittedBox(
+      fit: BoxFit.contain,
+      child: SizedBox(
+        width: LandingVerticalTokens.benefitCropSize,
+        height: LandingVerticalTokens.benefitCropSize,
+        child: ClipRect(
+          child: OverflowBox(
+            alignment: Alignment.topLeft,
+            minWidth: LandingVerticalTokens.benefitSheetWidth,
+            maxWidth: LandingVerticalTokens.benefitSheetWidth,
+            minHeight: LandingVerticalTokens.benefitSheetHeight,
+            maxHeight: LandingVerticalTokens.benefitSheetHeight,
+            child: Transform.translate(
+              offset: Offset(-LandingVerticalTokens.benefitCropLeft, -LandingVerticalTokens.benefitCropTops[index]),
+              child: Image.asset(
+                _Illustration.assetPath('benefits'),
+                width: LandingVerticalTokens.benefitSheetWidth,
+                height: LandingVerticalTokens.benefitSheetHeight,
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
+                excludeFromSemantics: true,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _Illustration extends StatelessWidget {
@@ -398,8 +561,14 @@ class _Illustration extends StatelessWidget {
   final bool mirror;
   final String? label;
   static String assetPath(String name) => switch (name) {
-    'shopping' => 'assets/images/landing/shopping_dezoom_transparent.png',
-    'tracking' => 'assets/images/landing/tracking_dezoom_transparent.png',
+    'benefits' => 'assets/images/landing/benefit_icons_supplied_20261013.png',
+    'banana' => 'assets/images/landing/banana_supplied_20261013.png',
+    'hero' => 'assets/images/landing/hero_salmon_20261013.png',
+    'scan' => 'assets/images/landing/scan_20261013_1258.png',
+    'meal_scan' => 'assets/images/landing/meal_scan_20261013_1258.png',
+    'menus' => 'assets/images/landing/menus_20261013_1258.png',
+    'shopping' => 'assets/images/landing/shopping_20261013_1258.png',
+    'tracking' => 'assets/images/landing/tracking_20261013_1258.png',
     _ => 'assets/images/landing/$name.png',
   };
   @override
@@ -411,122 +580,12 @@ class _Illustration extends StatelessWidget {
       semanticLabel: label,
       excludeFromSemantics: label == null,
       gaplessPlayback: true,
+      filterQuality: name == 'banana'
+          ? FilterQuality.high
+          : const ['scan', 'meal_scan', 'menus', 'shopping', 'tracking'].contains(name)
+          ? FilterQuality.medium
+          : FilterQuality.low,
     );
-    final artwork = name == 'tracking'
-        ? ClipRect(
-            child: Transform.scale(scale: LandingTokens.trackingArtScale, child: image),
-          )
-        : image;
-    return mirror ? Transform.flip(flipX: true, child: artwork) : artwork;
-  }
-}
-
-/// Presentation artwork from the supplied reference; example values only.
-/// No camera, analysis or nutrition calculation.
-class _MealScanIllustration extends StatelessWidget {
-  const _MealScanIllustration();
-
-  @override
-  Widget build(BuildContext context) {
-    final l = L.of(context);
-    return ExcludeSemantics(
-      child: LayoutBuilder(
-        builder: (context, bounds) {
-          final k = bounds.maxWidth / 176;
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              ShaderMask(
-                blendMode: BlendMode.dstIn,
-                shaderCallback: (bounds) => LinearGradient(
-                  begin: Directionality.of(context) == TextDirection.rtl ? Alignment.centerRight : Alignment.centerLeft,
-                  end: Directionality.of(context) == TextDirection.rtl ? Alignment.centerLeft : Alignment.centerRight,
-                  colors: const [Colors.transparent, Colors.white],
-                  stops: const [0, .10],
-                ).createShader(bounds),
-                child: Image.asset(LandingTokens.mealScanAsset, fit: BoxFit.cover),
-              ),
-              PositionedDirectional(
-                end: 5 * k,
-                top: bounds.maxHeight * .10,
-                bottom: bounds.maxHeight * .10,
-                width: 76 * k,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _MealScanMetric(icon: AppIcons.flame, value: l.unitKcal('520'), tint: AppColors.orange, scale: k),
-                    _MealScanMetric(
-                      icon: AppIcons.dumbbell,
-                      value: '38 g',
-                      label: l.macroProteinLabel,
-                      tint: AppColors.primary,
-                      scale: k,
-                    ),
-                    _MealScanMetric(
-                      icon: AppIcons.wheat,
-                      value: '46 g',
-                      label: l.macroCarbsLabel,
-                      tint: AppColors.orange,
-                      scale: k,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _MealScanMetric extends StatelessWidget {
-  const _MealScanMetric({required this.icon, required this.value, required this.tint, required this.scale, this.label});
-  final String icon, value;
-  final String? label;
-  final Color tint;
-  final double scale;
-
-  @override
-  Widget build(BuildContext context) {
-    final k = scale;
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 5 * k, vertical: 6 * k),
-      decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: .96),
-        borderRadius: BorderRadius.circular(9 * k),
-        boxShadow: [
-          BoxShadow(color: AppColors.ink.withValues(alpha: .07), blurRadius: 6 * k, offset: Offset(0, 3 * k)),
-        ],
-      ),
-      child: Row(
-        children: [
-          AppIcon(icon, size: 15 * k, color: tint, strokeWidth: 1.5),
-          SizedBox(width: 4 * k),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: AppText.of(
-                    10 * k,
-                    weight: AppFont.bold,
-                    color: LandingTokens.mealScanTitleInk,
-                    lineHeight: 13 * k,
-                  ),
-                ),
-                if (label != null)
-                  Text(
-                    label!,
-                    style: AppText.of(8 * k, color: LandingTokens.mealScanBodyInk, lineHeight: 11 * k),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+    return mirror ? Transform.flip(flipX: true, child: image) : image;
   }
 }

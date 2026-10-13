@@ -1,5 +1,29 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## État final validé — 13 octobre 2026, arrêt de la journée
+
+- Landing et cinq langues FR/EN/ES/IT/DE validées sur le Xiaomi 2201117PG ; compilation et installation debug réussies.
+- Sauvegarde de chacune des cinq langues confirmée par fermeture forcée et relance sur Android. Application laissée sur la Landing française.
+- Landing complète et présentations Solo/Famille contrôlées dans les cinq langues, sans débordement de texte/CTA observé sur environ 393 px logiques. Les formulaires complets n'ont pas été rejoués.
+- Les chevauchements du héros à 320 px issus des captures Flutter restent à arbitrer ; aucune correction automatique. Les 11 écarts visuels historiques hors Landing restent ouverts.
+- Simo autorise la sauvegarde Git finale des modifications validées et l'arrêt. Les essais, journaux volumineux et ressources non validées restent uniquement locaux.
+- Aucun travail Supabase commencé. Attendre les prochaines instructions ; ne pas reprendre l'étape 2 automatiquement.
+
+
+## État de reprise prioritaire — 13 octobre 2026, étape 1
+
+L'utilisateur autorise uniquement la consolidation des tests et de la documentation. Landing installée (icônes de bénéfices échelle 1,45), conservée comme référence **provisoire**. Aucun changement de code applicatif, PNG, règles métier, installation, commit/push ou Supabase dans cette étape. Les bilans datés ci-dessous restent historiques et ne constituent pas le résultat courant des tests.
+
+Référence : [reports/step1_landing_review/REFERENCE.md](reports/step1_landing_review/REFERENCE.md). Rapport et preuves : [reports/step1_landing_review/REPORT.md](reports/step1_landing_review/REPORT.md). L'étape 2 reste soumise à validation après ce rapport. Ne pas confondre les phases de correction 6A/6B/7 et les jalons produit de génération/IA/paywall.
+
+
+### Bilan de l'étape 1 terminée
+
+- Documentation et tests consolidés, historique conservé ; application et ressources identiques (398 empreintes).
+- Ciblés : 51 réussites ; suite complète : 1 214 réussites et 15 échecs hors Landing (11 écarts de références à diagnostiquer, 4 débordements ES/IT réels).
+- Captures complètes FR/DE/EN à 320/390 enregistrées ; chevauchement du héros anglais à 320 signalé sans correction.
+- Aucun travail Supabase, aucune installation, aucun commit/push. Arrêt pour validation avant étape 2.
+
 ## Fin de session — 9 octobre 2026 — état de reprise prioritaire
 
 Cet état remplace les bilans intermédiaires historiques ci-dessous pour la reprise.
@@ -500,3 +524,130 @@ Candidat separe dans reports/splash_c_clean_visual.dart : fourchette redessinee 
 2026-10-11 : APK debug avec C nettoye v3 compile avec succes ; installation sur CEUGAIC6AEVGWCNF reussie (Success), puis app ouverte pour verification par Simo. Aucune modification de la Landing.
 
 2026-10-11 : Simo confirme OK apres installation de C nettoye v3 sur telephone. Splash valide ; correction terminee. Landing preservee.
+
+### 2026-10-12 - Landing : quatre CTA avec contour
+Ajout limite aux quatre cartes Instant Recipe AI, CaliScan AI, Menus et Courses, sans mains ni cercles. Choix Simo : les deux scans restent inactifs ; Menus/Courses gardent PathChoiceScreen. Images, cadrages et textes originaux conserves par comparaison de geometrie a 320/390 ; quatre cartes +56 px, Suivi inchange. 36 tests reussis et analyse ciblee sans probleme. Captures completes et rapport : reports/landing_outline_cta/README.md. Attendre validation visuelle explicite avant installation ; aucun commit, push ou APK, splash et Commencer preserves.
+
+### 2026-10-12 - CTA responsive, libelles courts a 320
+Version francaise corrigee : courts a 320, complets a 390 ; une seule ligne, limite a la zone texte et a la colonne gauche. Police 12 et icones 18 preserves, espacements 4 px. Captures : reports/landing_cta_responsive/. Geometrie de la zone droite identique et tests francais reussis. Controle six langues : blocage allemand a 390 (texte +6,15 px). Arret selon garde-fou, 36 tests reussis / 1 echec allemand ; aucune correction improvisee. Attendre validation visuelle francaise et accord sur ce cas allemand, aucune installation ni commit/push.
+
+### 2026-10-12 - Landing : phase 1 sur les deux nouvelles references
+Implementation limitee a landing_screen.dart et aux jetons propres a la Landing, avec cinq nouveaux PNG derives du ZIP ; originaux, splash, autres ecrans et navigation preserves. Captures Flutter 320/390 et comparaisons dans reports/landing_phase1/. Espacement local de 10 px conserve : phase 2 non commencee. Deux tests de capture/navigation reussis et analyse ciblee sans probleme. Differences restantes documentees (cadrages, retours a la ligne, Suivi plus petit, dates du visuel Menus). Validation visuelle explicite de Simo attendue ; aucun APK, installation Android, commit ou push.
+
+### 2026-10-12 - Landing : correction ciblee des mains et CTA
+Quatre CTA a 16 px mesures sous les descriptions, style/taille/libelles et colonnes preserves. Deux illustrations avec mains dezoomees par marge Flutter de 10 px, aucun PNG modifie. Les sources tronquent deja les poignets : extensions proposees separement dans reports/landing_phase1_targeted/proposal_scan.png et proposal_meal_scan.png, non integrees et a valider. Captures Flutter 320/390 et comparaisons dans ce dossier. Deux tests reussis, analyse ciblee sans probleme. Suivi, Commencer, splash, navigation et espacement de 10 px preserves. Phase 2 non commencee ; aucun commit, push ou installation. Validation visuelle explicite attendue.
+
+### 2026-10-12 - Landing : structure unique et PNG originaux
+Cartes en conteneur unique avec Stack/Positioned.fill et image entiere en contain, sans decoupage en colonnes. Cinq nouveaux assets original_*.png copies binaires identiques au ZIP ; aucun detourage, generation ou modification des anciens PNG. Quatre CTA a 24 px sous les descriptions, style/libelles/couleurs preserves. Captures et comparaisons dans reports/landing_structure/, deux tests reussis, analyse ciblee sans probleme. Limites : poignets deja tronques et fonds opaques dans les PNG sources ; non corriges par recreation interdite. Reste de la Landing, Commencer, splash, navigation et espacements globaux preserves. Phase 2 non commencee ; aucun commit, push ou installation. Validation visuelle explicite attendue.
+
+### 2026-10-13 - Instant Recipe AI uniquement : validation attendue
+PNG fourni copie identique, fond menthe continu, interieur 40 % texte/CTA et 60 % image en contain. CTA multiligne, ecart description 24 px, scans inactifs preserves. Quatre captures Flutter FR/DE 320/390 : reports/landing_instant_phase2/. Quatre tests reussis, proportions et absence de debordement controles. Autres cartes, header, Commencer, splash et espacements preserves. Coupure source de l avant-bras visible. Aucun commit, push, APK, installation ni dependance. Attendre validation explicite de Simo.
+
+2026-10-13 : nouvel essai demande par Simo, Instant Recipe AI uniquement en 50/50. Quatre captures trial50_FR/DE_320/390 dans reports/landing_instant_phase2/, quatre tests reussis. PNG et autres cartes preserves ; aucun commit, push ni installation. Validation attendue.
+
+2026-10-13 : essai 50/50 ajuste sur demande de Simo : illustration alignee au bord inferieur sans recadrage, contenu du CTA centre horizontalement et verticalement. Quatre captures bottom_center_FR/DE_320/390, quatre tests reussis (image au bord inferieur incluse). PNG et autres cartes inchanges. Validation attendue ; aucun commit, push ni installation.
+
+2026-10-13 : CTA Instant Recipe AI court sous 390 px (Scanner en FR, traduction existante dans les autres langues), complet a 390 px. Quatre captures short320_FR/DE_320/390 et quatre controles Flutter reussis. Alignement inferieur et 50/50 preserves. Validation attendue. Aucun commit, push ni installation.
+
+2026-10-13 : variante verticale demandee par Simo sur Instant Recipe AI seulement : texte et CTA en haut pleine largeur, PNG entier centre en bas (75 % de la largeur interieure), avant-bras au bord inferieur. CTA court a 320, complet a 390. Quatre captures vertical_FR/DE_320/390 et quatre controles Flutter reussis, image sous CTA sans chevauchement. Autres cartes et espacements preserves, aucune retouche PNG, commit, push ni installation. Variante en attente de validation.
+
+2026-10-13 : variante verticale avec le meme CTA complet a 320 et 390 px, Scanner mon frigo en francais et traductions existantes. Quatre captures vertical_fullcta_FR/DE_320/390 ; quatre controles Flutter reussis. Aucun autre changement visuel ni comportemental. Validation attendue.
+
+2026-10-13 : correction de l alignement du header demandee sur image annotee : retrait gauche uniformise a 14 px a 320/390, aligne sur le bord des cartes. Logo, titre et avantages deplaces ensemble ; photo et cartes preserves. Quatre captures aligned_header_FR/DE_320/390 et quatre controles Flutter reussis. Validation attendue ; aucun commit, push ni installation.
+
+2026-10-13 : aeration demandee : header logo/titre 14 px, titre/avantages 18 px, avantages espaces de 10 px et interligne 16. Instant Recipe AI : badge/titre 8 px, titre/description 10 px, interlignes titre 20 et description 17 ; description/CTA conserve a 24 px. Autres cartes et espacements entre cartes inchanges. Quatre captures airy_FR/DE_320/390, quatre controles Flutter reussis. Validation attendue, aucune installation ni commit/push.
+
+2026-10-13 : bouton Instant Recipe AI entier reduit a 85 % de la largeur interieure et centre a 320/390. Quatre captures narrow_cta_FR/DE_320/390, quatre controles Flutter reussis dont largeur et centrage. Autres boutons inchanges, validation attendue. Aucun commit, push ni installation.
+
+2026-10-13 : modèle vertical Instant Recipe AI validé par Simo et appliqué aux quatre autres cartes avec les derniers PNG fournis, copies identiques. Quatre CTA centrés à 85 %, images entières sous les textes, Suivi sans CTA, couleurs/bordures et espacements préservés. Captures FR/DE 320/390 dans reports/landing_all_vertical/. Quatre tests réussis, analyse ciblée sans anomalie ; header et Instant Recipe AI identiques pixel par pixel aux captures validées. Limites des PNG inchangées (bras coupés, inscriptions incorporées, franges). Aucun commit, push, APK, installation ni dépendance. Attendre validation des quatre cartes.
+
+2026-10-13 : padding interieur uniforme demande par Simo : 20 px gauche, droite, haut et bas sur les cinq cartes a 320/390. Image conservee entiere, desormais a 20 px du bord inferieur ; CTA a 85 % de la nouvelle largeur interieure. Quatre captures padding20_FR/DE_320/390 et quatre controles Flutter reussis. Marge exterieure et espacement entre cartes inchanges. Validation attendue ; aucun commit, push ni installation.
+
+2026-10-13 : Simo demande aussi 20 px ENTRE les cartes. LandingTokens.cardGap passe a 20 px ; padding interieur 20 px conserve. Quatre tests Flutter reussis, quatre ecarts mesures a 20 px en FR/DE 320/390. Captures gap20 dans reports/landing_all_vertical/. Validation attendue, aucun commit, push ni installation.
+
+2026-10-13 : cartes raccourcies sur demande de Simo : padding bas retire et lignes transparentes inferieures des PNG exclues de la hauteur du cadre Flutter, sans modifier les pixels ni couper un objet. Avant-bras des scans au bord inferieur ; autres images alignees sur leur derniere ligne non transparente. Marges haut/gauche/droite 20 px et espaces inter-cartes 20 px preserves. Quatre captures compact_FR/DE_320/390, quatre controles Flutter reussis. Aucun commit, push ni installation, validation attendue.
+
+2026-10-13 : marges exterieures ecran/cartes passees a 24 px gauche/droite sur demande de Simo, espaces entre cartes maintenus a 20 px. Padding interieur haut/gauche/droite 20 px, bas compact conserve. Quatre captures inset24_FR/DE_320/390, quatre controles Flutter reussis dont marges externes 24 et espaces inter-cartes 20. Validation attendue ; aucun commit, push ni installation.
+
+2026-10-13 : remplacement des cinq visuels par les fichiers fournis 12_57_20/28/41/52 et 12_58_05. Copies binaires identiques, anciennes images conservees. Dimensions et lignes transparentes inferieures des nouveaux PNG prises en compte par Flutter, sans retouche ni recadrage des objets. Design, CTA, navigation, header et marges 24 px / ecarts 20 px preserves. Quatre captures replacement_FR/DE_320/390 dans reports/landing_replacement_1258/, quatre tests reussis. Frigo et Suivi visuellement plus petits a cause des nouveaux cadrages. Aucune installation Android, commit ni push ; attendre validation visuelle avant installation.
+
+2026-10-13 : agrandissement demande de la premiere illustration uniquement : cadre Instant Recipe AI a 100 % de la largeur interieure au lieu de 75 %, soit +33 %. Image entiere sans retouche ni recadrage ; autres cartes conservees. Quatre captures zoom_scan_FR/DE_320/390 et quatre controles Flutter reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : zoom supplementaire demande sur Instant Recipe AI uniquement : echelle 1,20 de la largeur interieure, +20 % par rapport a l essai precedent. Le cadre PNG deborde uniquement dans ses marges transparentes ; objets entiers preserves. Quatre captures zoom_scan120_FR/DE_320/390 et quatre controles Flutter reussis. Autres cartes inchangees ; aucune installation, commit ni push. Validation attendue.
+
+2026-10-13 : premiere illustration centree horizontalement sur la silhouette principale frigo/main (centre x819 dans PNG 1448 px) par translation Flutter, sans retouche. Zoom 1,20 preserve ; autres cartes inchangees. Quatre captures zoom_scan_centered_FR/DE_320/390 et quatre controles Flutter reussis incluant centrage mesure. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : CaliScan agrandi et centre sur demande de Simo. Echelle cible 1,20 comme Instant Recipe AI, limitee a 390 pour garder la silhouette et les badges dans la carte (centre source x727/1448). Image entiere en contain, PNG intact, autres cartes preservees. Quatre captures zoom_cali_centered_FR/DE_320/390 et quatre tests reussis. Aucune installation, commit ni push ; validation attendue.
+
+CaliScan : limite finale du zoom ajustee aux deux largeurs pour que meme les pixels du bord du PNG restent dans la carte ; quatre controles Flutter reussis (PNG entier contenu inclus). Captures zoom_cali_centered remplacees par cette version finale.
+
+2026-10-13 : Menus, Courses et Suivi agrandis et centres sur demande de Simo, echelle cible 1,20 limitee pour contenir tout le PNG dans la carte. Aucun chevauchement avec CTA (cadre image 12 px sous bouton), Suivi sans CTA. Premiere carte et CaliScan preserves. Quatre captures zoom_all_centered_FR/DE_320/390, quatre controles Flutter reussis incluant limites horizontales, centrage et espaces CTA. PNG intacts ; aucune installation, commit ni push, validation attendue.
+
+2026-10-13 : variante de fonds demandee par Simo pour visualisation : Instant Recipe D5E4DA, CaliScan D2DFEA, Menus D3E3E5, Courses D8E6DC, Suivi D9D5EB. Captures contrast_palette_FR/DE_320/390, quatre controles Flutter reussis. Dimensions, images et CTA preserves ; aucune installation, commit ni push. Palette en attente de validation.
+
+2026-10-13 : palette G tres claire validee et appliquee : E4F7ED/E6F3FE/FFF0E2/FFEDF3/F1EBFC pour Instant Recipe/CaliScan/Menus/Courses/Suivi. Quatre captures palette_g_light_FR/DE_320/390, quatre controles Flutter reussis. Images, CTA et espacements inchanges. Aucune installation, commit ni push.
+
+2026-10-13 : fonds fortement eclaircis sur demande de Simo : F4FCF8/F5FAFF/FFF9F3/FFF8FA/FAF7FE. Quatre captures palette_g_faint_FR/DE_320/390 et quatre tests Flutter reussis. Images, CTA et espacements preserves. Aucune installation, commit ni push ; validation du rendu attendue.
+
+2026-10-13 : bordures legerement plus colorees demandees par Simo, epaisseur conservee : B5DFCC/B4D5F2/F0CEAE/F0BFD0/D6C5EF. Fonds presque blancs preserves, ainsi que dimensions/CTA/images. Quatre captures soft_color_borders_FR/DE_320/390 et quatre tests Flutter reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : typographie Landing agrandie sur demande de Simo : titres cartes 17 px, descriptions 13, CTA 13 et icones 18 (hauteur mini 38), capsules 14 et icones 16 (padding 10/4), titre header 23/25 et avantages 12. Interlignes adaptes 24/20, Commencer 16 px hauteur44. Largeurs et espaces icone/texte des avantages adaptes aux mots allemands. Quatre captures larger_type_FR/DE_320/390 et quatre tests reussis (CTA >=38, limites et navigation). Fonds/bordures/PNG intacts, espaces entre cartes20 et marges ecran24 preserves. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : description Suivi enrichie sur demande de Simo (budget/calories/apports, evolution poids/habitudes, objectifs) et adaptee en six langues existantes. Traductions Flutter regenerees localement. Quatre captures tracking_description_FR/DE_320/390 et quatre tests reussis ; Suivi sans CTA preserve. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : description Suivi remplacee par le texte exact fourni par Simo, traductions adaptees. Graphiques rapproches : espace Flutter 6 px au lieu de12, 103 lignes entierement transparentes du haut du PNG exclues du cadre de mise en page, sans retouche ni coupe visible. Quatre captures tracking_final_FR/DE_320/390 et quatre tests reussis. Autres cartes preservees ; aucune installation, commit ni push. Validation attendue.
+
+2026-10-13 : Suivi resserre en haut/bas autour du visuel sur demande de Simo : cadre Flutter limite aux lignes235..840 du PNG (graphiques principaux et ombres conserves), sans toucher au fichier ni a l echelle. Texte et autres cartes preserves ; quatre captures tracking_tighter_FR/DE_320/390 et quatre tests reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : description Suivi remplacee par le dernier texte exact fourni (Suivez votre poids...), traductions mises a jour. Mise en page resserree conservee ; quatre captures tracking_short_FR/DE_320/390 et quatre tests Flutter reussis. Aucune installation, commit ni push.
+
+2026-10-13 : descriptions des quatre cartes hors Suivi raccourcies et organisees en trois lignes, traductions adaptees dans les six langues existantes. Quatre captures descriptions_three_lines_FR/DE_320/390 et quatre controles Flutter reussis avec mesure exacte de trois lignes dans les quatre descriptions. Suivi et mise en page preserves ; aucune installation, commit ni push. Validation attendue.
+
+2026-10-13 : clarification Simo : descriptions enrichies, sans retours a la ligne imposes, priorite390. Quatre descriptions francaises mesurees exactement sur trois lignes a390, retours naturels et hauteur libre a320 ; traductions naturelles mises a jour. Suivi preserve. Quatre captures descriptions_natural_FR/DE_320/390 et quatre tests reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : arrondi des cinq cartes Landing passe de9 a12 px sur demande de Simo, identique a320/390. Aucun autre changement, aucune installation ni commit/push.
+
+2026-10-13 : debordement de l avant-bras CaliScan dans le coin inferieur gauche signale par Simo : contenu de cette carte limite a son contour arrondi12 via clip antiAlias, PNG intact. Quatre captures cali_clip12_FR/DE_320/390 et quatre controles Flutter reussis. Autres cartes preservees ; aucune installation, commit ni push. Validation attendue.
+
+2026-10-13 : espace vertical entre cartes Landing passe de20 a16 px sur demande de Simo. Marges exterieures et padding interieur preserves. Aucune installation, commit ni push.
+
+2026-10-13 : fond global Landing F2F3F6 demande par Simo ; fonds des cartes, espacements16 et autres ecrans preserves. Aucune installation, commit ni push.
+
+2026-10-13 : fond global Landing eclairci deF2F3F6 aF8F9FB sur demande de Simo. Cartes et mise en page preservees. Aucune installation, commit ni push.
+
+2026-10-13 : hero Landing sans marge droite (end0), abaisse de8 px (top44). Icones avantages alignees sur le bord gauche cartes24 px par retrait local10, logo et titre preserves. Quatre captures hero_alignment_FR/DE_320/390 et quatre tests Flutter reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : hero Landing remplace par Bol de saumon grille et quinoa frais.png fourni par Simo, copie binaire identique dans hero_salmon_20261013.png. Position actuelle preservee (top44, end0), autres elements inchanges. Quatre captures hero_salmon_FR/DE_320/390 et quatre tests Flutter reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : branche decorative du coin superieur droit Landing retiree sur demande de Simo. PNG hero et ses feuilles integrees preserves. Aucune installation, commit ni push.
+
+2026-10-13 : hero saumon agrandi (180/220 px FR a320/390), ancien ShaderMask supprime pour afficher tout le PNG sans coupure haut/bas. Position droite0/top44 preservee ; taille allemande150/200 pour eviter les feuilles sur les textes plus longs. Quatre captures hero_zoom_full_FR/DE_320/390 et quatre tests reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : marges exterieures gauche/droite Landing passees de24 a20 px sur demande de Simo. Espace entre cartes16 px preserve, aucune installation ni commit/push.
+
+2026-10-13 : banane detouree generee avec imagegen et ajoutee sous le bol, ressource banana_20261013.png dans assets/images/landing. Largeur84, retrait droit24, espace avant premiere carte8 px mesure en FR/DE320/390. Quatre captures hero_banana et quatre tests reussis. Aucun chevauchement avec cartes ; aucune installation, commit ni push. Validation attendue.
+
+2026-10-13 : banane agrandie84 a100 px et remontee (distance carte8 a16), filtrage Flutter high au lieu de low pour lisser la reduction du PNG haute definition. PNG intact. Quatre captures banana_sharp_FR/DE_320/390 et quatre tests reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : banane remplacee par PNG fourni Banane mure isolee sur fond transparent.png (1254x1254, copie identique). Taille80 px, retrait droit12, ecart premiere carte16 px, filtrehigh ; position adaptee pres du bord inferieur du plat. Quatre captures banana_supplied_FR/DE_320/390 et quatre tests reussis. Autres elements preserves, aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : quatre bullets de benefices remplaces par la planche PNG fournie (assiette/tirelire/courses/progres). Copie identique benefit_icons_supplied_20261013.png, zones de chaque icone affichees via Flutter sans regeneration ni alteration des pixels. Tailles et alignements preserves, filtrehigh. Quatre captures benefit_icons_supplied_FR/DE_320/390 et quatre tests reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : installation demandee par Simo : APK debug compile avec succes, installation adb --no-streaming -r Success sur Xiaomi CEUGAIC6AEVGWCNF (2201117PG), lancement Status ok. Capture android_installed_current.png. Aucun changement du design durant cette operation, aucun commit/push. Attendre retour visuel de Simo.
+
+2026-10-13 : quatre icones benefices agrandies de20 % sur demande de Simo. PNG source preserve, autres visuels inchanges. Quatre captures benefit_icons_larger_FR/DE_320/390 et quatre tests reussis. Aucune nouvelle installation, commit ni push ; validation attendue.
+
+2026-10-13 : installation demandee apres agrandissement des icones benefices20 % : APK debug compile avec succes, adb install --no-streaming -r Success sur Xiaomi CEUGAIC6AEVGWCNF, lancement Status ok. Capture android_icons_larger_installed.png. Aucun changement du design durant installation, aucun commit/push. Attendre retour visuel de Simo.
+
+2026-10-13 : textes benefices13 px et CTA14 px appliques sur demande de Simo, autres tailles preservees. Quatre captures benefits13_cta14_FR/DE_320/390 et quatre tests Flutter reussis. Aucune nouvelle installation, commit ni push ; validation attendue.
+
+2026-10-13 : installation demandee de la version benefices13 / CTA14 : compilation APK debug reussie, installation adb -r Success sur Xiaomi CEUGAIC6AEVGWCNF, lancement Status ok et capture android_benefits13_cta14.png. Design preserve, aucun commit/push ; attendre retour de Simo.
+
+2026-10-13 : icones benefices encore agrandies sur demande de Simo, echelle1,45 au lieu de1,20 (+21 % par rapport a la version installee). Quatre captures benefit_icons145_FR/DE_320/390 et quatre tests Flutter reussis. Aucune installation, commit ni push ; validation attendue.
+
+2026-10-13 : installation demandee de la version icones benefices echelle1,45 : compilation debug reussie, adb install -r Success sur Xiaomi CEUGAIC6AEVGWCNF, lancement Status ok, capture android_benefit_icons145.png. Aucun changement de design pendant installation ni commit/push ; attendre retour Simo.
+
+
+## Langues — 13 octobre 2026, correction autorisée
+
+Cinq langues actives : FR, EN, ES, IT, DE. Persistance locale via shared_preferences autorisée explicitement ; quatre débordements ES/IT de couvertures corrigés sans réduire les polices. Landing/ressources/ARB inchangés (300 empreintes) et six captures FR/EN/DE identiques. 93 tests ciblés réussis, reprise et i18n contrôlés ; 11 écarts visuels historiques hors Landing restent. Rapport détaillé : reports/languages_five/REPORT.md. Validation native de reprise en attente d’une installation autorisée. Étape 2 Supabase toujours en attente.

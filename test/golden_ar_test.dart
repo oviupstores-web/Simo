@@ -75,11 +75,16 @@ void main() {
             home: OnboardingScope(data: data, child: entry.value),
           ),
         );
+        if (entry.key == '1_landing') {
+          await t.runAsync(() => LandingScreen.prepareImages(t.element(find.byType(LandingScreen))));
+        }
         await t.pumpAndSettle();
 
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/${locale.languageCode}_${entry.key}.png'),
+          matchesGoldenFile(entry.key == '1_landing'
+              ? 'goldens/landing_provisional/viewport_${locale.languageCode}.png'
+              : 'goldens/${locale.languageCode}_${entry.key}.png'),
         );
       });
     }

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 ///
 /// Legacy ARB files stay in place so their translations can be reactivated later.
 abstract final class AppLanguages {
-  static const launchLocales = <Locale>[Locale('fr'), Locale('en'), Locale('de')];
+  static const launchLocales = <Locale>[Locale('fr'), Locale('en'), Locale('es'), Locale('it'), Locale('de')];
 
   /// Resolves the chosen translation language while retaining the device region
   /// for locale-sensitive dates, numbers, units and currencies.

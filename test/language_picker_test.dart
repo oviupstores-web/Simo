@@ -22,7 +22,7 @@ void main() {
 
   for (final locale in AppLanguages.launchLocales) {
     for (final width in [320.0, 390.0]) {
-      testWidgets('${locale.languageCode} · sélecteur limité aux 3 langues à ${width.toInt()} px', (tester) async {
+      testWidgets('${locale.languageCode} · sélecteur limité aux 5 langues à ${width.toInt()} px', (tester) async {
         tester.view.physicalSize = Size(width, 844);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
@@ -56,15 +56,18 @@ void main() {
         await tester.tap(find.text('Ouvrir'));
         await tester.pumpAndSettle();
 
-        final titleByLocale = {'fr': 'Langue', 'en': 'Language', 'de': 'Sprache'};
+        final titleByLocale = {'fr': 'Langue', 'en': 'Language', 'de': 'Sprache', 'es': 'Idioma', 'it': 'Lingua'};
         expect(find.text(titleByLocale[locale.languageCode]!), findsOneWidget);
         expect(find.text('Français'), findsOneWidget);
         expect(find.text('English'), findsOneWidget);
         expect(find.text('Deutsch'), findsOneWidget);
-        expect(find.text('Español'), findsNothing);
-        expect(find.text('Italiano'), findsNothing);
+        expect(find.text('Español'), findsOneWidget);
+        expect(find.text('Italiano'), findsOneWidget);
         expect(find.text('العربية'), findsNothing);
         expect(tester.takeException(), isNull);
+        await tester.tap(find.text(lookupL(locale).languageName));
+        await tester.pumpAndSettle();
+        expect(controller.value, locale);
 
         final outputDirectory = locale.languageCode == 'fr' && width == 390.0
             ? Platform.environment['MENOO_LANGUAGE_SCREENSHOT_DIR']

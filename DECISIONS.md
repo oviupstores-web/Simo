@@ -332,3 +332,28 @@ Simo autorise la correction du splash et choisit les transitions Menoo -> M -> l
 2026-10-11 : Simo valide l'animation splash_c_clean_preview_v3.gif et demande son installation. GIF valide copie a l'identique dans assets/images/startup_c.gif ; image finale correspondante dans startup_c_final.png. La fourchette de l'arrivee reprend la silhouette du logo final.
 
 2026-10-11 : validation finale de Simo (OK) sur telephone pour le splash C nettoye v3, avec la silhouette de la fourchette du logo final conservee pendant l'animation.
+
+2026-10-12 : pour les nouveaux CTA de Landing, Simo choisit de laisser Scanner mon frigo et Analyser mon repas inactifs tant que les fonctions correspondantes ne sont pas implementees. Menus/Courses utilisent uniquement leur parcours existant. Validation du rendu des quatre CTA encore en attente.
+
+2026-10-13 : Simo valide le design vertical Instant Recipe AI avec espacements aérés et CTA centré à 85 % de la largeur ; il autorise son application aux quatre autres cartes avec les derniers PNG fournis. Suivi reste informatif sans CTA ; comportements des boutons conservés. Validation des quatre cartes en attente.
+
+2026-10-13 : Simo valide les cinq fonds tres clairs E4F7ED, E6F3FE, FFF0E2, FFEDF3 et F1EBFC et demande leur application.
+
+## 13 octobre 2026 — Étape 1, tests et documentation uniquement
+
+Simo valide la préparation puis l'exécution limitée de l'étape 1. La Landing actuelle est la référence provisoire, intégralement conservée. Autorisés : correction des attentes de tests remplacées, conservation de l'historique, consolidation documentaire, contrôles FR/DE 320/390 puis anglais, suite ciblée puis complète. Aucun changement de design, image, texte, CTA, règle métier, autre écran, Supabase, installation, commit ou push. Les problèmes responsive constatés restent à corriger seulement après accord. L'étape 2 n'est pas autorisée par cette décision.
+
+Référence et rapport : reports/step1_landing_review/. Les anciennes entrées datées sont conservées ; elles ne doivent pas être réappliquées comme si elles décrivaient encore la Landing actuelle.
+
+
+Bilan étape 1 : neuf expériences de tests archivées sans altération ; nouvelles références Landing séparées des anciennes. 51 tests ciblés réussis, suite complète 1 214 réussites / 15 échecs conservés. Aucun fichier applicatif ou visuel modifié (398 empreintes identiques). Rapport : reports/step1_landing_review/REPORT.md. Étape 2 en attente de validation.
+
+
+## 13 octobre 2026 — cinq langues et langue persistante
+
+Simo confirme exactement FR/EN/ES/IT/DE, remplaçant la restriction provisoire FR/EN/DE et l’ancienne cible six langues. Les traductions historiques ne sont pas supprimées. Il autorise explicitement shared_preferences pour conserver le code de langue après fermeture ; aucune autre donnée n’y est stockée. Correction des lignes inférieures des couvertures par retours à la ligne, sans diminution des polices. Landing conservée. Voir reports/languages_five/REPORT.md ; pas d’installation ni Supabase.
+
+
+## 13 octobre 2026 — validation Android et sauvegarde finale
+
+Simo valide les contrôles Android des cinq langues, dont la persistance après fermeture forcée et relance. Landing et présentations Solo/Famille contrôlées sur le Xiaomi (~393 px logiques), formulaires complets non rejoués. Aucun défaut visuel corrigé pendant le test. Sauvegarde Git et push autorisés, limités aux modifications validées et à leurs tests/documentation. Rapports volumineux et ressources expérimentales exclus ; arrêt jusqu’aux prochaines instructions, sans Supabase.

@@ -1,0 +1,47 @@
+[
+  {
+    "original": "test\\landing_all_vertical_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_all_vertical_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_alpha_preview_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_alpha_preview_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_cta_fit_probe_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_cta_fit_probe_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_instant_phase2_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_instant_phase2_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_outline_cta_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_outline_cta_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_outline_geometry_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_outline_geometry_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_phase1_capture_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_phase1_capture_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_phase1_targeted_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_phase1_targeted_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  },
+  {
+    "original": "test\\landing_structure_test.dart",
+    "archive": "reports\\step1_landing_review\\archived_tests\\landing_structure_test.dart",
+    "reason": "Historical experimental layout or preview; current geometry and navigation covered by consolidated tests."
+  }
+]

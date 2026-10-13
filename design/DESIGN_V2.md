@@ -1,5 +1,10 @@
 # Design system v2 — Menoo (prioritaire sur DESIGN.md)
 
+## Exception locale — Landing provisoire, 13 octobre 2026
+
+Les adaptations explicitement demandées par Simo pour la Landing sont documentées dans [REFERENCE](../reports/step1_landing_review/REFERENCE.md). Elles prévalent sur les anciens maîtres pour cet écran uniquement : fond #F8F9FB, cinq fonds très clairs, arrondis de cartes 12 px, marges externes 20 px, espaces inter-cartes 16 px, contenu vertical et quatre CTA. Les règles du design system et les maîtres des autres écrans sont inchangés. Les anciens fichiers restent des références historiques, pas des images à rétablir automatiquement.
+
+
 Source : écrans maîtres (`design/masters/*.html`) et références (`design/masters/ref/*.png`), validés par Simo.
 DESIGN.md (Stitch) ne sert plus que pour la structure et le contenu des écrans ; le rendu visuel suit ce fichier.
 

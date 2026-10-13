@@ -1,4 +1,9 @@
 # PRD — Menoo, planificateur de repas intelligent
+
+## État observé — Landing au 13 octobre 2026
+
+La présentation provisoire actuelle possède cinq cartes verticales et quatre CTA ; Suivi reste informatif. Les deux CTA de scan sont inactifs, Menus/Courses ouvrent le choix du mode. Cette présentation remplace la description graphique ancienne « quatre cartes sans bouton » du parcours d'entrée, sans rendre les fonctions IA, génération ou suivi opérationnelles. Voir [la référence provisoire](reports/step1_landing_review/REFERENCE.md). Le reste du PRD conserve sa portée produit et n'est pas révisé par cette étape.
+
 **Version :** 1.2 (proposée le 2026-09-30, en attente de validation) · **Statut :** pré-lancement, en développement
 **Référence d'implémentation :** `SPEC.md` (flux, liaisons et corrections écran par écran)
 

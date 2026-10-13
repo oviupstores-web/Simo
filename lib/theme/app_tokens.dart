@@ -216,6 +216,8 @@ abstract final class AppMotion {
 
 /// Landing-only values measured from accueil_deroulant.png. Shared screens retain their tokens.
 abstract final class LandingTokens {
+  static const screenBackground = Color(0xFFF8F9FB);
+  static const cardGap = 16.0;
   static const double referenceWidth = 833;
   static const titleInk = Color(0xFF061718);
   static const bodyInk = Color(0xFF19234F);
@@ -240,6 +242,22 @@ abstract final class LandingTokens {
   static const double trackingArtScale = 1.12;
 }
 
+/// Outlined CTAs from the supplied landing reference; artwork stays unchanged.
+abstract final class LandingCtaTokens {
+  static const height = 38.0;
+  static const radius = 14.5;
+  static const horizontalPadding = 8.0;
+  static const iconSize = 18.0;
+  static const gap = 6.0;
+  static const fontSize = 14.0;
+  static const lineHeight = 20.0;
+  static const borderWidth = 1.4;
+  static const topGap = 8.0;
+  static const bottomGap = 10.0;
+  static const fillOpacity = .88;
+  static const fullLabelMinWidth = 390.0;
+}
+
 /// Entry choice follows the approved landing palette and spacing locally.
 abstract final class PathChoiceTokens {
   static const gutter = AppSpace.x3_5;
@@ -247,4 +265,117 @@ abstract final class PathChoiceTokens {
   static const bodyInk = LandingTokens.bodyInk;
   static const soloSoft = LandingTokens.shoppingSoft;
   static const householdSoft = LandingTokens.menuSoft;
+}
+
+/// Values measured from the two supplied phase-1 landing references.
+abstract final class LandingPhase1Tokens {
+  static const scanSoft = Color(0xFFF4FCF8);
+  static const mealScanSoft = Color(0xFFF5FAFF);
+  static const menuSoft = Color(0xFFFFF9F3);
+  static const shoppingSoft = Color(0xFFFFF8FA);
+  static const trackingSoft = Color(0xFFFAF7FE);
+  static const cardHeights = <String, (double, double)>{
+    'scan': (195, 192), 'meal_scan': (171, 164), 'menus': (170, 175),
+    'shopping': (164, 166), 'tracking': (115, 117),
+  };
+  static const artWidths = <String, (double, double)>{
+    'scan': (150, 190), 'meal_scan': (145, 180), 'menus': (135, 180),
+    'shopping': (150, 165), 'tracking': (155, 185),
+  };
+  static const startHeight = 44.0;
+  static const startFontSize = 16.0;
+  static const startLineHeight = 24.0;
+  static const cardRadius = 12.0;
+  static const cardPadding = 20.0;
+  static const artInset = 5.0;
+  static const textFraction = .48;
+  static const bodySize = 13.0;
+  static const bodyLineHeight = 14.0;
+  static const titleSize = 17.0;
+  static const titleLineHeight = 17.0;
+  static const contentGap = 3.0;
+  static const ctaDescriptionGap = 24.0;
+  static const handArtMargin = 10.0;
+  static const badgeHorizontal = 10.0;
+  static const badgeVertical = 4.0;
+  static const badgeRadius = 9.0;
+  static const badgeIcon = 16.0;
+  static const badgeGap = 6.0;
+  static const badgeSize = 14.0;
+  static const badgeLineHeight = 20.0;
+  static const narrowHeaderInset = 14.0;
+  static const wideHeaderInset = 14.0;
+  static const brandWidth = 100.0;
+  static const brandHeight = 32.0;
+  static const headerTitleGap = 14.0;
+  static const headerTitleNarrow = 23.0;
+  static const headerTitleWide = 25.0;
+  static const headerTitleLineHeight = 32.0;
+  static const featureWidthNarrow = 165.0;
+  static const featureWidthWide = 185.0;
+  static const featureSize = 13.0;
+  static const featureLineHeight = 18.0;
+  static const heroWidthWide = 220.0;
+  static const heroWidthNarrow = 180.0;
+  static const heroWidthGermanNarrow = 150.0;
+  static const heroWidthGermanWide = 200.0;
+  static const bananaWidth = 80.0;
+  static const bananaEnd = 12.0;
+  static const bananaCardGap = 16.0;
+  static const heroTop = 44.0;
+}
+
+/// Shared vertical layout approved on Instant Recipe AI.
+abstract final class LandingVerticalTokens {
+  static const cardBorders = <String, Color>{
+    'scan': Color(0xFFB5DFCC),
+    'meal_scan': Color(0xFFB4D5F2),
+    'menus': Color(0xFFF0CEAE),
+    'shopping': Color(0xFFF0BFD0),
+    'tracking': Color(0xFFD6C5EF),
+  };
+  static const screenInset = 20.0;
+  // Full PNG height and last non-transparent row, relative to source width.
+  // Only transparent bottom rows extend beyond the artwork layout slot.
+  static const artAspectHeight = <String, double>{
+    'scan': 1086 / 1448, 'meal_scan': 1086 / 1448, 'menus': 1086 / 1448,
+    'shopping': 1086 / 1448, 'tracking': 1086 / 1448,
+  };
+  static const artVisibleBottomRatio = <String, double>{
+    'scan': 1086 / 1448, 'meal_scan': 1086 / 1448, 'menus': 1062 / 1448,
+    'shopping': 1058 / 1448, 'tracking': 841 / 1448,
+  };
+  static const ctaWidthFraction = .85;
+  static const badgeTitleGap = 8.0;
+  static const titleBodyGap = 10.0;
+  static const titleLineHeight = 24.0;
+  static const bodyLineHeight = 20.0;
+  static const headerFeaturesGap = 18.0;
+  static const featureGap = 10.0;
+  static const featureIconGap = 8.0;
+  static const benefitIconScale = 1.45;
+  static const benefitSheetWidth = 461.0;
+  static const benefitSheetHeight = 1290.0;
+  static const benefitCropSize = 310.0;
+  static const benefitCropLeft = 80.0;
+  static const benefitCropTops = [45.0, 335.0, 635.0, 930.0];
+  static const featureLeftInset = 10.0;
+  static const verticalArtGap = 12.0;
+  // Tracking layout keeps the main graphs and their shadows, excluding empty surround.
+  static const trackingTransparentTopRatio = 235 / 1448;
+  static const trackingArtGap = 6.0;
+  static const verticalArtFraction = .75;
+  static const instantArtFraction = 1.20;
+  static const caliArtFraction = 1.20;
+  static const remainingArtFraction = 1.20;
+  static const remainingArtCenter = <String, double>{
+    'menus': 729.5 / 1448, 'shopping': 724.5 / 1448, 'tracking': 730 / 1448,
+  };
+  static const caliCenterOffset = (724 - 727) / 1448;
+  static const caliVisibleWidthFraction = (2 * 727) / 1448;
+  static const artBorderInset = 1.0;
+  // Main fridge/hand silhouette is centered at x=819 in the 1448 px PNG.
+  static const instantCenterOffset = (724 - 819) / 1448;
+  static const textFraction = .50;
+  static const artFraction = .50;
 }

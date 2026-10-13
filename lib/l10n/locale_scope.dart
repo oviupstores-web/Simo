@@ -10,8 +10,9 @@ import 'app_localizations.dart';
 /// Provisoire : tant que l'écran Réglages n'existe pas (jalon 12), on change de langue
 /// par un appui long sur le logo Menoo, en haut de n'importe quel écran.
 class LocaleScope extends InheritedNotifier<ValueNotifier<Locale?>> {
-  const LocaleScope({super.key, required ValueNotifier<Locale?> controller, required super.child})
+  const LocaleScope({super.key, required ValueNotifier<Locale?> controller, required super.child, this.saveLocale})
     : super(notifier: controller);
+  final Future<void> Function(Locale)? saveLocale;
 
   static ValueNotifier<Locale?> of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<LocaleScope>()!.notifier!;
@@ -38,9 +39,11 @@ class LocaleScope extends InheritedNotifier<ValueNotifier<Locale?>> {
                 _LanguageRow(
                   locale: locale,
                   selected: controller.value?.languageCode == locale.languageCode,
-                  onTap: () {
+                  onTap: () async {
+                    final scope = context.getInheritedWidgetOfExactType<LocaleScope>()!;
+                    await scope.saveLocale?.call(locale);
                     controller.value = locale;
-                    Navigator.of(sheetContext).pop();
+                    if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                   },
                 ),
             ],

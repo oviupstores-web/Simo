@@ -7,11 +7,11 @@ import 'package:menoo/l10n/formats.dart';
 
 void main() {
   test('commercial locales preserve market region while using generic translations', () {
-    expect(AppLanguages.launchLocales.map((locale) => locale.languageCode), ['fr', 'en', 'de']);
+    expect(AppLanguages.launchLocales.map((locale) => locale.languageCode), ['fr', 'en', 'es', 'it', 'de']);
     expect(AppLanguages.resolve(null, const Locale('en', 'US')), const Locale('en', 'US'));
     expect(AppLanguages.resolve(null, const Locale('en', 'GB')), const Locale('en', 'GB'));
     expect(AppLanguages.resolve(const Locale('fr'), const Locale('en', 'CA')), const Locale('fr', 'CA'));
-    expect(AppLanguages.resolve(null, const Locale('es', 'ES')), const Locale('en', 'ES'));
+    expect(AppLanguages.resolve(null, const Locale('es', 'ES')), const Locale('es', 'ES'));
   });
 
   setUpAll(initializeDateFormatting);

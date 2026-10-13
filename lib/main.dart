@@ -5,13 +5,14 @@ import 'l10n/app_localizations.dart';
 import 'l10n/app_languages.dart';
 import 'l10n/formats.dart';
 import 'l10n/locale_scope.dart';
+import 'l10n/locale_preferences.dart';
 import 'onboarding/onboarding_data.dart';
 import 'onboarding/onboarding_scope.dart';
 import 'screens/entry/landing_screen.dart';
 import 'screens/entry/startup_screen.dart';
 import 'theme/theme.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
@@ -22,11 +23,20 @@ void main() {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
-  runApp(const MenooApp());
+  final preferences = LocalePreferences();
+  Locale? initialLocale;
+  try {
+    initialLocale = await preferences.load();
+  } catch (error) {
+    debugPrint(error.toString());
+  }
+  runApp(MenooApp(initialLocale: initialLocale, localePreferences: preferences));
 }
 
 class MenooApp extends StatefulWidget {
-  const MenooApp({super.key});
+  const MenooApp({super.key, this.initialLocale, this.localePreferences});
+  final Locale? initialLocale;
+  final LocalePreferences? localePreferences;
 
   @override
   State<MenooApp> createState() => _MenooAppState();
@@ -40,6 +50,12 @@ class _MenooAppState extends State<MenooApp> {
   final _locale = ValueNotifier<Locale?>(null);
 
   @override
+  void initState() {
+    super.initState();
+    _locale.value = widget.initialLocale;
+  }
+
+  @override
   void dispose() {
     _onboarding.dispose();
     _locale.dispose();
@@ -50,6 +66,7 @@ class _MenooAppState extends State<MenooApp> {
   Widget build(BuildContext context) {
     return LocaleScope(
       controller: _locale,
+      saveLocale: widget.localePreferences?.save,
       child: ValueListenableBuilder<Locale?>(
         valueListenable: _locale,
         builder: (context, locale, _) => MaterialApp(

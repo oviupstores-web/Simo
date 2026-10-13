@@ -105,9 +105,12 @@ class CoverHouseholdScreen extends StatelessWidget {
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text(
-                          '${l.commonQuickSteps(OnboardingFlow.foyer.length)} · ${l.commonEditableAnytime}',
-                          style: AppText.meta,
+                        Flexible(
+                          child: Text(
+                            '${l.commonQuickSteps(OnboardingFlow.foyer.length)} · ${l.commonEditableAnytime}',
+                            style: AppText.meta,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),

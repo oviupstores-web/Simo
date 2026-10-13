@@ -47,7 +47,7 @@ void main() {
 
   for (final lang in ['fr', 'en', 'de', 'es', 'it', 'ar']) {
     for (final width in [320.0, 390.0]) {
-      testWidgets('Landing restaurée $lang $width : cinq cartes et géométrie historique', (t) async {
+      testWidgets('Landing provisoire $lang $width : cinq cartes et navigation', (t) async {
         final routes = _Routes();
         await showLanding(t, width, lang, routes);
         expect(find.byType(LandingBadgeCta), findsNothing);
@@ -58,23 +58,19 @@ void main() {
           expect(card, findsOneWidget);
           expect(pill, findsOneWidget);
           final rect = t.getRect(card);
-          expect(rect.left, closeTo(14, .01));
-          expect(rect.right, closeTo(width - 14, .01));
-          if (previous != null) expect(rect.top - previous.bottom, closeTo(10, .01));
+          expect(rect.left, closeTo(20, .01));
+          expect(rect.right, closeTo(width - 20, .01));
+          if (previous != null) expect(rect.top - previous.bottom, closeTo(16, .01));
           previous = rect;
           final ink = t.element(card).findAncestorWidgetOfExactType<InkWell>()!;
           expect(ink.onTap != null, art == 'menus' || art == 'shopping');
         }
-        for (final image in t.widgetList<Image>(find.byType(Image))) {
-          if (image.image is! AssetImage) continue;
-          final asset = (image.image as AssetImage).assetName;
-          if (asset.endsWith('/scan.png') ||
-              asset.endsWith('/menus.png') ||
-              asset.endsWith('/shopping_dezoom_transparent.png') ||
-              asset.endsWith('/tracking_dezoom_transparent.png') ||
-              asset == LandingTokens.mealScanAsset) {
-            expect(image.fit, BoxFit.cover, reason: asset);
-          }
+        for (final art in ['scan', 'meal_scan', 'menus', 'shopping', 'tracking']) {
+          final image = t.widget<Image>(find.descendant(
+            of: find.byKey(ValueKey('landing_card_$art')), matching: find.byType(Image),
+          ));
+          expect((image.image as AssetImage).assetName, 'assets/images/landing/${art}_20261013_1258.png');
+          expect(image.fit, BoxFit.contain);
         }
         await t.pump(const Duration(seconds: 3));
         expect(routes.pushes, 1, reason: 'Aucune navigation automatique');
