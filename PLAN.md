@@ -1,5 +1,209 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## État de reprise — 15 octobre 2026 — jalon produit 6
+
+- **Solo : validé sur Xiaomi**, 11 étapes raccordées au stockage SQLite chiffré ; sauvegarde progressive, saisies incomplètes et restauration après fermeture forcée et hors connexion vérifiées.
+- **Famille : validé sur Xiaomi**, 9 étapes raccordées au même socle, brouillon indépendant de Solo ; membres, allergies, budget/devise, éditions et reprise vérifiés. L'intégration Famille totalise **505 tests PC réussis** ; ce nombre ne désigne pas une nouvelle suite exécutée le 15 octobre.
+- **Icônes : 17 remplacements validés**, sources conservées dans `design/nouvelles_icones`, copies PNG RGBA transparentes optimisées à 256 × 256 dans les chemins existants. **124 tests réussis** (dont les rendus des cinq langues à 320/390 px) et contrôle Xiaomi du 15 octobre, en français à environ 393 px. Signature identique et base chiffrée conservée à l'installation ; Solo/Famille retrouvés. Rapports : `reports/icons_20261015/REPORT.md` et `reports/icons_20261015/android/REPORT.md`.
+- **Restent à faire :** six icônes sans nouvelle source (Sans porc, Sans lactose, Sans gluten, Calories et macros calculés, Adapté à votre temps, Zéro gaspillage) ; raccordement Réserve au stockage chiffré ; correction autorisée séparément du libellé « 1 ans » ; contrôle Android réel à 320 px. Aucun de ces travaux n'est commencé par cette actualisation.
+- **Supabase :** audit distant validé, corrections obligatoires toujours non appliquées avant toute connexion métier : permissions SQL, relations entre foyers, confidentialité des recettes non publiées et de leurs détails, validation métier serveur. Authentification métier, transfert distant et génération des menus ne sont pas déclarés terminés.
+- Le jalon produit 6 reste **en cours** ; la phase corrective 6B reste distincte. Les validations du stockage et des icônes ne valent pas validation de toutes les fonctionnalités de Menoo.
+- **Prochaine action :** présenter l'audit Git et la liste explicite des fichiers proposés pour sauvegarde, puis attendre l'autorisation avant tout ajout à l'index, commit ou push. Aucun nouveau développement, nettoyage ou installation autorisé par cette mise à jour documentaire.
+
+### Préparation de sauvegarde Git — audit du 15 octobre 2026, aucune sauvegarde exécutée
+
+- Branche `master`, HEAD `488ee2314dfdd4b38d47ab418bf49036820ee4d8`, suivi local `origin/master` au même commit (0/0). Aucun accès distant/fetch : cela ne certifie pas l'état du serveur à cet instant. Index vide.
+- Inventaire Git : 37 fichiers suivis modifiés, aucun ajout/suppression indexé, 920 fichiers non suivis (~307,5 Mo), 5 332 fichiers ignorés signalés. Git avertit de chemins trop longs dans les caches du projet technique ; le nombre ignoré est celui retourné par Git, pas une certification exhaustive du disque.
+- Les 13 nouveaux fichiers Dart de stockage/navigation sont importés par l'application : les oublier produirait une sauvegarde incomplète. Les cinq ARB n'ajoutent que deux messages d'erreur ; les dépendances et le hook sqlite3mc doivent accompagner le code. La Landing et la persistance des cinq langues de référence sont déjà dans HEAD.
+- Verrou de dépendances examiné : six dépendances directes/de développement ajoutées avec leurs dépendances transitives, aucune suppression de paquet ; `meta` passe de 1.18.3 à 1.19.0. `pubspec.yaml` et `pubspec.lock` doivent être conservés ensemble. Aucun paquet installé ou mis à jour pendant cet audit ; les nombres de tests cités restent ceux des validations précédentes.
+- Contrôles en lecture seule : différences de code/configuration examinées, imports locaux non suivis identifiés, scan de signatures de secrets sans alerte sur les fichiers proposés, aucun fichier de base/clé privée repéré par son nom parmi les suivis/non suivis. Les clés synthétiques de tests ne sont pas des clés du téléphone. Ce scan n'est pas une preuve mathématique d'absence de secret. Aucune clé du téléphone ni aucun brouillon exporté pour cet audit.
+- **Confidentialité à arbitrer avant commit :** des entrées historiques de `PLAN.md` contiennent l'identifiant technique unique du téléphone. Il n'est pas recopié dans cette actualisation, mais reste dans le fichier afin de préserver intégralement l'historique demandé. Ce n'est pas un secret d'authentification ; c'est néanmoins une information identifiante. Ne pas présenter le fichier entier comme dépourvu de telles informations. Toute anonymisation ou exclusion différente doit être autorisée ; aucun effacement d'historique réalisé.
+- `.gitignore` reste intact. Les fichiers locaux ignorés, notamment `local.properties`, APK, caches et sorties générées, ne sont pas proposés. Aucune référence visuelle historique à remplacer. Avertissements LF/CRLF observés ; `git diff --check` sans erreur.
+- Proposition : un commit fonctionnel atomique de **59 fichiers** ci-dessous, puis un commit d'archivage des **17 sources validées**. Aucun git add/commit/push exécuté. Les listes sont explicites ; ne pas employer d'ajout global ou de joker récursif.
+
+Fichiers proposés pour le commit fonctionnel (chemins relatifs à la racine) :
+
+```text
+DECISIONS.md
+PLAN.md
+android/app/src/main/AndroidManifest.xml
+android/app/src/main/res/xml/draft_backup_rules.xml
+android/app/src/main/res/xml/draft_data_extraction_rules.xml
+assets/images/new_icons/activity_desk.png
+assets/images/new_icons/activity_run.png
+assets/images/new_icons/activity_training.png
+assets/images/new_icons/activity_walk.png
+assets/images/new_icons/diet_omnivore.png
+assets/images/new_icons/diet_pescatarian.png
+assets/images/new_icons/diet_vegan.png
+assets/images/new_icons/diet_vegetarian.png
+assets/images/new_icons/goal_balance.png
+assets/images/new_icons/goal_definition.png
+assets/images/new_icons/goal_gain.png
+assets/images/new_icons/goal_loss.png
+assets/images/new_icons/management_mixed.png
+assets/images/new_icons/management_pantry.png
+assets/images/new_icons/management_shopping.png
+assets/images/new_icons/pantry_quick_check.png
+assets/images/new_icons/pantry_reserve.png
+lib/l10n/app_de.arb
+lib/l10n/app_en.arb
+lib/l10n/app_es.arb
+lib/l10n/app_fr.arb
+lib/l10n/app_it.arb
+lib/local_storage/android_draft_storage.dart
+lib/local_storage/draft_checkpoint_clock.dart
+lib/local_storage/draft_database.dart
+lib/local_storage/draft_key.dart
+lib/local_storage/draft_key_store.dart
+lib/local_storage/family_draft_repository.dart
+lib/local_storage/local_draft.dart
+lib/local_storage/shared_draft_database.dart
+lib/local_storage/solo_draft_repository.dart
+lib/main.dart
+lib/onboarding/family_draft_navigation.dart
+lib/onboarding/family_draft_session.dart
+lib/onboarding/onboarding_data.dart
+lib/onboarding/onboarding_flow.dart
+lib/onboarding/onboarding_scope.dart
+lib/onboarding/solo_draft_navigation.dart
+lib/onboarding/solo_draft_session.dart
+lib/screens/entry/startup_screen.dart
+lib/screens/onboarding/budget_screen.dart
+lib/screens/onboarding/constraints_screen.dart
+lib/screens/onboarding/member_profiles_screen.dart
+lib/screens/onboarding/profile_screen.dart
+pubspec.lock
+pubspec.yaml
+test/family_draft_persistence_test.dart
+test/i18n_test.dart
+test/local_storage_foundation_test.dart
+test/solo_draft_persistence_test.dart
+test/support/draft_process_probe.dart
+test/support/family_draft_process_probe.dart
+test/support/solo_draft_process_probe.dart
+reports/icons_20261015/render_test.dart
+```
+
+Sources proposées pour un commit d'archivage distinct (~28,48 Mo), sans inclure les anciennes sources déjà suivies ni générer de doublons :
+
+```text
+design/nouvelles_icones/actif.png
+design/nouvelles_icones/courses uniquement.png
+design/nouvelles_icones/ma reserve.png
+design/nouvelles_icones/maintien et équilibre.png
+design/nouvelles_icones/mixte.png
+design/nouvelles_icones/modéré.png
+design/nouvelles_icones/omnivore.png
+design/nouvelles_icones/perte de poids.png
+design/nouvelles_icones/pescétarien.png
+design/nouvelles_icones/prise de masse.png
+design/nouvelles_icones/reserve uniquement.png
+design/nouvelles_icones/sèche et définition.png
+design/nouvelles_icones/sédentaire .png
+design/nouvelles_icones/tres actif.png
+design/nouvelles_icones/végan.png
+design/nouvelles_icones/végétarien.png
+design/nouvelles_icones/vérification rapide.png
+```
+
+Exclusions du futur commit, sans suppression locale :
+
+- Tous les autres fichiers `reports/` : captures Android/Flutter, XML/JSON de contrôles, empreintes, logs, APK, ZIP, anciens essais et copies de code ; seule exception proposée ci-dessus : le pilote reproductible `reports/icons_20261015/render_test.dart`. Les comptes rendus courts restent locaux également pour éviter d'inclure les identifiants du téléphone et les détails des données de test. Leurs conclusions validées sont sauvegardées dans les documents officiels ; les liens vers les preuves locales ne deviendront pas tous disponibles sur le dépôt distant.
+- Les 16 PNG non suivis de `assets/images/landing/` : aucune référence directe à leurs chemins dans le code actuel ; versions intermédiaires/variantes, non nécessaires aux visuels référencés. Le dossier complet est déclaré dans pubspec : ces fichiers locaux peuvent être embarqués par une compilation locale même sans usage ; exclusion Git proposée, sans modification du packaging ou suppression ici.
+- Tout `tools/storage_android_probe/` : application technique isolée et fichiers générés, non requis par Menoo. Une archive de ses seules sources pourrait faire l'objet d'une sélection séparée après validation ; aucun dossier complet à ajouter.
+- Tous les fichiers ignorés : `build/`, `.dart_tool/`, `.gradle/`, sorties de plugins/localisations, configurations machine, APK/AAB, échecs visuels et logs. Aucun forçage d'ajout des ignorés.
+- Toute future base, clé, export de brouillon, capture personnelle ou donnée sensible, même si non couverte par les règles actuelles. Aucun assouplissement de ces règles n'est proposé.
+
+Doublons : 17 groupes d'images/ZIP non suivis ont la même empreinte, notamment les captures FR/DE 320/390 recopiées dans plusieurs rapports. Le ZIP de prévisualisation fait ~11,56 Mo ; les APK ignorés de contrôle font ~209 à 249 Mo. Ces fichiers sont conservés sur disque, exclus de la proposition. Aucune déduplication effectuée.
+
+Avant exécution future : obtenir l'autorisation explicite, relire l'état Git et les listes, ajouter uniquement les chemins approuvés, vérifier le diff indexé (y compris binaires, tailles et secrets), créer les commits autorisés, puis pousser seulement après autorisation et vérifier le résultat. Aucune validation d'une publication Android ou d'une connexion Supabase n'est déduite de cette proposition.
+
+### Historique des contrôles et réalisations du 14 octobre 2026
+
+Les bilans suivants sont conservés intégralement dans leur état daté. Leurs mentions « en attente », « non connecté » ou « non testé » décrivent leur instant de rédaction ; l'état de reprise du 15 octobre ci-dessus prévaut pour le statut actuel.
+
+### Contrôle Android Famille — 14 octobre 2026, résultat en attente de validation
+
+- Compilation ARM64 debug et installation de mise à jour autorisées réussies sur Xiaomi 2201117PG (Android 13). Signature identique ; base chiffrée strictement identique avant/après installation, avant lancement ; UID et répertoire de données conservés. Aucun effacement ou suppression de brouillon.
+- Neuf étapes Famille parcourues jusqu'au récapitulatif, deux membres de démonstration modifiés en fictifs et deux membres fictifs ajoutés, allergies individuelles conservées. Fiche incomplète, ajout non validé, budget incomplet et édition depuis le récapitulatif restaurés après arrêts forcés ; reprises hors connexion au budget et au récapitulatif, dont absence de réseau par défaut confirmée.
+- Indépendance visible des réponses vérifiée dans les deux sens : Solo 38/180/75, 21 repas, 385 EUR, Sans gluten, Italienne, Blender ; Famille six personnes, 14 repas, 450 EUR, Sans lactose, Méditerranéenne, Air fryer, TestMaman responsable. Aucun raccordement Réserve ni opération Supabase.
+- Français à environ 393 px contrôlé ; aucun débordement manifeste dans les captures examinées. Libellé « 1 ans » relevé pour le bébé, non corrigé. Identifiants internes non inspectés directement sur le téléphone ; contrôle direct de cinq langues/320 px non rejoué ici.
+- Téléphone laissé sur Famille 9/9, Wi-Fi rétabli, données mobiles inchangées. Les deux brouillons fictifs restent conservés. Aucun fichier applicatif/design/traduction/dépendance modifié, aucun commit/push. Rapport et preuves : `reports/family_android/REPORT.md`. Attendre la validation avant toute suite du jalon produit 6 ; anciens bilans ci-dessous conservés.
+
+### Brouillons Solo et Famille — résultat technique actuel
+
+- Les contrôles Android Solo ont été validés. Le brouillon fictif Solo du téléphone reste conservé : aucune suppression ciblée ni installation réalisée pendant cette intervention.
+- Raccordement autorisé et réalisé des neuf étapes Famille à `guest.family`, distinct de `guest.solo`, avec une connexion chiffrée unique et un verrou unique. Enveloppe et schéma existants version 1 conservés ; section Famille version 1 et règles de portions version 1. Sources acceptées, champs bruts et fiches membres de travail séparés ; identifiants et prochain identifiant conservés.
+- Reprise après le splash, y compris fiche membre ouverte et édition depuis le récapitulatif. Le dernier parcours enregistré est choisi sans réécrire le brouillon de l'autre parcours ; ordre des checkpoints protégé contre un recul de l'horloge. Aucune individualisation des régimes/préférences ni activation d'objectifs physiques Famille.
+- Tests sur PC : 87 nouveaux contrôles Famille, 88 contrôles Solo et 330 régressions existantes réussis (505 contrôles distincts). Base native chiffrée sur les neuf étapes, interruption forcée d'une transaction et restauration dans un nouveau processus, saisies réelles, cinq langues, erreurs, devises et indépendance des enregistrements. Analyse statique ciblée et contrôle de diff sans erreur. Aucune nouvelle référence visuelle créée.
+- Réserve non connectée : une interruption de son détour reprend au mode de gestion, sans persistance des produits de ce détour ; éventuelles données pantry déjà enregistrées conservées sans raccordement. Android Famille non testé : aucune compilation APK ni installation. Pas de Supabase, nouvelle dépendance, commit/push ou nettoyage.
+- Rapport et liste exacte des fichiers : `reports/family_draft/REPORT.md`. Arrêt après cette intégration ; validation et toute installation Android attendues. Les bilans Solo et anciens états ci-dessous sont historiques et restent intégralement conservés. Phase corrective 6B distincte et inchangée.
+
+### Brouillon Solo connecté — résultat technique, validation Android en attente
+
+- Branchement autorisé du seul onboarding Solo (11 étapes) au socle SQLite chiffré. Sources acceptées et saisies brutes séparées ; étape et pile de retour conservées ; reprise après le splash, sans changement de sa séquence ni du design. Deux messages d'erreur traduits autorisés séparément, affichés dans l'alerte existante.
+- Tests finaux sur PC : 88 nouveaux contrôles Solo réussis (87 ensemble et un contrôle ciblé du détour Réserve), dont les onze écrans dans les cinq langues, erreurs de stockage, champs incomplets, devise et restauration multi-processus après interruption forcée. 272 tests existants de régression réussis ; analyse ciblée sans problème et diff check réussi. Disque plein lors d'une relance intermédiaire, contourné par les tests en série sans nettoyage des fichiers.
+- Famille non connectée : identifiant indépendant réservé, fichiers exclusifs inchangés et données Famille témoins préservées. Un brouillon Solo inactif ne préremplit pas Famille. Réserve inchangée : une interruption du détour reprend à l'étape Solo « Mode de gestion » ; les produits de ce détour ne sont pas encore persistés et son branchement reste soumis à autorisation distincte.
+- Aucun fichier asset/thème/Landing/Android/Supabase modifié pendant cette intervention, aucune nouvelle dépendance, aucun test historique supprimé/modifié, aucun ancien fichier non suivi supprimé. L'application technique Android a été désinstallée avec succès lors du nettoyage précédemment autorisé ; Menoo et ses données ont été préservés.
+- Rapport : `reports/solo_draft/REPORT.md`. Aucun APK compilé ou installé pour l'intégration Solo actuelle ; contrôle réel sur Xiaomi et toute suite du jalon produit 6 en attente de validation. Les états antérieurs « aucun onboarding connecté » ci-dessous restent historiques. Phase corrective 6B inchangée et distincte.
+
+### Validation Android du socle chiffré — résultat courant
+
+- Validation technique effectuée après autorisation sur Xiaomi 2201117PG, Android 13, avec une application isolée `com.menoo.storageprobe` et des données fictives. Installation de Menoo existante, signature et données conservées ; seul le paquet technique a été installé.
+- Compilations ARM64 debug du test et de Menoo réussies. Même bibliothèque sqlite3mc dans les deux APK ; APK Menoo inspecté mais non installé. Clé protégée par Android Keystore matériel, non exportable ; chiffrement effectif et lecture sans clé refusée vérifiés.
+- Création/lecture exactes Solo/Famille et Réserve, fermeture forcée et restauration dans de nouveaux processus réussies ; interruption d'une transaction restaure le dernier brouillon validé. Test sans permission INTERNET, sans changement des réseaux du téléphone. Mauvaise clé et clé indisponible simulée : refus sans effacement et restauration finale exacte.
+- Exclusions de la base et de ses clés vérifiées dans le manifeste fusionné et les ressources compilées de Menoo. Métadonnées d'algorithmes non secrètes du plugin non exclues ; aucun backup cloud ou transfert réel déclenché. Rapport : `reports/local_draft_foundation/ANDROID_REPORT.md`.
+- 430 empreintes applicatives/Android/assets/Supabase identiques ; aucun ancien fichier non suivi supprimé. Seuls projet technique, preuves et suivi documentaire ajoutés. Aucun onboarding branché, aucun design/langue/navigation/Supabase modifié, aucun commit/push. Suite du jalon produit 6 en attente de validation ; états antérieurs ci-dessous conservés comme historique.
+
+### Résultat courant du socle local chiffré — 14 octobre 2026
+
+- Moteur officiel sqlite3mc téléchargé après autorisation ; dépendances existantes réutilisées sans changement de version. Socle implémenté sans branchement aux écrans ou au démarrage.
+- Tests techniques sur PC : 13 réussites, 0 échec, dont chiffrement réel, refus des bases en clair/clés perdues et restauration dans un nouveau processus après interruption forcée d'une transaction. Contrôle combiné avec langues/i18n/parcours Solo-Famille : 28 réussites, 0 échec. Fausses alertes du détecteur i18n sur les commandes SQL déclarées précisément, sans exclusion de dossier ou modification des traductions.
+- Analyse ciblée sans erreur du socle ; analyse globale non verte (1 110 diagnostics incluant les archives locales sous reports/, conservées hors périmètre). Aucun nettoyage automatique.
+- Android : configuration de clé sécurisée et exclusions de sauvegarde présentes, mais Keystore physique, APK et restauration sur téléphone non validés. Installation et intégration aux onboardings en attente de validation.
+- Rapport : `reports/local_draft_foundation/REPORT.md`. Les états « non implémenté » et « tests en attente » ci-dessous sont conservés comme historique avant cette réalisation. Aucun écran, design, langue, navigation ou SQL Supabase modifié ; aucun commit, push ou installation Android.
+
+### Socle local chiffré — développement autorisé, validation technique en attente
+
+- Reprise limitée autorisée : code ajouté dans `lib/local_storage/`, sans branchement à `main.dart`, Solo, Famille ou Réserve. Le hook officiel `sqlite3mc` est configuré avec les dépendances existantes, sans réinstallation ni changement de version.
+- Enveloppe JSON version 1, parcours et étape, modes de gestion, devise explicite, réponses et Réserve conservées ; clé aléatoire de 256 bits protégée par `flutter_secure_storage` sur Android, namespace dédié et réinitialisation automatique désactivée.
+- Ouverture refusée sans moteur chiffré, avec une base en clair, une clé absente/invalide, un format inconnu ou des journaux orphelins. Aucun effacement ou repli automatique. Transactions Drift et verrouillage ; exclusions de la base et de sa clé pour sauvegarde cloud et transfert Android.
+- Analyse statique ciblée : aucune erreur. Treize tests écrits, dont chiffrement natif, restauration dans un nouveau processus après interruption forcée et annulation transactionnelle ; ils ne sont pas encore exécutés. L'autorisation du téléchargement éventuel du moteur par la commande de tests est en attente. La vérification physique du stockage sécurisé et de la restauration Android reste à faire après autorisation distincte d'installation.
+- Aucun écran, design, langue, navigation ou fichier Supabase modifié ; aucun commit, push ou installation. Les paragraphes d'audit ci-dessous décrivent l'état avant cette reprise ; les fonctionnalités écrites restent non validées tant que leurs tests ne sont pas exécutés.
+
+Cette entrée constitue l'état courant de reprise. Les décisions et bilans datés ci-dessous sont conservés intégralement comme historique ; leurs statuts ne doivent pas être confondus avec l'état présent. Aucune nouvelle numérotation de phases ou de sous-phases n'est créée.
+
+### Audit Supabase validé et corrections obligatoires
+
+- Projet distant officiel confirmé : `menoo-dev` (`pqdreuptzhenowqucvbl`). Audit réalisé en lecture seule : aucune migration, insertion, suppression ou modification Auth appliquée.
+- Les sept migrations locales et distantes concordent. Les 28 tables, colonnes, types, contraintes, relations, politiques RLS, permissions des rôles et paramètres Auth ont été examinés. La présence des tables et des politiques ne prouve pas une connexion métier opérationnelle dans Flutter.
+- Corrections obligatoires avant toute connexion métier Flutter ↔ Supabase : permissions SQL des rôles (droits métier manquants et privilèges excessifs), cohérence des relations entre foyers, confidentialité des recettes non publiées et de leurs détails, validation métier côté serveur. Elles restent identifiées, non appliquées ; les anciennes migrations sont conservées intactes.
+- Auth observée pendant l'audit : connexion par email activée avec confirmation ; téléphone, Google, Apple et comptes anonymes désactivés. La configuration de retour vers l'application et les exigences de sécurité devront être préparées avant une authentification mobile réelle. Aucun secret ni donnée personnelle n'est consigné ici.
+
+### Architecture validée et état réellement implémenté
+
+- Architecture cible : invité entièrement local, brouillon durable chiffré et reprise hors connexion pour Solo (11 étapes) et Famille (9 étapes). Courses, Réserve et Mixte restent des modes de gestion ; Famille ne comporte aucun objectif de perte de poids ou de prise de masse.
+- Le brouillon doit conserver parcours, étape courante, réponses, préférences, allergies, exclusions, équipements, budget et devise, composition du foyer, portions, produits de Réserve avec quantités/unités/dates/emplacements, version du format et état de synchronisation.
+- Dépendances installées et conservées : `drift 2.35.2`, `sqlite3 3.7.1`, `flutter_secure_storage 11.2.0`, `path_provider 2.1.6`, `drift_dev 2.35.1`, `build_runner 2.16.2`. Leur intégration est suspendue. Le moteur `sqlite3mc` n'est pas encore configuré ni testé.
+- Aucune base locale chiffrée, clé sécurisée, sauvegarde durable du brouillon, restauration ou connexion des écrans au stockage n'est implémentée. Les réponses d'onboarding restent en mémoire. `shared_preferences` reste réservé à la langue.
+- L'authentification réelle, le transfert vers Supabase et la génération des menus sous budget et contraintes ne sont pas opérationnels. L'audit terminé et l'architecture validée ne constituent pas une validation de ces fonctionnalités.
+
+| Travail restant au jalon produit 6 | État réel | Condition de reprise |
+|---|---|---|
+| Socle local chiffré : clé, format versionné, transactions, restauration et exclusions des sauvegardes Android | Dépendances présentes ; intégration suspendue | En attente de validation |
+| Branchement Solo/Famille et Réserve ; reprise exacte après fermeture forcée et redémarrage hors connexion | Non implémenté | Socle vérifié, puis en attente de validation |
+| Permissions SQL, relations entre foyers, confidentialité et validation serveur | Écarts audités ; aucune correction appliquée | Proposition de nouvelles migrations, en attente de validation |
+| Inscription et transfert transactionnel sans doublons ni écrasement silencieux | Non implémentés | Sécurité distante corrigée et tests validés ; en attente de validation |
+| Catalogue compatible et génération des menus sous budget, allergies, préférences, portions et équipements | Non opérationnels | Données compatibles et chaîne fonctionnelle testée ; en attente de validation |
+
+### Phase corrective 6B — périmètre distinct
+
+La phase corrective 6B demeure séparée du jalon produit 6. Le diagnostic 6A est terminé ; les références visuelles historiques et divergences documentaires restant ouvertes sont à examiner dans leur périmètre, en attente de validation. La consolidation documentaire et des tests réalisée le 13 octobre est conservée sans déclarer automatiquement toute la phase 6B terminée. Cette phase ne comprend ni stockage, ni authentification, ni génération des menus et n'autorise aucune modification automatique de la Landing validée.
+
+**Arrêt :** seule cette mise à jour documentaire est autorisée. La reprise du développement du jalon produit 6 est en attente de validation. Aucun code, SQL, dépendance, design, traduction, commit, push ou installation Android n'est modifié par ce jalon documentaire.
+
+
 ## État final validé — 13 octobre 2026, arrêt de la journée
 
 - Landing et cinq langues FR/EN/ES/IT/DE validées sur le Xiaomi 2201117PG ; compilation et installation debug réussies.
@@ -507,12 +711,12 @@ Main environ 30 px, tap de 3 px, cercles jusqu a 15 px de diametre ; pauses et d
 ### 2026-10-11 - Splash C : transitions completes
 Choix C confirme par Simo, priorite Menoo -> M -> logo. Acceleration a la preparation de la Landing supprimee ; sequence 4440 ms et slogan 1100 ms, selon le GIF C (5540 ms). 8 tests du splash reussis. Landing non modifiee. Validation visuelle sur telephone en attente ; aucune installation, commit ou push.
 
-2026-10-11 : APK debug compile avec succes, installe sur CEUGAIC6AEVGWCNF (adb install -r : Success), puis ouverture de Menoo. Validation utilisateur des transitions Menoo -> M -> logo en attente.
+2026-10-11 : APK debug compile avec succes, installe sur XIAOMI_TEST_DEVICE (adb install -r : Success), puis ouverture de Menoo. Validation utilisateur des transitions Menoo -> M -> logo en attente.
 
 ### 2026-10-11 - Remplacement effectif par le GIF C complet
 La correction precedente du rythme a ete refusee. Le splash lit maintenant assets/images/startup_c.gif, copie identique du GIF C (SHA256 D92E0499C57C70965018B95A211B4A082061372BF08F66E22C8F22E9D116FDEC), 68 images, 5540 ms, slogan inclus. Demarrage de la duree apres la premiere image ; image finale conservee si la Landing attend encore. 8 tests reussis, dont verification du GIF utilise. Landing inchangee par empreinte SHA256. Compilation et installation en cours.
 
-GIF C complet : APK debug compile et installe avec succes sur CEUGAIC6AEVGWCNF, app ouverte. Capture reports/splash_c_phone.png. Validation Simo en attente.
+GIF C complet : APK debug compile et installe avec succes sur XIAOMI_TEST_DEVICE, app ouverte. Capture reports/splash_c_phone.png. Validation Simo en attente.
 
 ### 2026-10-11 - Apercu C nettoye, avant installation
 Candidat separe dans reports/splash_c_clean_visual.dart : fourchette redessinee en courbes, arrivee alignee sans silhouette double, M et traits de liste nets. Apercu reports/splash_c_clean_preview.gif : 1080x2340, 68 images, 5540 ms. Rendu Flutter verifie, aucune installation et aucune modification du splash actif ni de la Landing pour cette preparation. Attendre le choix de Simo.
@@ -521,7 +725,7 @@ Candidat separe dans reports/splash_c_clean_visual.dart : fourchette redessinee 
 
 2026-10-11 : apercu C nettoye v3 valide par Simo ; integration des deux ressources realisee. SHA256 GIF 63726512DEC5BAAAE30B6619A480DF358946B612F88945717A5C09A06E293F82 identique a l'apercu valide. Landing inchangee. Compilation et installation demandees en cours.
 
-2026-10-11 : APK debug avec C nettoye v3 compile avec succes ; installation sur CEUGAIC6AEVGWCNF reussie (Success), puis app ouverte pour verification par Simo. Aucune modification de la Landing.
+2026-10-11 : APK debug avec C nettoye v3 compile avec succes ; installation sur XIAOMI_TEST_DEVICE reussie (Success), puis app ouverte pour verification par Simo. Aucune modification de la Landing.
 
 2026-10-11 : Simo confirme OK apres installation de C nettoye v3 sur telephone. Splash valide ; correction terminee. Landing preservee.
 
@@ -633,21 +837,25 @@ CaliScan : limite finale du zoom ajustee aux deux largeurs pour que meme les pix
 
 2026-10-13 : quatre bullets de benefices remplaces par la planche PNG fournie (assiette/tirelire/courses/progres). Copie identique benefit_icons_supplied_20261013.png, zones de chaque icone affichees via Flutter sans regeneration ni alteration des pixels. Tailles et alignements preserves, filtrehigh. Quatre captures benefit_icons_supplied_FR/DE_320/390 et quatre tests reussis. Aucune installation, commit ni push ; validation attendue.
 
-2026-10-13 : installation demandee par Simo : APK debug compile avec succes, installation adb --no-streaming -r Success sur Xiaomi CEUGAIC6AEVGWCNF (2201117PG), lancement Status ok. Capture android_installed_current.png. Aucun changement du design durant cette operation, aucun commit/push. Attendre retour visuel de Simo.
+2026-10-13 : installation demandee par Simo : APK debug compile avec succes, installation adb --no-streaming -r Success sur Xiaomi XIAOMI_TEST_DEVICE (2201117PG), lancement Status ok. Capture android_installed_current.png. Aucun changement du design durant cette operation, aucun commit/push. Attendre retour visuel de Simo.
 
 2026-10-13 : quatre icones benefices agrandies de20 % sur demande de Simo. PNG source preserve, autres visuels inchanges. Quatre captures benefit_icons_larger_FR/DE_320/390 et quatre tests reussis. Aucune nouvelle installation, commit ni push ; validation attendue.
 
-2026-10-13 : installation demandee apres agrandissement des icones benefices20 % : APK debug compile avec succes, adb install --no-streaming -r Success sur Xiaomi CEUGAIC6AEVGWCNF, lancement Status ok. Capture android_icons_larger_installed.png. Aucun changement du design durant installation, aucun commit/push. Attendre retour visuel de Simo.
+2026-10-13 : installation demandee apres agrandissement des icones benefices20 % : APK debug compile avec succes, adb install --no-streaming -r Success sur Xiaomi XIAOMI_TEST_DEVICE, lancement Status ok. Capture android_icons_larger_installed.png. Aucun changement du design durant installation, aucun commit/push. Attendre retour visuel de Simo.
 
 2026-10-13 : textes benefices13 px et CTA14 px appliques sur demande de Simo, autres tailles preservees. Quatre captures benefits13_cta14_FR/DE_320/390 et quatre tests Flutter reussis. Aucune nouvelle installation, commit ni push ; validation attendue.
 
-2026-10-13 : installation demandee de la version benefices13 / CTA14 : compilation APK debug reussie, installation adb -r Success sur Xiaomi CEUGAIC6AEVGWCNF, lancement Status ok et capture android_benefits13_cta14.png. Design preserve, aucun commit/push ; attendre retour de Simo.
+2026-10-13 : installation demandee de la version benefices13 / CTA14 : compilation APK debug reussie, installation adb -r Success sur Xiaomi XIAOMI_TEST_DEVICE, lancement Status ok et capture android_benefits13_cta14.png. Design preserve, aucun commit/push ; attendre retour de Simo.
 
 2026-10-13 : icones benefices encore agrandies sur demande de Simo, echelle1,45 au lieu de1,20 (+21 % par rapport a la version installee). Quatre captures benefit_icons145_FR/DE_320/390 et quatre tests Flutter reussis. Aucune installation, commit ni push ; validation attendue.
 
-2026-10-13 : installation demandee de la version icones benefices echelle1,45 : compilation debug reussie, adb install -r Success sur Xiaomi CEUGAIC6AEVGWCNF, lancement Status ok, capture android_benefit_icons145.png. Aucun changement de design pendant installation ni commit/push ; attendre retour Simo.
+2026-10-13 : installation demandee de la version icones benefices echelle1,45 : compilation debug reussie, adb install -r Success sur Xiaomi XIAOMI_TEST_DEVICE, lancement Status ok, capture android_benefit_icons145.png. Aucun changement de design pendant installation ni commit/push ; attendre retour Simo.
 
 
 ## Langues — 13 octobre 2026, correction autorisée
 
 Cinq langues actives : FR, EN, ES, IT, DE. Persistance locale via shared_preferences autorisée explicitement ; quatre débordements ES/IT de couvertures corrigés sans réduire les polices. Landing/ressources/ARB inchangés (300 empreintes) et six captures FR/EN/DE identiques. 93 tests ciblés réussis, reprise et i18n contrôlés ; 11 écarts visuels historiques hors Landing restent. Rapport détaillé : reports/languages_five/REPORT.md. Validation native de reprise en attente d’une installation autorisée. Étape 2 Supabase toujours en attente.
+
+## Jalon produit 6 — contrôle Android Solo, 14 octobre 2026
+
+Mise à jour Android autorisée et réussie sur Xiaomi 2201117PG, signature identique et répertoire de données conservé, sans désinstallation. Onze étapes Solo parcourues avec données fictives ; reprises après arrêt forcé aux étapes 2, 6, 8 et 11, dont budget et récapitulatif hors connexion. Langue allemande persistante, français et Wi-Fi rétablis. Entrée Famille 1/9 contrôlée sans modification des membres ; parcours complet Famille et largeur 320 px non rejoués. Aucun raccordement Réserve/Famille ni Supabase. Rapport : reports/solo_android/REPORT.md. Validation finale en attente ; arrêt du développement.

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="menoo_local_drafts/" />
+        <exclude domain="sharedpref" path="menoo_draft_keys.xml" />
+        <exclude domain="sharedpref" path="FlutterSecureKeyStorage:menoo_draft_keys.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="menoo_local_drafts/" />
+        <exclude domain="sharedpref" path="menoo_draft_keys.xml" />
+        <exclude domain="sharedpref" path="FlutterSecureKeyStorage:menoo_draft_keys.xml" />
+    </device-transfer>
+</data-extraction-rules>

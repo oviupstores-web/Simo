@@ -1434,5 +1434,7 @@
   "landingCtaScanShort": "Scanner",
   "landingCtaMealScanShort": "Analyser",
   "landingCtaMenusShort": "Mes menus",
-  "landingCtaShoppingShort": "Ma liste"
+  "landingCtaShoppingShort": "Ma liste",
+  "soloDraftLoadError": "Votre brouillon ne peut pas être ouvert. Les données existantes sont conservées. Relancez Menoo pour réessayer.",
+  "soloDraftSaveError": "La sauvegarde locale a échoué. Vos saisies restent dans cette session. Gardez l’application ouverte et réessayez."
 }

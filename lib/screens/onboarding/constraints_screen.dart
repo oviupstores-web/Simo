@@ -69,6 +69,20 @@ class ConstraintsScreen extends StatefulWidget {
 class _ConstraintsScreenState extends State<ConstraintsScreen> {
   final _food = TextEditingController();
   late bool _showOthers = false;
+  bool _soloInitialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final d = OnboardingScope.read(context);
+    if ((d.isFoyer && OnboardingScope.family(context) == null) || _soloInitialized) return;
+    _soloInitialized = true;
+    _food.text = d.isFoyer ? d.familyInputs['constraints.food'] ?? '' : d.soloInput('constraints.food', '');
+    _food.addListener(
+      () =>
+          d.isFoyer ? d.setFamilyInput('constraints.food', _food.text) : d.setSoloInput('constraints.food', _food.text),
+    );
+  }
 
   @override
   void dispose() {

@@ -682,5 +682,7 @@
   "landingCtaScanShort": "Scannen",
   "landingCtaMealScanShort": "Analysieren",
   "landingCtaMenusShort": "Meine Menüs",
-  "landingCtaShoppingShort": "Meine Liste"
+  "landingCtaShoppingShort": "Meine Liste",
+  "soloDraftLoadError": "Dein Entwurf konnte nicht geöffnet werden. Vorhandene Daten bleiben erhalten. Starte Menoo neu und versuche es erneut.",
+  "soloDraftSaveError": "Das lokale Speichern ist fehlgeschlagen. Deine Eingaben bleiben in dieser Sitzung. Lass die App geöffnet und versuche es erneut."
 }

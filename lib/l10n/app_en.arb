@@ -682,5 +682,7 @@
   "landingCtaScanShort": "Scan",
   "landingCtaMealScanShort": "Analyse",
   "landingCtaMenusShort": "My menus",
-  "landingCtaShoppingShort": "My list"
+  "landingCtaShoppingShort": "My list",
+  "soloDraftLoadError": "Your draft could not be opened. Existing data has been preserved. Restart Menoo to try again.",
+  "soloDraftSaveError": "Local saving failed. Your entries remain in this session. Keep the app open and try again."
 }

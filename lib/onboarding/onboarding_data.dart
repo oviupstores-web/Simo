@@ -76,6 +76,30 @@ enum MemberRole {
 
 /// Membre du foyer saisi pendant l'onboarding Foyer (enregistré à la création du compte).
 class MemberDraft {
+  Map<String, Object?> toDraftJson() => {
+    'id': id, 'role': role.name, 'firstName': firstName, 'age': age,
+    'heightCm': heightCm, 'weightKg': weightKg,
+    // Historical inactive fields survive; Family never uses them for targets.
+    'goal': goal.name, 'activity': activity.name, 'allergens': allergens.toList(),
+  };
+
+  factory MemberDraft.fromDraftJson(Map<String, Object?> value) {
+    final weight = (value['weightKg'] as num?)?.toDouble();
+    if (weight != null && !weight.isFinite) throw const FormatException('family_weight_invalid');
+    final id = value['id'] as int;
+    if (id < 1) throw const FormatException('family_member_id_invalid');
+    return MemberDraft(
+      id: id,
+      role: MemberRole.values.byName(value['role'] as String),
+      firstName: value['firstName'] as String,
+      age: value['age'] as int,
+      heightCm: value['heightCm'] as int?,
+      weightKg: weight,
+      goal: HealthGoal.values.byName(value['goal'] as String),
+      activity: ActivityLevel.values.byName(value['activity'] as String),
+      allergens: (value['allergens'] as List).cast<String>().toSet(),
+    );
+  }
   MemberDraft({
     required this.id,
     required this.role,
@@ -202,6 +226,263 @@ class PantryDraft {
 
 /// Réponses de l'onboarding (Solo ou Foyer), en mémoire jusqu'à la création du compte (jalon 6).
 class OnboardingData extends ChangeNotifier {
+  final Map<String, String> familyInputs = {};
+  final Map<int, Map<String, Object?>> familyMemberEdits = {};
+  void setFamilyInput(String field, String value) {
+    if (!isFoyer || familyInputs[field] == value) return;
+    familyInputs[field] = value;
+    notifyListeners();
+  }
+
+  void saveFamilyMemberEdit(MemberDraft member, Map<String, String> raw, {required bool isNew}) {
+    if (!isFoyer) return;
+    familyMemberEdits[member.id] = {
+      'member': member.toDraftJson(),
+      'rawInputs': {...raw},
+      'isNew': isNew,
+    };
+    notifyListeners();
+  }
+
+  static const familyPortionRulesVersion = 1;
+  static const _soloOnlyKeys = {
+    'goal',
+    'sex',
+    'age',
+    'heightCm',
+    'weightKg',
+    'targetWeightKg',
+    'weeklyRateKg',
+    'activity',
+    'wantsScale',
+  };
+
+  Map<String, Object?> exportFamilyAnswers() => {
+    for (final entry in exportSoloAnswers().entries)
+      if (!_soloOnlyKeys.contains(entry.key)) entry.key: entry.value,
+    'members': [for (final member in members) member.toDraftJson()],
+    'nextMemberId': _nextMemberId,
+    'mainCookId': mainCookId,
+    'portionRulesVersion': familyPortionRulesVersion,
+    'portionFactors': {for (final role in MemberRole.values) role.name: role.portion},
+  };
+
+  /// Validate the complete snapshot before replacing any live Family state.
+  /// Solo-specific sources and pantry products are not assigned here.
+  void restoreFamilyAnswers(
+    Map<String, Object?> values,
+    Map<String, String> raw,
+    Map<int, Map<String, Object?>> edits,
+  ) {
+    final restored = OnboardingData();
+    try {
+      restored.restoreSoloAnswers({...restored.exportSoloAnswers(), ...values}, {});
+      if (values['portionRulesVersion'] != familyPortionRulesVersion) {
+        throw const FormatException('family_portion_version_unknown');
+      }
+      final factors = values['portionFactors'] as Map;
+      for (final role in MemberRole.values) {
+        if (factors[role.name] != role.portion) throw const FormatException('family_portions_invalid');
+      }
+      final decoded = (values['members'] as List)
+          .map((v) => MemberDraft.fromDraftJson(Map<String, Object?>.from(v as Map)))
+          .toList();
+      final ids = decoded.map((m) => m.id).toSet();
+      if (ids.length != decoded.length) throw const FormatException('family_duplicate_id');
+      restored.members
+        ..clear()
+        ..addAll(decoded);
+      for (final member in decoded) {
+        if (restored.validateMember(member) != null || memberInputViolation(member) != null) {
+          throw const FormatException('family_member_invalid');
+        }
+      }
+      if (decoded.isEmpty) throw const FormatException('family_empty_household');
+      final cook = values['mainCookId'] as int?;
+      if (cook != null && !decoded.any((m) => m.id == cook && m.role == MemberRole.adulte)) {
+        throw const FormatException('family_cook_invalid');
+      }
+      final next = values['nextMemberId'] as int;
+      if (next < 1 || ids.any((id) => id >= next)) throw const FormatException('family_next_id_invalid');
+      final copiedEdits = <int, Map<String, Object?>>{};
+      for (final entry in edits.entries) {
+        final member = MemberDraft.fromDraftJson(Map<String, Object?>.from(entry.value['member'] as Map));
+        final isNew = entry.value['isNew'] as bool;
+        final fields = Map<String, String>.from(entry.value['rawInputs'] as Map);
+        if (member.id != entry.key || member.id >= next || (isNew == ids.contains(member.id))) {
+          throw const FormatException('family_edit_identity_invalid');
+        }
+        copiedEdits[entry.key] = {'member': member.toDraftJson(), 'isNew': isNew, 'rawInputs': fields};
+      }
+      slots
+        ..clear()
+        ..addAll(restored.slots);
+      _budgetAmount = restored._budgetAmount;
+      _budgetCurrencyCode = restored._budgetCurrencyCode;
+      _budgetInherited = restored._budgetInherited;
+      budgetEdited = restored.budgetEdited;
+      management = restored.management;
+      diets
+        ..clear()
+        ..addAll(restored.diets);
+      allergens
+        ..clear()
+        ..addAll(restored.allergens);
+      excludedFoods
+        ..clear()
+        ..addAll(restored.excludedFoods);
+      cuisinePreferences
+        ..clear()
+        ..addAll(restored.cuisinePreferences);
+      cookingLevel = restored.cookingLevel;
+      weekdayMinutes = restored.weekdayMinutes;
+      weekendMinutes = restored.weekendMinutes;
+      equipment
+        ..clear()
+        ..addAll(restored.equipment);
+      members
+        ..clear()
+        ..addAll(decoded);
+      _nextMemberId = next;
+      mainCookId = cook;
+      familyInputs
+        ..clear()
+        ..addAll(raw);
+      familyMemberEdits
+        ..clear()
+        ..addAll(copiedEdits);
+    } finally {
+      restored.dispose();
+    }
+  }
+
+  /// Raw Solo inputs are independent of the last accepted business values.
+  final Map<String, String> soloInputs = {};
+  String soloInput(String field, String fallback) => isFoyer ? fallback : soloInputs[field] ?? fallback;
+  void setSoloInput(String field, String value) {
+    if (isFoyer || soloInputs[field] == value) return;
+    soloInputs[field] = value;
+    notifyListeners();
+  }
+
+  Map<String, Object?> exportSoloAnswers() => {
+    'goal': goal.name,
+    'sex': sex.name,
+    'age': age,
+    'heightCm': heightCm,
+    'weightKg': weightKg,
+    'targetWeightKg': targetWeightKg,
+    'weeklyRateKg': weeklyRateKg,
+    'activity': activity.name,
+    'wantsScale': wantsScale,
+    'slots': [
+      for (final slot in slots) {'day': slot.$1, 'meal': slot.$2.name},
+    ],
+    'budgetAmount': _budgetAmount,
+    'budgetCurrency': _budgetCurrencyCode,
+    'budgetInherited': _budgetInherited,
+    'budgetEdited': budgetEdited,
+    'management': management.name,
+    'diets': diets.toList(),
+    'allergens': allergens.toList(),
+    'excludedFoods': excludedFoods.toList(),
+    'cuisinePreferences': cuisinePreferences.toList(),
+    'cookingLevel': cookingLevel.name,
+    'weekdayMinutes': weekdayMinutes,
+    'weekendMinutes': weekendMinutes,
+    'equipment': equipment.toList(),
+  };
+
+  /// Decode into a temporary model first, never partially mutate on a read error.
+  /// Family members and shared pantry contents are deliberately not touched.
+  void restoreSoloAnswers(Map<String, Object?> values, Map<String, String> inputs) {
+    double number(String key) {
+      final value = (values[key] as num).toDouble();
+      if (!value.isFinite) throw const FormatException('solo_number_invalid');
+      return value;
+    }
+
+    List<String> strings(String key) => (values[key] as List).cast<String>();
+    final restored = OnboardingData();
+    try {
+      restored.goal = HealthGoal.values.byName(values['goal'] as String);
+      restored.sex = Sex.values.byName(values['sex'] as String);
+      restored.age = values['age'] as int;
+      restored.heightCm = values['heightCm'] as int;
+      restored.weightKg = number('weightKg');
+      restored.targetWeightKg = values['targetWeightKg'] == null ? null : number('targetWeightKg');
+      restored.weeklyRateKg = number('weeklyRateKg');
+      restored.activity = ActivityLevel.values.byName(values['activity'] as String);
+      restored.wantsScale = values['wantsScale'] as bool;
+      restored.slots.clear();
+      for (final item in values['slots'] as List) {
+        final slot = item as Map;
+        final day = slot['day'] as int;
+        if (day < 1 || day > 7) throw const FormatException('solo_slot_invalid');
+        restored.slots.add((day, MealType.values.byName(slot['meal'] as String)));
+      }
+      restored._budgetAmount = values['budgetAmount'] as int;
+      restored._budgetCurrencyCode = values['budgetCurrency'] as String?;
+      if (restored._budgetCurrencyCode != null && !budgetCurrencies.contains(restored._budgetCurrencyCode)) {
+        throw const FormatException('solo_currency_invalid');
+      }
+      restored._budgetInherited = values['budgetInherited'] as bool;
+      restored.budgetEdited = values['budgetEdited'] as bool;
+      restored.management = ManagementMode.values.byName(values['management'] as String);
+      restored.diets.addAll(strings('diets'));
+      restored.allergens.addAll(strings('allergens'));
+      restored.excludedFoods.addAll(strings('excludedFoods'));
+      restored.cuisinePreferences.addAll(strings('cuisinePreferences'));
+      restored.cookingLevel = CookingLevel.values.byName(values['cookingLevel'] as String);
+      restored.weekdayMinutes = values['weekdayMinutes'] as int;
+      restored.weekendMinutes = values['weekendMinutes'] as int;
+      restored.equipment
+        ..clear()
+        ..addAll(strings('equipment'));
+      // Atomic assignment after every source field has been decoded.
+      goal = restored.goal;
+      sex = restored.sex;
+      age = restored.age;
+      heightCm = restored.heightCm;
+      weightKg = restored.weightKg;
+      targetWeightKg = restored.targetWeightKg;
+      weeklyRateKg = restored.weeklyRateKg;
+      activity = restored.activity;
+      wantsScale = restored.wantsScale;
+      slots
+        ..clear()
+        ..addAll(restored.slots);
+      _budgetAmount = restored._budgetAmount;
+      _budgetCurrencyCode = restored._budgetCurrencyCode;
+      _budgetInherited = restored._budgetInherited;
+      budgetEdited = restored.budgetEdited;
+      management = restored.management;
+      diets
+        ..clear()
+        ..addAll(restored.diets);
+      allergens
+        ..clear()
+        ..addAll(restored.allergens);
+      excludedFoods
+        ..clear()
+        ..addAll(restored.excludedFoods);
+      cuisinePreferences
+        ..clear()
+        ..addAll(restored.cuisinePreferences);
+      cookingLevel = restored.cookingLevel;
+      weekdayMinutes = restored.weekdayMinutes;
+      weekendMinutes = restored.weekendMinutes;
+      equipment
+        ..clear()
+        ..addAll(restored.equipment);
+      soloInputs
+        ..clear()
+        ..addAll(inputs);
+    } finally {
+      restored.dispose();
+    }
+  }
+
   // Mode choisi sur path_choice
   AppMode mode = AppMode.solo;
   bool get isFoyer => mode == AppMode.foyer;
@@ -403,6 +684,7 @@ class OnboardingData extends ChangeNotifier {
       while (count(role) > target) {
         final last = members.lastWhere((m) => m.role == role);
         members.remove(last);
+        familyMemberEdits.remove(last.id);
         if (mainCookId == last.id) mainCookId = null;
       }
       _refreshBudget();
@@ -421,6 +703,7 @@ class OnboardingData extends ChangeNotifier {
     update(() {
       final i = members.indexWhere((x) => x.id == m.id);
       i < 0 ? members.add(m) : members[i] = m;
+      familyMemberEdits.remove(m.id);
       if (mainCookId == m.id && m.role != MemberRole.adulte) mainCookId = null;
       members.sort((a, b) => a.role.index.compareTo(b.role.index));
       _refreshBudget();
@@ -442,6 +725,7 @@ class OnboardingData extends ChangeNotifier {
     if (error != null) return error;
     update(() {
       members.removeWhere((x) => x.id == m.id);
+      familyMemberEdits.remove(m.id);
       if (mainCookId == m.id) mainCookId = null;
       _refreshBudget();
     });

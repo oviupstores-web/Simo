@@ -1,5 +1,78 @@
 # DECISIONS.md — Choix validés
 
+## 15 octobre 2026 — validations Solo/Famille, icônes et préparation de sauvegarde
+
+- Sauvegarde chiffrée et restauration des onboardings **Solo (11 étapes)** et **Famille (9 étapes)** validées sur Xiaomi, avec brouillons indépendants. L'intégration Famille compte **505 tests PC réussis** ; les comptes rendus antérieurs et leurs résultats restent conservés dans leur contexte daté.
+- **17 correspondances d'icônes validées** puis intégrées : copies PNG RGBA transparentes 256 × 256, proportions et chemins Flutter conservés, sources originales non modifiées ; composants, pastilles et `BoxFit.contain` conservés. **124 tests réussis**, puis contrôle Android des 17 icônes sur Xiaomi le 15 octobre, en français à environ 393 px, sans correction supplémentaire. Signature identique, conservation de la base à l'installation et présence des réponses Solo/Famille constatées. Rapports : `reports/icons_20261015/REPORT.md` et `reports/icons_20261015/android/REPORT.md`.
+- Les **six icônes sans nouvelle source** restent inchangées : Sans porc, Sans lactose, Sans gluten, Calories et macros calculés, Adapté à votre temps et Zéro gaspillage. Leur remplacement nécessite des sources et une autorisation distinctes.
+- **Limites maintenues :** Réserve non raccordée au stockage chiffré ; défaut « 1 ans » non corrigé ; contrôle Android réel à 320 px restant à effectuer. Les tests PC à 320 px ne remplacent pas ce contrôle téléphone.
+- **Sécurité Supabase bloquante avant connexion métier :** permissions SQL, cohérence des relations entre foyers, confidentialité des recettes non publiées et de leurs détails, validation métier serveur. Audit conservé ; aucune correction SQL/Auth ni connexion métier appliquée par ces validations.
+- Le jalon produit 6 reste en cours, distinct de la phase corrective 6B. Invité local, SQLite chiffré, budget/devise explicites, calculs versionnés et futur transfert transactionnel restent les décisions de référence ; leur périmètre réellement implémenté est précisé dans l'état courant de `PLAN.md`.
+- Autorisation du jour limitée à l'actualisation de **PLAN.md et DECISIONS.md** et à l'audit Git en lecture seule. Préparer une liste précise d'inclusion/exclusion, sans modifier le code, les assets, les tests, `.gitignore` ou les brouillons. Aucun ajout à l'index, commit, push, pull, changement de branche, suppression, compilation, installation Android ou intervention Supabase. Toute opération Git de sauvegarde attend une autorisation explicite.
+
+Les décisions et anciens bilans ci-dessous sont conservés intégralement. Leurs statuts datés ne sont pas des statuts courants ; cette entrée consigne les validations ultérieures sans réécrire leur historique.
+
+## 14 octobre 2026 — contrôle Android Famille autorisé et effectué
+
+- Mise à jour de com.menoo.app autorisée uniquement pour validation Famille, signature identique et base conservée avant lancement, sans désinstallation ou effacement.
+- Neuf étapes, membres fictifs et allergies, saisies incomplètes, reprises après arrêts forcés et hors connexion, édition depuis le récapitulatif et indépendance des réponses Solo/Famille observés sur Xiaomi. Rapport : `reports/family_android/REPORT.md`.
+- Aucune correction visuelle/fonctionnelle appliquée ; « 1 ans » relevé et conservé. Aucun fichier applicatif, illustration, traduction ou dépendance modifié. Captures françaises à environ 393 px ; limitations précisées dans le rapport.
+- Brouillons fictifs Solo et Famille conservés, Réserve non raccordée, aucun Supabase, commit ou push. Wi-Fi rétabli et application laissée au récapitulatif Famille. Résultat Android en attente de validation ; arrêt avant la suite du jalon produit 6.
+
+## 14 octobre 2026 — raccordement local Famille autorisé, résultat technique
+
+- Autorisation limitée aux neuf étapes Famille et au maintien du brouillon Solo existant. Connexion SQLite partagée, enregistrements `guest.family` et `guest.solo` indépendants ; aucune suppression du brouillon fictif Solo et aucune intervention sur le téléphone.
+- Les fiches membres non validées restent distinctes des membres enregistrés ; conserver champs bruts, rôle, allergies, identifiant et prochain identifiant. Le bouton Enregistrer conserve ses validations et son comportement. Les régimes, exclusions et cuisines restent communs au foyer.
+- Portions inchangées : adulte 1, enfant 0,65, bébé 0,3 ; règles locales version 1 et statut provisoire. Les anciens champs de profil devenus inactifs sont conservés sans réactiver d'objectif de transformation physique en Famille. Budget et devise explicitement conservés, EUR par défaut, ancienne devise inconnue non déduite ni convertie.
+- Restaurer l'étape, la pile de retour et la fiche membre en cours, y compris depuis le récapitulatif, après le splash existant. Une erreur de lecture ne doit pas autoriser l'écrasement par défaut ; une erreur d'écriture conserve l'instantané en attente et utilise les messages existants sans nouveau texte. Aucun repli non chiffré.
+- Résultat PC : 87 tests Famille, 88 tests Solo et 330 régressions réussis ; analyse ciblée sans problème. Rapport : `reports/family_draft/REPORT.md`. Validation technique Android des écrans Famille reste à effectuer après autorisation d'installation.
+- Réserve et Supabase inchangés et non raccordés par cette intervention ; aucune dépendance ajoutée, aucun commit/push, aucune installation. Arrêt en attente de validation ; anciennes décisions conservées sans nouvelle numérotation.
+
+## 14 octobre 2026 — intégration locale du seul onboarding Solo autorisée
+
+- Périmètre autorisé : sauvegarde progressive Solo, étape courante, reprise, sources acceptées distinctes des saisies brutes, erreurs sans effacement ; préparation d'un identifiant Famille indépendant sans connexion de ce parcours. Pas de modification des règles métier, du design, des CTA, couleurs ou parcours Famille/Réserve.
+- Exception textuelle explicitement autorisée : deux messages d'erreur de lecture/écriture traduits dans FR/EN/ES/IT/DE, affichés par le composant d'alerte existant. Tous les textes préexistants conservés.
+- Identifiants `guest.solo` et `guest.family` distincts. Le codec Solo ne sérialise ni membres Famille ni produits Réserve. Les anciens champs inconnus et un éventuel contenu pantry persistant sont préservés, sans les connecter aux écrans.
+- Retour au point Solo enregistré après la fin du splash existant ; sources et devise explicite conservées, aucune conversion monétaire ou calcul serveur définitif inventé. Lecture illisible bloquée sans écriture de valeurs par défaut ; écriture échouée conservée en attente et signalée.
+- Dépendance Réserve signalée : si ce détour partagé est interrompu, reprise à « Mode de gestion », sans restauration des produits encore uniquement en mémoire. Une connexion de Réserve ou Famille nécessite une autorisation distincte.
+- Résultats disponibles : 88 tests Solo et 272 régressions réussis sur PC, analyse ciblée sans problème ; aucune installation Android pour cette intégration. Les anciennes décisions et bilans restent conservés. Rapport : `reports/solo_draft/REPORT.md`.
+- Arrêt avant installation Android, intervention Famille/Réserve ou suite fonctionnelle. Aucun Supabase, nouvelle dépendance, commit ou push ; suite du jalon produit 6 en attente de validation.
+
+## 14 octobre 2026 — validation Android autorisée du socle du jalon produit 6
+
+- Autorisation limitée au test technique du stockage sur le Xiaomi 2201117PG, avec données fictives, sans branchement aux écrans ni modification de leurs textes, langues, design ou navigation.
+- Isolation réalisée par un paquet distinct `com.menoo.storageprobe`, sans permission INTERNET. Aucun compte ou donnée personnelle de Menoo lu/modifié ; aucune désinstallation, suppression de données ou modification de signature de Menoo.
+- Résultats techniques consignés dans `reports/local_draft_foundation/ANDROID_REPORT.md` : Keystore matériel, chiffrement réel, fermeture forcée et restauration hors connexion, interruption transactionnelle, mauvaises clés refusées sans effacement, exclusions de sauvegarde compilées vérifiées. Ce résultat ne vaut pas validation de la connexion aux onboardings ni d'un transfert cloud réel.
+- Les métadonnées d'algorithmes non secrètes du plugin restent non exclues des sauvegardes ; constat consigné, sans correction automatique. Le test et les données fictives sont conservés. Aucun nouveau paquet externe ajouté, aucun Supabase, commit ou push.
+- Arrêt après les contrôles Android. Suite du jalon produit 6 en attente de validation ; phase corrective 6B toujours distincte et inchangée.
+
+## 14 octobre 2026 — réalisation limitée du socle du jalon produit 6
+
+- Reprise autorisée du stockage local uniquement ; les six dépendances existantes sont réutilisées. Téléchargement éventuel du moteur par la commande de tests explicitement autorisé, sans installation Android.
+- Configuration officielle sqlite3mc ; clé aléatoire de 256 bits, namespace Android dédié et reset automatique désactivé. Brouillon version 1, transactions Drift, erreurs techniques sans secrets et refus des bases en clair ou clés perdues sans suppression automatique. Aucun écran connecté.
+- Treize tests techniques passent sur PC ; contrôle combiné i18n, langue persistante et parcours Solo/Famille : 28 réussites. Ces résultats ne constituent pas une validation Android du Keystore ou de la restauration sur téléphone. Rapport : `reports/local_draft_foundation/REPORT.md`.
+- Exclusions ciblées de sauvegarde cloud et transfert Android pour la base et sa clé. Les données locales ne disposent pas encore d'une solution de récupération après perte de clé ou changement d'appareil.
+- La liste exacte des chaînes SQL/diagnostics internes du stockage est déclarée dans le test i18n ; aucune traduction ou règle métier n'est modifiée. Les archives locales et diagnostics hors périmètre sont conservés.
+- Test Android, installation et connexion aux onboardings en attente de validation. Aucun Supabase, commit ou push. Les entrées précédentes restent conservées ; leur état « intégration suspendue / non implémentée » décrit l'instant précédant cette reprise autorisée.
+
+## 14 octobre 2026 — décisions validées pour le jalon produit 6
+
+Cette entrée complète l'historique sans supprimer ni réécrire les anciennes décisions. Le jalon produit 6 (compte et génération des menus) reste distinct de la phase corrective 6B (références visuelles et divergences documentaires). Aucune nouvelle numérotation n'est introduite.
+
+- **Audit distant conservé :** projet officiel `menoo-dev` (`pqdreuptzhenowqucvbl`), sept migrations concordantes et 28 tables examinées en lecture seule. Audit clôturé et validé ; aucune correction SQL ou Auth appliquée.
+- **Sécurité obligatoire avant connexion métier :** corriger les permissions SQL des rôles, la cohérence des relations entre foyers, la confidentialité des recettes non publiées et de leurs détails ainsi que la validation métier serveur. Conserver les anciennes migrations intactes et proposer de nouvelles migrations pour validation. Aucune clé privée ou `service_role` dans Flutter.
+- **Parcours :** Solo comprend 11 étapes ; Famille comprend 9 étapes et aucun objectif de perte de poids ou de prise de masse. Courses, Réserve et Mixte sont des modes de gestion, jamais un troisième parcours d'onboarding.
+- **Invité local :** aucun compte Supabase Auth créé automatiquement ; création du compte uniquement à l'inscription. L'invité doit pouvoir reprendre ses données hors connexion après fermeture forcée.
+- **Brouillon versionné :** conserver parcours, étape, toutes les réponses, préférences, allergies, exclusions, équipements, budget/devise, foyer/portions, Réserve (produits, quantités, unités, dates, emplacements), version du format et état de synchronisation. Conserver les données sources nécessaires aux futurs calculs.
+- **Stockage cible :** SQLite réellement chiffré avec moteur `sqlite3mc`, clé aléatoire protégée par le stockage sécurisé Android, écritures fiables et transactions, récupération après interruption et exclusions adaptées des sauvegardes Android. Aucun recours silencieux à une base non chiffrée. Aucune donnée d'onboarding dans `shared_preferences`, réservé à la langue. Ce stockage n'est pas encore implémenté ni testé.
+- **Budget et devise :** EUR par défaut pour les nouveaux brouillons ; montant et devise explicitement enregistrés ensemble. Architecture compatible avec d'autres devises selon le pays, sans conversion ni comparaison monétaire implicite. Les anciens montants dont la devise est inconnue restent soumis à confirmation explicite conformément à la décision historique.
+- **Calculs versionnés :** calcul serveur versionné pour calories, macros et portions ; conservation des données sources et de la version des règles. Calculs provisoires autorisés hors connexion, sans les considérer comme des résultats serveur définitifs. Cette décision n'autorise pas une modification immédiate des formules métier existantes.
+- **Transfert futur :** transactionnel et sans doublons ; copie locale conservée jusqu'à confirmation serveur. Si le compte distant contient déjà des données, demander une décision explicite avant fusion ou remplacement ; aucun écrasement silencieux. Authentification et synchronisation non implémentées.
+- **Dépendances conservées, intégration suspendue :** `drift 2.35.2`, `sqlite3 3.7.1`, `flutter_secure_storage 11.2.0`, `path_provider 2.1.6`, `drift_dev 2.35.1`, `build_runner 2.16.2`. Leur installation ne constitue pas une preuve de chiffrement ou de persistance. Aucun écran connecté au stockage.
+- **Évolution de la décision historique :** la conservation uniquement en mémoire jusqu'à l'inscription est remplacée comme architecture cible par le brouillon local durable chiffré. Elle reste le fonctionnement réel actuel tant que cette sauvegarde n'est pas implémentée et validée.
+- **Reprise :** développement du jalon produit 6 et interventions de phase corrective 6B en attente de validation dans leurs périmètres respectifs. La présente autorisation porte uniquement sur `PLAN.md` et `DECISIONS.md` ; aucun développement fonctionnel n'est repris.
+
+
 ## Révision scientifique de phase 2 — instructions de Simo, 2026-10-09
 
 - 250 kg n'est pas une limite médicale universelle. Les bornes actuelles restent provisoires et aucun nouveau seuil de poids/IMC n'est ajouté. Un IMC élevé ne suffit pas à rejeter un profil ni à inférer sa masse grasse.
@@ -357,3 +430,7 @@ Simo confirme exactement FR/EN/ES/IT/DE, remplaçant la restriction provisoire F
 ## 13 octobre 2026 — validation Android et sauvegarde finale
 
 Simo valide les contrôles Android des cinq langues, dont la persistance après fermeture forcée et relance. Landing et présentations Solo/Famille contrôlées sur le Xiaomi (~393 px logiques), formulaires complets non rejoués. Aucun défaut visuel corrigé pendant le test. Sauvegarde Git et push autorisés, limités aux modifications validées et à leurs tests/documentation. Rapports volumineux et ressources expérimentales exclus ; arrêt jusqu’aux prochaines instructions, sans Supabase.
+
+## 14 octobre 2026 — essai Android de la sauvegarde Solo
+
+Compilation et mise à jour de com.menoo.app autorisées pour valider Solo ; signature vérifiée identique, aucune désinstallation ni effacement. Brouillon fictif conservé après les essais, pas de nettoyage automatique. Reprises et persistance linguistique observées sur téléphone ; contrôle Famille limité à la couverture et la composition initiale, contrôle visuel à environ 393 px. Aucune correction du design ou de la navigation, aucun raccordement Famille/Réserve ni Supabase. Rapport : reports/solo_android/REPORT.md. Suite du jalon produit 6 en attente de validation.

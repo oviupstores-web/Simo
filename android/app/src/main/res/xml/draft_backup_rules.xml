@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <exclude domain="file" path="menoo_local_drafts/" />
+    <exclude domain="sharedpref" path="menoo_draft_keys.xml" />
+    <exclude domain="sharedpref" path="FlutterSecureKeyStorage:menoo_draft_keys.xml" />
+</full-backup-content>

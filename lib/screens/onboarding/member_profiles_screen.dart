@@ -36,11 +36,7 @@ class MemberProfilesScreen extends StatelessWidget {
       children: [
         for (final (i, m) in d.members.indexed) ...[
           if (i > 0) const SizedBox(height: AppSpace.x3),
-          _MemberCard(
-            member: m,
-            name: d.displayName(m, l),
-            onTap: () => push(context, MemberEditScreen(member: m.copy())),
-          ),
+          _MemberCard(member: m, name: d.displayName(m, l), onTap: () => OnboardingFlow.openMember(context, m.copy())),
         ],
         const SizedBox(height: AppSpace.x3),
         Pressable(
@@ -57,7 +53,7 @@ class MemberProfilesScreen extends StatelessWidget {
               );
               return;
             }
-            push(context, MemberEditScreen(member: d.newMember(role), isNew: true));
+            OnboardingFlow.openMember(context, d.newMember(role), isNew: true);
           },
           child: Container(
             padding: const EdgeInsets.all(AppSpace.x3_5),
@@ -181,12 +177,43 @@ class MemberEditScreen extends StatefulWidget {
 }
 
 class _MemberEditScreenState extends State<MemberEditScreen> {
-  late final MemberDraft m = widget.member;
+  late MemberDraft m = widget.member;
   late final _name = TextEditingController(text: m.firstName);
   late final _age = TextEditingController(text: '${m.age}');
   late final _height = TextEditingController(text: m.heightCm?.toString() ?? '');
   late final _weight = TextEditingController(text: m.weightKg == null ? '' : OnboardingData.formatKg(m.weightKg!));
   String? _error;
+  bool _draftInitialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_draftInitialized || OnboardingScope.family(context) == null) return;
+    _draftInitialized = true;
+    final d = OnboardingScope.read(context);
+    final edit = d.familyMemberEdits[m.id];
+    if (edit != null) {
+      m = MemberDraft.fromDraftJson(Map<String, Object?>.from(edit['member'] as Map));
+      final raw = Map<String, String>.from(edit['rawInputs'] as Map);
+      _name.text = raw['name'] ?? m.firstName;
+      _age.text = raw['age'] ?? '${m.age}';
+      _height.text = raw['height'] ?? m.heightCm?.toString() ?? '';
+      _weight.text = raw['weight'] ?? (m.weightKg == null ? '' : OnboardingData.formatKg(m.weightKg!));
+    }
+    for (final controller in [_name, _age, _height, _weight]) {
+      controller.addListener(_captureEdit);
+    }
+  }
+
+  void _captureEdit() {
+    if (!mounted || !_draftInitialized) return;
+    OnboardingScope.read(context).saveFamilyMemberEdit(m, {
+      'name': _name.text,
+      'age': _age.text,
+      'height': _height.text,
+      'weight': _weight.text,
+    }, isNew: widget.isNew);
+  }
 
   static const _roleIcons = {
     MemberRole.adulte: AppIcons.user,
@@ -223,6 +250,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
       _height.text = m.heightCm?.toString() ?? '';
       _weight.text = m.weightKg == null ? '' : OnboardingData.formatKg(m.weightKg!);
     });
+    _captureEdit();
   }
 
   void _save() {
@@ -345,9 +373,12 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
                 icon: a.$3,
                 tint: a.$4,
                 selected: m.allergens.containsAll(a.$1),
-                onTap: () => setState(
-                  () => m.allergens.containsAll(a.$1) ? m.allergens.removeAll(a.$1) : m.allergens.addAll(a.$1),
-                ),
+                onTap: () {
+                  setState(
+                    () => m.allergens.containsAll(a.$1) ? m.allergens.removeAll(a.$1) : m.allergens.addAll(a.$1),
+                  );
+                  _captureEdit();
+                },
               ),
           ],
         ),

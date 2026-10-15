@@ -33,6 +33,28 @@ void main() {
   /// Dossiers à ne pas scanner.
   const skippedDirs = {'lib/l10n'};
 
+  // Storage protocol and developer diagnostics, never displayed by a widget.
+  // Exact strings scoped to exact files: new UI text remains detectable.
+  const storageProtocol = {
+    'lib/local_storage/draft_database.dart': {
+      'PRAGMA cipher',
+      "PRAGMA cipher = 'chacha20'",
+      r'SQLite format 3\u0000',
+      r"PRAGMA key = '$key'",
+      'SELECT count(*) FROM sqlite_master',
+      'PRAGMA user_version',
+      'PRAGMA temp_store = MEMORY',
+      'PRAGMA journal_mode = DELETE',
+      'PRAGMA synchronous = FULL',
+      'PRAGMA secure_delete = ON',
+      'PRAGMA busy_timeout = 5000',
+      'PRAGMA integrity_check',
+      'SELECT count(*) AS count FROM local_drafts',
+      'SELECT format_version, payload FROM local_drafts WHERE id = ?',
+    },
+    'lib/local_storage/local_draft.dart': {'Invalid draft envelope', 'Unsupported draft format'},
+  };
+
   /// Un texte est « visible » s'il ressemble à une phrase ou à un mot écrit pour être lu :
   /// un accent, deux mots, ou un seul mot qui commence par une majuscule (« Continuer »).
   /// Cela laisse passer les identifiants techniques (`sans_porc`, `fridge`, `EUR`).
@@ -61,16 +83,17 @@ void main() {
 
   test('Aucun texte d\'interface en dur dans lib/', () {
     final found = <String>[];
-    final files = Directory('lib')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((f) => f.path.endsWith('.dart'))
-        .map((f) => f.path.replaceAll(r'\', '/'))
-        .where((p) => !skippedFiles.contains(p))
-        .where((p) => !skippedDirs.any(p.startsWith))
-        .where((p) => !p.contains('app_localizations'))
-        .toList()
-      ..sort();
+    final files =
+        Directory('lib')
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((f) => f.path.endsWith('.dart'))
+            .map((f) => f.path.replaceAll(r'\', '/'))
+            .where((p) => !skippedFiles.contains(p))
+            .where((p) => !skippedDirs.any(p.startsWith))
+            .where((p) => !p.contains('app_localizations'))
+            .toList()
+          ..sort();
 
     for (final path in files) {
       final lines = File(path).readAsLinesSync();
@@ -80,6 +103,7 @@ void main() {
           for (final m in re.allMatches(code)) {
             final text = m.group(1)!;
             if (allowed.contains(text) || !looksLikeUiText(text)) continue;
+            if (storageProtocol[path]?.contains(text) ?? false) continue;
             found.add('$path:${i + 1}  « $text »');
           }
         }
@@ -89,8 +113,7 @@ void main() {
     expect(
       found,
       isEmpty,
-      reason:
-          '${found.length} texte(s) en dur à sortir dans lib/l10n/app_fr.arb :\n${found.join('\n')}',
+      reason: '${found.length} texte(s) en dur à sortir dans lib/l10n/app_fr.arb :\n${found.join('\n')}',
     );
   });
 }

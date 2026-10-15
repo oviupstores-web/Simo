@@ -13,11 +13,12 @@ import '../../theme/theme.dart';
 /// One startup overlay. The existing landing builds underneath, without changing
 /// its route or state. Future initialization can be supplied through [ready].
 class MenooStartup extends StatefulWidget {
-  const MenooStartup({super.key, required this.child, this.ready, this.prepare});
+  const MenooStartup({super.key, required this.child, this.ready, this.prepare, this.onDismissed});
 
   final Widget child;
   final Future<void>? ready;
   final Future<void> Function(BuildContext)? prepare;
+  final VoidCallback? onDismissed;
 
   @override
   State<MenooStartup> createState() => _MenooStartupState();
@@ -105,7 +106,10 @@ class _MenooStartupState extends State<MenooStartup> with SingleTickerProviderSt
     if (!mounted || _exiting) return;
     setState(() => _exiting = true);
     _exitTimer = Timer(_reducedMotion ? Duration.zero : StartupTokens.exit, () {
-      if (mounted) setState(() => _dismissed = true);
+      if (mounted) {
+        setState(() => _dismissed = true);
+        widget.onDismissed?.call();
+      }
     });
   }
 

@@ -18,6 +18,8 @@ import '../screens/onboarding/weekly_grid_screen.dart';
 import '../screens/pantry/pantry_hub_onboarding_screen.dart';
 import 'onboarding_data.dart';
 import 'onboarding_scope.dart';
+import 'solo_draft_navigation.dart';
+import 'family_draft_navigation.dart';
 
 /// Toutes les étapes possibles de l'onboarding (Solo et Foyer partagent la plupart des écrans).
 enum OnbStep {
@@ -90,21 +92,103 @@ abstract final class OnboardingFlow {
     OnbStep.summary => const SummaryScreen(),
   };
 
-  static Route<void> _route(Widget screen, {bool fromSummary = false}) => MaterialPageRoute(
-    settings: RouteSettings(arguments: fromSummary),
+  static Route<void> _route(Widget screen, {bool fromSummary = false, bool family = false}) => MaterialPageRoute(
+    settings: RouteSettings(
+      arguments: fromSummary,
+      name: screen is PantryHubOnboardingScreen
+          ? pantryDetourRoute
+          : _stepFor(screen) == null
+          ? null
+          : '${family ? familyRoutePrefix : soloRoutePrefix}${_stepFor(screen)!.name}',
+    ),
     builder: (_) => screen,
   );
+
+  static OnbStep? _stepFor(Widget screen) => switch (screen) {
+    GoalScreen() => OnbStep.goal,
+    ProfileScreen() => OnbStep.profile,
+    ActivityScreen() => OnbStep.activity,
+    SmartScaleScreen() => OnbStep.scale,
+    WeeklyGridScreen() => OnbStep.grid,
+    BudgetScreen() => OnbStep.budget,
+    ManagementModeScreen() => OnbStep.management,
+    ConstraintsScreen() => OnbStep.constraints,
+    OnboardingCuisinesScreen() => OnbStep.cuisines,
+    KitchenScreen() => OnbStep.kitchen,
+    SummaryScreen() => OnbStep.summary,
+    HouseholdSizeScreen() => OnbStep.household,
+    MemberProfilesScreen() => OnbStep.members,
+    _ => null,
+  };
 
   /// Ouvre une étape (depuis le récapitulatif : le « Continuer » y ramènera).
   static Future<void> open(BuildContext context, OnbStep step, {bool fromSummary = false}) {
     final d = OnboardingScope.read(context);
     if (d.isFoyer && !foyer.contains(step)) step = OnbStep.household;
     if (!d.isFoyer && step != OnbStep.profile && !d.isEligibleForIndividual) step = OnbStep.profile;
-    return Navigator.of(context).push(_route(screenFor(step), fromSummary: fromSummary));
+    return Navigator.of(context).push(_route(screenFor(step), fromSummary: fromSummary, family: d.isFoyer));
+  }
+
+  static Future<void> openMember(BuildContext context, MemberDraft member, {bool isNew = false}) {
+    if (OnboardingScope.family(context) != null) {
+      final d = OnboardingScope.read(context);
+      if (!d.familyMemberEdits.containsKey(member.id)) {
+        d.saveFamilyMemberEdit(member, {
+          'name': member.firstName,
+          'age': '${member.age}',
+          'height': member.heightCm?.toString() ?? '',
+          'weight': member.weightKg == null ? '' : OnboardingData.formatKg(member.weightKg!),
+        }, isNew: isNew);
+      }
+    }
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        settings: RouteSettings(name: familyMemberRoute, arguments: {'memberId': member.id, 'isNew': isNew}),
+        builder: (_) => MemberEditScreen(member: member, isNew: isNew),
+      ),
+    );
   }
 
   /// Première étape du parcours choisi.
-  static Future<void> start(BuildContext context) => open(context, steps(context).first);
+  static Future<void> start(BuildContext context) async {
+    final family = OnboardingScope.family(context);
+    if (OnboardingScope.read(context).isFoyer && family != null) {
+      if (!await family.enter()) {
+        if (context.mounted) {
+          final l = L.of(context);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.soloDraftLoadError)));
+        }
+        return;
+      }
+      if (!context.mounted) return;
+      if (family.routeStack.isNotEmpty) {
+        final observer = Navigator.of(context).widget.observers.whereType<FamilyDraftRouteObserver>().firstOrNull;
+        if (observer != null) {
+          resumeFamilyRoutes(context, family, observer, includeEntry: false);
+          return;
+        }
+      }
+    }
+    final session = OnboardingScope.solo(context);
+    if (!OnboardingScope.read(context).isFoyer && session != null) {
+      if (!await session.enter()) {
+        if (context.mounted) {
+          final l = L.of(context);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.soloDraftLoadError)));
+        }
+        return;
+      }
+      if (!context.mounted) return;
+      if (session.routeStack.isNotEmpty) {
+        final observer = Navigator.of(context).widget.observers.whereType<SoloDraftRouteObserver>().firstOrNull;
+        if (observer != null) {
+          resumeSoloRoutes(context, session, observer, includeEntry: false);
+          return;
+        }
+      }
+    }
+    if (context.mounted) await open(context, steps(context).first);
+  }
 
   /// Vrai si l'écran a été ouvert depuis « Éditer » du récapitulatif.
   static bool isEditing(BuildContext context) => ModalRoute.of(context)?.settings.arguments == true;
@@ -123,6 +207,8 @@ abstract final class OnboardingFlow {
       return;
     }
     final editing = isEditing(context);
+    if (!d.isFoyer) OnboardingScope.solo(context)?.markCompleted(step.name);
+    if (d.isFoyer) OnboardingScope.family(context)?.markCompleted(step.name);
     final nav = Navigator.of(context);
     final order = steps(context);
     if (step == OnbStep.management && OnboardingScope.read(context).management != ManagementMode.courses) {
@@ -131,6 +217,7 @@ abstract final class OnboardingFlow {
         _route(
           PantryHubOnboardingScreen(onFinish: (hub) => finishPantryDetour(hub, editing, after)),
           fromSummary: editing,
+          family: d.isFoyer,
         ),
       );
       return;
@@ -165,7 +252,7 @@ abstract final class OnboardingFlow {
       nav.pop();
       nav.pop();
     } else {
-      nav.pushReplacement(_route(screenFor(after)));
+      nav.pushReplacement(_route(screenFor(after), family: OnboardingScope.read(hubContext).isFoyer));
     }
   }
 }

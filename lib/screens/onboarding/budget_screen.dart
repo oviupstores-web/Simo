@@ -27,6 +27,8 @@ class BudgetScreen extends StatefulWidget {
 class _BudgetScreenState extends State<BudgetScreen> {
   final _custom = TextEditingController();
   String? _error;
+  bool _soloInitialized = false;
+  Locale? _soloLocale;
 
   @override
   void dispose() {
@@ -38,6 +40,23 @@ class _BudgetScreenState extends State<BudgetScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     OnboardingScope.read(context).initializeBudgetCurrency(Formats.of(context).currency);
+    final d = OnboardingScope.read(context);
+    if (!d.isFoyer || OnboardingScope.family(context) != null) {
+      if (!_soloInitialized) {
+        _soloInitialized = true;
+        _custom.text = d.isFoyer ? d.familyInputs['budget.custom'] ?? '' : d.soloInput('budget.custom', '');
+        _custom.addListener(
+          () => d.isFoyer
+              ? d.setFamilyInput('budget.custom', _custom.text)
+              : d.setSoloInput('budget.custom', _custom.text),
+        );
+      }
+      final locale = Localizations.localeOf(context);
+      if (_soloLocale != locale) {
+        _soloLocale = locale;
+        if (_custom.text.isNotEmpty) _applyCustom(_custom.text);
+      }
+    }
   }
 
   Formats get _formats =>

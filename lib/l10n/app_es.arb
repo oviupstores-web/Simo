@@ -682,5 +682,7 @@
   "landingCtaScanShort": "Escanear",
   "landingCtaMealScanShort": "Analizar",
   "landingCtaMenusShort": "Mis menús",
-  "landingCtaShoppingShort": "Mi lista"
+  "landingCtaShoppingShort": "Mi lista",
+  "soloDraftLoadError": "No se pudo abrir tu borrador. Los datos existentes se conservan. Reinicia Menoo para volver a intentarlo.",
+  "soloDraftSaveError": "La copia local ha fallado. Tus datos siguen en esta sesión. Mantén la aplicación abierta y vuelve a intentarlo."
 }

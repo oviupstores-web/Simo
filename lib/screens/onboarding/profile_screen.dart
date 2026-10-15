@@ -36,12 +36,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_init) return;
     _init = true;
     final d = OnboardingScope.read(context);
-    _age.text = '${d.age}';
-    _height.text = '${d.heightCm}';
-    _weight.text = OnboardingData.formatKg(d.weightKg);
-    if (d.targetWeightKg != null) _target.text = OnboardingData.formatKg(d.targetWeightKg!);
-    for (final c in [_age, _height, _weight, _target]) {
-      c.addListener(() => setState(() {}));
+    _age.text = d.soloInput('profile.age', '${d.age}');
+    _height.text = d.soloInput('profile.height', '${d.heightCm}');
+    _weight.text = d.soloInput('profile.weight', OnboardingData.formatKg(d.weightKg));
+    _target.text = d.soloInput(
+      'profile.target',
+      d.targetWeightKg == null ? '' : OnboardingData.formatKg(d.targetWeightKg!),
+    );
+    for (final (field, c) in [('age', _age), ('height', _height), ('weight', _weight), ('target', _target)]) {
+      c.addListener(() {
+        d.setSoloInput('profile.$field', c.text);
+        if (mounted) setState(() {});
+      });
     }
   }
 

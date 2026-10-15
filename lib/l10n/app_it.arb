@@ -682,5 +682,7 @@
   "landingCtaScanShort": "Scansiona",
   "landingCtaMealScanShort": "Analizza",
   "landingCtaMenusShort": "I miei menu",
-  "landingCtaShoppingShort": "La mia lista"
+  "landingCtaShoppingShort": "La mia lista",
+  "soloDraftLoadError": "Impossibile aprire la bozza. I dati esistenti sono conservati. Riavvia Menoo per riprovare.",
+  "soloDraftSaveError": "Il salvataggio locale non è riuscito. I dati inseriti restano in questa sessione. Tieni aperta l’app e riprova."
 }
