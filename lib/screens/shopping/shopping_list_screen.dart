@@ -39,7 +39,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
 
   Widget _section(String icon, String title, String count, List<_Article> items, {bool interactive = true}) {
     return ListSectionCard(
-      leading: AppIcon(icon, size: 20, color: AppColors.primary),
+      leading: AppIcon(icon, size: AppIcon.preferredSize(icon, 20), color: AppColors.primary),
       title: title,
       count: count,
       rows: [
@@ -80,10 +80,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                     const SizedBox(height: AppSpace.x5),
                     Text(l.shoppingTitle, style: AppText.h1Dash),
                     const SizedBox(height: AppSpace.x1),
-                    Text(
-                      l.shoppingWeekRange('14', '20'),
-                      style: AppText.of(AppFont.s14, color: AppColors.ink2),
-                    ),
+                    Text(l.shoppingWeekRange('14', '20'), style: AppText.of(AppFont.s14, color: AppColors.ink2)),
                     const SizedBox(height: AppSpace.x4),
                     AppCard(
                       child: Column(
@@ -103,7 +100,11 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                                           TextSpan(text: '52,80 €', style: AppText.bigNumber),
                                           TextSpan(
                                             text: ' / 65 €',
-                                            style: AppText.of(AppFont.s13, weight: AppFont.medium, color: AppColors.ink2),
+                                            style: AppText.of(
+                                              AppFont.s13,
+                                              weight: AppFont.medium,
+                                              color: AppColors.ink2,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -144,7 +145,13 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                                   interactive: false,
                                 ),
                                 const SizedBox(height: AppSpace.x3),
-                                _section(AppIcons.cupboard, l.shoppingGrocery, l.itemCount(3), _grocery(l), interactive: false),
+                                _section(
+                                  AppIcons.cupboard,
+                                  l.shoppingGrocery,
+                                  l.itemCount(3),
+                                  _grocery(l),
+                                  interactive: false,
+                                ),
                               ],
                             ),
                           ),

@@ -1,3 +1,5 @@
+import '../../theme/premium_icons.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -66,7 +68,11 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     const SizedBox(height: AppSpace.x5),
                     Align(
                       alignment: AlignmentDirectional.centerStart,
-                      child: EyebrowTag(label: l.pantryHubOptional, icon: AppIcons.pantryReserve),
+                      child: EyebrowTag(
+                        label: l.pantryHubOptional,
+                        icon: AppIcons.pantryReserve,
+                        premiumAsset: PremiumIcons.pantryReserve,
+                      ),
                     ),
                     const SizedBox(height: AppSpace.x3),
                     Text(l.pantryHubTitle, style: AppText.h1),
@@ -375,7 +381,13 @@ class _EmptyPantry extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpace.x5),
       child: Column(
         children: [
-          const IconTile(icon: AppIcons.pantryReserve, size: AppSizes.lockCircle, iconSize: 22, circle: true),
+          const IconTile(
+            icon: AppIcons.pantryReserve,
+            premiumAsset: PremiumIcons.pantryReserve,
+            size: AppSizes.lockCircle,
+            iconSize: PremiumIconTokens.minSize,
+            circle: true,
+          ),
           const SizedBox(height: AppSpace.x3),
           Text(L.of(context).pantryHubEmptyTitle, style: AppText.of(AppFont.s16, weight: AppFont.extrabold)),
           const SizedBox(height: AppSpace.x1),

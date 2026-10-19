@@ -46,7 +46,7 @@ class ToggleChip extends StatelessWidget {
             ? null
             : tint != null
             ? TintBadge(icon: icon!, tint: tint!, size: AppSizes.chipBadge, circle: true)
-            : AppIcon(icon!, size: 15, color: fg));
+            : AppIcon(icon!, size: AppIcon.preferredSize(icon!, 15), color: fg));
     final hasBadge = leading != null || (icon != null && tint != null);
     return Semantics(
       selected: selected,

@@ -102,7 +102,7 @@ class _IconTextFieldState extends State<IconTextField> {
       height: AppSizes.fieldHeight,
       builder: (focus, _) => Row(
         children: [
-          AppIcon(widget.icon, size: 20, color: AppColors.ink3),
+          AppIcon(widget.icon, size: AppIcon.preferredSize(widget.icon, 20), color: AppColors.ink3),
           const SizedBox(width: AppSpace.x3),
           Expanded(
             child: TextField(

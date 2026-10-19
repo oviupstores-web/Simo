@@ -103,7 +103,7 @@ class CoverHouseholdScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
+                        const AppIcon(AppIcons.shield, preserveSvg: true, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
                         Flexible(
                           child: Text(

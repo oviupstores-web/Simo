@@ -99,10 +99,7 @@ class _RecipeSheetScreenState extends State<RecipeSheetScreen> {
                           ],
                         ),
                         const SizedBox(height: AppSpace.x3),
-                        Text(
-                          l.recipeDemoDescription,
-                          style: AppText.body,
-                        ),
+                        Text(l.recipeDemoDescription, style: AppText.body),
                         const SizedBox(height: AppSpace.x4),
                         Row(
                           children: [
@@ -187,11 +184,12 @@ class _MacroTile extends StatelessWidget {
       decoration: const BoxDecoration(color: AppColors.card, borderRadius: AppRadius.tileR, boxShadow: AppShadows.card),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: AppSpace.x1,
             children: [
-              AppIcon(icon, size: 15, color: color),
-              const SizedBox(width: AppSpace.x1),
+              AppIcon(icon, size: 28, color: color),
               Text(value, style: AppText.of(AppFont.s16, weight: AppFont.extrabold, lineHeight: 22)),
             ],
           ),

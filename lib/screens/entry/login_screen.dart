@@ -124,7 +124,7 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         const AppIcon(AppIcons.shield, size: 15, color: AppColors.ink2),
                         const SizedBox(width: AppSpace.x1_5),
-                        Text(l.commonDataSecure, style: AppText.meta),
+                        Flexible(child: Text(l.commonDataSecure, style: AppText.meta)),
                       ],
                     ),
                   ],

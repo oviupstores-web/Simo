@@ -3,15 +3,41 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
+import '../theme/app_tokens.dart';
+import '../theme/premium_icons.dart';
 
-/// Icône au trait (contenu SVG de `AppIcons`), rendue à l'identique des écrans maîtres.
+/// PNG final pour chaque motif enregistré ; SVG uniquement sans équivalent.
 class AppIcon extends StatelessWidget {
-  const AppIcon(this.svg, {super.key, this.size = 24, this.color = AppColors.ink, this.strokeWidth = 2});
+  const AppIcon(
+    this.svg, {
+    super.key,
+    this.size = 24,
+    this.color = AppColors.ink,
+    this.strokeWidth = 2,
+    this.premiumAsset,
+    this.compactNavigation = false,
+    this.preserveSvg = false,
+  });
 
   final String svg;
   final double size;
   final Color color;
   final double strokeWidth;
+
+  /// Explicit opt-in for context-dependent aliases, never for functional icons.
+  final String? premiumAsset;
+
+  /// Navigation retains its existing footprint, while still using the final PNG.
+  final bool compactNavigation;
+
+  /// Context without the protection meaning of the premium shield.
+  final bool preserveSvg;
+
+  static double preferredSize(String svg, double current, {Color? color, bool large = false}) {
+    if (PremiumIcons.assetFor(svg) == null) return current;
+    final minimum = large ? PremiumIconTokens.largeSize : PremiumIconTokens.minSize;
+    return current < minimum ? minimum : current;
+  }
 
   static String hex(Color c) => '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
 
@@ -27,16 +53,37 @@ class AppIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final asset = preserveSvg ? null : premiumAsset ?? PremiumIcons.assetFor(svg);
+    final flip = _directional.contains(svg) && Directionality.of(context) == TextDirection.rtl;
+    Widget directional(Widget child) => flip ? Transform.flip(flipX: true, child: child) : child;
+    if (asset == null) {
+      return directional(_svgPicture());
+    }
+    final imageSize = !compactNavigation && size < PremiumIconTokens.minSize ? PremiumIconTokens.minSize : size;
+    final image = Image.asset(
+      asset,
+      width: imageSize,
+      height: imageSize,
+      fit: BoxFit.contain,
+      color: color == AppColors.white ? AppColors.white : null,
+      colorBlendMode: color == AppColors.white ? BlendMode.srcIn : null,
+      // Mipmaps preserve the fine strokes when reducing 256px sources to 28px.
+      filterQuality: FilterQuality.medium,
+      excludeFromSemantics: true,
+    );
+    // Only the rendered icon is tinted; source PNG pixels remain untouched.
+    return directional(image);
+  }
+
+  Widget _svgPicture() {
     final opacity = c255(color) < 255 ? ' stroke-opacity="${(c255(color) / 255).toStringAsFixed(3)}"' : '';
-    final picture = SvgPicture.string(
+    return SvgPicture.string(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" '
       'stroke="${hex(color)}"$opacity stroke-width="$strokeWidth" '
       'stroke-linecap="round" stroke-linejoin="round">$svg</svg>',
       width: size,
       height: size,
     );
-    final flip = _directional.contains(svg) && Directionality.of(context) == TextDirection.rtl;
-    return flip ? Transform.flip(flipX: true, child: picture) : picture;
   }
 
   static int c255(Color c) => (c.toARGB32() >> 24) & 0xFF;

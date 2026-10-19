@@ -455,7 +455,11 @@ class _Line extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: AppSpace.x0_5),
-              child: AppIcon(icon, size: 16, color: strong ? AppColors.primary : AppColors.ink3),
+              child: AppIcon(
+                icon,
+                size: AppIcon.preferredSize(icon, 16),
+                color: strong ? AppColors.primary : AppColors.ink3,
+              ),
             ),
             const SizedBox(width: AppSpace.x2_5),
             Expanded(

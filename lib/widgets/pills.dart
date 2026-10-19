@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../theme/app_tokens.dart';
+import '../theme/premium_icons.dart';
 import 'app_icon.dart';
 import 'pressable.dart';
 
@@ -58,7 +59,12 @@ class PillBadge extends StatelessWidget {
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AppIcon(icon!, size: size + 2, color: foreground, strokeWidth: 2.4),
+                AppIcon(
+                  icon!,
+                  size: AppIcon.preferredSize(icon!, size + 2, color: foreground),
+                  color: foreground,
+                  strokeWidth: 2.4,
+                ),
                 const SizedBox(width: AppSpace.x1),
                 if (allowTextWrap) Flexible(child: text) else text,
               ],
@@ -69,10 +75,11 @@ class PillBadge extends StatelessWidget {
 
 /// Étiquette de section (« VOTRE POINT DE DÉPART »).
 class EyebrowTag extends StatelessWidget {
-  const EyebrowTag({super.key, required this.label, required this.icon});
+  const EyebrowTag({super.key, required this.label, required this.icon, this.premiumAsset});
 
   final String label;
   final String icon;
+  final String? premiumAsset;
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +89,23 @@ class EyebrowTag extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AppIcon(icon, size: 14, color: AppColors.primary),
+          AppIcon(
+            icon,
+            size: premiumAsset == null ? AppIcon.preferredSize(icon, 14) : PremiumIconTokens.minSize,
+            color: AppColors.primary,
+            premiumAsset: premiumAsset,
+          ),
           const SizedBox(width: AppSpace.x1_5),
-          Text(
-            label,
-            style: AppText.of(
-              AppFont.s12,
-              weight: AppFont.extrabold,
-              color: AppColors.primary,
-              lineHeight: 16,
-            ).copyWith(letterSpacing: 0.3),
+          Flexible(
+            child: Text(
+              label,
+              style: AppText.of(
+                AppFont.s12,
+                weight: AppFont.extrabold,
+                color: AppColors.primary,
+                lineHeight: 16,
+              ).copyWith(letterSpacing: 0.3),
+            ),
           ),
         ],
       ),
@@ -111,7 +125,7 @@ class InfoChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final fg = highlighted ? AppColors.primary : AppColors.ink;
     return Container(
-      height: AppSizes.tagHeight,
+      height: PremiumIcons.assetFor(icon) != null ? PremiumIconTokens.compactHeight : AppSizes.tagHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpace.x2_5),
       decoration: BoxDecoration(
         color: highlighted ? AppColors.mint : AppColors.card,
@@ -121,7 +135,7 @@ class InfoChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AppIcon(icon, size: 15, color: fg),
+          AppIcon(icon, size: AppIcon.preferredSize(icon, 15), color: fg),
           const SizedBox(width: AppSpace.x1_5),
           Text(
             label,

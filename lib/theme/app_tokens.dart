@@ -379,3 +379,12 @@ abstract final class LandingVerticalTokens {
   static const textFraction = .50;
   static const artFraction = .50;
 }
+
+/// Approved minimum logical size for the premium illustration collection.
+abstract final class PremiumIconTokens {
+  static const minSize = 32.0;
+  static const largeSize = 36.0;
+  static const largeSupport = 56.0;
+  static const minSupport = 40.0;
+  static const compactHeight = 40.0;
+}

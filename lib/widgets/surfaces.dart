@@ -4,6 +4,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_text.dart';
 import '../theme/app_tokens.dart';
+import '../theme/premium_icons.dart';
 import 'app_icon.dart';
 import 'pressable.dart';
 
@@ -51,6 +52,7 @@ class IconTile extends StatelessWidget {
     super.key,
     required this.icon,
     this.illustrationAsset,
+    this.premiumAsset,
     this.illustrationSize = 36,
     this.size = AppSizes.iconTile,
     this.iconSize = 24,
@@ -61,8 +63,10 @@ class IconTile extends StatelessWidget {
   });
 
   final String icon;
+
   /// Optional exclusive replacement for the stroke icon.
   final String? illustrationAsset;
+  final String? premiumAsset;
   final double illustrationSize;
   final double size;
   final double iconSize;
@@ -73,17 +77,31 @@ class IconTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final premium = illustrationAsset == null && (premiumAsset != null || PremiumIcons.assetFor(icon) != null);
+    final extent = premium && size < PremiumIconTokens.minSupport ? PremiumIconTokens.minSupport : size;
+    final active =
+        foreground == AppColors.white || background == AppColors.primary || background == AppColors.primaryDark;
     return Container(
-      width: size,
-      height: size,
+      width: extent,
+      height: extent,
       decoration: BoxDecoration(
-        color: background,
+        color: premium && !active && background != AppColors.transparent ? AppColors.mint : background,
         shape: circle ? BoxShape.circle : BoxShape.rectangle,
         borderRadius: circle ? null : BorderRadius.circular(radius),
       ),
       alignment: Alignment.center,
       child: illustrationAsset == null
-          ? AppIcon(icon, size: iconSize, color: foreground)
+          ? AppIcon(
+              icon,
+              size: AppIcon.preferredSize(
+                icon,
+                iconSize,
+                color: foreground,
+                large: premium && extent >= PremiumIconTokens.largeSupport,
+              ),
+              color: foreground,
+              premiumAsset: premiumAsset,
+            )
           : ExcludeSemantics(
               child: Image.asset(
                 illustrationAsset!,
@@ -125,7 +143,7 @@ class InfoBanner extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(top: iconTopOffset),
-            child: AppIcon(icon, size: 22, color: AppColors.primary),
+            child: AppIcon(icon, size: AppIcon.preferredSize(icon, 22, large: true), color: AppColors.primary),
           ),
           const SizedBox(width: AppSpace.x3),
           Expanded(
@@ -164,7 +182,7 @@ class AlertBanner extends StatelessWidget {
         decoration: const BoxDecoration(color: AppColors.orangeSoft, borderRadius: AppRadius.cardR),
         child: Row(
           children: [
-            AppIcon(icon, size: 20, color: AppColors.warn),
+            AppIcon(icon, size: AppIcon.preferredSize(icon, 20), color: AppColors.warn),
             const SizedBox(width: AppSpace.x3),
             Expanded(
               child: Text.rich(text, style: AppText.of(AppFont.s12_5, color: AppColors.alertInk, lineHeight: 18)),

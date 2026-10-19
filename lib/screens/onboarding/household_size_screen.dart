@@ -72,29 +72,27 @@ class HouseholdSizeScreen extends StatelessWidget {
             children: [
               const AppIcon(AppIcons.cutlery, size: 20, color: AppColors.primary),
               const SizedBox(width: AppSpace.x2_5),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: l.householdTotalLabel,
-                      style: AppText.of(AppFont.s15, color: AppColors.ink2),
-                    ),
-                    TextSpan(
-                      text: l.householdPeopleAtTable(n),
-                      style: AppText.of(AppFont.s15, weight: AppFont.extrabold, color: AppColors.primaryDark),
-                    ),
-                  ],
+              Expanded(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: l.householdTotalLabel,
+                        style: AppText.of(AppFont.s15, color: AppColors.ink2),
+                      ),
+                      TextSpan(
+                        text: l.householdPeopleAtTable(n),
+                        style: AppText.of(AppFont.s15, weight: AppFont.extrabold, color: AppColors.primaryDark),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: AppSpace.x4),
-        InfoBanner(
-          icon: AppIcons.bulb,
-          title: l.commonMenooTip,
-          text: l.householdTipText,
-        ),
+        InfoBanner(icon: AppIcons.bulb, title: l.commonMenooTip, text: l.householdTipText),
       ],
     );
   }

@@ -17,7 +17,13 @@ class KitchenScreen extends StatelessWidget {
   /// Niveaux : photo « toque de chef + ustensile » détourée (assets/images/levels/<code>.jpg, fournies par Simo).
   static List<(CookingLevel, String, String, String, String)> levels(L l) => [
     (CookingLevel.debutant, 'debutant', l.kitchenLevelBeginner, l.kitchenLevelBeginnerText, AppIcons.egg),
-    (CookingLevel.intermediaire, 'intermediaire', l.kitchenLevelIntermediate, l.kitchenLevelIntermediateText, AppIcons.skillet),
+    (
+      CookingLevel.intermediaire,
+      'intermediaire',
+      l.kitchenLevelIntermediate,
+      l.kitchenLevelIntermediateText,
+      AppIcons.skillet,
+    ),
     (CookingLevel.confirme, 'confirme', l.kitchenLevelAdvanced, l.kitchenLevelAdvancedText, AppIcons.chefHat),
   ];
 
@@ -77,12 +83,7 @@ class KitchenScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpace.x2),
-          Text(
-            d.mainCookId == null
-                ? l.kitchenCookNoteShared
-                : l.kitchenCookNotePerson,
-            style: AppText.caption,
-          ),
+          Text(d.mainCookId == null ? l.kitchenCookNoteShared : l.kitchenCookNotePerson, style: AppText.caption),
           const SizedBox(height: AppSpace.x6),
         ],
         StepSectionTitle(l.kitchenLevelSection, hint: l.commonSingleChoice),
@@ -130,10 +131,7 @@ class KitchenScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpace.x6),
-        StepSectionTitle(
-          l.kitchenEquipmentSection,
-          hint: l.commonSelectedCountMasc(d.equipment.length),
-        ),
+        StepSectionTitle(l.kitchenEquipmentSection, hint: l.commonSelectedCountMasc(d.equipment.length)),
         GridView.count(
           crossAxisCount: 3,
           shrinkWrap: true,
@@ -154,11 +152,7 @@ class KitchenScreen extends StatelessWidget {
         ),
         FormError(message: d.equipment.isEmpty ? l.kitchenEquipmentError : null),
         const SizedBox(height: AppSpace.x4),
-        InfoBanner(
-          icon: AppIcons.bulb,
-          title: l.kitchenInfoTitle,
-          text: l.kitchenInfoText,
-        ),
+        InfoBanner(icon: AppIcons.bulb, title: l.kitchenInfoTitle, text: l.kitchenInfoText),
       ],
     );
   }
@@ -180,7 +174,7 @@ class _TimeSlider extends StatelessWidget {
       children: [
         Row(
           children: [
-            AppIcon(icon, size: 18, color: AppColors.ink2),
+            AppIcon(icon, size: AppIcon.preferredSize(icon, 18), color: AppColors.ink2),
             const SizedBox(width: AppSpace.x2),
             Expanded(
               child: Text(label, style: AppText.of(AppFont.s14, weight: AppFont.semibold)),

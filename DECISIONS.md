@@ -1,5 +1,79 @@
 # DECISIONS.md — Choix validés
 
+## 19 octobre 2026 — validation finale des 50 icônes et clôture
+
+- Collection de 50 PNG premium officiellement validée : traits fins, accents pastel, tailles 32/36 et pastilles décoratives #EAF6EB. Illustrations historiques et états fonctionnels conservés.
+- Compilation debug finale réussie (48,5 s), package com.menoo.app et signature identique vérifiés ; mise à jour -r réussie sans désinstallation. Empreintes des données identiques avant/après installation avant lancement. Brouillons Solo et Famille retrouvés, membres et allergies conservés ; bouclier observé dans le récapitulatif Solo et les badges/encart Famille. Aucun nouveau débordement manifeste ni erreur bloquante dans le journal contrôlé. Navigation de contrôle seulement, aucune réponse modifiée.
+- Sauvegarde autorisée sur master officiel oviupstores-web/Simo : 50 PNG applicatifs, registre et composants, adaptations des écrans, test premium, pubspec et suivi. Les 50 sources graphiques validées utilisées par les tests de comparaison sont incluses ; variantes, planches, APK et rapports volumineux/personnels restent locaux. Liste exacte locale : reports/final_backup_20261019/commit_manifest.json.
+- Les 17 suppressions anciennes sont exclues. Aucun changement métier, stockage, authentification ou Supabase. Défauts connus laissés pour la prochaine session : « 1 ans », connexion IT 320 (14 px), Landing transitoire avant reprise Famille.
+- Prochaine action : nouvelle instruction uniquement, après vérification du commit et du push autorisés. Les rapports locaux référencés dans l’historique ne sont pas tous présents sur GitHub.
+
+
+## 19 octobre 2026 — bouclier premium intégré, validation visuelle en attente
+
+- Proposition shield.png validée ; copie identique ajoutée au registre premium (50 motifs), dix usages de confidentialité/protection convertis à 32/36 px. Deux couvertures Solo/Famille gardent explicitement leur SVG ; captures identiques.
+- Aucun PNG existant, donnée, stockage ou logique métier modifié. Lignes de confidentialité connexion/inscription adaptatives ; pastilles décoratives #EAF6EB, fonds fonctionnels conservés.
+- Tests après : 200 réussis et un échec déjà présent connexion IT 320 (14 px) ; contrôle allergies supplémentaire 129 réussis et même échec. Analyse sans anomalie. Captures cinq langues à 320/390 et détails disponibles : reports/shield_integration_20261019/REPORT.md.
+- 17 suppressions Git préexistantes conservées, index vide. Aucun commit/push, Android ou Supabase. Prochaine action : validation des captures par l’utilisateur, aucune installation autorisée à ce stade.
+
+
+## 19 octobre 2026 — validation Xiaomi des tailles 32/36 autorisée
+
+- Tailles premium et fond décoratif #EAF6EB validés par l'utilisateur. Compilation debug et mise à jour sans désinstallation autorisées, sous réserve de signature identique et conservation des données.
+- Contrôle terminé sans modification de code ni d'illustration : compilation debug réussie (46,4 s), signature identique et mise à jour -r réussie. Empreintes de toutes les données identiques avant/après installation avant lancement ; trois fichiers de préférences inchangés après contrôle. Brouillons Solo/Famille retrouvés ; composition, récapitulatif, membres, gestion et Profil contrôlés, sans débordement manifeste. Choix Famille Courses rétabli après essai Mixte. 17 suppressions Git inchangées et index vide.
+- Preuves : reports/premium_icons_size32_android_20261019/REPORT.md, captures et comparaison Xiaomi avant/après. Pastilles #EAF6EB et dessins agrandis observés ; CTA/états sélectionnés et images existantes conservés. Profil Solo laissé ouvert. Aucun commit/push, Supabase ou correctif automatique. Validation finale en attente.
+
+
+## 19 octobre 2026 — taille premium 32/36 et fond décoratif uniforme
+
+- Demande validée pour préparation locale : dessins premium au minimum 32 px, 36 dans les grands supports/encarts ; pastilles décoratives #EAF6EB via AppColors.mint. Supports et capsules adaptés ; aucune pastille ajoutée aux icônes sans fond.
+- CTA, verts sélectionnés, navigation et autres icônes fonctionnelles conservés ; sources des 49 PNG, anciennes images, photos, données et stockage inchangés par empreintes.
+- Captures avant/après 320/390 FR/EN/ES/IT/DE, états composants contrôlés. 478 tests réussis / un échec connu connexion IT 320 (14 px), analyse ciblée sans anomalie. Aucun nouveau débordement détecté.
+- Rapport : reports/premium_icons_size32_20261019/REPORT.md. Aucun commit/push, Android ou Supabase. Version 32/36 non installée sur Xiaomi ; attente de validation visuelle.
+
+
+## 19 octobre 2026 — contrôle Xiaomi des icônes autorisé
+
+- Autorisation explicite : compilation debug et mise à jour com.menoo.app sans désinstallation ni effacement. Vérifier signature et conservation des données avant lancement.
+- Contrôle visuel uniquement, sans correction du code/design, sans Supabase ou Git. Brouillons Solo/Famille à préserver, sans réinitialisation.
+- Compilation debug et installation -r réussies, signature identique. Empreintes des données identiques avant/après installation avant lancement ; Solo et Famille retrouvés. Landing, étapes Solo/Famille, Profil, Gestion et encart Réserve contrôlés en FR ~393 px, sans débordement manifeste. Choix Famille Courses rétabli après essais Réserves/Mixte. Recette non accessible par le parcours actuel, donc non validée sur téléphone. « 1 ans », faible contraste de certains motifs pastel et affichage transitoire Landing avant reprise Famille signalés, sans correction. Sources/illustrations/configuration Android inchangées, aucun Git/Supabase. Rapport : reports/premium_icons_android_20261019/REPORT.md. Validation utilisateur en attente.
+
+
+## 19 octobre 2026 — SVG secondaires et encart Réserve
+
+- Consigne explicite : inclure l'ancien réfrigérateur de l'encart Onglet Réserve activé et les petits SVG équivalents. Registre complété pour les dessins secondaires de rangement, checklist et couverts ; images PNG/photo existantes conservées.
+- Navigation garde son empreinte 26 px en PNG ; autres illustrations au minimum 28 px. Masque blanc sur états demandant du blanc, couleurs originales sur fond clair.
+- Huit captures FR 320/390 contrôlées ; 465 tests réussis / un échec connu connexion IT 320 (14 px). Analyse sans anomalie. Assets, données et stockage inchangés ; aucun commit/push ou Android.
+- Deux correspondances supplémentaires Activité/Équilibre rejetées par le contrôle automatique et non appliquées ; leurs PNG existants restent affichés. Rapport : reports/premium_icons_secondary_20261019/REPORT.md. Validation visuelle en attente.
+
+
+## 19 octobre 2026 — règle finale : SVG uniquement, adaptation aux composants
+
+- Nouvelle consigne prioritaire : ne remplacer que les anciens SVG disposant d'un PNG premium exact. Les images/illustrations PNG déjà déclarées et les photos restent affichées ; leur priorité a été rétablie dans IconTile et les allergènes.
+- Sur fond vert sélectionné, rendu premium teinté blanc via son masque alpha, sans fond clair supplémentaire. Sur fond clair, couleurs originales. Aucun fichier PNG modifié.
+- Huit vues demandées FR 320/390 (Landing, Mode de gestion Solo, Profil, Recette) contrôlées sans débordement. 456 tests réussis / un échec connu connexion IT 320 (14 px), analyse ciblée sans anomalie.
+- Stockage et données Solo/Famille, traductions, assets et 17 suppressions préexistantes conservés. Aucun commit/push, Android ou Supabase. Rapport : reports/premium_icons_ui_20261019/REPORT.md. Validation visuelle en attente.
+
+
+## 19 octobre 2026 — correction du rendu : collection finale exclusivement
+
+- Consigne utilisateur prioritaire : tout emplacement correspondant aux 49 motifs doit afficher le PNG final exact, sans exception de taille ou couleur au profit du SVG. Aucune nouvelle icône, aucun changement métier.
+- Reprendre les anciens visuels prioritaires dans les composants lorsqu’une correspondance exacte existe ; conserver les fichiers sources et les fonctions sans équivalent. Adapter localement la disposition si nécessaire.
+- Confirmation utilisateur : calendar à quatre cases, comme sur la planche finale. Version deux cases archivée, puis source principale et copie applicative remplacées par la version quatre cases existante.
+- Contrôles terminés : 207 emplacements/scénarios en PNG, 49 motifs observés, zéro SVG pour les 49 constantes ; 140 captures FR/EN/ES/IT/DE 320/390. 675 tests réussis / un échec historique connexion IT 320 (14 px), puis dernier contrôle premium+rendus 455 réussites / même échec. Calendar quatre cases confirmé ; 48 autres PNG applicatifs inchangés. Correspondances supplémentaires des autres dessins Réserve refusées par le contrôle automatique, donc non appliquées. Données/stockage/langues, anciens fichiers et 17 suppressions préservés ; index vide, aucun commit/push, Android ou Supabase. Rapport : reports/premium_icons_strict_20261019/REPORT.md. Validation utilisateur en attente.
+
+## 19 octobre 2026 — 49 icônes premium intégrées, validation utilisateur en attente
+
+- Collection finale validée au trait fin ; calendrier à deux cases et Réserve agrandie finalisés.
+- Périmètre : copies dédiées, correspondance SVG/PNG, adaptation locale à 28 px et contrôles FR/EN/ES/IT/DE à 320/390 px. Préserver les 23 PNG existants, les icônes fonctionnelles et le stockage Solo/Famille.
+- Petits emplacements ou contraste incompatibles : conserver provisoirement le SVG et les signaler. Alias pantryReserve/managementPantry traité explicitement.
+- Aucun Supabase, commit/push, nettoyage Git ni installation Android. Les 17 suppressions locales restent intactes. Validation visuelle de cette intervention en attente ; anciens bilans conservés.
+- Résultat : 49 copies dédiées, correspondance explicite et repli SVG. 173 emplacements/scénarios convertis, 46 motifs observés dans les écrans ; 14 emplacements restent en SVG. Minimum 28 px pour les PNG, couleurs et proportions conservées.
+- Contrôles : matrice 5 langues × 320/390 px = 399 réussites / 1 débordement sur connexion IT 320 hors conversions ; 57 tests premium réussis ; 277 régressions finales réussies, dont Solo/Famille et interruptions hors connexion. Suite complète : 1 556 réussites / 11 écarts aux références visuelles historiques, non remplacées. Analyse finale lib et test premium sans anomalie.
+- Intégrité : 292 anciens assets, 49 sources design et 33 fichiers de données/stockage/traductions inchangés. Les 17 suppressions locales et l’index sont préservés. HEAD reste 5ee6c6564595851d6e1e2b308d39a9fb4d9ba0f9.
+- Rapport et preuves : reports/premium_icons_20261019/REPORT.md, FILES.md et captures/. Le jalon produit 6 reste en cours ; aucun travail métier supplémentaire.
+- Prochaine action : validation utilisateur des captures et des exceptions SVG ; aucune installation Android ou sauvegarde Git sans autorisation supplémentaire.
+
 ## 15 octobre 2026 — validations Solo/Famille, icônes et préparation de sauvegarde
 
 - Sauvegarde chiffrée et restauration des onboardings **Solo (11 étapes)** et **Famille (9 étapes)** validées sur Xiaomi, avec brouillons indépendants. L'intégration Famille compte **505 tests PC réussis** ; les comptes rendus antérieurs et leurs résultats restent conservés dans leur contexte daté.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
+import '../theme/premium_icons.dart';
 import 'app_icon.dart';
 
 /// Pastille pastel avec icône teintée (principe des écrans maîtres).
@@ -20,16 +21,22 @@ class TintBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final premium = PremiumIcons.assetFor(icon) != null;
+    final extent = premium && size < PremiumIconTokens.minSupport ? PremiumIconTokens.minSupport : size;
     return Container(
-      width: size,
-      height: size,
+      width: extent,
+      height: extent,
       decoration: BoxDecoration(
-        color: tint.soft,
+        color: premium ? AppColors.mint : tint.soft,
         shape: circle ? BoxShape.circle : BoxShape.rectangle,
         borderRadius: circle ? null : AppRadius.tileR,
       ),
       alignment: Alignment.center,
-      child: AppIcon(icon, size: size * 0.5, color: tint.ink),
+      child: AppIcon(
+        icon,
+        size: AppIcon.preferredSize(icon, size * 0.5, large: extent >= PremiumIconTokens.largeSupport),
+        color: tint.ink,
+      ),
     );
   }
 }
