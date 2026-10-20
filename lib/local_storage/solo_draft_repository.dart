@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'draft_database.dart';
 import 'local_draft.dart';
+import 'save_onboarding_draft.dart';
 
 abstract interface class SoloDraftRepository {
   static const soloId = 'guest.solo';
@@ -24,24 +25,7 @@ class EncryptedSoloDraftRepository implements SoloDraftRepository {
     if (draft.id != SoloDraftRepository.soloId || draft.journey != DraftJourney.solo) {
       throw const DraftStorageException('solo_identity_invalid');
     }
-    // Preserve fields not owned by this Solo integration, including a future pantry.
-    final db = await _db();
-    final previous = await db.load(SoloDraftRepository.soloId);
-    if (previous != null && (previous.journey != DraftJourney.solo || previous.answers['soloPayloadVersion'] != 1)) {
-      throw const DraftStorageException('solo_existing_format_unknown');
-    }
-    await db.save(
-      LocalDraft(
-        id: draft.id,
-        journey: draft.journey,
-        step: draft.step,
-        management: draft.management,
-        currency: draft.currency,
-        updatedAt: draft.updatedAt,
-        answers: {...?previous?.answers, ...draft.answers},
-        pantry: previous?.pantry ?? draft.pantry,
-      ),
-    );
+    await saveOnboardingDraft(await _db(), draft, 'soloPayloadVersion');
   }
 
   @override

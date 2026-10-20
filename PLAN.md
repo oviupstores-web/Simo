@@ -1,5 +1,53 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## 20 octobre 2026 — validation utilisateur du jalon produit 6 et fin de journée
+
+- Modèle et codec Réserve, raccordement de la persistance indépendante Solo/Famille, 480 tests locaux et essais Android du jour validés par l'utilisateur.
+- Sauvegarde autorisée uniquement pour les fichiers du jalon 6 et leur documentation. Travaux graphiques antérieurs, archives, rapports techniques, captures, APK et 17 suppressions historiques conservés localement hors de ce commit.
+- Aucun nouveau développement ni changement de données Xiaomi. Prochaine action : attendre les instructions de reprise ; aucune autre étape commencée.
+
+
+## 20 octobre 2026 — jalon produit 6, Réserve contrôlée sur Xiaomi
+
+- Compilation debug réussie (108,4 s), package com.menoo.app et certificat identique vérifiés ; mise à jour adb install -r réussie. UID/date de première installation et 12 empreintes de fichiers conservés avant premier lancement. Anciennes Réserves chargées vides et reconnues, sans écriture en attente, vérifiées avant installation via inspection debug temporaire autorisée.
+- Produits fictifs Solo/Famille ajoutés et retrouvés après arrêts forcés ; deux sections indépendantes, identifiants et contenus inchangés. Stock rapide Présent → Quelques restes à identité stable, puis suppression explicite de cette seule ligne fictive, confirmée après relance hors connexion.
+- Reprise Famille observée sans réseau ; deux brouillons contrôlés. Réponses et saisies précédentes identiques en fin d'essai, éditions membres inchangées ; mode Famille Courses uniquement rétabli. Stockage sécurisé et préférence linguistique inchangés, réseau restauré ; inspection debug fermée et redirection temporaire retirée.
+- Deux produits TEST_SOLO_20261020 et TEST_FAMILLE_20261020 conservés pour validation. Écrans en FR ~393 px ; pas de passage Android 320 px/autres langues. Aucun code, catalogue, image, clé, Supabase ou Git modifié ; 17 suppressions et index vide préservés.
+- Rapport : reports/pantry_android_20261020/REPORT.md. Validation technique observée ; validation visuelle utilisateur en attente. Prochaine action : attendre, sans autre intervention.
+
+
+## 20 octobre 2026 — jalon produit 6, persistance Réserve raccordée localement
+
+- Produits validés raccordés aux sessions et dépôts SQLite chiffrés existants : deux Réserves indépendantes guest.solo / guest.family, lots identifiés une fois, ajouts/modifications/suppressions capturés avec leurs réponses. Le détour et les formulaires incomplets restent inchangés.
+- Quantités num conservées sans conversion/arrondi, unités/libellés, foodId, dates civiles et origines, extensions compatibles conservés. Réponses et Réserve écrites dans une transaction ; checkpoint plus ancien refusé. Formats historiques inconnus/corrompus et versions futures refusés sans réinitialisation ni effacement.
+- 480 tests finaux réussis : 21 nouveaux tests Réserve, 118 tests codec et 341 non-régressions. Arrêt forcé pendant transaction et lecture par nouveau processus sur bases fictives temporaires validés ; cinq langues couvertes par les régressions Solo/Famille. Analyse ciblée : aucune anomalie.
+- Trois références de tests adaptées à la persistance désormais active, versions précédentes archivées. Premiers échecs et journaux conservés ; deux échecs de processus au passage parallèle ne se reproduisent pas au passage séquentiel, cause exacte non établie.
+- Catalogue, images, SQLite/chiffrement/clés, Supabase, navigation et onglet Réserve de démonstration inchangés. 579 fichiers préexistants contrôlés : seuls les six fichiers applicatifs et deux tests prévus ont changé ; aucun fichier disparu. Les 17 suppressions historiques et l’index Git vide sont préservés.
+- Rapport : reports/pantry_persistence_20261020/REPORT.md. Validation Android non effectuée. Prochaine action : validation utilisateur, puis autorisation distincte avant tout essai Xiaomi. Aucun commit/push, dépendance, migration utilisateur ou installation.
+
+
+## 20 octobre 2026 — jalon produit 6, raccordement Réserve autorisé
+
+- Étape 2 autorisée : produits validés, identifiants stables, deux Réserves guest.solo/guest.family et écritures atomiques avec leurs réponses. Réutilisation du codec versionné et de SQLite chiffré ; clés inchangées.
+- Tests uniquement sur données fictives et bases temporaires. Aucun changement des formulaires incomplets, navigation, onglet Réserve de démonstration, catalogue ou images. Aucun Android, Supabase ou Git.
+- Travail en cours ; prochaine action : tests et rapport avant validation utilisateur. Historique conservé.
+
+
+## 20 octobre 2026 — résultat du codec Réserve isolé
+
+- Nouveau modèle de stockage autonome avec identifiant stable et codec JSON pantryVersion 1, propriétaire Solo/Famille obligatoire, quantités/unités sans conversion, dates civiles et origines conservées, extensions compatibles immuables. PantryDraft et LocalDraft existants inchangés ; aucun branchement.
+- Anciens brouillons à Réserve vide reconnus sans mutation. Contenu non vide non versionné, version inconnue ou corruption refusés intact, sans liste vide de remplacement. Aucune migration utilisateur exécutée.
+- 118 tests codec finaux et 341 non-régressions distinctes réussis (455 lors du passage groupé, puis quatre cas supplémentaires du codec). Analyse ciblée sans anomalie ; 585 fichiers préexistants vérifiés inchangés. Rapport : reports/pantry_codec_20261020/REPORT.md.
+- Les 17 suppressions et autres modifications locales sont préservées. Aucun raccordement aux écrans/sessions/dépôts, chiffrement, clé, dépendance, navigation, Android, Git ou Supabase modifié. Prochaine action : validation avant raccordement au stockage réel.
+
+
+## 20 octobre 2026 — jalon produit 6, codec Réserve seul autorisé
+
+- Première étape autorisée : identifiants stables et codec versionné autonome, validation complète et tests ; aucun raccordement aux écrans, sessions ou dépôts.
+- Deux propriétaires Solo/Famille explicites, quantités/unités sans conversion, dates civiles et origine conservées. Versions inconnues et anciens contenus non identifiables refusés sans écriture.
+- Chiffrement, clés, réponses et navigation existants inchangés ; aucune migration réelle, Supabase, installation Android ou opération Git. Prochaine action : résultats techniques puis validation avant raccordement.
+
+
 ## 19 octobre 2026 — validation finale des 50 icônes et clôture
 
 - Collection de 50 PNG premium officiellement validée : traits fins, accents pastel, tailles 32/36 et pastilles décoratives #EAF6EB. Illustrations historiques et états fonctionnels conservés.

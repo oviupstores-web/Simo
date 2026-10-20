@@ -1,5 +1,6 @@
 import 'draft_database.dart';
 import 'local_draft.dart';
+import 'save_onboarding_draft.dart';
 import 'solo_draft_repository.dart';
 
 abstract interface class FamilyDraftRepository {
@@ -24,26 +25,7 @@ class EncryptedFamilyDraftRepository implements FamilyDraftRepository {
     if (draft.id != FamilyDraftRepository.id || draft.journey != DraftJourney.family) {
       throw const DraftStorageException('family_identity_invalid');
     }
-    final db = await _db();
-    await db.transaction(() async {
-      final previous = await db.load(FamilyDraftRepository.id);
-      if (previous != null &&
-          (previous.journey != DraftJourney.family || previous.answers['familyPayloadVersion'] != 1)) {
-        throw const DraftStorageException('family_existing_format_unknown');
-      }
-      await db.save(
-        LocalDraft(
-          id: draft.id,
-          journey: draft.journey,
-          step: draft.step,
-          management: draft.management,
-          currency: draft.currency,
-          updatedAt: draft.updatedAt,
-          answers: {...?previous?.answers, ...draft.answers},
-          pantry: previous?.pantry ?? draft.pantry,
-        ),
-      );
-    });
+    await saveOnboardingDraft(await _db(), draft, 'familyPayloadVersion');
   }
 
   @override

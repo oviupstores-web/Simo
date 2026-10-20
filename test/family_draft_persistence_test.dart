@@ -13,6 +13,7 @@ import 'package:menoo/local_storage/draft_checkpoint_clock.dart';
 import 'package:menoo/local_storage/draft_key.dart';
 import 'package:menoo/local_storage/family_draft_repository.dart';
 import 'package:menoo/local_storage/local_draft.dart';
+import 'package:menoo/local_storage/pantry_draft_section.dart';
 import 'package:menoo/local_storage/shared_draft_database.dart';
 import 'package:menoo/local_storage/solo_draft_repository.dart';
 import 'package:menoo/main.dart';
@@ -305,89 +306,97 @@ void main() {
     });
   }
 
-  test('One encrypted connection preserves Solo bytes and unknown pantry across Family operations', () async {
-    final dir = await Directory.systemTemp.createTemp('menoo_family_shared_');
-    final file = File('${dir.path}/draft.sqlite');
-    final keys = FamilyTestKeys();
-    var opens = 0;
-    final shared = SharedDraftDatabase(() {
-      opens++;
-      return DraftDatabase.open(file, keys);
-    });
-    final soloStore = EncryptedSoloDraftRepository(shared.database, ownsConnection: false);
-    final familyStore = EncryptedFamilyDraftRepository(shared.database, ownsConnection: false);
-    try {
-      final soloData = OnboardingData()..initializeBudgetCurrency('EUR');
-      final seedSolo = SoloDraftSession(soloData, soloStore, familyEnabled: true);
-      await seedSolo.initialize();
-      seedSolo.checkpoint(
-        [
-          {'step': 'goal', 'editing': false},
-        ],
-        visibleSolo: true,
-        pantryDetour: false,
-      );
-      await seedSolo.flush();
-      final db = await shared.database();
-      final soloBefore = (await db.load('guest.solo'))!.encode();
-      final store = FamilyMemory();
-      final familySeed = await seed(store, 8);
-      await db.save(
-        LocalDraft(
-          id: familySeed.id,
-          journey: familySeed.journey,
-          step: familySeed.step,
-          management: familySeed.management,
-          currency: familySeed.currency,
-          updatedAt: familySeed.updatedAt,
-          answers: {...familySeed.answers, 'future_field': 'preserved'},
-          pantry: const [
-            {'name': 'untouched synthetic reserve', 'quantity': 2},
+  test(
+    'One encrypted connection preserves Solo bytes and compatible pantry extensions across Family operations',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('menoo_family_shared_');
+      final file = File('${dir.path}/draft.sqlite');
+      final keys = FamilyTestKeys();
+      var opens = 0;
+      final shared = SharedDraftDatabase(() {
+        opens++;
+        return DraftDatabase.open(file, keys);
+      });
+      final soloStore = EncryptedSoloDraftRepository(shared.database, ownsConnection: false);
+      final familyStore = EncryptedFamilyDraftRepository(shared.database, ownsConnection: false);
+      try {
+        final soloData = OnboardingData()..initializeBudgetCurrency('EUR');
+        final seedSolo = SoloDraftSession(soloData, soloStore, familyEnabled: true);
+        await seedSolo.initialize();
+        seedSolo.checkpoint(
+          [
+            {'step': 'goal', 'editing': false},
           ],
-        ),
-      );
-      final family = FamilyDraftSession(soloData, familyStore);
-      await Future.wait([soloStore.load(), family.initialize()]);
-      soloData.startMode(AppMode.foyer);
-      expect(await family.enter(), isTrue);
-      family.checkpoint(familyStack(8), visibleFamily: true, pantryDetour: false);
-      soloData.update(() => soloData.equipment.add('synthetic_extra'));
-      await Future.wait([family.flush(), seedSolo.flush()]);
-      expect((await db.load('guest.solo'))!.encode(), soloBefore);
-      expect((await db.load('guest.family'))!.pantry.single['quantity'], 2);
-      expect((await db.load('guest.family'))!.answers['future_field'], 'preserved');
-      expect(opens, 1);
-      final familyBefore = (await db.load('guest.family'))!.encode();
-      soloData.startMode(AppMode.solo);
-      expect(await seedSolo.enter(), isTrue);
-      seedSolo.checkpoint(
-        [
-          {'step': 'goal', 'editing': false},
-        ],
-        visibleSolo: true,
-        pantryDetour: false,
-      );
-      await seedSolo.flush();
-      await family.flush();
-      expect((await db.load('guest.family'))!.encode(), familyBefore);
-      await family.close();
-      await seedSolo.close();
-      family.dispose();
-      seedSolo.dispose();
-      soloData.dispose();
-      await shared.close();
-      expect(
-        utf8.decode((await file.readAsBytes()).take(16).toList(), allowMalformed: true),
-        isNot('SQLite format 3\u0000'),
-      );
-      final reopened = await DraftDatabase.open(file, keys);
-      expect((await reopened.load('guest.family'))!.encode(), familyBefore);
-      await reopened.close();
-    } finally {
-      await shared.close();
-      await dir.delete(recursive: true);
-    }
-  });
+          visibleSolo: true,
+          pantryDetour: false,
+        );
+        await seedSolo.flush();
+        final db = await shared.database();
+        final soloBefore = (await db.load('guest.solo'))!.encode();
+        final store = FamilyMemory();
+        final familySeed = await seed(store, 8);
+        await db.save(
+          LocalDraft(
+            id: familySeed.id,
+            journey: familySeed.journey,
+            step: familySeed.step,
+            management: familySeed.management,
+            currency: familySeed.currency,
+            updatedAt: familySeed.updatedAt,
+            answers: {...familySeed.answers, 'future_field': 'preserved'},
+            // Former opaque fixture replaced by the now-required versioned format.
+            // Unrecognized historical contents are tested as refused, never erased.
+            pantry: [
+              {
+                ...familySeed.pantry.single,
+                'future_fixture': {'retained': 2},
+              },
+            ],
+          ),
+        );
+        final family = FamilyDraftSession(soloData, familyStore);
+        await Future.wait([soloStore.load(), family.initialize()]);
+        soloData.startMode(AppMode.foyer);
+        expect(await family.enter(), isTrue);
+        family.checkpoint(familyStack(8), visibleFamily: true, pantryDetour: false);
+        soloData.update(() => soloData.equipment.add('synthetic_extra'));
+        await Future.wait([family.flush(), seedSolo.flush()]);
+        expect((await db.load('guest.solo'))!.encode(), soloBefore);
+        expect((await db.load('guest.family'))!.pantry.single['future_fixture'], {'retained': 2});
+        expect((await db.load('guest.family'))!.answers['future_field'], 'preserved');
+        expect(opens, 1);
+        final familyBefore = (await db.load('guest.family'))!.encode();
+        soloData.startMode(AppMode.solo);
+        expect(await seedSolo.enter(), isTrue);
+        seedSolo.checkpoint(
+          [
+            {'step': 'goal', 'editing': false},
+          ],
+          visibleSolo: true,
+          pantryDetour: false,
+        );
+        await seedSolo.flush();
+        await family.flush();
+        expect((await db.load('guest.family'))!.encode(), familyBefore);
+        await family.close();
+        await seedSolo.close();
+        family.dispose();
+        seedSolo.dispose();
+        soloData.dispose();
+        await shared.close();
+        expect(
+          utf8.decode((await file.readAsBytes()).take(16).toList(), allowMalformed: true),
+          isNot('SQLite format 3\u0000'),
+        );
+        final reopened = await DraftDatabase.open(file, keys);
+        expect((await reopened.load('guest.family'))!.encode(), familyBefore);
+        await reopened.close();
+      } finally {
+        await shared.close();
+        await dir.delete(recursive: true);
+      }
+    },
+  );
 
   test('Fresh Family defaults never inherit Solo common fields or change Solo-specific sources', () async {
     final d = OnboardingData()..initializeBudgetCurrency('USD');
@@ -544,7 +553,7 @@ void main() {
     }
   }, timeout: const Timeout(Duration(minutes: 2)));
 
-  test('Unconnected reserve detour resumes Family management and does not persist products', () async {
+  test('Reserve detour resumes Family management and persists validated products', () async {
     final store = FamilyMemory();
     await seed(store, 6);
     final s = FamilyDraftSession(OnboardingData()..startMode(AppMode.foyer), store);
@@ -565,7 +574,7 @@ void main() {
     await s.flush();
     expect(store.value!.step, 6);
     expect(store.value!.answers['resumeRequested'], isTrue);
-    expect(store.value!.pantry, isEmpty);
+    expect(PantryDraftSection.read(store.value!).items.single.name, 'Synthetic reserve');
     await s.close();
     s.data.dispose();
     s.dispose();

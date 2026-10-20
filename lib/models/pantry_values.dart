@@ -7,7 +7,7 @@ import '../theme/app_icons.dart';
 
 const pantryLanguages = ['fr', 'en', 'de', 'es', 'it', 'ar'];
 
-String _plural(String label, double? quantity) {
+String _plural(String label, num? quantity) {
   final plural = quantity != null && quantity > 1;
   if (label.endsWith('/i')) {
     final base = label.substring(0, label.length - 2);
@@ -38,7 +38,7 @@ enum PantryUnit {
     liter => 'L',
     pack => l.unitPacks2,
   };
-  String display(L l, double? quantity) => _plural(label(l), quantity);
+  String display(L l, num? quantity) => _plural(label(l), quantity);
   static PantryUnit? fromLegacy(String value) {
     final n = FoodCatalog.normalize(value);
     if (n.isEmpty) return null;

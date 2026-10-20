@@ -8,6 +8,7 @@ import 'package:flutter/material.dart' show ChangeNotifier, DateUtils, Locale, V
 import '../models/pantry_location.dart';
 import '../models/numeric_safety.dart';
 import '../models/pantry_values.dart';
+import '../models/pantry_product_record.dart';
 
 export '../models/pantry_location.dart';
 
@@ -163,9 +164,10 @@ extension SetToggle<T> on Set<T> {
 /// Un créneau de la grille des repas (jour 1 = lundi).
 typedef MealSlot = (int day, MealType meal);
 
-/// Produit ajouté à la réserve pendant l'onboarding (enregistré à la création du compte).
+/// Produit validé du détour Réserve, conservé dans le brouillon local.
 class PantryDraft {
   PantryDraft({
+    String? id,
     required this.name,
     this.quantity,
     String? unitLabel,
@@ -177,13 +179,52 @@ class PantryDraft {
     this.declaredCategory,
     this.declaredStock,
     this.expiryOrigin = ExpiryOrigin.unknown,
-  }) : unitLabel = unitLabel ?? unit?.id ?? '',
-       unit = unit ?? PantryUnit.fromLegacy(unitLabel ?? '');
+    Map<String, Object?> unknownFields = const {},
+    bool inferLegacyUnit = true,
+  }) : id = id ?? createPantryProductId(),
+       unknownFields = freezePantryFields(unknownFields),
+       unitLabel = unitLabel ?? unit?.id ?? '',
+       unit = unit ?? (inferLegacyUnit ? PantryUnit.fromLegacy(unitLabel ?? '') : null);
 
+  PantryDraft.fromProductRecord(PantryProductRecord item)
+    : id = item.id,
+      name = item.name,
+      quantity = item.quantity,
+      unitLabel = item.unitLabel,
+      unit = item.unit,
+      foodId = item.foodId,
+      declaredCategory = item.declaredCategory,
+      declaredStock = item.declaredStock,
+      expiryOrigin = item.expiryOrigin,
+      location = item.location,
+      expiresOn = item.expiresOn == null ? null : DateTime.parse(item.expiresOn!),
+      source = item.source,
+      unknownFields = item.unknownFields;
+
+  PantryProductRecord toProductRecord() => PantryProductRecord(
+    id: id,
+    name: name,
+    quantity: quantity,
+    unit: unit,
+    unitLabel: unitLabel,
+    location: location,
+    expiresOn: expiresOn == null
+        ? null
+        : '${expiresOn!.year.toString().padLeft(4, '0')}-${expiresOn!.month.toString().padLeft(2, '0')}-${expiresOn!.day.toString().padLeft(2, '0')}',
+    expiryOrigin: expiryOrigin,
+    source: source,
+    foodId: foodId,
+    declaredCategory: declaredCategory,
+    declaredStock: declaredStock,
+    unknownFields: unknownFields,
+  );
+
+  final String id;
+  final Map<String, Object?> unknownFields;
   final String name;
-  final double? quantity;
+  final num? quantity;
 
-  /// Unité telle que saisie (« pièce(s) », « g », « kg »…), convertie en g/ml/pièce à l'enregistrement.
+  /// Unité telle que saisie, conservée sans conversion à l'enregistrement local.
   final String unitLabel;
   final PantryUnit? unit;
   final String? foodId;
@@ -197,6 +238,9 @@ class PantryDraft {
   String displayName(L l) => quickCategory?.label(l) ?? name;
   String displayUnit(L l) => unit?.display(l, quantity) ?? unitLabel;
   PantryDraft withQuickStock(QuickCategory category, QuickStock stock) => PantryDraft(
+    inferLegacyUnit: false,
+    id: id,
+    unknownFields: unknownFields,
     name: name,
     quantity: quantity,
     unitLabel: unitLabel,
@@ -224,7 +268,7 @@ class PantryDraft {
   }
 }
 
-/// Réponses de l'onboarding (Solo ou Foyer), en mémoire jusqu'à la création du compte (jalon 6).
+/// Réponses et Réserves en mémoire, capturées par les sessions locales chiffrées.
 class OnboardingData extends ChangeNotifier {
   final Map<String, String> familyInputs = {};
   final Map<int, Map<String, Object?>> familyMemberEdits = {};
@@ -394,7 +438,7 @@ class OnboardingData extends ChangeNotifier {
   };
 
   /// Decode into a temporary model first, never partially mutate on a read error.
-  /// Family members and shared pantry contents are deliberately not touched.
+  /// Family members and both independent pantries are deliberately not touched.
   void restoreSoloAnswers(Map<String, Object?> values, Map<String, String> inputs) {
     double number(String key) {
       final value = (values[key] as num).toDouble();
@@ -610,7 +654,17 @@ class OnboardingData extends ChangeNotifier {
   int weekendMinutes = 45;
   final Set<String> equipment = {'four', 'plaques', 'micro_ondes'};
   // Détour Réserve
-  final List<PantryDraft> pantry = [];
+  final List<PantryDraft> _soloPantry = [];
+  final List<PantryDraft> _familyPantry = [];
+  List<PantryDraft> get pantry => isFoyer ? _familyPantry : _soloPantry;
+
+  /// Restore an already fully validated snapshot without notifying mid-restore.
+  void restorePantry(AppMode owner, List<PantryDraft> items) {
+    final target = owner == AppMode.foyer ? _familyPantry : _soloPantry;
+    target
+      ..clear()
+      ..addAll(items);
+  }
 
   /// Notifie les écrans après une modification.
   void update(VoidCallback change) {

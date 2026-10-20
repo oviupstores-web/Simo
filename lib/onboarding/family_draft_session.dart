@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 
 import '../local_storage/draft_database.dart';
 import '../local_storage/local_draft.dart';
+import '../local_storage/pantry_codec.dart';
+import '../local_storage/pantry_draft_section.dart';
 import '../local_storage/draft_checkpoint_clock.dart';
 import '../local_storage/family_draft_repository.dart';
 import '../local_storage/solo_draft_repository.dart' show copySoloJson;
@@ -21,7 +23,7 @@ const familyStepNames = [
   'summary',
 ];
 
-/// Family snapshots own no Solo sources or pantry products.
+/// Family snapshots include only Family answers and its own pantry.
 class FamilyDraftSession extends ChangeNotifier {
   FamilyDraftSession(this.data, this.repository, {DraftCheckpointClock? clock})
     : clock = clock ?? DraftCheckpointClock() {
@@ -53,6 +55,7 @@ class FamilyDraftSession extends ChangeNotifier {
         if (draft.id != FamilyDraftRepository.id || draft.journey != DraftJourney.family) {
           throw const DraftStorageException('family_identity_invalid');
         }
+        final restoredPantry = PantryDraftSection.restore(PantryDraftSection.read(draft));
         final answer = draft.answers;
         if (answer['familyPayloadVersion'] != 1) throw const FormatException('family_format_unknown');
         final stack = (answer['routeStack'] as List).map((e) => Map<String, Object?>.from(e as Map)).toList();
@@ -89,6 +92,7 @@ class FamilyDraftSession extends ChangeNotifier {
         } finally {
           decoded.dispose();
         }
+        data.restorePantry(AppMode.foyer, restoredPantry);
         _latest = draft;
         clock.observe(draft.updatedAt);
         currentStep = draft.step;
@@ -134,6 +138,10 @@ class FamilyDraftSession extends ChangeNotifier {
           },
         );
       }
+      data.restorePantry(
+        AppMode.foyer,
+        _latest == null ? [] : PantryDraftSection.restore(PantryDraftSection.read(_latest!)),
+      );
       return true;
     } catch (_) {
       errorStage = 'load';
@@ -147,7 +155,7 @@ class FamilyDraftSession extends ChangeNotifier {
 
   void checkpoint(List<Map<String, Object?>> routes, {required bool visibleFamily, required bool pantryDetour}) {
     if (!_loaded || _closed || !data.isFoyer) return;
-    _active = visibleFamily;
+    _active = visibleFamily || pantryDetour;
     if (routes.isNotEmpty) {
       routeStack
         ..clear()
@@ -156,7 +164,7 @@ class FamilyDraftSession extends ChangeNotifier {
       if (numbered.isNotEmpty) currentStep = familyStepNames.indexOf(numbered.last['step'] as String) + 1;
     }
     resumeRequested = visibleFamily || pantryDetour;
-    if (visibleFamily) {
+    if (_active) {
       _capture();
     } else {
       _captureMetadataOnly();
@@ -189,10 +197,15 @@ class FamilyDraftSession extends ChangeNotifier {
   void _capture() {
     try {
       if (data.budgetCurrencyCode == null && !data.budgetCurrencyUnknown) data.initializeBudgetCurrency('EUR');
+      final pantry = PantryDraftSection.capture(DraftJourney.family, data.pantry, _latest);
       final answers = copySoloJson({
         ...?_latest?.answers,
         ..._metadata,
-        'acceptedAnswers': data.exportFamilyAnswers(),
+        'pantryPayloadVersion': PantryCodec.version,
+        'acceptedAnswers': {
+          if (_latest != null) ...Map<String, Object?>.from(_latest!.answers['acceptedAnswers'] as Map),
+          ...data.exportFamilyAnswers(),
+        },
         'rawInputs': data.familyInputs,
         'memberEdits': {for (final e in data.familyMemberEdits.entries) e.key.toString(): e.value},
       });
@@ -209,7 +222,7 @@ class FamilyDraftSession extends ChangeNotifier {
           currency: data.budgetCurrencyCode ?? (data.budgetCurrencyUnknown ? 'XXX' : 'EUR'),
           updatedAt: clock.next(),
           answers: answers,
-          pantry: _latest?.pantry ?? const [],
+          pantry: [PantryCodec.toMap(pantry)],
         ),
       );
     } catch (_) {

@@ -11,6 +11,7 @@ import 'package:menoo/l10n/locale_scope.dart';
 import 'package:menoo/local_storage/draft_database.dart';
 import 'package:menoo/local_storage/draft_key.dart';
 import 'package:menoo/local_storage/local_draft.dart';
+import 'package:menoo/local_storage/pantry_draft_section.dart';
 import 'package:menoo/local_storage/solo_draft_repository.dart';
 import 'package:menoo/onboarding/onboarding_data.dart';
 import 'package:menoo/onboarding/onboarding_flow.dart';
@@ -502,7 +503,7 @@ void main() {
     expected.dispose();
   });
 
-  test('pantry detour keeps its live products without writing or restoring them in Solo', () async {
+  test('pantry detour persists validated products and restores them in Solo', () async {
     final store = FakeSoloStore();
     final data = source();
     data.management = ManagementMode.mixte;
@@ -521,7 +522,7 @@ void main() {
     data.update(() => data.pantry.add(product));
     await session.flush();
     expect(data.pantry, [product]);
-    expect(store.value!.pantry, isEmpty);
+    expect(PantryDraftSection.read(store.value!).items.single.id, product.id);
     expect(store.value!.answers['acceptedAnswers'], accepted);
     expect(store.value!.answers['resumeRequested'], isTrue);
     await session.close();
@@ -531,7 +532,7 @@ void main() {
     await restart.initialize();
     expect(restart.currentStep, 7);
     expect(restart.data.management, ManagementMode.mixte);
-    expect(restart.data.pantry, isEmpty);
+    expect(restart.data.pantry.single.id, product.id);
     await restart.close();
     restart.data.dispose();
     restart.dispose();

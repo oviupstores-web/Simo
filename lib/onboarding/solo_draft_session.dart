@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 
 import '../local_storage/draft_database.dart';
 import '../local_storage/local_draft.dart';
+import '../local_storage/pantry_codec.dart';
+import '../local_storage/pantry_draft_section.dart';
 import '../local_storage/draft_checkpoint_clock.dart';
 import '../local_storage/solo_draft_repository.dart';
 import 'onboarding_data.dart';
@@ -22,7 +24,7 @@ const soloStepNames = [
   'summary',
 ];
 
-/// Persistence owns no business calculations, Family fields or pantry products.
+/// Persists Solo answers and its pantry; owns no Family fields or calculations.
 class SoloDraftSession extends ChangeNotifier {
   SoloDraftSession(this.data, this.repository, {this.familyEnabled = false, DraftCheckpointClock? clock})
     : clock = clock ?? DraftCheckpointClock() {
@@ -55,6 +57,7 @@ class SoloDraftSession extends ChangeNotifier {
         if (draft.id != SoloDraftRepository.soloId || draft.journey != DraftJourney.solo) {
           throw const DraftStorageException('solo_identity_invalid');
         }
+        final restoredPantry = PantryDraftSection.restore(PantryDraftSection.read(draft));
         final answer = draft.answers;
         if (answer['soloPayloadVersion'] != 1) throw const FormatException('solo_format_unknown');
         final stack = (answer['routeStack'] as List).map((e) => Map<String, Object?>.from(e as Map)).toList();
@@ -87,6 +90,7 @@ class SoloDraftSession extends ChangeNotifier {
         } finally {
           _restoring = false;
         }
+        data.restorePantry(AppMode.solo, restoredPantry);
         _latest = draft;
         clock.observe(draft.updatedAt);
         currentStep = draft.step;
@@ -129,12 +133,16 @@ class SoloDraftSession extends ChangeNotifier {
         _restoring = false;
       }
     }
+    data.restorePantry(
+      AppMode.solo,
+      _latest == null ? [] : PantryDraftSection.restore(PantryDraftSection.read(_latest!)),
+    );
     return true;
   }
 
   void checkpoint(List<Map<String, Object?>> routes, {required bool visibleSolo, required bool pantryDetour}) {
     if (!_loaded || _closed || data.isFoyer) return;
-    _active = visibleSolo;
+    _active = visibleSolo || pantryDetour;
     if (routes.isNotEmpty) {
       routeStack
         ..clear()
@@ -142,7 +150,7 @@ class SoloDraftSession extends ChangeNotifier {
       currentStep = soloStepNames.indexOf(routes.last['step'] as String) + 1;
     }
     resumeRequested = visibleSolo || pantryDetour;
-    if (visibleSolo) {
+    if (_active) {
       _capture();
     } else {
       _captureMetadataOnly();
@@ -178,10 +186,15 @@ class SoloDraftSession extends ChangeNotifier {
   void _capture() {
     try {
       if (data.budgetCurrencyCode == null && !data.budgetCurrencyUnknown) data.initializeBudgetCurrency('EUR');
+      final pantry = PantryDraftSection.capture(DraftJourney.solo, data.pantry, _latest);
       final answers = copySoloJson({
         ...?_latest?.answers,
         ..._metadata,
-        'acceptedAnswers': data.exportSoloAnswers(),
+        'pantryPayloadVersion': PantryCodec.version,
+        'acceptedAnswers': {
+          if (_latest != null) ...Map<String, Object?>.from(_latest!.answers['acceptedAnswers'] as Map),
+          ...data.exportSoloAnswers(),
+        },
         'rawInputs': data.soloInputs,
       });
       _enqueue(
@@ -197,7 +210,7 @@ class SoloDraftSession extends ChangeNotifier {
           currency: data.budgetCurrencyCode ?? (data.budgetCurrencyUnknown ? 'XXX' : 'EUR'),
           updatedAt: clock.next(),
           answers: answers,
-          pantry: _latest?.pantry ?? const [],
+          pantry: [PantryCodec.toMap(pantry)],
         ),
       );
     } catch (_) {
