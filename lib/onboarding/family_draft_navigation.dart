@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import '../screens/entry/path_choice_screen.dart';
 import '../screens/onboarding/cover_household_screen.dart';
 import '../screens/onboarding/member_profiles_screen.dart';
+import '../screens/pantry/pantry_add_manual_screen.dart';
+import '../screens/pantry/pantry_quick_check_screen.dart';
 import 'onboarding_data.dart';
 import 'onboarding_flow.dart';
 import 'family_draft_session.dart';
-import 'solo_draft_navigation.dart' show pantryDetourRoute;
+import 'solo_draft_navigation.dart' show pantryDetourRoute, pantryManualRoute, pantryQuickRoute;
 
 const familyRoutePrefix = 'onboarding.family.step.';
 const familyMemberRoute = 'onboarding.family.member';
@@ -49,6 +51,7 @@ class FamilyDraftRouteObserver extends NavigatorObserver {
     final visible =
         top?.settings.name == familyMemberRoute || (top?.settings.name?.startsWith(familyRoutePrefix) ?? false);
     if (_bootstrapping && pages.length <= 1 && !visible) return;
+    final hub = pages.where((r) => r.settings.name == pantryDetourRoute).lastOrNull;
     session.checkpoint(
       [
         for (final route in pages)
@@ -62,6 +65,12 @@ class FamilyDraftRouteObserver extends NavigatorObserver {
       ],
       visibleFamily: visible,
       pantryDetour: pages.any((r) => r.settings.name == pantryDetourRoute),
+      pantrySubscreen: top?.settings.name == pantryManualRoute
+          ? 'manual'
+          : top?.settings.name == pantryQuickRoute
+          ? 'quick'
+          : 'hub',
+      fromSummary: hub?.settings.arguments == true,
     );
   }
 
@@ -106,6 +115,15 @@ void resumeFamilyRoutes(
       final step = OnbStep.values.byName(item['step'] as String);
       restore(OnboardingFlow.screenFor(step), name: '$familyRoutePrefix${step.name}', arguments: item['editing']);
     }
+  }
+  if (session.pantryScreen != null) {
+    restore(
+      OnboardingFlow.restoredPantryHub(context, session.pantryFromSummary),
+      name: pantryDetourRoute,
+      arguments: session.pantryFromSummary,
+    );
+    if (session.pantryScreen == 'manual') restore(const PantryAddManualScreen(), name: pantryManualRoute);
+    if (session.pantryScreen == 'quick') restore(const PantryQuickCheckScreen(), name: pantryQuickRoute);
   }
   observer.finishReplay();
 }

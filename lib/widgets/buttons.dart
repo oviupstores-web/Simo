@@ -49,7 +49,7 @@ class PrimaryButton extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: LayoutBuilder(
-              builder: (context, constraints) {
+              builder: (context, _) {
                 final labelText = Text(
                   label,
                   textAlign: TextAlign.center,
@@ -60,7 +60,7 @@ class PrimaryButton extends StatelessWidget {
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (constraints.maxWidth < 320) Flexible(child: labelText) else labelText,
+                    Flexible(child: labelText),
                     if (end != null) ...[SizedBox(width: trailing != null ? AppSpace.x3 : AppSpace.x2), end],
                   ],
                 );

@@ -9,6 +9,7 @@ import '../../models/pantry_values.dart';
 import '../../navigation.dart';
 import '../../onboarding/onboarding_data.dart';
 import '../../onboarding/onboarding_scope.dart';
+import '../../onboarding/solo_draft_navigation.dart' show pantryManualRoute, pantryQuickRoute;
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'pantry_add_manual_screen.dart';
@@ -131,7 +132,12 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                     ],
                     const SizedBox(height: AppSpace.x3),
                     AppCard(
-                      onTap: () => push(context, const PantryQuickCheckScreen()),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          settings: const RouteSettings(name: pantryQuickRoute),
+                          builder: (_) => const PantryQuickCheckScreen(),
+                        ),
+                      ),
                       padding: const EdgeInsets.fromLTRB(AppSpace.x2, AppSpace.x2, AppSpace.x3_5, AppSpace.x2),
                       child: Row(
                         children: [
@@ -165,7 +171,12 @@ class _PantryHubOnboardingScreenState extends State<PantryHubOnboardingScreen> {
                       manualLabel: l.pantryQuickManual,
                       barcodeLabel: l.pantryQuickBarcode,
                       photoLabel: l.pantryQuickPhotoAi,
-                      onManual: () => push(context, const PantryAddManualScreen()),
+                      onManual: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          settings: const RouteSettings(name: pantryManualRoute),
+                          builder: (_) => const PantryAddManualScreen(),
+                        ),
+                      ),
                       onBarcode: () => push(context, const PantryScanScreen()),
                       onPhoto: () => push(context, const PantryPhotoAiScreen()),
                     ),

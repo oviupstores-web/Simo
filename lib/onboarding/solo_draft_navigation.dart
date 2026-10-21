@@ -4,6 +4,8 @@ import '../l10n/app_localizations.dart';
 import '../navigation.dart';
 import '../screens/entry/path_choice_screen.dart';
 import '../screens/onboarding/cover_solo_screen.dart';
+import '../screens/pantry/pantry_add_manual_screen.dart';
+import '../screens/pantry/pantry_quick_check_screen.dart';
 import 'onboarding_flow.dart';
 import 'solo_draft_session.dart';
 import 'family_draft_session.dart';
@@ -12,6 +14,8 @@ import 'onboarding_data.dart';
 
 const soloRoutePrefix = 'onboarding.step.';
 const pantryDetourRoute = 'onboarding.pantry';
+const pantryManualRoute = 'onboarding.pantry.manual';
+const pantryQuickRoute = 'onboarding.pantry.quick';
 
 class SoloDraftRouteObserver extends NavigatorObserver {
   SoloDraftRouteObserver(this.session);
@@ -50,6 +54,12 @@ class SoloDraftRouteObserver extends NavigatorObserver {
     final top = pages.lastOrNull;
     if (_bootstrapping && pages.length <= 1 && !(top?.settings.name?.startsWith(soloRoutePrefix) ?? false)) return;
     final names = pages.map((r) => r.settings.name);
+    final hub = pages.where((r) => r.settings.name == pantryDetourRoute).lastOrNull;
+    final pantrySubscreen = top?.settings.name == pantryManualRoute
+        ? 'manual'
+        : top?.settings.name == pantryQuickRoute
+        ? 'quick'
+        : 'hub';
     session.checkpoint(
       [
         for (final route in pages)
@@ -61,6 +71,8 @@ class SoloDraftRouteObserver extends NavigatorObserver {
       ],
       visibleSolo: top?.settings.name?.startsWith(soloRoutePrefix) ?? false,
       pantryDetour: names.contains(pantryDetourRoute),
+      pantrySubscreen: pantrySubscreen,
+      fromSummary: hub?.settings.arguments == true,
     );
   }
 
@@ -116,8 +128,10 @@ class _SoloDraftResumeHostState extends State<SoloDraftResumeHost> {
       if (!mounted) return;
       final family = widget.family;
       final familyIsLatest =
-          family?.updatedAt != null &&
-          (widget.session.updatedAt == null || !family!.updatedAt!.isBefore(widget.session.updatedAt!));
+          family?.resumeRequested == true &&
+          (!widget.session.resumeRequested ||
+              widget.session.updatedAt == null ||
+              !family!.updatedAt!.isBefore(widget.session.updatedAt!));
       if (familyIsLatest && family!.resumeRequested && widget.familyObserver != null) {
         widget.session.data.update(() => widget.session.data.mode = AppMode.foyer);
         if (await family.enter() && mounted) {
@@ -186,6 +200,15 @@ void resumeSoloRoutes(
   for (final item in stack) {
     final step = OnbStep.values.byName(item['step'] as String);
     restore(OnboardingFlow.screenFor(step), name: '$soloRoutePrefix${step.name}', editing: item['editing'] as bool);
+  }
+  if (session.pantryScreen != null) {
+    restore(
+      OnboardingFlow.restoredPantryHub(context, session.pantryFromSummary),
+      name: pantryDetourRoute,
+      editing: session.pantryFromSummary,
+    );
+    if (session.pantryScreen == 'manual') restore(const PantryAddManualScreen(), name: pantryManualRoute);
+    if (session.pantryScreen == 'quick') restore(const PantryQuickCheckScreen(), name: pantryQuickRoute);
   }
   observer.finishReplay();
 }

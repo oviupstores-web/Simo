@@ -6,6 +6,7 @@ import '../local_storage/draft_database.dart';
 import '../local_storage/local_draft.dart';
 import '../local_storage/pantry_codec.dart';
 import '../local_storage/pantry_draft_section.dart';
+import '../local_storage/pantry_form_checkpoint.dart';
 import '../local_storage/draft_checkpoint_clock.dart';
 import '../local_storage/solo_draft_repository.dart';
 import 'onboarding_data.dart';
@@ -48,6 +49,19 @@ class SoloDraftSession extends ChangeNotifier {
   final List<Map<String, Object?>> routeStack = [];
   final Set<String> completedSteps = {};
   int currentStep = 1;
+  PantryFormCheckpoint pantryForms = const PantryFormCheckpoint();
+  String? pantryScreen;
+  bool pantryFromSummary = false;
+
+  void setManualForm(Map<String, Object?>? value, {bool persist = true}) {
+    pantryForms = pantryForms.withManual(value);
+    if (persist && _active && !data.isFoyer) _capture();
+  }
+
+  void setQuickForm(Map<String, Object?>? value, {bool persist = true}) {
+    pantryForms = pantryForms.withQuick(value);
+    if (persist && _active && !data.isFoyer) _capture();
+  }
 
   Future<void> initialize() async {
     if (_loaded) return;
@@ -59,6 +73,13 @@ class SoloDraftSession extends ChangeNotifier {
         }
         final restoredPantry = PantryDraftSection.restore(PantryDraftSection.read(draft));
         final answer = draft.answers;
+        final forms = PantryFormCheckpoint.read(answer['pantryForms']);
+        final savedPantryScreen = answer['pantryScreen'];
+        if (savedPantryScreen != null && !const ['hub', 'manual', 'quick'].contains(savedPantryScreen)) {
+          throw const FormatException('solo_pantry_route_invalid');
+        }
+        final savedFromSummary = answer['pantryFromSummary'] ?? false;
+        if (savedFromSummary is! bool) throw const FormatException('solo_pantry_context_invalid');
         if (answer['soloPayloadVersion'] != 1) throw const FormatException('solo_format_unknown');
         final stack = (answer['routeStack'] as List).map((e) => Map<String, Object?>.from(e as Map)).toList();
         for (final route in stack) {
@@ -72,6 +93,9 @@ class SoloDraftSession extends ChangeNotifier {
         final values = Map<String, Object?>.from(answer['acceptedAnswers'] as Map);
         final resume = answer['resumeRequested'] as bool;
         if (resume && stack.isEmpty) throw const FormatException('solo_route_missing');
+        if (savedPantryScreen != null && (!resume || stack.isEmpty || stack.last['step'] != 'management')) {
+          throw const FormatException('solo_pantry_checkpoint_invalid');
+        }
         if (stack.isNotEmpty && soloStepNames.indexOf(stack.last['step'] as String) + 1 != draft.step) {
           throw const FormatException('solo_checkpoint_mismatch');
         }
@@ -101,6 +125,9 @@ class SoloDraftSession extends ChangeNotifier {
           ..clear()
           ..addAll(completed);
         resumeRequested = resume;
+        pantryForms = forms;
+        pantryScreen = savedPantryScreen as String?;
+        pantryFromSummary = savedFromSummary;
       }
       _loaded = true;
       errorStage = null;
@@ -140,7 +167,13 @@ class SoloDraftSession extends ChangeNotifier {
     return true;
   }
 
-  void checkpoint(List<Map<String, Object?>> routes, {required bool visibleSolo, required bool pantryDetour}) {
+  void checkpoint(
+    List<Map<String, Object?>> routes, {
+    required bool visibleSolo,
+    required bool pantryDetour,
+    String? pantrySubscreen,
+    bool fromSummary = false,
+  }) {
     if (!_loaded || _closed || data.isFoyer) return;
     _active = visibleSolo || pantryDetour;
     if (routes.isNotEmpty) {
@@ -150,6 +183,8 @@ class SoloDraftSession extends ChangeNotifier {
       currentStep = soloStepNames.indexOf(routes.last['step'] as String) + 1;
     }
     resumeRequested = visibleSolo || pantryDetour;
+    pantryScreen = pantryDetour ? (pantrySubscreen ?? 'hub') : null;
+    pantryFromSummary = pantryDetour && fromSummary;
     if (_active) {
       _capture();
     } else {
@@ -181,6 +216,8 @@ class SoloDraftSession extends ChangeNotifier {
     'routeStack': routeStack,
     'completedSteps': completedSteps.toList(),
     'calculationStatus': 'localProvisional',
+    'pantryScreen': pantryScreen,
+    'pantryFromSummary': pantryFromSummary,
   };
 
   void _capture() {
@@ -191,6 +228,7 @@ class SoloDraftSession extends ChangeNotifier {
         ...?_latest?.answers,
         ..._metadata,
         'pantryPayloadVersion': PantryCodec.version,
+        'pantryForms': pantryForms.toJson(),
         'acceptedAnswers': {
           if (_latest != null) ...Map<String, Object?>.from(_latest!.answers['acceptedAnswers'] as Map),
           ...data.exportSoloAnswers(),

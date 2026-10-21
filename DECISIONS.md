@@ -1,4 +1,9 @@
-# DECISIONS.md — Choix validés
+## 21 octobre 2026 — étape 3 du jalon produit 6, décision technique locale
+
+- Réutiliser l'enveloppe `answers` du brouillon SQLite chiffré pour `pantryForms` version 1, sans migration de schéma ni changement de clé. Une saisie provisoire n'entre jamais dans `pantry` ; validation explicite seulement. Solo et Famille gardent sections, routes et écritures distinctes.
+- Sauver le sous-écran du détour (`hub`, `manual`, `quick`) et son contexte de retour, puis rejouer les routes après chargement validé. Refuser versions/valeurs incohérentes ; préserver les extensions compatibles et ne jamais substituer un brouillon vide à une lecture échouée. La vérification rapide est appliquée en lot unique, sans suppression implicite.
+- La reprise au lancement sélectionne le plus récent parmi les brouillons avec `resumeRequested=true` ; un brouillon Famille plus récent mais inactif ne masque plus Solo actif. Aucun changement au nombre ou à l'ordre des étapes.
+- Les corrections de débordement sont limitées au formulaire Réserve et à la flexibilité du libellé du bouton partagé ; textes/traductions et illustrations restent inchangés. Tests locaux sur bases fictives seulement ; aucune installation, Supabase, staging, commit ni push autorisés à cette étape.
 
 ## 20 octobre 2026 — validation utilisateur du jalon produit 6 et fin de journée
 
@@ -28,6 +33,8 @@
 - Étape 2 autorisée : produits validés, identifiants stables, deux Réserves guest.solo/guest.family et écritures atomiques avec leurs réponses. Réutilisation du codec versionné et de SQLite chiffré ; clés inchangées.
 - Tests uniquement sur données fictives et bases temporaires. Aucun changement des formulaires incomplets, navigation, onglet Réserve de démonstration, catalogue ou images. Aucun Android, Supabase ou Git.
 - Travail en cours ; prochaine action : tests et rapport avant validation utilisateur. Historique conservé.
+
+# DECISIONS.md — Choix validés
 
 ## 20 octobre 2026 — résultat du codec Réserve isolé
 

@@ -25,15 +25,45 @@ class PantryQuickCheckScreen extends StatefulWidget {
 class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
   final _state = <QuickCategory, _Stock>{};
   String? _error;
+  bool _restored = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_restored) return;
+    _restored = true;
+    final d = OnboardingScope.read(context);
+    final saved = d.isFoyer
+        ? OnboardingScope.family(context)?.pantryForms.quick
+        : OnboardingScope.solo(context)?.pantryForms.quick;
+    if (saved != null) {
+      for (final entry in saved.entries) {
+        _state[QuickCategory.values.byName(entry.key)] = _Stock.values.byName(entry.value as String);
+      }
+    }
+  }
+
+  void _persist() {
+    final saved = {for (final entry in _state.entries) entry.key.name: entry.value.name};
+    if (OnboardingScope.read(context).isFoyer) {
+      OnboardingScope.family(context)?.setQuickForm(saved);
+    } else {
+      OnboardingScope.solo(context)?.setQuickForm(saved);
+    }
+  }
+
   int get _count => _state.values.where((s) => s != _Stock.none).length;
-  void _cycle(QuickCategory category) => setState(() {
-    _error = null;
-    _state[category] = switch (_state[category] ?? _Stock.none) {
-      _Stock.none => _Stock.present,
-      _Stock.present => _Stock.some,
-      _Stock.some => _Stock.none,
-    };
-  });
+  void _cycle(QuickCategory category) {
+    setState(() {
+      _error = null;
+      _state[category] = switch (_state[category] ?? _Stock.none) {
+        _Stock.none => _Stock.present,
+        _Stock.present => _Stock.some,
+        _Stock.some => _Stock.none,
+      };
+    });
+    _persist();
+  }
+
   void _save() {
     final l = L.of(context);
     final d = OnboardingScope.read(context);
@@ -46,9 +76,18 @@ class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
         return;
       }
     }
-    for (final e in active) {
-      final location = e.key.location;
-      d.declareQuickStock(e.key, location, e.value == _Stock.some ? QuickStock.some : QuickStock.present, l);
+    if (d.isFoyer) {
+      OnboardingScope.family(context)?.setQuickForm(null, persist: false);
+    } else {
+      OnboardingScope.solo(context)?.setQuickForm(null, persist: false);
+    }
+    final applied = d.declareQuickStockBatch({
+      for (final e in active) e.key: e.value == _Stock.some ? QuickStock.some : QuickStock.present,
+    }, l);
+    if (!applied) {
+      _persist();
+      setState(() => _error = l.quickCheckAmbiguousStock(active.first.key.label(l)));
+      return;
     }
     Navigator.of(context).pop();
   }
@@ -63,7 +102,16 @@ class _PantryQuickCheckScreenState extends State<PantryQuickCheckScreen> {
       subtitle: l.quickCheckSubtitle,
       continueLabel: _count == 0 ? l.quickCheckSkip : l.quickCheckAddCount(_count),
       showArrow: _count > 0,
-      onContinue: _count == 0 ? () => Navigator.of(context).pop() : _save,
+      onContinue: _count == 0
+          ? () {
+              if (OnboardingScope.read(context).isFoyer) {
+                OnboardingScope.family(context)?.setQuickForm(null);
+              } else {
+                OnboardingScope.solo(context)?.setQuickForm(null);
+              }
+              Navigator.of(context).pop();
+            }
+          : _save,
       children: [
         ClipRRect(
           borderRadius: AppRadius.cardR,
@@ -136,18 +184,38 @@ class _CategoryRow extends StatelessWidget {
             border: Border.all(color: on ? AppColors.primary : AppColors.line, width: on ? 1.5 : 1),
             boxShadow: AppShadows.card,
           ),
-          child: Row(
-            children: [
-              FoodThumb(photo: 'assets/images/$photo.jpg', icon: icon, tint: location.tint, size: AppSizes.iconTileMd),
-              const SizedBox(width: AppSpace.x3),
-              Expanded(
-                child: Text(label, style: AppText.of(AppFont.s14, weight: AppFont.semibold, lineHeight: 20)),
-              ),
-              AnimatedSwitcher(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final compact = constraints.maxWidth < 300;
+              final status = AnimatedSwitcher(
                 duration: AppMotion.fast,
                 child: PillBadge(tag, key: ValueKey(stock), background: tagBg, foreground: tagFg, size: AppFont.s12),
-              ),
-            ],
+              );
+              return Row(
+                children: [
+                  FoodThumb(
+                    photo: 'assets/images/$photo.jpg',
+                    icon: icon,
+                    tint: location.tint,
+                    size: AppSizes.iconTileMd,
+                  ),
+                  const SizedBox(width: AppSpace.x3),
+                  Expanded(
+                    child: compact
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(label, style: AppText.of(AppFont.s14, weight: AppFont.semibold, lineHeight: 20)),
+                              const SizedBox(height: AppSpace.x1),
+                              status,
+                            ],
+                          )
+                        : Text(label, style: AppText.of(AppFont.s14, weight: AppFont.semibold, lineHeight: 20)),
+                  ),
+                  if (!compact) status,
+                ],
+              );
+            },
           ),
         ),
       ),

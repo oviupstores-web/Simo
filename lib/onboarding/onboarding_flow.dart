@@ -255,4 +255,11 @@ abstract final class OnboardingFlow {
       nav.pushReplacement(_route(screenFor(after), family: OnboardingScope.read(hubContext).isFoyer));
     }
   }
+
+  /// Rebuilds the detour with the original return destination, including Edit.
+  static PantryHubOnboardingScreen restoredPantryHub(BuildContext context, bool fromSummary) {
+    final order = steps(context);
+    final after = order[order.indexOf(OnbStep.management) + 1];
+    return PantryHubOnboardingScreen(onFinish: (hub) => finishPantryDetour(hub, fromSummary, after));
+  }
 }

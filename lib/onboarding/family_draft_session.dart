@@ -6,6 +6,7 @@ import '../local_storage/draft_database.dart';
 import '../local_storage/local_draft.dart';
 import '../local_storage/pantry_codec.dart';
 import '../local_storage/pantry_draft_section.dart';
+import '../local_storage/pantry_form_checkpoint.dart';
 import '../local_storage/draft_checkpoint_clock.dart';
 import '../local_storage/family_draft_repository.dart';
 import '../local_storage/solo_draft_repository.dart' show copySoloJson;
@@ -46,6 +47,19 @@ class FamilyDraftSession extends ChangeNotifier {
   final List<Map<String, Object?>> routeStack = [];
   final Set<String> completedSteps = {};
   int currentStep = 1;
+  PantryFormCheckpoint pantryForms = const PantryFormCheckpoint();
+  String? pantryScreen;
+  bool pantryFromSummary = false;
+
+  void setManualForm(Map<String, Object?>? value, {bool persist = true}) {
+    pantryForms = pantryForms.withManual(value);
+    if (persist && _active && data.isFoyer) _capture();
+  }
+
+  void setQuickForm(Map<String, Object?>? value, {bool persist = true}) {
+    pantryForms = pantryForms.withQuick(value);
+    if (persist && _active && data.isFoyer) _capture();
+  }
 
   Future<void> initialize() async {
     if (_loaded) return;
@@ -57,6 +71,13 @@ class FamilyDraftSession extends ChangeNotifier {
         }
         final restoredPantry = PantryDraftSection.restore(PantryDraftSection.read(draft));
         final answer = draft.answers;
+        final forms = PantryFormCheckpoint.read(answer['pantryForms']);
+        final savedPantryScreen = answer['pantryScreen'];
+        if (savedPantryScreen != null && !const ['hub', 'manual', 'quick'].contains(savedPantryScreen)) {
+          throw const FormatException('family_pantry_route_invalid');
+        }
+        final savedFromSummary = answer['pantryFromSummary'] ?? false;
+        if (savedFromSummary is! bool) throw const FormatException('family_pantry_context_invalid');
         if (answer['familyPayloadVersion'] != 1) throw const FormatException('family_format_unknown');
         final stack = (answer['routeStack'] as List).map((e) => Map<String, Object?>.from(e as Map)).toList();
         for (final route in stack) {
@@ -82,6 +103,9 @@ class FamilyDraftSession extends ChangeNotifier {
         }
         final numbered = stack.where((r) => familyStepNames.contains(r['step'])).toList();
         if (resume && stack.isEmpty) throw const FormatException('family_route_missing');
+        if (savedPantryScreen != null && (!resume || numbered.isEmpty || numbered.last['step'] != 'management')) {
+          throw const FormatException('family_pantry_checkpoint_invalid');
+        }
         if (stack.isNotEmpty &&
             (numbered.isEmpty || familyStepNames.indexOf(numbered.last['step'] as String) + 1 != draft.step)) {
           throw const FormatException('family_checkpoint_mismatch');
@@ -103,6 +127,9 @@ class FamilyDraftSession extends ChangeNotifier {
           ..clear()
           ..addAll(completed);
         resumeRequested = resume;
+        pantryForms = forms;
+        pantryScreen = savedPantryScreen as String?;
+        pantryFromSummary = savedFromSummary;
       }
       _loaded = true;
       errorStage = null;
@@ -153,7 +180,13 @@ class FamilyDraftSession extends ChangeNotifier {
     }
   }
 
-  void checkpoint(List<Map<String, Object?>> routes, {required bool visibleFamily, required bool pantryDetour}) {
+  void checkpoint(
+    List<Map<String, Object?>> routes, {
+    required bool visibleFamily,
+    required bool pantryDetour,
+    String? pantrySubscreen,
+    bool fromSummary = false,
+  }) {
     if (!_loaded || _closed || !data.isFoyer) return;
     _active = visibleFamily || pantryDetour;
     if (routes.isNotEmpty) {
@@ -164,6 +197,8 @@ class FamilyDraftSession extends ChangeNotifier {
       if (numbered.isNotEmpty) currentStep = familyStepNames.indexOf(numbered.last['step'] as String) + 1;
     }
     resumeRequested = visibleFamily || pantryDetour;
+    pantryScreen = pantryDetour ? (pantrySubscreen ?? 'hub') : null;
+    pantryFromSummary = pantryDetour && fromSummary;
     if (_active) {
       _capture();
     } else {
@@ -192,6 +227,8 @@ class FamilyDraftSession extends ChangeNotifier {
     'routeStack': routeStack,
     'completedSteps': completedSteps.toList(),
     'calculationStatus': 'localProvisional',
+    'pantryScreen': pantryScreen,
+    'pantryFromSummary': pantryFromSummary,
   };
 
   void _capture() {
@@ -202,6 +239,7 @@ class FamilyDraftSession extends ChangeNotifier {
         ...?_latest?.answers,
         ..._metadata,
         'pantryPayloadVersion': PantryCodec.version,
+        'pantryForms': pantryForms.toJson(),
         'acceptedAnswers': {
           if (_latest != null) ...Map<String, Object?>.from(_latest!.answers['acceptedAnswers'] as Map),
           ...data.exportFamilyAnswers(),

@@ -1054,6 +1054,34 @@ class OnboardingData extends ChangeNotifier {
     return true;
   }
 
+  /// Validate every quick choice before changing anything; emit one snapshot.
+  bool declareQuickStockBatch(Map<QuickCategory, QuickStock> choices, L l) {
+    for (final category in choices.keys) {
+      if (quickMatches(category, category.location).length > 1) return false;
+    }
+    update(() {
+      for (final entry in choices.entries) {
+        final category = entry.key;
+        final matches = quickMatches(category, category.location);
+        if (matches.isEmpty) {
+          pantry.add(
+            PantryDraft(
+              name: category.label(l),
+              location: category.location,
+              source: 'verification_rapide',
+              declaredCategory: category,
+              declaredStock: entry.value,
+            ),
+          );
+        } else if (matches.single.quickStock != entry.value) {
+          final index = pantry.indexOf(matches.single);
+          pantry[index] = matches.single.withQuickStock(category, entry.value);
+        }
+      }
+    });
+    return true;
+  }
+
   // --- Calculs -------------------------------------------------------
 
   int get plannedMeals => slots.length;

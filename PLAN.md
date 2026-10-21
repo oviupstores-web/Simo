@@ -1,5 +1,13 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## 21 octobre 2026 — jalon produit 6, étape 3 locale : saisies provisoires et reprise Réserve
+
+- Formulaires manuels et vérification rapide enregistrés dans une section `pantryForms` version 1 du brouillon chiffré de leur propriétaire (`guest.solo` ou `guest.family`), dans la même transaction que réponses et produits validés. Les brouillons antérieurs sans cette section restent lisibles ; versions inconnues et contenus corrompus sont refusés sans remplacement. Champs compatibles inconnus conservés.
+- Saisie manuelle : nom et quantité brute même incomplète, valeur numérique précédente, unité, catégorie/emplacement choisis et proposés, date civile et origine, choix manuels et contexte de champ sont restaurés sans recalcul au chargement. Une quantité brute incomplète n'est pas validée comme produit. Les choix rapides restent provisoires jusqu'au bouton final ; application par lot en une notification, sans suppression pour « Non ».
+- Checkpoint de navigation : détour hub, ajout manuel ou vérification rapide, et retour après édition depuis le récapitulatif sont restaurés sur le sous-écran exact. Choix de reprise initiale corrigé : comparer les dates seulement entre parcours encore demandés à la reprise, pour éviter le retour Landing lorsqu'un brouillon Famille plus récent est inactif et Solo encore actif.
+- Contrôles locaux sur données fictives : 25 nouveaux tests et 396 régressions ciblées réussis (421 au total), dont stockage chiffré, interruption transactionnelle, cinq langues et 320/390 px. Les débordements révélés sur indice de section, CTA long et badges de vérification rapide ont été corrigés dans ce périmètre. Analyse Dart ciblée sans problème et `git diff --check` réussi.
+- Aucune installation Xiaomi, migration réelle, opération Supabase, staging, commit ou push. Clés/base existantes, produits Solo/Famille du téléphone, 50 icônes, images, catalogue, 17 suppressions historiques et autres modifications locales préservés. Validation sur Xiaomi soumise à autorisation distincte ; arrêt après tests locaux.
+
 ## 20 octobre 2026 — validation utilisateur du jalon produit 6 et fin de journée
 
 - Modèle et codec Réserve, raccordement de la persistance indépendante Solo/Famille, 480 tests locaux et essais Android du jour validés par l'utilisateur.

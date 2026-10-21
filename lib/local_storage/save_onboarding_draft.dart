@@ -1,12 +1,14 @@
 import 'draft_database.dart';
 import 'local_draft.dart';
 import 'pantry_storage_guard.dart';
+import 'pantry_form_checkpoint.dart';
 
 /// Answers and pantry are one encrypted, atomic checkpoint. Reading and checking
 /// the existing row happen inside the same transaction as the replacement.
 Future<void> saveOnboardingDraft(DraftDatabase db, LocalDraft draft, String answerVersionKey) async {
   await db.transaction(() async {
     if (draft.answers[answerVersionKey] != 1) throw const DraftStorageException('onboarding_format_unknown');
+    PantryFormCheckpoint.read(draft.answers['pantryForms']);
     PantryStorageGuard.validate(draft);
     final previous = await db.load(draft.id);
     if (previous != null) {
@@ -14,6 +16,7 @@ Future<void> saveOnboardingDraft(DraftDatabase db, LocalDraft draft, String answ
         throw const DraftStorageException('onboarding_existing_format_unknown');
       }
       PantryStorageGuard.validate(previous);
+      PantryFormCheckpoint.read(previous.answers['pantryForms']);
       if (previous.answers.containsKey('pantryPayloadVersion') && !draft.answers.containsKey('pantryPayloadVersion')) {
         throw const DraftStorageException('pantry_downgrade_refused');
       }
