@@ -123,7 +123,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
         StepSectionTitle(
           l.constraintsDietsSection,
           hint: l.constraintsPrincipalHint,
-          icon: AppIcons.leaf,
+          icon: AppIcons.gridCutlery,
           tint: Tint.leafy,
           adaptiveHint: true,
         ),
@@ -163,7 +163,7 @@ class _ConstraintsScreenState extends State<ConstraintsScreen> {
         StepSectionTitle(
           l.constraintsRestrictionsSection,
           hint: l.commonMultipleChoice,
-          icon: AppIcons.leaf,
+          icon: AppIcons.list,
           tint: Tint.leafy,
           adaptiveHint: true,
         ),

@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (d.needsTarget) ..._targetSection(context, d) else _maintainNote(l),
         const SizedBox(height: AppSpace.x6),
         InfoBanner(
-          icon: AppIcons.leaf,
+          icon: AppIcons.shield,
           iconTopOffset: AppSpace.x0_5,
           text: l.profilePrivacy,
           textColor: ProfileTokens.bodyInk,

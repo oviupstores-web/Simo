@@ -37,6 +37,11 @@ class SummaryScreen extends StatelessWidget {
     ManagementMode.reserves: (l.modePantryOnlyTitle, l.modePantryOnlyText),
     ManagementMode.mixte: (l.modeMixedTitle, l.modeMixedText),
   };
+  static String managementIcon(ManagementMode mode) => switch (mode) {
+    ManagementMode.courses => AppIcons.basket,
+    ManagementMode.reserves => AppIcons.pantryReserve,
+    ManagementMode.mixte => AppIcons.balance,
+  };
   static Map<CookingLevel, String> levels(L l) => {
     CookingLevel.debutant: l.levelBeginnerShort,
     CookingLevel.intermediaire: l.levelIntermediateShort,
@@ -249,7 +254,11 @@ class SummaryScreen extends StatelessWidget {
           tint: Tint.sky,
           onEdit: () => edit(OnbStep.management),
           children: [
-            _Line(icon: AppIcons.balance, text: modes(l)[d.management]!.$1, strong: true),
+            _Line(
+              icon: managementIcon(d.management),
+              text: modes(l)[d.management]!.$1,
+              strong: true,
+            ),
             _Line(icon: AppIcons.info, text: modes(l)[d.management]!.$2),
             if (d.management != ManagementMode.courses)
               _Line(
@@ -260,13 +269,13 @@ class SummaryScreen extends StatelessWidget {
         ),
         const SizedBox(height: AppSpace.x3),
         _SummaryCard(
-          icon: AppIcons.block,
+          icon: AppIcons.gridCutlery,
           title: l.summaryDietExclusionsTitle,
           tint: Tint.lavender,
           onEdit: () => edit(OnbStep.constraints),
           children: [
             _Line(
-              icon: AppIcons.leaf,
+              icon: AppIcons.list,
               text: dietLabels.isEmpty ? l.summaryDietOmnivore : l.summaryDietsList(dietLabels.join(', ')),
             ),
             if (allergenLabels.isNotEmpty)
@@ -274,7 +283,7 @@ class SummaryScreen extends StatelessWidget {
             if (d.excludedFoods.isNotEmpty)
               _Line(icon: AppIcons.block, text: l.summaryExcludedList(d.excludedFoods.join(', '))),
             _Line(
-              icon: AppIcons.cutlery,
+              icon: AppIcons.chefHat,
               text: d.cuisinePreferences.isEmpty
                   ? l.summaryCuisinesAll
                   : l.summaryCuisinesList(
