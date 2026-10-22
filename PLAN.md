@@ -1,5 +1,14 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## 22 octobre 2026 — décision produit validée : menus Famille, option A
+
+- **État actuel :** jalon produit 6 en cours ; étapes Réserve 1, 2 et 3 terminées et sauvegardées. La présente entrée consigne une décision produit, sans implémentation du transfert ni du générateur. Les bilans datés ci-dessous restent historiques.
+- **Menu commun obligatoire :** un foyer reçoit un menu commun, sans menu personnalisé par membre. Pour chaque repas prévu, proposer une seule recette d'entrée, une seule recette de plat principal et une seule recette de dessert, selon les catégories sélectionnées. Adapter les quantités au foyer en préservant les règles de portions déjà validées ; cette décision n'implémente pas la sélection des catégories.
+- **Contraintes de génération :** les allergies et interdictions de chaque membre s'appliquent au repas commun ; toutes les recettes doivent être compatibles avec les régimes déclarés. Les contraintes générales du foyer s'y ajoutent. Les préférences restent distinctes des interdictions. Ne jamais relâcher une restriction obligatoire pour respecter le budget ou compléter le menu ; afficher une impossibilité explicite si aucune recette compatible n'existe.
+- **Contrat SQLite → Supabase à prévoir :** conserver séparément les restrictions individuelles, les restrictions du foyer et les contraintes communes calculées, avec leur provenance. Ne jamais recopier l'allergie d'un membre dans les profils des autres. Prévoir un modèle extensible aux substitutions individuelles ultérieures, sans les réaliser maintenant. Le schéma distant actuel ne doit pas être considéré comme adapté par cette décision documentaire.
+- **Compatibilité et périmètre :** modèles et brouillons SQLite, parcours Solo/Famille, produits et formulaires Réserve, règles de portions et données Xiaomi préservés. Seuls PLAN.md et DECISIONS.md sont actualisés ; aucun Flutter, SQLite, SQL, migration Supabase, test, build, installation Android ou opération de sauvegarde Git. Les 17 suppressions historiques et autres fichiers locaux restent intacts.
+- **Prochaine action officielle :** présenter les passages documentaires modifiés, puis attendre les instructions de Simo. Aucune sauvegarde GitHub ni reprise du développement sans autorisation distincte ; les autres arbitrages du contrat de transfert restent ouverts.
+
 ## 21 octobre 2026 — jalon produit 6, étape 3 locale : saisies provisoires et reprise Réserve
 
 - Formulaires manuels et vérification rapide enregistrés dans une section `pantryForms` version 1 du brouillon chiffré de leur propriétaire (`guest.solo` ou `guest.family`), dans la même transaction que réponses et produits validés. Les brouillons antérieurs sans cette section restent lisibles ; versions inconnues et contenus corrompus sont refusés sans remplacement. Champs compatibles inconnus conservés.
