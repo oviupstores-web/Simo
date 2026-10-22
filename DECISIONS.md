@@ -1,3 +1,8 @@
+## 22 octobre 2026 — contrat SQLite → Supabase V1 validé, phase 1 close
+
+- Référence : [menoo.guest-import — version 1 du 22 octobre 2026](docs/contracts/menoo_guest_import_v1.md), spécification fonctionnelle validée, enregistrée intégralement en 20 sections. Elle précise et clôt les arbitrages du transfert initial dans son périmètre ; les décisions historiques restent conservées ci-dessous.
+- La validation fonctionnelle ne vaut ni implémentation ni conformité SQL démontrée. §10 corrigé : la catégorie du formulaire manuel n'est pas un champ persisté du produit validé et n'est donc pas transférable lorsqu'elle est absente ; `declaredCategory` et `declaredStock` sont préservés exactement lorsqu'ils sont renseignés, et restent nuls sinon. Aucune déduction arbitraire d'une catégorie manquante. L'éventuelle persistance future de la catégorie manuelle reste une décision de phase 2, sans reconstitution fictive des anciens produits. Phase 2 soumise à autorisation distincte ; aucun développement, changement SQLite/SQL, accès Supabase/Xiaomi, test, build, staging, commit ou push autorisé par cette clôture documentaire.
+
 ## 22 octobre 2026 — décision produit officielle : menus Famille, option A
 
 - **Menu commun :** Simo valide l'option A. Un foyer reçoit un menu commun, et non un menu personnalisé par membre. Pour chaque repas prévu, Menoo propose une seule recette d'entrée, une seule recette de plat principal et une seule recette de dessert, selon les catégories sélectionnées. Quantités et portions adaptées au foyer ; règles de portions déjà validées conservées.

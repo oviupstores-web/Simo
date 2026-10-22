@@ -1,5 +1,11 @@
 # PLAN.md — Suivi des jalons Menoo
 
+## 22 octobre 2026 — clôture documentaire de la phase 1 du jalon 6
+
+- **Référence fonctionnelle validée :** [menoo.guest-import — version 1 du 22 octobre 2026](docs/contracts/menoo_guest_import_v1.md), contrat consolidé enregistré intégralement, sections 1 à 20. Les autres arbitrages évoqués dans les entrées historiques ci-dessous sont remplacés, dans le périmètre du contrat, par ses décisions définitives. La numérotation officielle des étapes reste inchangée.
+- **État :** phase 1 finalisée sur le plan fonctionnel ; conformité au schéma SQL à vérifier avant implémentation. §10 précisé : la catégorie manuelle, présente dans le formulaire provisoire mais absente du produit validé, n'est pas transférable ; `declaredCategory` et `declaredStock` sont préservés lorsqu'ils sont renseignés, et restent nuls sinon. Aucune catégorie manquante inventée. Phase 2 : décider de l'éventuelle persistance future de la catégorie manuelle, sans reconstitution fictive des anciens produits ni modification SQLite dans cette clôture.
+- **Prochaine action :** validation de cette clôture par Simo ; aucune sauvegarde GitHub autorisée. La phase 2, « conception des adaptations Supabase et du plan de sécurité », nécessite une autorisation distincte et n'est pas commencée. Documentation uniquement ; données, code, migrations, 17 suppressions historiques et autres modifications locales préservés.
+
 ## 22 octobre 2026 — décision produit validée : menus Famille, option A
 
 - **État actuel :** jalon produit 6 en cours ; étapes Réserve 1, 2 et 3 terminées et sauvegardées. La présente entrée consigne une décision produit, sans implémentation du transfert ni du générateur. Les bilans datés ci-dessous restent historiques.
