@@ -217,4 +217,53 @@ revoke all on function public.handle_new_user(), public.set_updated_at(),
 -- aucun INSERT dans weekly_menus/menu_meals/courses/poids, aucun CREATE permanent.
 -- Les privilèges des rôles service/admin et les DEFAULT PRIVILEGES de CHAQUE
 -- créateur réel doivent être inventoriés avant adoption. Ne pas les présumer sûrs.
+
+-- Contrôle de contexte candidat PostgreSQL 17 : compatible avec le principe
+-- Supabase de rôles clients distincts de service_role/supabase_admin/postgres.
+-- Ces rôles administratifs légitimes ne sont PAS interdits comme propriétaires.
+-- Leur configuration effective et les memberships doivent être vérifiés en base
+-- isolée avant adoption : aucun rôle distant n'est modifié ou présumé conforme.
+do $security_guard$
+begin
+  if exists (
+    select 1 from pg_catalog.pg_roles
+    where rolname in ('anon', 'authenticated', 'menoo_import_executor')
+      and (rolsuper or rolbypassrls or rolcreaterole or rolcreatedb or rolreplication)
+  ) then
+    raise exception 'MENOO_UNSAFE_ROLE_ATTRIBUTES';
+  end if;
+
+  if exists (
+    select 1
+    from pg_catalog.pg_class c
+    join pg_catalog.pg_namespace n on n.oid = c.relnamespace
+    where c.relkind in ('r', 'p') and (
+      (n.nspname = 'public' and c.relname = any(array[
+        'aisles','equipment','diets','allergens','ingredients','ingredient_allergens',
+        'recipes','recipe_ingredients','recipe_equipment','recipe_steps','stores',
+        'profiles','households','household_members','kitchen_settings','household_equipment',
+        'member_diets','member_allergens','member_excluded_ingredients','meal_plan_slots',
+        'weekly_menus','menu_meals','pantry_items','pantry_events','shopping_lists',
+        'shopping_list_items','orders','weight_entries'
+      ])) or (n.nspname = 'menoo_private' and c.relname = 'guest_imports')
+    ) and (
+      not c.relrowsecurity
+      or (n.nspname = 'menoo_private' and not c.relforcerowsecurity)
+      or exists (
+        select 1 from pg_catalog.pg_roles r
+        where r.rolname in ('anon', 'authenticated', 'menoo_import_executor')
+          and (
+            pg_catalog.pg_has_role(r.oid, c.relowner, 'USAGE')
+            or pg_catalog.pg_has_role(r.oid, c.relowner, 'SET')
+          )
+      )
+    )
+  ) then
+    raise exception 'MENOO_UNSAFE_TABLE_SECURITY';
+  end if;
+end $security_guard$;
+
+-- Ce garde-fou ne prouve ni l'absence d'autres politiques permissives/fonctions
+-- privilégiées ni la sécurité des chemins service/admin. En cas de refus,
+-- diagnostiquer la configuration ; ne pas corriger les rôles automatiquement.
 commit;

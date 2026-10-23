@@ -481,6 +481,128 @@ begin
   set constraints public.profiles_active_household_owner_fk,
     public.households_main_cook_same_household_fk, public.menoo_household_cook_integrity,
     public.menoo_member_cook_integrity, menoo_private.guest_imports_household_owner_fk immediate;
+
+  -- Relecture finale du nouvel import, APRÈS les écritures et les déclencheurs
+  -- différés ci-dessus. Les reprises d'un reçu déjà validé restent inchangées.
+  -- Comparaisons NULL-safe : absence collectée, zéro et tableau vide diffèrent.
+  -- Ensembles de codes triés ; membres et exclusions gardent leur ordre source.
+  perform menoo_private.require(exists (
+    select 1 from public.households h where h.id=v_house
+      and row(h.owner_id,h.name collate "C",h.mode,h.weekly_budget_cents,
+        h.budget_currency collate "C",h.management_mode,h.main_cook_member_id,h.portion_rules_version)
+      is not distinct from row(v_user,(v_payload#>>'{identity,householdName}') collate "C",v_mode,
+        menoo_private.budget_to_minor((a->>'budgetAmount')::numeric,a->>'budgetCurrency'),
+        (a->>'budgetCurrency') collate "C",(a->>'management')::public.management_mode,
+        (v_member_map->>(a->>'mainCookId'))::uuid,
+        case when v_mode='foyer' then 1::smallint else null::smallint end)
+      and menoo_private.string_list(pg_catalog.to_jsonb(h.cuisine_preferences),null,true)
+        is not distinct from a->'cuisinePreferences'
+      and menoo_private.string_list(pg_catalog.to_jsonb(h.diet_codes),null,true)
+        is not distinct from case when v_mode='foyer' then a->'diets' else '[]'::jsonb end
+      and menoo_private.string_list(pg_catalog.to_jsonb(h.allergen_codes),null,true)
+        is not distinct from case when v_mode='foyer' then a->'allergens' else '[]'::jsonb end
+      and pg_catalog.to_jsonb(h.excluded_foods)
+        is not distinct from case when v_mode='foyer' then a->'excludedFoods' else '[]'::jsonb end
+  ),'import_household_readback_mismatch');
+
+  perform menoo_private.require(
+    (select pg_catalog.count(*) from public.household_members where household_id=v_house)=v_expected_members
+    and (select pg_catalog.count(*) from pg_catalog.jsonb_object_keys(v_member_map))=v_expected_members
+    and not exists (
+      -- Vue de comparaison seulement : aucune modification de la projection,
+      -- de l'empreinte, des boucles d'insertion ni des UUID alloués précédemment.
+      with expected as (
+        select x.value as data, x.ordinality-1 as position, x.value->>'id' as local_id
+        from pg_catalog.jsonb_array_elements(case when v_mode='solo'
+          then pg_catalog.jsonb_build_array(a || pg_catalog.jsonb_build_object(
+            'id','solo','role','adulte','firstName',v_payload#>>'{identity,soloFirstName}'))
+          else a->'members' end) with ordinality as x(value,ordinality)
+      )
+      select 1 from expected e
+      left join public.household_members hm on hm.id=(v_member_map->>e.local_id)::uuid
+      where hm.id is null or row(hm.household_id,hm.source_local_id collate "C",
+        hm.first_name collate "C",hm.role::text collate "C",hm.sex::text collate "C",
+        hm.age_years,hm.height_cm,hm.weight_kg,hm.goal::text collate "C",
+        hm.activity::text collate "C",hm.is_owner,hm.position,hm.target_weight_kg,
+        hm.weekly_rate_kg,pg_catalog.to_jsonb(hm.excluded_foods),hm.wants_scale)
+      is distinct from row(v_house,e.local_id collate "C",(e.data->>'firstName') collate "C",
+        (e.data->>'role') collate "C",(e.data->>'sex') collate "C",
+        (e.data->>'age')::smallint,(e.data->>'heightCm')::bigint,(e.data->>'weightKg')::numeric,
+        (case e.data->>'goal' when 'pertePoids' then 'perte_poids' when 'priseMasse' then 'prise_masse'
+          else e.data->>'goal' end) collate "C",
+        (case e.data->>'activity' when 'tresActif' then 'tres_actif' else e.data->>'activity' end) collate "C",
+        v_mode='solo',e.position,(e.data->>'targetWeightKg')::numeric,
+        (e.data->>'weeklyRateKg')::numeric,e.data->'excludedFoods',(e.data->>'wantsScale')::boolean)
+      or coalesce((select pg_catalog.jsonb_agg(ma.allergen_code
+          order by pg_catalog.convert_to(ma.allergen_code,'UTF8'))
+        from public.member_allergens ma where ma.member_id=hm.id),'[]'::jsonb)
+        is distinct from e.data->'allergens'
+      or coalesce((select pg_catalog.jsonb_agg(md.diet_code
+          order by pg_catalog.convert_to(md.diet_code,'UTF8'))
+        from public.member_diets md where md.member_id=hm.id),'[]'::jsonb)
+        is distinct from case when v_mode='solo' then a->'diets' else '[]'::jsonb end
+    ),'import_members_readback_mismatch');
+
+  perform menoo_private.require(exists (
+    select 1 from public.kitchen_settings k where k.household_id=v_house
+      and row(k.cooking_level,k.weekday_minutes,k.weekend_minutes)
+      is not distinct from row((a->>'cookingLevel')::public.cooking_level,
+        (a->>'weekdayMinutes')::smallint,(a->>'weekendMinutes')::smallint)
+  ) and coalesce((select pg_catalog.jsonb_agg(he.equipment_code
+      order by pg_catalog.convert_to(he.equipment_code,'UTF8'))
+    from public.household_equipment he where he.household_id=v_house),'[]'::jsonb)
+    is not distinct from a->'equipment','import_kitchen_readback_mismatch');
+
+  perform menoo_private.require(
+    (select pg_catalog.count(*) from public.meal_plan_slots where household_id=v_house)
+      =pg_catalog.jsonb_array_length(a->'slots')
+    and not exists (
+      select 1 from pg_catalog.jsonb_array_elements(a->'slots') as s(data)
+      where not exists (
+        select 1 from public.meal_plan_slots ps where ps.household_id=v_house
+          and ps.day_of_week=(s.data->>'day')::smallint
+          and ps.meal_type=(case s.data->>'meal' when 'petitDejeuner' then 'petit_dejeuner'
+            else s.data->>'meal' end)::public.meal_type
+      )
+    ),'import_slots_readback_mismatch');
+
+  perform menoo_private.require(
+    (select pg_catalog.count(*) from public.pantry_items where household_id=v_house)
+      =pg_catalog.jsonb_array_length(v_payload->'pantry')
+    and (select pg_catalog.count(*) from pg_catalog.jsonb_object_keys(v_lot_map))
+      =pg_catalog.jsonb_array_length(v_payload->'pantry')
+    and not exists (
+      select 1 from pg_catalog.jsonb_array_elements(v_payload->'pantry') as p(data)
+      left join public.pantry_items pi on pi.id=(v_lot_map->>(p.data->>'id'))::uuid
+      where pi.id is null or row(pi.household_id,pi.source_local_id collate "C",
+        pi.name collate "C",pi.quantity,pi.unit collate "C",pi.unit_label collate "C",
+        pi.location,pi.expires_on,pi.expiry_origin collate "C",pi.source,
+        pi.local_food_id collate "C",pi.declared_category collate "C",pi.declared_stock collate "C",pi.ingredient_id)
+      is distinct from row(v_house,(p.data->>'id') collate "C",(p.data->>'name') collate "C",
+        (p.data->>'quantity')::numeric,menoo_private.pantry_unit(p.data->>'unit') collate "C",
+        (p.data->>'unitLabel') collate "C",(p.data->>'location')::public.pantry_location,
+        (p.data->>'expiresOn')::date,(p.data->>'expiryOrigin') collate "C",
+        (p.data->>'source')::public.pantry_source,(p.data->>'foodId') collate "C",
+        (p.data->>'declaredCategory') collate "C",(p.data->>'declaredStock') collate "C",null::uuid)
+    ),'import_pantry_final_readback_mismatch');
+
+  perform menoo_private.require(exists (
+    select 1 from public.profiles pr where pr.id=v_user
+      and row(pr.mode,pr.active_household_id,pr.onboarding_completed_at,
+        pr.premium,pr.display_name collate "C")
+      is not distinct from row(v_mode,v_house,pg_catalog.transaction_timestamp(),
+        v_profile.premium,v_profile.display_name collate "C")
+  ),'import_profile_readback_mismatch');
+  perform menoo_private.require(exists (
+    select 1 from menoo_private.guest_imports gi
+    where gi.owner_id=v_user and gi.operation_id=p_operation_id
+      and row(gi.source_origin_id,gi.journey,gi.contract_version,gi.canonical_version,
+        gi.source_versions,gi.payload_hash,gi.household_id,gi.receipt,gi.committed_at)
+      is not distinct from row(v_origin,v_mode,1::smallint,1::smallint,
+        v_payload->'sourceVersions',v_hash,v_house,v_receipt,pg_catalog.transaction_timestamp())
+  ),'import_registry_readback_mismatch');
+  -- Tout écart ci-dessus lève une exception : ni métier, ni profil, ni reçu
+  -- ne sont validés partiellement. Aucun COMMIT dans la fonction.
   return v_receipt;
 exception
   when unique_violation then

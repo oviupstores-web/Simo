@@ -2,6 +2,8 @@
 
 Date : 22 octobre 2026. **PLAN UNIQUEMENT — AUCUN TEST EXÉCUTÉ.**
 
+Compléments du 23 octobre 2026 : corrections locales M2/M3/M4 depuis le checkpoint `113d5d96e95fefbc9256459300a0f0ef4be9a9de`. Les scénarios ajoutés ci-dessous ne constituent ni des tests réalisés ni une autorisation de les préparer ou de les lancer.
+
 Les quatre brouillons sont NON EXÉCUTABLES EN L'ÉTAT et possèdent une garde bloquante. Ce document ne donne pas l'autorisation de la retirer, de lancer PostgreSQL/Supabase, d'installer un outil, d'utiliser le téléphone ou d'appliquer une migration. Une nouvelle autorisation sera nécessaire.
 
 ## 1. Environnement et preuves attendues
@@ -39,6 +41,21 @@ Vérifier notamment : syntaxe CASE des helpers ; REVOKE de table et de colonne ;
 Exécuter les tests ACL pour PUBLIC, anon, A, B, E et les chemins service réellement utilisés, avec pg_catalog.has_*_privilege et tentatives effectives. Les noms de politique, ACL et memberships réels doivent être comparés à la matrice de TECHNICAL_DECISIONS. Vérifier également les ACL de fonctions pg_catalog/auth requises.
 
 Injecter dans la copie un ancien grant UPDATE(mode), un grant UPDATE(premium), un grant de colonne pantry et un rôle parent donnant des droits supplémentaires : vérifier que les précontrôles ou la révocation les détectent/suppriment, sans supposer qu'une révocation de table suffit. Tester SET ROLE vers E ; refus client obligatoire. Vérifier toutes les surcharges publiques et defaults pour chaque créateur.
+
+### 3.1. Prérequis supplémentaires pour M3 corrigé
+
+Avant tout essai, obtenir une autorisation distincte ; identifier la copie isolée, son snapshot et le contexte d'administration capable de créer le rôle, d'en changer les fonctions propriétaires et de révoquer CREATE temporaire. Confirmer PostgreSQL 17, les versions Supabase/gateway et l'accès aux catalogues et à `pg_has_role` avec USAGE/SET. Relever tous les propriétaires des 28 tables historiques et de guest_imports, les attributs et chemins d'appartenance/SET ROLE des rôles, les activations RLS et FORCE RLS du registre. Ne pas déduire la configuration distante de celle de cette copie.
+
+| Variante injectée dans la copie isolée seulement | Résultat à vérifier |
+|---|---|
+| Rôles clients sans privilèges critiques, E conforme, tables appartenant à l'administration habituelle, RLS active | Garde M3 acceptée ; aucune exigence de changement des propriétaires administratifs légitimes |
+| anon/authenticated avec SUPERUSER, BYPASSRLS, CREATEROLE, CREATEDB ou REPLICATION, un attribut à la fois | MENOO_UNSAFE_ROLE_ATTRIBUTES ; rollback du script, aucune correction automatique du rôle |
+| Un des rôles clients ou E propriétaire direct d'une table ciblée | MENOO_UNSAFE_TABLE_SECURITY ; aucun contournement par propriété |
+| Droits de propriétaire hérités ou accessibles par SET ROLE | Refus par le précontrôle de membership existant ou le garde-fou complémentaire ; vérifier séparément la vérité des prédicats pg_has_role, sans affaiblir le candidat livré |
+| RLS désactivée sur une table publique ciblée ou guest_imports ; FORCE RLS désactivée sur guest_imports | MENOO_UNSAFE_TABLE_SECURITY, sans réactivation automatique |
+| Fonction SECURITY DEFINER/vues/defaults ou rôle service additionnels | Inventaire et tests d'accès effectifs indispensables ; garde acceptée ne signifie pas sécurité complète |
+
+Pour les variantes touchant le rôle E créé par M3, utiliser après autorisation une instrumentation de copie explicitement documentée ; aucune suppression de contrôle dans les brouillons de référence. Réaliser les accès A/B après le passage du garde-fou, sous leurs vraies sessions, et vérifier les grants de lecture nécessaires aux nouvelles assertions M4, sans étendre les permissions pour masquer un échec.
 
 ## 4. Fixtures Solo et Famille
 
@@ -143,6 +160,39 @@ Changement de compte : figer le compte A avant envoi, connexion B avant requête
 
 Compte déjà rempli : actif, inactif, plusieurs foyers historiques, marker onboarding seul, mode seul. Aucun import/fusion/remplacement/second foyer ; valider le traitement explicite des états partiels. Afficher utiliser l'existant ou annuler, en gardant les brouillons.
 
+### 9.1. Régressions ciblées M2 : état final du cuisinier
+
+Dans une même transaction isolée, tester séparément les cas suivants et déclencher les contraintes différées aux mêmes moments que M4 puis au COMMIT :
+
+- Membre cuisinier déplacé H1→H2→H1 avec liens finaux valides : succès, malgré les événements intermédiaires ; déplacement définitif laissant H1 incohérent : refus. Contrôler les deux foyers concernés, même propriétaire ou propriétaires distincts.
+- Adulte→enfant laissé cuisinier : refus ; adulte→enfant→adulte avant contrôle : succès. Changement de rôle d'un autre membre : aucun faux refus ; remplacement du cuisinier par un autre adulte du foyer : succès.
+- Suppression du cuisinier : SET NULL historique conservé ; sélection d'un nouvel adulte dans la même transaction : succès si état final valide. Suppression d'un autre membre : cuisinier intact.
+- Suppression de foyer et cascade de compte fictif : aucun contrôle sur un foyer final absent ; vérifier aussi les cycles FK et le registre, sans contourner les contraintes existantes. Suppression isolée d'un foyer importé toujours bloquée par son registre.
+- Liens historiques incohérents : diagnostic avant adoption, aucune réparation ni suppression automatique. Mesurer verrous et interblocages avec les sessions concurrentes et l'ordre profil→foyer.
+
+### 9.2. Régressions ciblées M4 : relecture exhaustive avant succès
+
+Dans la copie isolée autorisée, vérifier d'abord les imports normaux Solo/Famille avec les droits exacts de E et tous les groupes de la table de relecture de TECHNICAL_DECISIONS §9. Pour chaque champ admissible, prévoir une fixture attendue indépendante des fonctions de conversion candidates ; ne pas valider une formule uniquement en la réutilisant pour calculer l'attendu.
+
+Prévoir ensuite une instrumentation de test locale (par exemple des triggers réservés à la copie) altérant une seule donnée après son écriture. Distinguer les erreurs bloquées plus tôt par une FK/CHECK des écarts détectés par les nouvelles assertions ; aucun code de cette instrumentation n'est créé par la présente intervention.
+
+| Groupe altéré ou scénario | Preuve attendue |
+|---|---|
+| Foyer/identité, budget/devise/gestion, cuisines, contraintes communes, cuisinier/version portions | Chaque différence admissible est détectée ; ensemble de codes réordonné seul reste équivalent, exclusion réordonnée ou répétition perdue échoue |
+| Membres : champ collecté, ordre, source_local_id, foyer, UUID du mapping ; membre absent ou supplémentaire | Échec de correspondance ou de cardinalité ; homonymes jamais fusionnés ; aucun succès avec mapping faux, incomplet ou excédentaire |
+| Allergènes individuels et régimes Solo supprimés, ajoutés ou affectés au mauvais membre | Échec ; aucune propagation silencieuse dans les autres profils ; famille sans régime individuel inventé |
+| Cuisine et équipement : niveau, temps, code ajouté/supprimé ; créneau jour/repas remplacé à nombre égal | Échec malgré compteurs identiques ; aucun menu individuel ou catégorie de recette créé |
+| Chaque champ des lots, y compris source, emplacement, date/origine, foodId local, declaredCategory/declaredStock et lien ingredient_id | Échec pour valeur différente, perte de NULL, lien catalogue inventé ou UUID/id source incohérent ; deux homonymes restent deux lots |
+| Profil : mode, foyer actif, date onboarding ; premium/display_name modifiés | Échec et profil d'origine intégralement restauré par rollback |
+| Registre : propriétaire/opération, origine/parcours, versions source/contrat/canonique, hash, foyer, date ou reçu différent du retour | Refus par contrainte ou relecture ; aucun reçu de succès incohérent enregistré |
+| Écart révélé seulement par un trigger différé du foyer, des membres ou du profil | Nouvelle relecture exécutée après les contrôles différés nommés ; pas de succès fondé sur une lecture intermédiaire |
+
+NULL admissibles à couvrir sans faux refus : cible/rythme Solo maintien, mesures bébé absentes, données individuelles non collectées en Famille, cuisinier à tour de rôle, quantité/unité/date/foodId/declaredCategory/declaredStock absents. Couvrir aussi tableaux vides, libellé d'unité vide, quantité zéro, exclusions répétées/Unicode et noms sensibles à une collation non déterministe. Aucun test ne doit remplacer un NULL source autorisé par une valeur arbitraire pour réussir.
+
+Pour tout échec, comparer l'état avant/après : aucune ligne importée, profil antérieur inchangé, aucun registre/reçu partiel, compte Auth et données locales conservés. Les boucles d'insertion, allocations/mappings UUID et enregistrement du reçu doivent encore être couverts par les fixtures complètes. Mesurer le coût supplémentaire des relectures sur les grandes Réserves et refaire les scénarios concurrents, d'interruption et de changement de compte de §9.
+
+Enfin, après un import validé, effectuer une modification métier légitime par le chemin de test autorisé puis rejouer l'opération et récupérer le reçu : le reçu original doit rester identique. Les nouvelles assertions ne doivent pas réimporter le snapshot ni imposer à des données ultérieurement modifiées de correspondre à l'ancien snapshot.
+
 ## 10. Suppression et retour arrière
 
 Base isolée seulement : vérifier que la suppression de compte fictif par la procédure administrative prévue supprime ses dépendances et son registre sans échec des cycles différés ; que supprimer seulement un foyer importé ne contourne pas le registre ; que l'autre compte demeure intact. Ne pas transformer cet essai en autorisation de suppression réelle.
@@ -160,4 +210,4 @@ La préparation peut devenir une proposition de migrations à valider uniquement
 5. Toutes les anomalies sont résolues ou présentées pour arbitrage ; aucun blocage B1–B9 n'est caché par une mention « terminé ».
 6. Simo autorise explicitement l'étape suivante. Aucune réussite en base isolée n'autorise automatiquement un accès distant ou un déploiement.
 
-Arrêt de l'intervention actuelle après création documentaire et vérifications statiques des fichiers/Git. Aucun test SQL, build, installation, staging, commit, push, reset ou clean dans cette préparation.
+Arrêt de l'intervention actuelle après les corrections documentaires locales des cinq fichiers autorisés et vérifications statiques des fichiers/Git. Gardes NON EXÉCUTABLES conservées. Aucun test SQL, build, installation, staging, commit, push, reset ou clean dans cette préparation ; aucune préparation de base de test sans autorisation distincte.

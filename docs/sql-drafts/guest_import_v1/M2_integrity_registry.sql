@@ -90,29 +90,32 @@ for each row execute function menoo_private.lock_household_owner();
 
 -- La FK composite protège l'appartenance. Le rôle « adulte » est un contrôle
 -- distinct, vérifié dans les deux directions au terme de la transaction.
+-- OLD/NEW identifient les foyers touchés par l'événement ; seul l'état courant
+-- de ces foyers décide du résultat différé (y compris H1 -> H2 -> H1).
 create function menoo_private.check_main_cook() returns trigger
 language plpgsql set search_path = '' as $fn$
-declare v_house uuid;
+declare v_houses uuid[];
 begin
-  if tg_table_name = 'households' then v_house := new.id;
-  elsif tg_op = 'DELETE' then v_house := old.household_id;
-  else v_house := new.household_id; end if;
+  if tg_table_name = 'households' then
+    v_houses := array[new.id];
+  elsif tg_op = 'DELETE' then
+    v_houses := array[old.household_id];
+  else
+    v_houses := array[old.household_id, new.household_id];
+  end if;
   if exists (
     select 1 from public.households h
-    left join public.household_members m on m.id = h.main_cook_member_id
-    where h.id = v_house and h.main_cook_member_id is not null
-      and (m.id is null or m.household_id <> h.id or m.role <> 'adulte')
+    where h.id = any(v_houses) and h.main_cook_member_id is not null
+      and not exists (
+        select 1 from public.household_members m
+        where m.id = h.main_cook_member_id
+          and m.household_id = h.id and m.role = 'adulte'
+      )
   ) then
     raise exception using errcode = '23514', message = 'import_main_cook_invalid';
   end if;
-  if tg_table_name = 'household_members' then
-    if tg_op = 'UPDATE' and old.household_id is distinct from new.household_id then
-      if exists (select 1 from public.households h where h.id = old.household_id
-                  and h.main_cook_member_id = new.id) then
-        raise exception using errcode = '23514', message = 'import_main_cook_invalid';
-      end if;
-    end if;
-  end if;
+  -- Un foyer supprimé n'a plus d'invariant à contrôler. Le SET NULL historique
+  -- et les cascades restent inchangés ; aucun membre ni foyer n'est réparé ici.
   return null;
 end $fn$;
 create constraint trigger menoo_household_cook_integrity

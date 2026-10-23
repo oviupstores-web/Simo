@@ -2,6 +2,8 @@
 
 Date : 22 octobre 2026. Base documentaire : commit `e4fd62587e8e770df2adb91343b94d2a65a582c0` et état local préexistant préservé.
 
+Révision locale du 23 octobre 2026, à partir du checkpoint `113d5d96e95fefbc9256459300a0f0ef4be9a9de` : corrections autorisées de M2/M3/M4 et des deux documents techniques seulement. M1, le contrat V1, Flutter, SQLite et les migrations historiques restent inchangés. Aucun SQL ni test exécuté ; aucune sauvegarde Git autorisée pour cette révision.
+
 **STATUT : NON EXÉCUTABLE EN L'ÉTAT — préparation locale uniquement.**
 
 Les quatre fichiers SQL contiennent du SQL candidat, sans pseudo-code de remplacement. Ils commencent par `BEGIN` et une exception volontaire qui invalide toute leur transaction. Aucun script n'a été exécuté, parsé par PostgreSQL ou testé. Ils ne constituent pas des migrations adoptées. Ne pas retirer les gardes, copier un extrait dans une console SQL ou déplacer ces fichiers dans `supabase/migrations` sans nouvelle autorisation. Aucun déploiement n'est autorisé.
@@ -28,7 +30,7 @@ Repères principaux dans le dépôt :
 
 Éléments **non vérifiés** : version effective du serveur distant, schéma réellement déployé, ACL héritées/defaults, propriétaires des objets, éventuelles fonctions/vues supplémentaires, données historiques présentes, compatibilité effective des brouillons et performances. Aucun accès Supabase distant n'a été effectué.
 
-Les mentions anciennes « phase 2 non commencée / sauvegarde non autorisée » en tête des documents datent de la clôture documentaire précédente. L'autorisation actuelle permet ces six brouillons seulement. L'ancienne formulation « conserver les contraintes calculées » n'impose pas une troisième copie permanente : le contrat V1 §6 retient leur calcul à partir des sources. Les anciennes conventions EUR, six langues ou anciennes étapes ne justifient aucune réécriture des données.
+Les mentions anciennes « phase 2 non commencée / sauvegarde non autorisée » en tête des documents datent de la clôture documentaire précédente. L'autorisation initiale permettait la création des six brouillons ; celle du 23 octobre est limitée aux cinq fichiers indiqués ci-dessus. L'ancienne formulation « conserver les contraintes calculées » n'impose pas une troisième copie permanente : le contrat V1 §6 retient leur calcul à partir des sources. Les anciennes conventions EUR, six langues ou anciennes étapes ne justifient aucune réécriture des données.
 
 ## 2. Ordre et contenu
 
@@ -181,6 +183,8 @@ Les clés candidates composites sont non différables ; les FK peuvent être dif
 
 Relations ajoutées : profil actif/propriétaire du foyer ; cuisinier/même foyer ; liste/menu/même foyer ; commande/liste/même foyer ; registre/foyer/même propriétaire. Le cuisinier doit aussi être adulte, vérifié par déclencheurs différables dans les deux directions.
 
+Correction M2 du 23 octobre : `check_main_cook` utilise OLD/NEW uniquement pour identifier les foyers concernés, puis relit leur état courant quand le contrôle différé se déclenche. Un déplacement H1→H2→H1 ne doit pas échouer à cause d'un état intermédiaire disparu. Pour un changement de foyer du membre, les deux foyers sont contrôlés ; pour un changement de rôle, le cuisinier final doit toujours être adulte. La suppression d'un membre conserve le SET NULL historique ; un foyer supprimé par cascade n'a plus de cuisinier à valider. Aucun lien n'est réparé, aucun membre déplacé ni historique supprimé par ce contrôle. Les FK composites et leur caractère différé restent inchangés. Leur interaction avec suppressions, RLS, verrous et cascades n'est pas démontrée sans essai isolé.
+
 `NOT VALID` évite de réécrire/refuser d'emblée l'historique, mais s'applique aux nouvelles écritures ; un ancien lien incohérent peut empêcher une mise à jour future. Les triggers de cuisinier ne disposent pas d'un équivalent NOT VALID : tout conflit existant doit être diagnostiqué avant adoption. Aucun correctif de données n'est automatique. Les index uniques de provenance sont partiels sur les valeurs non NULL ; les UUID historiques restent intacts.
 
 Ne pas ajouter UNIQUE(owner_id) : plusieurs anciens foyers d'un compte sont conservés. Un seul foyer actif est désigné par le profil. Cela ne dit rien du nombre de menus : Solo personnalisé, Famille commun. Aucune table de menu n'est écrite par l'import.
@@ -227,6 +231,10 @@ RLS : remplacer les anciennes politiques FOR ALL par SELECT ; ne pas simplement 
 
 M3 refuse les memberships ascendants des rôles clients/technique. Un inventaire plus général reste obligatoire : fonctions SECURITY DEFINER publiques et toutes leurs surcharges, vues, rôles hérités, options SET ROLE/INHERIT, defaults par créateur, ownership, SQL dynamique et fonctions service. Les noms de politiques inattendus des tables réécrites arrêtent le script ; le catalogue de politiques complet doit aussi être comparé avant adoption.
 
+Durcissement M3 du 23 octobre : un contrôle final refuse les attributs superuser, BYPASSRLS, CREATEROLE, CREATEDB ou REPLICATION pour `anon`, `authenticated` et E. Il refuse également, sur les 28 tables publiques historiques et le registre privé, une RLS désactivée ou des droits de propriétaire disponibles pour ces rôles (propriété directe, héritée ou accessible par SET ROLE). Le registre doit en plus conserver FORCE ROW LEVEL SECURITY. Les propriétaires administratifs habituels de Supabase ne sont pas interdits : la cible du contrôle est l'accès client/technique à leurs droits. Aucune permission nouvelle ni modification automatique de rôle n'est introduite.
+
+Ce contrôle repose sur les catalogues et `pg_has_role(..., 'USAGE'/'SET')` de [PostgreSQL 17](https://www.postgresql.org/docs/17/functions-info.html#FUNCTIONS-INFO-ACCESS-TABLE). La documentation établit la disponibilité de ces tests, pas leur réussite dans la configuration Supabase réelle, inconnue ici. Rôles absents, objets supplémentaires, permissions des fonctions système et chemins privilégiés nécessitent l'inventaire préalable. Un refus doit conduire à un diagnostic, jamais au retrait du contrôle pour continuer. Ce garde-fou n'établit pas à lui seul l'isolation complète, la sûreté de toutes les fonctions SECURITY DEFINER ou celle des accès administratifs.
+
 Les DEFAULT PRIVILEGES ne sont pas rétroactifs. Le brouillon ne prétend pas corriger ceux de créateurs distants inconnus ; l'administrateur devra préparer des révocations ciblées à partir de l'inventaire. Le rôle service/admin reste une autorité de confiance pouvant contourner RLS ou désactiver des triggers : aucune garantie d'isolation contre un administrateur malveillant n'est revendiquée.
 
 Les CHECK privés M1 et triggers invoker exigent les permissions de leurs appelants réels. E dispose des helpers nécessaires. Les futurs chemins service/admin de génération, édition, suppression et maintenance doivent être recensés ; ne pas supposer qu'un rôle service dispose déjà d'USAGE/EXECUTE sur le nouveau schéma privé. Des GRANT ciblés pourront être nécessaires après justification, sans exposer ce schéma au client.
@@ -243,7 +251,25 @@ Ordre candidat :
 6. Contrôler le compte sous verrou : aucun foyer, même inactif, ni marqueur actif/onboarding/mode préexistant. `display_name` Auth et premium seuls ne déclenchent pas de remplacement ni ne sont modifiés. Le traitement conservateur d'un `mode` isolé nécessite confirmation lors des essais de compatibilité ; en attendant, refus plutôt qu'écrasement.
 7. Vérifier les catalogues actuels puis insérer foyer, membres, déclarations, cuisine, créneaux, lots ; conserver la portée et l'ordre des données.
 8. Renseigner le cuisinier si déclaré, puis le profil actif. Contrôler les compteurs et la relecture des valeurs sensibles Réserve ; insérer le reçu minimal dans la même transaction.
-9. Forcer les contraintes différées pertinentes avant retour ; le gateway doit encore réussir COMMIT avant que le client ne considère le succès comme acquis.
+9. Forcer les contraintes différées pertinentes, puis relire toutes les données métier admissibles, le profil et le registre avant retour du reçu ; le gateway doit encore réussir COMMIT avant que le client ne considère le succès comme acquis.
+
+Correction M4 du 23 octobre : le contrôle final porte sur les lignes SQL visibles au rôle E, pas uniquement sur les variables préparées ou le nombre de lignes. Les insertions, allocations d'UUID, mappings, construction/enregistrement du reçu et handlers de rollback existants sont conservés.
+
+| Groupe relu après les contraintes différées | Comparaison candidate |
+|---|---|
+| Foyer et identité | UUID, propriétaire, nom confirmé, mode SQL, cuisinier issu du mapping ou NULL ; budget mineur exact et devise ; gestion ; cuisines ; contraintes communes ; version de portions |
+| Membres et provenance | Cardinalité et taille du mapping ; chaque UUID relu à partir de son id local ; foyer, id source, prénom, rôle, ordre, propriétaire ; champs Solo collectés et correspondances d'enums ; mesures Famille et NULL non collectés |
+| Déclarations individuelles | Allergènes de chaque membre, sans duplication dans les autres profils ; régimes Solo ; exclusions Solo avec ordre et répétitions ; aucune déclaration de régime individuel Famille inventée |
+| Cuisine et planning | Niveau, temps semaine/week-end ; ensemble exact d'équipements ; nombre et présence de tous les couples jour/type de repas, sans catégories entrée/plat/dessert ajoutées |
+| Réserve | Nombre et mapping des lots ; foyer, id source, nom, quantité, unité convertie, libellé brut, emplacement, date civile, origine de date, source, foodId local, declaredCategory, declaredStock ; ingredient_id reste NULL |
+| Profil | Compte, mode, foyer actif, date de fin d'onboarding ; premium et display_name identiques aux valeurs verrouillées avant import |
+| Registre et reçu | Compte/opération, origine, parcours SQL, versions, versions source, empreinte, foyer, date transactionnelle ; reçu enregistré identique au reçu retourné, avec les mappings relus ci-dessus |
+
+Les comparaisons utilisent `IS [NOT] DISTINCT FROM` pour distinguer correctement SQL NULL, zéro, chaînes vides et listes vides. Maintien Solo : cible/rythme NULL ; bébé : mesures facultatives NULL ; Famille : sexe/objectif/activité/cible/rythme/exclusions individuelles/balance non collectés restent NULL. Aucun champ absent du parcours Famille n'est exigé comme une nouvelle réponse. Un cuisinier à tour de rôle, une date ou une quantité absente et des déclarations qualitatives NULL restent admissibles. Les ensembles de codes sont comparés triés ; les exclusions sont comparées comme listes ordonnées, répétitions incluses. Les textes libres comparés en SQL utilisent la collation C afin de ne pas accepter une différence de contenu sous une collation non déterministe.
+
+L'assertion de confirmation de l'identité reste validée dans la projection et couverte par l'empreinte, sans nouvelle colonne de confirmation. Les contrôles réutilisent la conversion budgétaire et les correspondances déjà définies ; ils ne démontrent pas indépendamment leur justesse métier ni la parité de l'encodeur Flutter absent. Aucun arrondi, nouvelle catégorie, modification du protocole canonique ou des facteurs Famille 1 / 0.65 / 0.3 n'est introduit.
+
+Tout écart déclenche une exception avant le retour du nouveau reçu et doit annuler métier, profil et registre ensemble. Les retours anticipés d'un reçu déjà validé restent inchangés : une modification métier ultérieure légitime ne doit pas empêcher de récupérer ce reçu historique. Le coût de ces relectures supplémentaires, leur exécution réelle avec ACL/RLS, les effets des triggers et la concurrence restent à démontrer (B1, B3, B5, B7, B9).
 
 Le RPC n'écrit ni menu, ni poids historique, ni courses. Aucun COMMIT interne ; toute exception annule l'ensemble. Les erreurs de contrainte prévues sont traduites en codes génériques sans détails d'un autre compte. Les erreurs inattendues annulent également la transaction et doivent rester diagnostiquées côté serveur sans journaliser le contenu personnel.
 
